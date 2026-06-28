@@ -1,0 +1,96 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# 64Box Specific Database & Media
+GBC_v19.mdb
+gb64.sqlite
+gb64.sqlite.bk
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite-journal
+/gb64_export/
+/CSV_FILES_GBC_v19/
+/64BoxMedia/
+/emu-temp/
+/GBC_v19/
+
+# Testing output
+/playwright-report/
+/test-results/
+
+# Tauri Build target
+/src-tauri/target/
+
+# AI Agent Specific Folders
+/.agent
+/.agents
+/skills-lock.json
+/plans/
+/.claude/
+/.codex
+handover-*.md
+
+# One-off scripts and test logs
+/check_*.py
+!/scripts/
+/scripts/*
+!/scripts/check_sqlite_support.js
+!/scripts/convert_csv_to_sqlite.js
+!/scripts/db_pipeline.js
+!/scripts/exportMdb.ps1
+!/scripts/import_gb64.bat
+!/scripts/import_gb64.sh
+!/scripts/mdb-export-all.sh
+!/scripts/sqlite_support_config.js
+/src-tauri/test_output*.txt
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+
+# Graphify
+graphify-out/cache/
+graphify-out/manifest.json
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+

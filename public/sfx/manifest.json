@@ -1,0 +1,84 @@
+{
+  "generatedAt": "2026-03-15T16:00:31.471Z",
+  "source": "sounds/*.wav",
+  "targetFormat": "mp3",
+  "sampleRate": 22050,
+  "bitrate": "32k",
+  "files": [
+    {
+      "source": "app-error-1.wav",
+      "output": "app-error-1.mp3",
+      "bytes": 8481
+    },
+    {
+      "source": "app-error-2.wav",
+      "output": "app-error-2.mp3",
+      "bytes": 16526
+    },
+    {
+      "source": "app-popup.wav",
+      "output": "app-popup.mp3",
+      "bytes": 8481
+    },
+    {
+      "source": "back-detail-1.wav",
+      "output": "back-detail-1.mp3",
+      "bytes": 4510
+    },
+    {
+      "source": "bigbox-switch.wav",
+      "output": "bigbox-switch.mp3",
+      "bytes": 4510
+    },
+    {
+      "source": "classic-game.wav",
+      "output": "classic-game.mp3",
+      "bytes": 8481
+    },
+    {
+      "source": "close-app-1.wav",
+      "output": "close-app-1.mp3",
+      "bytes": 8481
+    },
+    {
+      "source": "close-app-2.wav",
+      "output": "close-app-2.mp3",
+      "bytes": 16526
+    },
+    {
+      "source": "close-app-3.wav",
+      "output": "close-app-3.mp3",
+      "bytes": 12451
+    },
+    {
+      "source": "close-app-4.wav",
+      "output": "close-app-4.mp3",
+      "bytes": 12451
+    },
+    {
+      "source": "menu-move-1.wav",
+      "output": "menu-move-1.mp3",
+      "bytes": 4510
+    },
+    {
+      "source": "open-app-1.wav",
+      "output": "open-app-1.mp3",
+      "bytes": 12451
+    },
+    {
+      "source": "open-app-2.wav",
+      "output": "open-app-2.mp3",
+      "bytes": 12451
+    },
+    {
+      "source": "open-detail-1.wav",
+      "output": "open-detail-1.mp3",
+      "bytes": 4510
+    },
+    {
+      "source": "search-filter.wav",
+      "output": "search-filter.mp3",
+      "bytes": 4510
+    }
+  ]
+}

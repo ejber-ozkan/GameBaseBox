@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SID Test</title>
+    <script src="/jsSID.js"></script>
+</head>
+<body>
+    <button id="playBtn">Play Asterix directly from public</button>
+    <button id="stopBtn">Stop</button>
+    <script>
+        var player = null;
+        document.getElementById('playBtn').addEventListener('click', function() {
+            if (!player) {
+                player = new jsSID(16384, 0.0005);
+            }
+            if (window.jsSID_aCtx && window.jsSID_aCtx.state === 'suspended') {
+                window.jsSID_aCtx.resume();
+            }
+            player.loadstart('/sids/asterix.sid', 0);
+        });
+        document.getElementById('stopBtn').addEventListener('click', function() {
+            if (player) {
+                player.pause();
+            }
+        });
+    </script>
+</body>
+</html>

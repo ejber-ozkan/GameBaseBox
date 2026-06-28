@@ -1,0 +1,977 @@
+{
+  "check_db.js": {
+    "mtime": 1773400424.7916362,
+    "ast_hash": "e1ee380b70083da4a2b475c41348c6b2",
+    "semantic_hash": "e1ee380b70083da4a2b475c41348c6b2"
+  },
+  "check_db.py": {
+    "mtime": 1773347578.9482827,
+    "ast_hash": "5795937eee695154c788bf5944363d8a",
+    "semantic_hash": "5795937eee695154c788bf5944363d8a"
+  },
+  "check_game.py": {
+    "mtime": 1773347623.9528377,
+    "ast_hash": "7cf9d03ed00e69a849a62ecfa9e8b62c",
+    "semantic_hash": "7cf9d03ed00e69a849a62ecfa9e8b62c"
+  },
+  "check_pal.py": {
+    "mtime": 1773347700.1161218,
+    "ast_hash": "b95f82b1005a627db9c0c7db2f38d206",
+    "semantic_hash": "b95f82b1005a627db9c0c7db2f38d206"
+  },
+  "check_view.py": {
+    "mtime": 1773347683.7921164,
+    "ast_hash": "dc2f68d31f03b12c7594660aa1616714",
+    "semantic_hash": "dc2f68d31f03b12c7594660aa1616714"
+  },
+  "eslint.config.mjs": {
+    "mtime": 1776605403.9196496,
+    "ast_hash": "0ee1d43e68bbacdd8727059c1ce6eb28",
+    "semantic_hash": "0ee1d43e68bbacdd8727059c1ce6eb28"
+  },
+  "fix_view.js": {
+    "mtime": 1773400452.342556,
+    "ast_hash": "202c3d7ce631dccc73dfe813cbbac3d1",
+    "semantic_hash": "202c3d7ce631dccc73dfe813cbbac3d1"
+  },
+  "next.config.ts": {
+    "mtime": 1772887281.17442,
+    "ast_hash": "5a63b5bd3a6512528d9b6f690a41b414",
+    "semantic_hash": "5a63b5bd3a6512528d9b6f690a41b414"
+  },
+  "package.json": {
+    "mtime": 1776605403.9222944,
+    "ast_hash": "e6a3559e9cc7031615d4054332ab1fcf",
+    "semantic_hash": "e6a3559e9cc7031615d4054332ab1fcf"
+  },
+  "playwright.config.ts": {
+    "mtime": 1772884997.829036,
+    "ast_hash": "a5289d90966e27c5d9929fceb5586a7e",
+    "semantic_hash": "a5289d90966e27c5d9929fceb5586a7e"
+  },
+  "postcss.config.mjs": {
+    "mtime": 1772884606.198929,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "public/emulator/data/compression/extract7z.js": {
+    "mtime": 1772989998.0808446,
+    "ast_hash": "8828ae1b7a82477ad54db3be70ea8e1c",
+    "semantic_hash": "8828ae1b7a82477ad54db3be70ea8e1c"
+  },
+  "public/emulator/data/compression/extractzip.js": {
+    "mtime": 1772989998.1063683,
+    "ast_hash": "973a73f6fa5ea4272eea55d2a36e0584",
+    "semantic_hash": "973a73f6fa5ea4272eea55d2a36e0584"
+  },
+  "public/emulator/data/contributors.json": {
+    "mtime": 1772989998.1349914,
+    "ast_hash": "e3c55288278982b965ff5ea265f7a54f",
+    "semantic_hash": "e3c55288278982b965ff5ea265f7a54f"
+  },
+  "public/emulator/data/cores/package.json": {
+    "mtime": 1772989999.7317624,
+    "ast_hash": "4f20a776db1027e551e65e3447106bef",
+    "semantic_hash": "4f20a776db1027e551e65e3447106bef"
+  },
+  "public/emulator/data/cores/reports/vice_x64.json": {
+    "mtime": 1772989999.7327552,
+    "ast_hash": "15161bdca79874a91621f49ecf82f7d6",
+    "semantic_hash": "15161bdca79874a91621f49ecf82f7d6"
+  },
+  "public/emulator/data/cores/reports/vice_x64sc.json": {
+    "mtime": 1772989996.3226552,
+    "ast_hash": "e4ae6e09f2adaa0e9035e8aacaba8602",
+    "semantic_hash": "e4ae6e09f2adaa0e9035e8aacaba8602"
+  },
+  "public/emulator/data/loader.js": {
+    "mtime": 1772989998.1159117,
+    "ast_hash": "789bce767a5b89afff4a3c1e27255d39",
+    "semantic_hash": "789bce767a5b89afff4a3c1e27255d39"
+  },
+  "public/emulator/data/src/GameManager.js": {
+    "mtime": 1772989998.1083686,
+    "ast_hash": "d4825875ba451764260db6a2be02d184",
+    "semantic_hash": "d4825875ba451764260db6a2be02d184"
+  },
+  "public/emulator/data/src/compression.js": {
+    "mtime": 1772989998.0587714,
+    "ast_hash": "45af3b3dca63f7ef0ecbe76715211ad7",
+    "semantic_hash": "45af3b3dca63f7ef0ecbe76715211ad7"
+  },
+  "public/emulator/data/src/emulator.js": {
+    "mtime": 1772989998.0708177,
+    "ast_hash": "476921c16b7621370716c2ee1ffe4000",
+    "semantic_hash": "476921c16b7621370716c2ee1ffe4000"
+  },
+  "public/emulator/data/src/gamepad.js": {
+    "mtime": 1772989998.1098742,
+    "ast_hash": "167a0e01934a662d5cdf419e0c571795",
+    "semantic_hash": "167a0e01934a662d5cdf419e0c571795"
+  },
+  "public/emulator/data/src/shaders.js": {
+    "mtime": 1772989998.1229157,
+    "ast_hash": "987b7c28d3e32432ae6d9de0834e63bc",
+    "semantic_hash": "987b7c28d3e32432ae6d9de0834e63bc"
+  },
+  "public/emulator/data/src/storage.js": {
+    "mtime": 1772989998.126916,
+    "ast_hash": "f807e908ce60cf19bc066e1ca395ad9e",
+    "semantic_hash": "f807e908ce60cf19bc066e1ca395ad9e"
+  },
+  "public/emulator/data/version.json": {
+    "mtime": 1772989998.1648715,
+    "ast_hash": "c4c6f2ecdbcd3e6e066b26a46e8b8160",
+    "semantic_hash": "c4c6f2ecdbcd3e6e066b26a46e8b8160"
+  },
+  "public/jsSID.js": {
+    "mtime": 1772968990.1201143,
+    "ast_hash": "054d19eb924e7d29bcd82ac3583c9f90",
+    "semantic_hash": "054d19eb924e7d29bcd82ac3583c9f90"
+  },
+  "public/sfx/manifest.json": {
+    "mtime": 1773590431.4735587,
+    "ast_hash": "aece0f016fe1ca18133ef221456577f0",
+    "semantic_hash": "aece0f016fe1ca18133ef221456577f0"
+  },
+  "scripts/check_csv_records.js": {
+    "mtime": 1773173513.3162198,
+    "ast_hash": "934ad14af45670e38163e496603f44ca",
+    "semantic_hash": "934ad14af45670e38163e496603f44ca"
+  },
+  "scripts/check_row_counts.js": {
+    "mtime": 1773173513.3167555,
+    "ast_hash": "4bee0742c20877704e71727dbeb28046",
+    "semantic_hash": "4bee0742c20877704e71727dbeb28046"
+  },
+  "scripts/check_sqlite_support.js": {
+    "mtime": 1776605403.9238105,
+    "ast_hash": "b8cb8d949dfb998df011de88d2a294f4",
+    "semantic_hash": "b8cb8d949dfb998df011de88d2a294f4"
+  },
+  "scripts/check_tables.js": {
+    "mtime": 1773343411.2353156,
+    "ast_hash": "9dce14d0d72c229462171f73a39d13d6",
+    "semantic_hash": "9dce14d0d72c229462171f73a39d13d6"
+  },
+  "scripts/convert_csv_to_sqlite.js": {
+    "mtime": 1782655790.0394752,
+    "ast_hash": "db2b3f07c2e3cbad16e5801a48e559c0",
+    "semantic_hash": ""
+  },
+  "scripts/convert_ui_sounds_to_mp3.js": {
+    "mtime": 1773589859.6334238,
+    "ast_hash": "64f3cf998ec6b4b82562b47b9b05922a",
+    "semantic_hash": "64f3cf998ec6b4b82562b47b9b05922a"
+  },
+  "scripts/db_pipeline.js": {
+    "mtime": 1782595288.066915,
+    "ast_hash": "647a17266aee550aa65188ce89792e66",
+    "semantic_hash": ""
+  },
+  "scripts/debug_csv_count.js": {
+    "mtime": 1773173513.3184216,
+    "ast_hash": "4dfdee4855bf97af7d81a02043000a51",
+    "semantic_hash": "4dfdee4855bf97af7d81a02043000a51"
+  },
+  "scripts/exportMdb.ps1": {
+    "mtime": 1773174431.012229,
+    "ast_hash": "5b5fce12b2d41ba191ea520816bd6a59",
+    "semantic_hash": "5b5fce12b2d41ba191ea520816bd6a59"
+  },
+  "scripts/import_gb64.sh": {
+    "mtime": 1776605403.926816,
+    "ast_hash": "3b0dbf53a1c0c7f2c8b108087ef460a3",
+    "semantic_hash": "3b0dbf53a1c0c7f2c8b108087ef460a3"
+  },
+  "scripts/list_tables.js": {
+    "mtime": 1773344082.040795,
+    "ast_hash": "60f0716b4e62e361468547f3160624eb",
+    "semantic_hash": "60f0716b4e62e361468547f3160624eb"
+  },
+  "scripts/mdb-export-all.sh": {
+    "mtime": 1776605403.9278188,
+    "ast_hash": "6fec1bc586dca1aba0805d05e53e4406",
+    "semantic_hash": "6fec1bc586dca1aba0805d05e53e4406"
+  },
+  "scripts/setup_emulator.js": {
+    "mtime": 1772995645.05434,
+    "ast_hash": "1a9171a9385cad84e15351bb619652ee",
+    "semantic_hash": "1a9171a9385cad84e15351bb619652ee"
+  },
+  "scripts/sqlite_support_config.js": {
+    "mtime": 1782597322.504969,
+    "ast_hash": "1305886f583f56983c5c9ca1e65cdc81",
+    "semantic_hash": ""
+  },
+  "src-tauri/build.rs": {
+    "mtime": 1773498756.1798162,
+    "ast_hash": "1be34a5c61c2c35365de3dab14298f0b",
+    "semantic_hash": "1be34a5c61c2c35365de3dab14298f0b"
+  },
+  "src-tauri/capabilities/default.json": {
+    "mtime": 1773343638.26987,
+    "ast_hash": "d769010cfbb640aef769705e57c7dd74",
+    "semantic_hash": "d769010cfbb640aef769705e57c7dd74"
+  },
+  "src-tauri/src/commands/db/games.rs": {
+    "mtime": 1782649106.3087168,
+    "ast_hash": "b346d4ea10337257844bf58701ca80bb",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/db/mod.rs": {
+    "mtime": 1782596927.2725198,
+    "ast_hash": "5eee291421a912bdfdaaa4c35aa95351",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/db/querying.rs": {
+    "mtime": 1782644108.9697096,
+    "ast_hash": "3ed9eb64b5658948dbf5b27eba8ca11b",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/db/secure_settings.rs": {
+    "mtime": 1776605403.9758935,
+    "ast_hash": "29a342b82baf55f591a49662fe8eea0c",
+    "semantic_hash": "29a342b82baf55f591a49662fe8eea0c"
+  },
+  "src-tauri/src/commands/db/tests.rs": {
+    "mtime": 1782649106.3104954,
+    "ast_hash": "3289fba2a3dfd397e78350d4bf82ede8",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/emulator.rs": {
+    "mtime": 1782660729.1478722,
+    "ast_hash": "f8dc5c55c6ee54740bcf61b5f0641ad4",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/files.rs": {
+    "mtime": 1782649106.3116114,
+    "ast_hash": "c27c720c8490937bdde2e10354c11173",
+    "semantic_hash": "c27c720c8490937bdde2e10354c11173"
+  },
+  "src-tauri/src/commands/mod.rs": {
+    "mtime": 1782592648.4102314,
+    "ast_hash": "9bc402e822ccafee555860085802ae31",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/setup.rs": {
+    "mtime": 1782649106.3137903,
+    "ast_hash": "a7b4b0f22f425ca7a9c6c05f54905e41",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/system.rs": {
+    "mtime": 1782649106.3148568,
+    "ast_hash": "d94476897d50802ed2bed11b82e01386",
+    "semantic_hash": "d94476897d50802ed2bed11b82e01386"
+  },
+  "src-tauri/src/database.rs": {
+    "mtime": 1782656000.7271597,
+    "ast_hash": "6493dd3a8de85b52cba1520d67d20185",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/lib.rs": {
+    "mtime": 1782652188.01247,
+    "ast_hash": "9e3d0b14bce122c74cd2169c7b5affce",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/main.rs": {
+    "mtime": 1773498756.2117507,
+    "ast_hash": "c606fa15ae831a39cb2310dde4d4fa4c",
+    "semantic_hash": "c606fa15ae831a39cb2310dde4d4fa4c"
+  },
+  "src-tauri/src/models.rs": {
+    "mtime": 1782652185.867239,
+    "ast_hash": "add0f9ef12bcd79c086c71bdf9336861",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/security.rs": {
+    "mtime": 1782649106.3160028,
+    "ast_hash": "6663cd5c39c0fd15687381e0ec9ac197",
+    "semantic_hash": "6663cd5c39c0fd15687381e0ec9ac197"
+  },
+  "src-tauri/tauri.conf.json": {
+    "mtime": 1776605403.9834363,
+    "ast_hash": "fa2f89581eb05eeb1f76553fc1f76209",
+    "semantic_hash": "fa2f89581eb05eeb1f76553fc1f76209"
+  },
+  "src/app/layout.tsx": {
+    "mtime": 1776605403.9839602,
+    "ast_hash": "118aa0c8b69d84c6c99ca4e28b958144",
+    "semantic_hash": "118aa0c8b69d84c6c99ca4e28b958144"
+  },
+  "src/app/page.tsx": {
+    "mtime": 1782645859.735536,
+    "ast_hash": "40aa0dfe4ea0c8917604a0adc7aeaa85",
+    "semantic_hash": ""
+  },
+  "src/components/AlphabetJumpBar.tsx": {
+    "mtime": 1776605403.9844885,
+    "ast_hash": "f92ea1e35ad45481ad4ee5105a902710",
+    "semantic_hash": "f92ea1e35ad45481ad4ee5105a902710"
+  },
+  "src/components/AppLaunchSplash.tsx": {
+    "mtime": 1773592847.6873176,
+    "ast_hash": "b632eccd436d0b26022724e7017acd22",
+    "semantic_hash": "b632eccd436d0b26022724e7017acd22"
+  },
+  "src/components/BigBoxTileMedia.tsx": {
+    "mtime": 1774041167.2955163,
+    "ast_hash": "decd5807f50cb38769ba38ed9ca08d9d",
+    "semantic_hash": "decd5807f50cb38769ba38ed9ca08d9d"
+  },
+  "src/components/BigBoxView.tsx": {
+    "mtime": 1782597169.527498,
+    "ast_hash": "1697025192082124c9bc6f5df02ba959",
+    "semantic_hash": ""
+  },
+  "src/components/ControllerSearchKeyboard.tsx": {
+    "mtime": 1773591606.8647628,
+    "ast_hash": "818c3b211d6d459502ef1063d5d9d5fd",
+    "semantic_hash": "818c3b211d6d459502ef1063d5d9d5fd"
+  },
+  "src/components/DetailView.tsx": {
+    "mtime": 1782597183.105415,
+    "ast_hash": "554ac66cf5f40675778125319efd4849",
+    "semantic_hash": ""
+  },
+  "src/components/ExtrasDetail.tsx": {
+    "mtime": 1782652370.4356058,
+    "ast_hash": "3ce88efd59fd6342d8dbc8d206299ea8",
+    "semantic_hash": ""
+  },
+  "src/components/GridView.tsx": {
+    "mtime": 1782641481.2791836,
+    "ast_hash": "9ea5adeb05a58e36f0c03061c4cc04a1",
+    "semantic_hash": ""
+  },
+  "src/components/HorizontalRail.tsx": {
+    "mtime": 1774663237.453866,
+    "ast_hash": "8fd5f20eace403910ca5f0dfa032e6d5",
+    "semantic_hash": "8fd5f20eace403910ca5f0dfa032e6d5"
+  },
+  "src/components/ImageSlider.tsx": {
+    "mtime": 1776605403.9883182,
+    "ast_hash": "1b8eb6d5984ed86ee9ec8472e0ce8038",
+    "semantic_hash": "1b8eb6d5984ed86ee9ec8472e0ce8038"
+  },
+  "src/components/ImageWithFallback.tsx": {
+    "mtime": 1773424075.8501256,
+    "ast_hash": "778e640496f197b0d8e820effc005025",
+    "semantic_hash": "778e640496f197b0d8e820effc005025"
+  },
+  "src/components/ListView.tsx": {
+    "mtime": 1782641482.273209,
+    "ast_hash": "f4ad2b6977fd0ac3bc448308e2321ea7",
+    "semantic_hash": ""
+  },
+  "src/components/MusicianPhoto.tsx": {
+    "mtime": 1776605403.9899302,
+    "ast_hash": "3d89bffe48f04000e8cb73012f06c34b",
+    "semantic_hash": "3d89bffe48f04000e8cb73012f06c34b"
+  },
+  "src/components/ScrapeButton.tsx": {
+    "mtime": 1776605403.990455,
+    "ast_hash": "c72b254471835a0c17528f3969736cbf",
+    "semantic_hash": "c72b254471835a0c17528f3969736cbf"
+  },
+  "src/components/SettingsModal.tsx": {
+    "mtime": 1782650000.2898452,
+    "ast_hash": "ff13d241e62c27a176f2069754eb6df7",
+    "semantic_hash": ""
+  },
+  "src/components/SidPlayer.tsx": {
+    "mtime": 1774712135.0066428,
+    "ast_hash": "cd2b0949862abc490d8fb91736a842e0",
+    "semantic_hash": "cd2b0949862abc490d8fb91736a842e0"
+  },
+  "src/components/StatusRow.tsx": {
+    "mtime": 1776605403.9909797,
+    "ast_hash": "34b7609ff80c37e11f1926273486bc67",
+    "semantic_hash": "34b7609ff80c37e11f1926273486bc67"
+  },
+  "src/components/SubGenrePickerModal.tsx": {
+    "mtime": 1774124246.453648,
+    "ast_hash": "bd555cb27228435b071c53925d7fee76",
+    "semantic_hash": "bd555cb27228435b071c53925d7fee76"
+  },
+  "src/components/UiSoundRuntime.tsx": {
+    "mtime": 1773591606.8637586,
+    "ast_hash": "4a9bfb34f6c8fa568dc380f987decf74",
+    "semantic_hash": "4a9bfb34f6c8fa568dc380f987decf74"
+  },
+  "src/components/WasmPlayer.tsx": {
+    "mtime": 1773394996.7458718,
+    "ast_hash": "d740818933f43854abd663adba9f9e6a",
+    "semantic_hash": "d740818933f43854abd663adba9f9e6a"
+  },
+  "src/components/bigbox/BigBoxAlphabetRail.tsx": {
+    "mtime": 1774661116.592059,
+    "ast_hash": "f56b7a47e389a188d0847e54d0dc006a",
+    "semantic_hash": "f56b7a47e389a188d0847e54d0dc006a"
+  },
+  "src/components/bigbox/BigBoxExitPrompt.tsx": {
+    "mtime": 1773591606.8637586,
+    "ast_hash": "b8a483b6730cb32df12ba3c06a9abecc",
+    "semantic_hash": "b8a483b6730cb32df12ba3c06a9abecc"
+  },
+  "src/components/bigbox/BigBoxFooter.tsx": {
+    "mtime": 1774125009.1080291,
+    "ast_hash": "adc919ca0a32f93d4838a6d98dd3cd4b",
+    "semantic_hash": "adc919ca0a32f93d4838a6d98dd3cd4b"
+  },
+  "src/components/bigbox/BigBoxHeader.tsx": {
+    "mtime": 1782594799.1648073,
+    "ast_hash": "56adb10605d5c4ead3179f87c6d68c7a",
+    "semantic_hash": ""
+  },
+  "src/components/detail/DetailGameTitle.tsx": {
+    "mtime": 1774663897.38901,
+    "ast_hash": "bc85a7202ce0c43215ccf1f864188ee6",
+    "semantic_hash": "bc85a7202ce0c43215ccf1f864188ee6"
+  },
+  "src/components/detail/DetailTitleBanner.tsx": {
+    "mtime": 1776605403.9915137,
+    "ast_hash": "b80179add43e0c06a5f8652f27a598ed",
+    "semantic_hash": "b80179add43e0c06a5f8652f27a598ed"
+  },
+  "src/components/extras/ResolvedExtraMedia.tsx": {
+    "mtime": 1776605403.992558,
+    "ast_hash": "8608aca84c55fee9be64ed31e73a77f9",
+    "semantic_hash": "8608aca84c55fee9be64ed31e73a77f9"
+  },
+  "src/components/extras/VisualExtraCard.tsx": {
+    "mtime": 1776605403.9936283,
+    "ast_hash": "df0cd843e35ad46da62fde6ab0886868",
+    "semantic_hash": "df0cd843e35ad46da62fde6ab0886868"
+  },
+  "src/components/extras/VisualExtrasBrowser.tsx": {
+    "mtime": 1776605403.9947062,
+    "ast_hash": "dc825b5c1370aea5fb5859bc3d8d80a2",
+    "semantic_hash": "dc825b5c1370aea5fb5859bc3d8d80a2"
+  },
+  "src/components/library/LibraryHeader.tsx": {
+    "mtime": 1782594346.8195877,
+    "ast_hash": "3a7cce5646c71c8e6e28c6c2e6b8f9d4",
+    "semantic_hash": ""
+  },
+  "src/components/library/WindowGameListSection.tsx": {
+    "mtime": 1782641483.433966,
+    "ast_hash": "1b217e66737223f0fe3e654f55ce63e7",
+    "semantic_hash": ""
+  },
+  "src/components/library/WindowGameShelf.tsx": {
+    "mtime": 1782640855.4536672,
+    "ast_hash": "9245ca084ca10687792b807277e0d21e",
+    "semantic_hash": ""
+  },
+  "src/components/settings/AboutSettingsTab.tsx": {
+    "mtime": 1773493823.0572934,
+    "ast_hash": "26ce74269b245c3a78ff7c77ab0432e5",
+    "semantic_hash": "26ce74269b245c3a78ff7c77ab0432e5"
+  },
+  "src/components/settings/AppearanceSettingsTab.tsx": {
+    "mtime": 1774710671.2091825,
+    "ast_hash": "18c38532735bed9085415db2f2f08497",
+    "semantic_hash": "18c38532735bed9085415db2f2f08497"
+  },
+  "src/components/settings/ContentSettingsTab.tsx": {
+    "mtime": 1773493758.959899,
+    "ast_hash": "9cbf22a37e2d33df9323946108746b92",
+    "semantic_hash": "9cbf22a37e2d33df9323946108746b92"
+  },
+  "src/components/settings/MaintenanceSettingsTab.tsx": {
+    "mtime": 1773493777.1362484,
+    "ast_hash": "329f8a2c6661b749d602ee186b42ffc5",
+    "semantic_hash": "329f8a2c6661b749d602ee186b42ffc5"
+  },
+  "src/components/settings/PathsSettingsTab.tsx": {
+    "mtime": 1782659714.1773167,
+    "ast_hash": "e343465f4ab9623badeb7cff86a2ca6b",
+    "semantic_hash": ""
+  },
+  "src/components/settings/ScrapersSettingsTab.tsx": {
+    "mtime": 1773493948.7794747,
+    "ast_hash": "66299459e8e1479e4ca532bdd9040379",
+    "semantic_hash": "66299459e8e1479e4ca532bdd9040379"
+  },
+  "src/components/settings/types.ts": {
+    "mtime": 1782659715.3146966,
+    "ast_hash": "c3a176eb5f31dd0c4c7cb8e66a3b8b29",
+    "semantic_hash": ""
+  },
+  "src/components/setup/DatabaseSetupView.tsx": {
+    "mtime": 1782645839.0705726,
+    "ast_hash": "c0496628da9e55770e79659dd03ca9c6",
+    "semantic_hash": ""
+  },
+  "src/components/themes/PlayButton.tsx": {
+    "mtime": 1782653256.478322,
+    "ast_hash": "3196cd2c7a0e5e39bfa66a0c04ff8d10",
+    "semantic_hash": ""
+  },
+  "src/components/themes/neon-archive/NeonArchiveDetailLayout.tsx": {
+    "mtime": 1782658941.8726952,
+    "ast_hash": "2c9091ad6ed4692f86c114490ad7f32e",
+    "semantic_hash": ""
+  },
+  "src/components/themes/neon-archive/detailThemeStyles.ts": {
+    "mtime": 1774698209.7458787,
+    "ast_hash": "36bcc7f8d107ace0ba2696cb69f55f9b",
+    "semantic_hash": "36bcc7f8d107ace0ba2696cb69f55f9b"
+  },
+  "src/components/themes/window/WindowedDetailLayout.tsx": {
+    "mtime": 1782658943.427214,
+    "ast_hash": "e669c9e8034509f939626ee60cdce2dd",
+    "semantic_hash": ""
+  },
+  "src/contexts/SettingsContext.tsx": {
+    "mtime": 1782659743.002139,
+    "ast_hash": "23d3422c3554b32d023f4cf4dba7d77e",
+    "semantic_hash": ""
+  },
+  "src/data/mockGames.ts": {
+    "mtime": 1776605403.99923,
+    "ast_hash": "cf52808e96bac86f80ae0c49e2fc8a5e",
+    "semantic_hash": "cf52808e96bac86f80ae0c49e2fc8a5e"
+  },
+  "src/hooks/navigation-math.ts": {
+    "mtime": 1776605404.0002291,
+    "ast_hash": "44ef4ae5595568529fccc91c4f8e9fb1",
+    "semantic_hash": "44ef4ae5595568529fccc91c4f8e9fb1"
+  },
+  "src/hooks/useBigBoxLibraryData.ts": {
+    "mtime": 1782597160.0730684,
+    "ast_hash": "f37801234bf1e0a92e9f75289dafff83",
+    "semantic_hash": ""
+  },
+  "src/hooks/useBigBoxNavigation.ts": {
+    "mtime": 1782594798.091568,
+    "ast_hash": "0ed9057c47e687aa5cf43070c402f04c",
+    "semantic_hash": ""
+  },
+  "src/hooks/useBigBoxScrollSync.ts": {
+    "mtime": 1774035934.5732625,
+    "ast_hash": "ce54e83342fec790794ed8670ba25951",
+    "semantic_hash": "ce54e83342fec790794ed8670ba25951"
+  },
+  "src/hooks/useDetailNavigation.ts": {
+    "mtime": 1774700260.1054974,
+    "ast_hash": "b7b9ff93dedd0e2915d14f05fb0d7831",
+    "semantic_hash": "b7b9ff93dedd0e2915d14f05fb0d7831"
+  },
+  "src/hooks/useFavorites.ts": {
+    "mtime": 1776605404.0037441,
+    "ast_hash": "f1a14c5d723fb3cfc44321e77802652d",
+    "semantic_hash": "f1a14c5d723fb3cfc44321e77802652d"
+  },
+  "src/hooks/useFullscreenLayoutMetrics.ts": {
+    "mtime": 1774797285.176288,
+    "ast_hash": "c591fc0daa33806d079df0b4092e2ae8",
+    "semantic_hash": "c591fc0daa33806d079df0b4092e2ae8"
+  },
+  "src/hooks/useGamepad.ts": {
+    "mtime": 1774125038.7323873,
+    "ast_hash": "f1f35731f3fa12429c1f4f934fe48e19",
+    "semantic_hash": "f1f35731f3fa12429c1f4f934fe48e19"
+  },
+  "src/hooks/useInputMode.ts": {
+    "mtime": 1774124290.6767876,
+    "ast_hash": "aeb7f71dad1c7334a99ff3e2b37f3014",
+    "semantic_hash": "aeb7f71dad1c7334a99ff3e2b37f3014"
+  },
+  "src/hooks/useLibraryBrowserState.ts": {
+    "mtime": 1782597109.8426266,
+    "ast_hash": "046a7ad751b7ce7a6194ff05d2ad50c2",
+    "semantic_hash": ""
+  },
+  "src/hooks/useLibraryShellInput.ts": {
+    "mtime": 1773588152.1006594,
+    "ast_hash": "a81a46f86ec312685b78192a98633fdf",
+    "semantic_hash": "a81a46f86ec312685b78192a98633fdf"
+  },
+  "src/hooks/usePopupOpenSound.ts": {
+    "mtime": 1773592847.6833172,
+    "ast_hash": "f5d41862762335fe1a98cd912dddc7bf",
+    "semantic_hash": "f5d41862762335fe1a98cd912dddc7bf"
+  },
+  "src/hooks/useResolvedBoxArtUrl.ts": {
+    "mtime": 1782655862.4335494,
+    "ast_hash": "74667f4a3c6d090c05469ca877e99531",
+    "semantic_hash": ""
+  },
+  "src/hooks/useWindowLibraryShelves.ts": {
+    "mtime": 1782597118.2093859,
+    "ast_hash": "3cacc2950fb060b79ed614ec8f2110ef",
+    "semantic_hash": ""
+  },
+  "src/lib/detail-layout.ts": {
+    "mtime": 1774811697.9740143,
+    "ast_hash": "39e527dabf5f7af7d8127e200ad49429",
+    "semantic_hash": "39e527dabf5f7af7d8127e200ad49429"
+  },
+  "src/lib/emumovies.ts": {
+    "mtime": 1773451821.772172,
+    "ast_hash": "1ca30621d52b7d8559f10bdc6b65b4f3",
+    "semantic_hash": "1ca30621d52b7d8559f10bdc6b65b4f3"
+  },
+  "src/lib/extras.ts": {
+    "mtime": 1782655860.3247974,
+    "ast_hash": "e7c56c4c5c7fcfc26d6ca2442a4846c1",
+    "semantic_hash": ""
+  },
+  "src/lib/game-display.ts": {
+    "mtime": 1773450389.8275692,
+    "ast_hash": "1e5cd719e5501a8aa110e62bd52866c9",
+    "semantic_hash": "1e5cd719e5501a8aa110e62bd52866c9"
+  },
+  "src/lib/library-navigation.ts": {
+    "mtime": 1773494647.9730093,
+    "ast_hash": "a8d937fa56d519812af0774cc7ff7268",
+    "semantic_hash": "a8d937fa56d519812af0774cc7ff7268"
+  },
+  "src/lib/screenscraper.ts": {
+    "mtime": 1776605404.0077424,
+    "ast_hash": "99385ed003673e3b4c3e19741ac07c3e",
+    "semantic_hash": "99385ed003673e3b4c3e19741ac07c3e"
+  },
+  "src/lib/subgenre-display.ts": {
+    "mtime": 1774124091.4496105,
+    "ast_hash": "8a3c9291b3abbc0f1eb149cb5b8bafb5",
+    "semantic_hash": "8a3c9291b3abbc0f1eb149cb5b8bafb5"
+  },
+  "src/lib/tauri-bridge.ts": {
+    "mtime": 1782652189.1127636,
+    "ast_hash": "65289a30757b2a75cb2911b542a28434",
+    "semantic_hash": ""
+  },
+  "src/lib/thegamesdb.ts": {
+    "mtime": 1776605404.0087428,
+    "ast_hash": "958215dde7387ae5a3e7d9309837f674",
+    "semantic_hash": "958215dde7387ae5a3e7d9309837f674"
+  },
+  "src/lib/ui-sound-effects.ts": {
+    "mtime": 1776605404.010743,
+    "ast_hash": "b0bfa6ed95d6b3a3ed2e29cff927b582",
+    "semantic_hash": "b0bfa6ed95d6b3a3ed2e29cff927b582"
+  },
+  "src/types/game.ts": {
+    "mtime": 1776605404.0122485,
+    "ast_hash": "e9380340fc4ff51c1d6af7c23473cf93",
+    "semantic_hash": "e9380340fc4ff51c1d6af7c23473cf93"
+  },
+  "src/utils/sorting.ts": {
+    "mtime": 1772884811.0300229,
+    "ast_hash": "066b077fca48e0820ca4c3083f179e42",
+    "semantic_hash": "066b077fca48e0820ca4c3083f179e42"
+  },
+  "tauri.dev-override.json": {
+    "mtime": 1772994892.5637531,
+    "ast_hash": "312aa26141db184b2de7c1d76600c2c1",
+    "semantic_hash": "312aa26141db184b2de7c1d76600c2c1"
+  },
+  "tsconfig.json": {
+    "mtime": 1772884634.7061422,
+    "ast_hash": "ee17fd1c97c735e9f3564e3f5251f125",
+    "semantic_hash": "ee17fd1c97c735e9f3564e3f5251f125"
+  },
+  "AGENTS.md": {
+    "mtime": 1782590153.5340343,
+    "ast_hash": "d154720ac2e66d26bf89421cf154732a",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1780851260.5482047,
+    "ast_hash": "a3dd39eab2364987e84a62f799c18902",
+    "semantic_hash": ""
+  },
+  "GB64_Modern_Frontend_Requirements.md": {
+    "mtime": 1772884362.2551782,
+    "ast_hash": "4089cd4cf1ece0cc3a163ec1e2cce78c",
+    "semantic_hash": "4089cd4cf1ece0cc3a163ec1e2cce78c"
+  },
+  "README.md": {
+    "mtime": 1776605403.9127202,
+    "ast_hash": "1a291b52fbaf1bf72ba809dd3fa03e91",
+    "semantic_hash": "1a291b52fbaf1bf72ba809dd3fa03e91"
+  },
+  "docs/architecture-review.md": {
+    "mtime": 1776605403.914876,
+    "ast_hash": "518e71611d7cb99632c9aed4772b3c57",
+    "semantic_hash": "518e71611d7cb99632c9aed4772b3c57"
+  },
+  "public/emulator.html": {
+    "mtime": 1772996324.319632,
+    "ast_hash": "b0bfc13702d7edd74aa7cc76b5731a85",
+    "semantic_hash": "b0bfc13702d7edd74aa7cc76b5731a85"
+  },
+  "public/emulator/data/compression/README.md": {
+    "mtime": 1772989998.177894,
+    "ast_hash": "32eccb7752a5fcbc0f497b1d279e9ff9",
+    "semantic_hash": "32eccb7752a5fcbc0f497b1d279e9ff9"
+  },
+  "public/emulator/data/contributors.md": {
+    "mtime": 1772989998.1758864,
+    "ast_hash": "0815687f2020deedf3a45c7bf704b68e",
+    "semantic_hash": "0815687f2020deedf3a45c7bf704b68e"
+  },
+  "public/emulator/data/cores/README.md": {
+    "mtime": 1772989999.733764,
+    "ast_hash": "ebb11a43e116f58cac793245d8736aa0",
+    "semantic_hash": "ebb11a43e116f58cac793245d8736aa0"
+  },
+  "public/emulator/data/localization/README.md": {
+    "mtime": 1772989998.179895,
+    "ast_hash": "c72ec17ce8e81897fd3451066b32d019",
+    "semantic_hash": "c72ec17ce8e81897fd3451066b32d019"
+  },
+  "public/test.html": {
+    "mtime": 1772968847.0300772,
+    "ast_hash": "ede4fbc1d88d3d0d0ce7efe309192869",
+    "semantic_hash": "ede4fbc1d88d3d0d0ce7efe309192869"
+  },
+  "src/new-detail-page-design.html": {
+    "mtime": 1774700508.433964,
+    "ast_hash": "f0355e9a7747a9ca6d36d28185392ce6",
+    "semantic_hash": "f0355e9a7747a9ca6d36d28185392ce6"
+  },
+  ".specify/extensions/agent-context/scripts/bash/update-agent-context.sh": {
+    "mtime": 1782586036.0435648,
+    "ast_hash": "9576655467df664057c545d0bed2f3d4",
+    "semantic_hash": ""
+  },
+  ".specify/extensions/agent-context/scripts/powershell/update-agent-context.ps1": {
+    "mtime": 1782586035.9815629,
+    "ast_hash": "df87e38a7fc1048e2d96658ccb186da1",
+    "semantic_hash": ""
+  },
+  ".specify/feature.json": {
+    "mtime": 1782588422.7183907,
+    "ast_hash": "b1ba038e3b31b95438956eb5d4df7214",
+    "semantic_hash": ""
+  },
+  ".specify/init-options.json": {
+    "mtime": 1782586917.5420487,
+    "ast_hash": "beba323d911df9d0ca7fa10e4ae2d6ed",
+    "semantic_hash": ""
+  },
+  ".specify/integration.json": {
+    "mtime": 1782586917.281657,
+    "ast_hash": "465195d9b9f547ab09cc5f21e063a7e8",
+    "semantic_hash": ""
+  },
+  ".specify/integrations/codex.manifest.json": {
+    "mtime": 1782586917.2776506,
+    "ast_hash": "c94b2b2993ea501a471d93f22a606319",
+    "semantic_hash": ""
+  },
+  ".specify/integrations/speckit.manifest.json": {
+    "mtime": 1782586917.4777172,
+    "ast_hash": "aef6c8fc86c0df6af29ae287e8fdf061",
+    "semantic_hash": ""
+  },
+  ".specify/scripts/powershell/check-prerequisites.ps1": {
+    "mtime": 1782586917.3279471,
+    "ast_hash": "d3f93ba2070499b5550f9c5b5463c341",
+    "semantic_hash": ""
+  },
+  ".specify/scripts/powershell/common.ps1": {
+    "mtime": 1782586917.3489468,
+    "ast_hash": "c604e11f097dd85cb28ebc76261e4018",
+    "semantic_hash": ""
+  },
+  ".specify/scripts/powershell/create-new-feature.ps1": {
+    "mtime": 1782586917.3719468,
+    "ast_hash": "1f0f9ab7a017bb337ffa80ac1d6973d7",
+    "semantic_hash": ""
+  },
+  ".specify/scripts/powershell/setup-plan.ps1": {
+    "mtime": 1782586917.396973,
+    "ast_hash": "b640ae1bd5b44d9a49a9481931cb4ab9",
+    "semantic_hash": ""
+  },
+  ".specify/scripts/powershell/setup-tasks.ps1": {
+    "mtime": 1782586917.4069736,
+    "ast_hash": "1f5a59359bc55ba2501150435f4d6fbd",
+    "semantic_hash": ""
+  },
+  ".specify/workflows/workflow-registry.json": {
+    "mtime": 1782586917.54005,
+    "ast_hash": "db208e456b8c0dfdb5399e133bea36e0",
+    "semantic_hash": ""
+  },
+  "scripts/platform_import_config.test.js": {
+    "mtime": 1782592745.9305272,
+    "ast_hash": "db9a7178a63009b39890162c02833813",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/platforms.rs": {
+    "mtime": 1782649106.3126776,
+    "ast_hash": "d61e62d5dcb30d5b13327aa00f999af1",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/platforms/tests.rs": {
+    "mtime": 1782600339.0060387,
+    "ast_hash": "6d304a68beff3f14fb85c79010f5ea4d",
+    "semantic_hash": ""
+  },
+  "src/components/PlatformSwitcher.tsx": {
+    "mtime": 1782594345.8532884,
+    "ast_hash": "8c5e45a94f908021cb62dfd6f0cd540c",
+    "semantic_hash": ""
+  },
+  "src/lib/platform-capabilities.ts": {
+    "mtime": 1782653254.277211,
+    "ast_hash": "6d85e7d893ce9cd2d0609d7610220a01",
+    "semantic_hash": ""
+  },
+  "src/types/platform.ts": {
+    "mtime": 1782592513.1426406,
+    "ast_hash": "46e51592bbaef0aa3a2e0b481a7dd033",
+    "semantic_hash": ""
+  },
+  ".specify/extensions.yml": {
+    "mtime": 1782586917.5838616,
+    "ast_hash": "6fc655d042586d15ec3356b836bfd8ab",
+    "semantic_hash": ""
+  },
+  ".specify/extensions/agent-context/README.md": {
+    "mtime": 1782586036.0375638,
+    "ast_hash": "4747d48f39e763a46cbc23569e6222c4",
+    "semantic_hash": ""
+  },
+  ".specify/extensions/agent-context/agent-context-config.yml": {
+    "mtime": 1782586917.586862,
+    "ast_hash": "4c290ba881d5b74765eeb2e5b7b5a95e",
+    "semantic_hash": ""
+  },
+  ".specify/extensions/agent-context/commands/speckit.agent-context.update.md": {
+    "mtime": 1782586036.042562,
+    "ast_hash": "a466e6bfeb0042c2789d6ae60d43921b",
+    "semantic_hash": ""
+  },
+  ".specify/extensions/agent-context/extension.yml": {
+    "mtime": 1782586036.0535638,
+    "ast_hash": "c09cdcdf8b86381d5955182b5eac0caf",
+    "semantic_hash": ""
+  },
+  ".specify/memory/constitution.md": {
+    "mtime": 1782587223.5513353,
+    "ast_hash": "1d2c3c4fecafc44167bdd724e6edfd3a",
+    "semantic_hash": ""
+  },
+  ".specify/templates/checklist-template.md": {
+    "mtime": 1782586917.4269726,
+    "ast_hash": "af4274efb13cbb2263029402deb14f6b",
+    "semantic_hash": ""
+  },
+  ".specify/templates/constitution-template.md": {
+    "mtime": 1782586917.4389725,
+    "ast_hash": "dcefb6b60e7cb3db2e966977b6f02f18",
+    "semantic_hash": ""
+  },
+  ".specify/templates/plan-template.md": {
+    "mtime": 1782586917.4459753,
+    "ast_hash": "fea2e21a1d9cf3470186abc1dfb6e9fb",
+    "semantic_hash": ""
+  },
+  ".specify/templates/spec-template.md": {
+    "mtime": 1782586917.4587157,
+    "ast_hash": "45ac8538bc1220324c9f0d610145b53f",
+    "semantic_hash": ""
+  },
+  ".specify/templates/tasks-template.md": {
+    "mtime": 1782586917.4647188,
+    "ast_hash": "f8b4f62d384defa0a559bdbbaacb0540",
+    "semantic_hash": ""
+  },
+  ".specify/workflows/speckit/workflow.yml": {
+    "mtime": 1782586036.0045643,
+    "ast_hash": "eba6943b2a2f6407162ae12e0218bdac",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/checklists/platform-readiness.md": {
+    "mtime": 1782592232.8290918,
+    "ast_hash": "2548e285a211310760b585a6386fcb3f",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/checklists/requirements.md": {
+    "mtime": 1782588414.6645782,
+    "ast_hash": "4eabe99559aa7e89bdeaacf61076bbcc",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/contracts/import-launch-contract.md": {
+    "mtime": 1782591996.3944612,
+    "ast_hash": "b5632e376fbd553bb01f20c971cb3f1e",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/contracts/platform-ui-contract.md": {
+    "mtime": 1782650184.2141314,
+    "ast_hash": "0b5b32ee6f2568c9425210e7179ff968",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/contracts/tauri-ipc-contract.md": {
+    "mtime": 1782591978.2849717,
+    "ast_hash": "9c1bb237900bf24c6e7687ac5d5c13b9",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/data-model.md": {
+    "mtime": 1782591955.5632603,
+    "ast_hash": "bdf215d425ea18c34ef1a431ef312f40",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/plan.md": {
+    "mtime": 1782591935.368097,
+    "ast_hash": "26074464a759252853ce1d9fa2149104",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/quickstart.md": {
+    "mtime": 1782592902.4023366,
+    "ast_hash": "2f2d36a7bb6495ebc78a87373ea704ce",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/research.md": {
+    "mtime": 1782592015.1092393,
+    "ast_hash": "82f7eed4474ca08892562a9d0ee483c9",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/spec.md": {
+    "mtime": 1782650002.4003742,
+    "ast_hash": "de14ab04b1644d08fabc1ce32b82bd5c",
+    "semantic_hash": ""
+  },
+  "specs/001-multi-platform-gamebases/tasks.md": {
+    "mtime": 1782652252.1144745,
+    "ast_hash": "e2b8aa528b6da6b2a4d81d564bf63015",
+    "semantic_hash": ""
+  },
+  "scripts/convert_csv_to_sqlite.test.js": {
+    "mtime": 1782655637.8171186,
+    "ast_hash": "1efa6d462766c1d11e65b6fdbe14af77",
+    "semantic_hash": ""
+  },
+  "scripts/db_pipeline.test.js": {
+    "mtime": 1782595402.0356698,
+    "ast_hash": "f270eec8dee3f0ae83d92796b8b32330",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/commands/setup/tests.rs": {
+    "mtime": 1782645707.7687194,
+    "ast_hash": "316e539c0a3925a82cd71ceb2353a6d7",
+    "semantic_hash": ""
+  },
+  "src/lib/platform-launch.ts": {
+    "mtime": 1782652022.3198316,
+    "ast_hash": "39178b9907de427733e29418cb9fc855",
+    "semantic_hash": ""
+  },
+  "src/components/MusicPlayer.tsx": {
+    "mtime": 1782659086.456449,
+    "ast_hash": "1bbb0d6f7b1ea341caa928c081416bc2",
+    "semantic_hash": ""
+  },
+  "src/components/SapPlayer.tsx": {
+    "mtime": 1782659085.315995,
+    "ast_hash": "8756218484fbbb1d0f93e8bc33b66a81",
+    "semantic_hash": ""
+  }
+}

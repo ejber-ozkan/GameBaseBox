@@ -1,0 +1,348 @@
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GBBox - Airborne Ranger</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500&amp;family=Space+Grotesk:wght@300;400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#c8d5ed",
+              "surface-container-lowest": "#000000",
+              "error": "#ff716c",
+              "primary-fixed-dim": "#00d4ec",
+              "inverse-surface": "#f8f9ff",
+              "primary-fixed": "#00e3fd",
+              "surface-bright": "#252d36",
+              "outline": "#71767e",
+              "secondary-container": "#3a475b",
+              "surface-container": "#141a21",
+              "inverse-primary": "#006976",
+              "on-surface-variant": "#a7abb4",
+              "surface-container-highest": "#1f262f",
+              "on-secondary": "#455266",
+              "on-primary-fixed": "#003840",
+              "on-tertiary-fixed": "#2a4753",
+              "on-primary-container": "#004d57",
+              "tertiary-container": "#ceedfd",
+              "outline-variant": "#43484f",
+              "background": "#0a0f15",
+              "error-container": "#9f0519",
+              "on-secondary-container": "#c4d1e9",
+              "on-tertiary-fixed-variant": "#466370",
+              "secondary-dim": "#c8d5ed",
+              "primary-container": "#00e3fd",
+              "surface-container-high": "#1a2028",
+              "surface-dim": "#0a0f15",
+              "surface-variant": "#1f262f",
+              "on-tertiary": "#45616f",
+              "on-error": "#490006",
+              "on-primary-fixed-variant": "#005762",
+              "tertiary-fixed-dim": "#c0dfee",
+              "tertiary-dim": "#c0dfee",
+              "inverse-on-surface": "#50555d",
+              "tertiary-fixed": "#ceedfd",
+              "error-dim": "#d7383b",
+              "primary-dim": "#00d4ec",
+              "on-primary": "#005762",
+              "on-secondary-fixed-variant": "#4f5c71",
+              "secondary": "#d6e3fc",
+              "surface": "#0a0f15",
+              "on-surface": "#e1e5ee",
+              "secondary-fixed": "#d6e3fc",
+              "on-error-container": "#ffa8a3",
+              "on-secondary-fixed": "#334053",
+              "on-tertiary-container": "#3c5966",
+              "on-background": "#e1e5ee",
+              "surface-tint": "#81ecff",
+              "primary": "#81ecff",
+              "tertiary": "#edf8ff",
+              "surface-container-low": "#0e141a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(31, 38, 47, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .primary-gradient {
+            background: linear-gradient(45deg, #81ecff, #00e3fd);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar Shell -->
+<header class="bg-[#0a0f15] text-[#81ecff] flex justify-between items-center px-8 h-20 w-full fixed top-0 z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-3xl">terminal</span>
+<h1 class="font-['Manrope'] font-black tracking-tighter uppercase text-2xl">GBBox</h1>
+</div>
+<nav class="flex gap-8">
+<a class="font-headline font-bold text-sm tracking-widest text-[#81ecff] border-b-2 border-[#81ecff] pb-1" href="#">GAME</a>
+<a class="font-headline font-bold text-sm tracking-widest text-[#e1e5ee]/60 hover:text-[#81ecff] transition-colors duration-300" href="#">EXTRAS.ALT</a>
+<a class="font-headline font-bold text-sm tracking-widest text-[#e1e5ee]/60 hover:text-[#81ecff] transition-colors duration-300" href="#">EXTRAS</a>
+</nav>
+<div class="w-10"></div> <!-- Placeholder to keep nav centered or balanced -->
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 min-h-screen">
+<!-- Hero Section - Height reduced from aspect-[21/7] to aspect-[21/5.25] (approx 25% reduction) -->
+<section class="relative w-full aspect-[21/5.25] min-h-[300px] overflow-hidden">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="Cinematic 80s tactical action scene with silhouettes of paratroopers jumping against a deep blue and orange twilight sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnp87lzy-pfkcM-ud73l5yq4HY1y3tjWB__OSY3q5pEuAQ-SPZxMSuaw5nhoyAmudAq22wrB25_BjATXel_uNjvZ8tKECWx9e0qZCe0Whdt5Cm9hqoaB3fCYyK10_flk0azS_5YtZgwUaN4CoK3dDtA0dQK2-EqW17aurXoCbt1oo6LnVuztD_b9_A7xhG8M0SNikK7xrS_se3V2iasRJH8R9lMUq3-mxnwdURgpDYRijS7RTd3uTy4vG4y-bRnFJxb-MGDFG0_Ck"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent"></div>
+<div class="relative h-full container mx-auto px-8 flex flex-col justify-end pb-8">
+<div class="max-w-2xl">
+<div class="flex items-center gap-2 mb-3">
+<span class="bg-primary/20 text-primary px-3 py-1 rounded text-[10px] font-label font-bold tracking-tighter uppercase border border-primary/30">Microprose</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded text-[10px] font-label font-bold tracking-tighter uppercase">C64 ARCHIVE</span>
+</div>
+<!-- Reduced Font Size of Main Title significantly -->
+<h2 class="font-headline font-extrabold text-3xl md:text-5xl lg:text-6xl text-on-surface tracking-tighter leading-none mb-4">AIRBORNE<br/>RANGER</h2>
+<div class="flex flex-wrap gap-4 items-center">
+<button class="primary-gradient text-on-primary-container font-headline font-extrabold px-8 py-3 rounded-lg flex items-center gap-3 hover:shadow-[0_0_20px_rgba(129,236,255,0.4)] transition-all duration-300 transform active:scale-95 text-sm">
+<span class="material-symbols-outlined text-lg">rocket_launch</span>
+                            LAUNCH EMULATOR
+                        </button>
+<button class="glass-panel text-on-surface border border-outline-variant/30 font-headline font-bold px-8 py-3 rounded-lg flex items-center gap-3 hover:bg-surface-container-highest transition-all duration-300 text-sm">
+<span class="material-symbols-outlined text-lg">play_circle</span>
+                            PLAY EMBEDDED
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Separator Line -->
+<div class="container mx-auto px-8">
+<hr class="border-outline-variant/20"/>
+</div>
+<!-- Dynamic Content Grid -->
+<section class="container mx-auto px-8 py-12 grid grid-cols-12 gap-8">
+<!-- Left Column: Media & Data -->
+<div class="col-span-12 lg:col-span-8 space-y-12">
+<!-- Artwork Carousel -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<h3 class="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant">Visual_Archives</h3>
+<div class="flex gap-2">
+<div class="w-8 h-1 bg-primary"></div>
+<div class="w-8 h-1 bg-outline-variant"></div>
+<div class="w-8 h-1 bg-outline-variant"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4 h-[300px]">
+<div class="col-span-2 relative group overflow-hidden rounded-xl bg-surface-container-low">
+<img class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" data-alt="Retro game box art featuring a soldier in tactical gear with a jungle background in a vivid 8-bit color palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOpniC8GljHYAFcUQHUnS4Wk4ywbDtGZzvxglKo1T3I9Tgt3jjjBza08FYwVGxHKIJ4CeIAgvbyAS49gmDsD5OO5jB3_HvjEVpUf1F6TlY10xdjXnEvPbONYCC4e4jDG2XQ8gRLQfdppXFLmhrDF2ZC1rynSQqM8mE90Almotaswst8JZQ3CXnkFQeJqjfQmSolkdG6nF4HXqHPZdQZoBEAagcmh0qBWUWLZOJkVvm9RE_n9QivgoXbX_BoQnvpkOtZH-MzdH5u_A"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+<span class="font-label text-xs text-primary">01 // BOX_ART_FRONT</span>
+</div>
+</div>
+<div class="grid grid-rows-2 gap-4">
+<div class="rounded-xl overflow-hidden bg-surface-container-low border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="Classic CRT television showing pixelated green military terrain and small character sprite from a top-down game" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCLlqeoKirVoi7AWADYK2-aLjyPw9k-aSfn9J1Sm626Yz2qCJjZ1Do1-MkiyxXdNSc0Q8NZfpMCw6Awr1wlUDyRit1eZM-JAygCp4SaVewm3Z5STutam3ZzLjonXc-maaDf0lEOO8IRHXxLdvkqBYpqAaQuuqjj6Ejumm_62Jg64nWeGC-lmoGvzi6SCfu_jHOHhBzLXsv0lgfD0nBHC6HP0_UP5lu-NQrUqt5KHdImc-swkWWgwvV1v6VrzqUh4pgdov4bZQj-oU"/>
+</div>
+<div class="rounded-xl overflow-hidden bg-surface-container-low border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="Action-packed pixel art screenshot showing explosions and a ranger character infiltrating a military base" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASgBlaVodkGFLSInjsVOBa5G0AXbGhW3fpdECJVLCskVnP90Tw4Lkz5BLhwZniZU4o0jQR7czlNtCljgTfKJQgXga58TgBWLLQ5rs6T9biIgvGo_iGveDz_zxONz37pEkTQNbsiPTxF80ABwvkPcrhP6r1QZOVBcljWP-M8PTDPjyr6vq_c7HE6S43NzIUxIhE3j3Q060ORWypyXAO-VvIyHsIM1RdXudlOQ9h0WPKmXNdhVIE3LUXOsD0pzrKTFR9OuZCr9ZUnlI"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Description Bento -->
+<div class="bg-surface-container-low p-8 rounded-xl border-l-2 border-primary/30">
+<h3 class="font-headline font-bold text-2xl text-on-surface mb-6">Infiltrate. Sabotage. Survive.</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6 font-body">
+                        First released in 1987, Airborne Ranger represents the pinnacle of tactical action on the Commodore 64. As an elite ranger, you are dropped behind enemy lines to complete high-stakes missions ranging from prisoner rescues to bunker demolitions. Every step requires careful planning, as ammunition and supplies are limited.
+                    </p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-outline-variant/20">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary">military_tech</span>
+<div>
+<h4 class="font-label text-xs uppercase tracking-widest text-on-surface mb-1">Stealth Mechanics</h4>
+<p class="text-xs text-on-surface-variant">Utilize terrain and darkness to bypass superior enemy forces without detection.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary">map</span>
+<div>
+<h4 class="font-label text-xs uppercase tracking-widest text-on-surface mb-1">Tactical Planning</h4>
+<p class="text-xs text-on-surface-variant">Select your drop zone and equipment carefully based on mission objectives.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Version Selector Component -->
+<div class="space-y-6">
+<h3 class="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant">Deployment_Versions</h3>
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between p-4 bg-surface-container-high border-l-4 border-primary rounded-r-lg group cursor-pointer transition-colors hover:bg-surface-variant">
+<div class="flex items-center gap-6">
+<span class="font-label text-primary font-bold">1.0</span>
+<div>
+<h4 class="font-headline font-bold text-sm">PAL Retail (Cassette)</h4>
+<p class="font-label text-[10px] text-on-surface-variant uppercase">Release Date: 1987-10-12</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">check_circle</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg group cursor-pointer transition-colors hover:bg-surface-container-high">
+<div class="flex items-center gap-6">
+<span class="font-label text-on-surface-variant font-bold">1.1</span>
+<div>
+<h4 class="font-headline font-bold text-sm text-on-surface/80">NTSC Disk Version</h4>
+<p class="font-label text-[10px] text-on-surface-variant/60 uppercase">Release Date: 1988-02-05</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-on-surface">download</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg group cursor-pointer transition-colors hover:bg-surface-container-high">
+<div class="flex items-center gap-6">
+<span class="font-label text-on-surface-variant font-bold">2.0</span>
+<div>
+<h4 class="font-headline font-bold text-sm text-on-surface/80">Ranger-Elite (Fan Patch)</h4>
+<p class="font-label text-[10px] text-on-surface-variant/60 uppercase">Release Date: 2012-11-20</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-on-surface">download</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Metadata & Tech Specs -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Repositioned Game Info: Vertically aligned just under the separator line -->
+<div class="bg-surface-container-low/60 backdrop-blur-md overflow-hidden rounded-xl border border-outline-variant/10">
+<div class="bg-surface-container-high/40 px-6 py-4 flex items-center justify-between border-b border-outline-variant/10">
+<h3 class="font-label text-xs uppercase tracking-widest font-bold">Game_Info</h3>
+<span class="material-symbols-outlined text-sm text-primary">info</span>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex justify-between items-center py-1">
+<span class="font-label text-xs text-on-surface-variant uppercase">Developer</span>
+<span class="text-sm font-medium">Microprose</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<span class="font-label text-xs text-on-surface-variant uppercase">Publisher</span>
+<span class="text-sm font-medium">Microprose</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<span class="font-label text-xs text-on-surface-variant uppercase">Platform</span>
+<span class="text-sm font-medium">Commodore 64</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<span class="font-label text-xs text-on-surface-variant uppercase">Year</span>
+<span class="text-sm font-medium">1987</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<span class="font-label text-xs text-on-surface-variant uppercase">Genre</span>
+<span class="text-sm font-medium">Tactical Stealth</span>
+</div>
+</div>
+</div>
+<!-- Soundtrack Module -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden border border-primary/10">
+<div class="h-32 relative">
+<img class="w-full h-full object-cover grayscale brightness-50" data-alt="Top view of an analog synthesizer with glowing blue LEDs and patch cables, moody technical atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOfhog9d-OOSeu7tE_Fa5qTsu3UPGAUq4kBruItI5IEUmKBqHv6OCUVXj74fqr1KIG0roiolzEZ62Fw48dbUbgaT6VR9T2EJt5KUEPCauXLSu51UgUTt3dK0KLz9mlL5UYdOUQWYgfP3JPOWk8ZzCKTdU8KZTe_OHj-Jd31fm75bdnsfs5KgQhq3ZF3hgkpjDHUh4br1a6zv7ReONnuA78ZzE2Hv7QKPeyrMNQ3F6p6sJoCztWPZmbAqWy2hodfBEfz7GDJGGSw2U"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<button class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg transform hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">play_arrow</span>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline font-bold text-sm">SID-Engine Score</h4>
+<p class="text-[10px] font-label text-on-surface-variant uppercase">Composer: Ken Lagace</p>
+</div>
+<span class="material-symbols-outlined text-primary text-lg">graphic_eq</span>
+</div>
+<div class="space-y-2">
+<div class="flex items-center gap-3 group cursor-pointer">
+<span class="text-[10px] font-label text-on-surface-variant">01</span>
+<span class="text-xs group-hover:text-primary transition-colors">Main Theme - High Infiltration</span>
+<span class="ml-auto text-[10px] font-label text-on-surface-variant">03:42</span>
+</div>
+<div class="flex items-center gap-3 group cursor-pointer">
+<span class="text-[10px] font-label text-on-surface-variant">02</span>
+<span class="text-xs group-hover:text-primary transition-colors">Combat Alert Sequence</span>
+<span class="ml-auto text-[10px] font-label text-on-surface-variant">02:15</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Credits List -->
+<div class="space-y-4">
+<h3 class="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant px-2">Personnel_Archive</h3>
+<div class="bg-surface-container-low rounded-xl p-6 space-y-4 divide-y divide-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<div>
+<h5 class="text-xs font-label uppercase tracking-wider text-on-surface">Lawrence Schick</h5>
+<p class="text-[10px] text-primary uppercase font-bold">Game Design</p>
+</div>
+</div>
+<div class="flex items-center gap-4 pt-4">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">code</span>
+</div>
+<div>
+<h5 class="text-xs font-label uppercase tracking-wider text-on-surface">Sid Meier</h5>
+<p class="text-[10px] text-primary uppercase font-bold">Lead Programmer</p>
+</div>
+</div>
+<div class="flex items-center gap-4 pt-4">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">palette</span>
+</div>
+<div>
+<h5 class="text-xs font-label uppercase tracking-wider text-on-surface">Michael Haire</h5>
+<p class="text-[10px] text-primary uppercase font-bold">Graphic Arts</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="mt-24 border-t border-outline-variant/10 bg-surface-container-low px-8 py-12">
+<div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">terminal</span>
+<span class="font-headline font-black tracking-tighter uppercase text-xl text-primary">GBBox</span>
+</div>
+<div class="flex gap-12 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Privacy_Protocol</a>
+<a class="hover:text-primary transition-colors" href="#">Terms_Of_Service</a>
+<a class="hover:text-primary transition-colors" href="#">System_Status</a>
+</div>
+<div class="text-[10px] font-label text-on-surface-variant/40">
+                    © 1987-2024 MICROPROSE / NEON ARCHIVE PROJECT
+                </div>
+</div>
+</footer>
+</main>
+</body></html>

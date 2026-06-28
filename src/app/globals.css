@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@source not "../../*.sqlite";
+@source not "../../*.sqlite-*";
+@source not "../../*.db";
+@source not "../../.beads/**";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Segoe UI", "Trebuchet MS", Arial, Helvetica, sans-serif;
+  --font-mono: "Cascadia Mono", "Consolas", "Liberation Mono", "Courier New", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.custom-scrollbar-hidden, .no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+.custom-scrollbar-hidden::-webkit-scrollbar, .no-scrollbar::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+  background: transparent !important;
+}
+
+@keyframes app-launch-splash-fade {
+  0% {
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes app-launch-splash-image {
+  0% {
+    opacity: 0.35;
+    transform: scale(1.06);
+  }
+  22% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  78% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.25;
+    transform: scale(0.98);
+  }
+}
+
+.app-launch-splash {
+  animation: app-launch-splash-fade 5s ease-in-out forwards;
+}
+
+.app-launch-splash-image {
+  animation: app-launch-splash-image 5s ease-in-out forwards;
+}

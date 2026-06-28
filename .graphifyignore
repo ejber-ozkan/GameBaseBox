@@ -1,0 +1,107 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/
+
+# Build, cache, and generated directories
+.next/
+out/
+build/
+src-tauri/target/
+dist/
+.uv-cache/
+tmp/
+temp/
+*.tsbuildinfo
+next-env.d.ts
+
+# Graphify output itself
+graphify-out/
+
+# Database files & Media
+GBC_v19.mdb
+gb64.sqlite
+gb64.sqlite.bk
+gb64_export/
+CSV_FILES_GBC_v19/
+64BoxMedia/
+emu-temp/
+GBC_v19/
+*.db
+
+# Test reports, output, and test suites
+coverage/
+playwright-report/
+test-results/
+src-tauri/test_output*.txt
+e2e/
+**/*.test.ts
+**/*.test.tsx
+src/tests/
+
+# Third-party bundled emulator runtime and generated/static payloads
+public/emulator/data/
+public/sfx/
+public/launch/
+public/test.html
+public/jsSID.js
+public/*.svg
+public/*.ico
+
+# Tauri generated assets and schemas
+src-tauri/gen/
+src-tauri/icons/
+
+# Media assets (images, audio, video)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.mp3
+*.wav
+*.ogg
+*.mp4
+*.webm
+*.wasm
+*.data
+*.icns
+
+# External vendor/minified libraries
+public/emulator/data/compression/libunrar.js
+public/emulator/data/src/socket.io.min.js
+public/emulator/data/src/nipplejs.js
+
+# AI agent caches & configuration
+.agent/
+.agents/
+.claude/
+.codex/
+handover-*.md
+plans/
+skills-lock.json
+
+# Version control and task trackers
+.git/
+.github/
+.dolt/
+.beads/
+.beads-credential-key
+
+# Miscellaneous non-source files
+LICENSE
+CHANGELOG.md
+VERSION
+package-lock.json
+Cargo.lock
+*.bat
+
+# Scratch diagnostics and one-off repair scripts
+check_*.js
+check_*.py
+fix_view.js
+
+# Large design/export artifacts outside the live app
+src/new-detail-page-design.html
