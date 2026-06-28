@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "VIC40GameBase64",
+  "project_id": "f19c45f5-eb9e-4fe6-99f1-afe1f802f22d"
+}

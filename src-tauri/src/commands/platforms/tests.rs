@@ -1,0 +1,178 @@
+use super::{
+    get_active_platform, get_platform_import_status_sync, get_supported_platforms,
+    set_active_platform,
+};
+use crate::test_helpers::DbEnvGuard;
+use rusqlite::Connection;
+use tempfile::NamedTempFile;
+
+#[tokio::test(flavor = "current_thread")]
+async fn test_get_supported_platforms_includes_atari800_capabilities() {
+    let platforms = get_supported_platforms().await.unwrap();
+    let atari800 = platforms
+        .iter()
+        .find(|platform| platform.id == "atari800")
+        .expect("Atari 800 profile should exist");
+
+    assert_eq!(atari800.import_status, "notImported");
+    assert_eq!(atari800.capabilities.music, "sap");
+    assert!(atari800.folder_types.contains(&"games".to_string()));
+    assert!(atari800.folder_types.contains(&"music".to_string()));
+    assert!(atari800.folder_types.contains(&"photos".to_string()));
+    assert!(atari800.folder_types.contains(&"screenshots".to_string()));
+    assert!(atari800
+        .supported_emulator_profile_ids
+        .contains(&"altirra-atari800".to_string()));
+    assert!(atari800
+        .capabilities
+        .launch_extensions
+        .contains(&".xex".to_string()));
+}
+
+#[tokio::test(flavor = "current_thread")]
+async fn test_get_supported_platforms_includes_importable_atari2600_capabilities() {
+    let platforms = get_supported_platforms().await.unwrap();
+    let atari2600 = platforms
+        .iter()
+        .find(|platform| platform.id == "atari2600")
+        .expect("Atari 2600 profile should exist");
+
+    assert_eq!(atari2600.status, "available");
+    assert_eq!(atari2600.import_status, "notImported");
+    assert_eq!(atari2600.default_emulator_profile_id, "retroarch-atari2600");
+    assert_eq!(
+        atari2600.folder_types,
+        vec!["games".to_string(), "screenshots".to_string(), "extras".to_string()]
+    );
+    assert!(atari2600
+        .capabilities
+        .launch_extensions
+        .contains(&".a26".to_string()));
+}
+
+#[tokio::test(flavor = "current_thread")]
+async fn test_active_platform_defaults_to_c64() {
+    let active = get_active_platform().await.unwrap();
+
+    assert_eq!(active.active_platform_id, "c64");
+    assert_eq!(active.last_used_platform_id, Some("c64".to_string()));
+    assert!(!active.platform_selection_required);
+}
+
+#[tokio::test(flavor = "current_thread")]
+async fn test_set_active_platform_routes_unimported_atari800_to_import() {
+    let response = set_active_platform("atari800".to_string()).await.unwrap();
+
+    assert_eq!(response.active_platform_id, "atari800");
+    assert!(response.requires_import);
+    assert!(response.message.contains("imported"));
+}
+
+#[test]
+fn test_platform_import_status_is_platform_scoped() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
+    let status = get_platform_import_status_sync("atari800").unwrap();
+
+    assert_eq!(status.platform_id, "atari800");
+    assert_eq!(status.import_status, "notImported");
+    assert_eq!(status.game_count, 0);
+}
+
+#[test]
+fn test_platform_import_status_reads_imported_sqlite_library() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
+    {
+        let conn = Connection::open(&db_path).unwrap();
+        conn.execute(
+            "CREATE TABLE PlatformLibraries (
+                platform_id TEXT PRIMARY KEY,
+                display_name TEXT NOT NULL,
+                import_status TEXT NOT NULL,
+                source_mdb_path TEXT,
+                game_count INTEGER NOT NULL DEFAULT 0,
+                last_import_error TEXT,
+                last_imported_at TEXT
+            )",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO PlatformLibraries (
+                platform_id,
+                display_name,
+                import_status,
+                source_mdb_path,
+                game_count,
+                last_import_error,
+                last_imported_at
+            ) VALUES (?1, ?2, ?3, ?4, ?5, NULL, datetime('now'))",
+            rusqlite::params![
+                "atari800",
+                "Atari 800",
+                "imported",
+                "E:/Atari/Atari 800 v12.mdb",
+                7288,
+            ],
+        )
+        .unwrap();
+    }
+
+    let status = get_platform_import_status_sync("atari800").unwrap();
+
+    assert_eq!(status.platform_id, "atari800");
+    assert_eq!(status.import_status, "imported");
+    assert_eq!(status.game_count, 7288);
+    assert_eq!(
+        status.source_mdb_path,
+        Some("E:/Atari/Atari 800 v12.mdb".to_string())
+    );
+}
+
+#[test]
+fn test_platform_import_status_treats_missing_library_row_as_not_imported() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
+    {
+        let conn = Connection::open(&db_path).unwrap();
+        conn.execute(
+            "CREATE TABLE PlatformLibraries (
+                platform_id TEXT PRIMARY KEY,
+                display_name TEXT NOT NULL,
+                import_status TEXT NOT NULL,
+                source_mdb_path TEXT,
+                game_count INTEGER NOT NULL DEFAULT 0,
+                last_import_error TEXT,
+                last_imported_at TEXT
+            )",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO PlatformLibraries (
+                platform_id,
+                display_name,
+                import_status,
+                source_mdb_path,
+                game_count,
+                last_import_error,
+                last_imported_at
+            ) VALUES (?1, ?2, ?3, NULL, ?4, NULL, datetime('now'))",
+            rusqlite::params!["atari800", "Atari 800", "imported", 7288],
+        )
+        .unwrap();
+    }
+
+    let status = get_platform_import_status_sync("c64").unwrap();
+
+    assert_eq!(status.platform_id, "c64");
+    assert_eq!(status.import_status, "notImported");
+    assert_eq!(status.game_count, 0);
+}

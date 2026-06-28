@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>WASM Emulator</title>
+  <style>
+    body, html { 
+      margin: 0; 
+      padding: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: black; 
+      overflow: hidden; 
+    }
+    #game-container { 
+      width: 100%; 
+      height: 100%; 
+    }
+    .loading-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: flex;
+      align-items: center; justify-content: center;
+      color: white; font-family: sans-serif;
+      background: #111; z-index: 10;
+      transition: opacity 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading" class="loading-overlay">Initializing Web Emulator...</div>
+  <div id="game-container"></div>
+  <script>
+    console.log('[WASM-Iframe] Ready for signal...');
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'START_EMULATOR') {
+        console.log('[WASM-Iframe] Received ROM data:', e.data.fileName);
+        startEmulator(e.data.core, e.data.fileData, e.data.fileName);
+      }
+    });
+
+    window.onerror = function(msg, url, line) {
+      console.error('[WASM-Err]', msg, 'at', url, 'line', line);
+      document.getElementById('loading').innerText = 'Fatal Emulator Error: ' + msg;
+    };
+
+    function startEmulator(core, fileData, fileName) {
+      if (window.__EMULATOR_STARTED__) {
+        console.warn('[WASM-Iframe] Blocked double-init attempt');
+        return;
+      }
+      window.__EMULATOR_STARTED__ = true;
+
+      try {
+        console.log('[WASM-Iframe] Initializing Local Core:', core);
+        var blob = new Blob([fileData], { type: 'application/octet-stream' });
+        var blobUrl = URL.createObjectURL(blob);
+
+        window.EJS_player = '#game-container';
+        window.EJS_core = core; // 'vice_x64sc'
+        window.EJS_system = 'c64';
+        window.EJS_gameName = fileName;
+        window.EJS_gameID = fileName.replace(/[^a-z0-9]/gi, '_');
+        window.EJS_color = '#000000';
+        window.EJS_startOnLoaded = true;
+        
+        // POINT TO LOCAL ASSETS
+        window.EJS_pathtodata = '/emulator/data/';
+        window.EJS_gameUrl = blobUrl;
+        window.EJS_DEBUG_XX = true;
+
+        window.EJS_ready = function() {
+          console.log('[WASM-Iframe] Local Emulator Ready!');
+          var loader = document.getElementById('loading');
+          if (loader) loader.style.display = 'none';
+        };
+
+        window.EJS_onGameStart = function() {
+          console.log('[WASM-Iframe] Game Started! Focusing... ');
+          var loader = document.getElementById('loading');
+          if (loader) loader.style.display = 'none';
+          
+          // Force keyboard focus into the emulator iframe
+          window.focus();
+          document.body.focus();
+          var canvas = document.querySelector('canvas');
+          if (canvas) canvas.focus();
+        };
+
+        var script = document.createElement('script');
+        script.src = '/emulator/data/loader.js';
+        script.onload = () => console.log('[WASM-Iframe] Local loader.js loaded');
+        script.onerror = (e) => console.error('[WASM-Iframe] Local loader.js FAILED', e);
+        document.body.appendChild(script);
+        
+      } catch (err) {
+        console.error('[WASM-Iframe] Setup Error:', err);
+        document.getElementById('loading').innerText = 'Setup Error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+[package]
+name = "gamebasebox"
+version = "0.1.0"
+description = "GBBox - GameBase Box"
+authors = ["GBBox Contributors"]
+license = "MIT"
+edition = "2021"
+rust-version = "1.77.2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.5.6", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.10.3", features = ["protocol-asset"] }
+tauri-plugin-log = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+walkdir = "2"
+crc32fast = "1"
+rusqlite = { version = "0.31", features = ["bundled"] }
+reqwest = "0.13.2"
+zip = "0.6.6"
+machine-uid = "0.3"
+aes-gcm = "0.10"
+sha2 = "0.10"
+base64 = "0.22"
+
+[dev-dependencies]
+tempfile = "3.10"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
