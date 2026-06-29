@@ -56,7 +56,7 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "id": "d_mysource_vic40gamebase64_specify_extensions_agent_context_scripts_bash_update_agent_context_sh__entry",
+      "id": "d_mysource_gamebasebox_specify_extensions_agent_context_scripts_bash_update_agent_context_sh__entry",
       "community": 87,
       "norm_label": "update-agent-context.sh script"
     },
@@ -1171,70 +1171,70 @@
       "norm_label": "test"
     },
     {
-      "label": "setup:emu",
-      "file_type": "code",
-      "source_file": "package.json",
-      "source_location": "L22",
-      "_origin": "ast",
-      "id": "package_scripts_setup_emu",
-      "community": 20,
-      "norm_label": "setup:emu"
-    },
-    {
-      "label": "postinstall",
+      "label": "engines",
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "package_scripts_postinstall",
-      "community": 20,
-      "norm_label": "postinstall"
+      "id": "package_engines",
+      "community": 37,
+      "norm_label": "engines"
+    },
+    {
+      "label": "node",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "package_engines_node",
+      "community": 37,
+      "norm_label": "node"
+    },
+    {
+      "label": "overrides",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "package_overrides",
+      "community": 37,
+      "norm_label": "overrides"
+    },
+    {
+      "label": "esbuild",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "package_overrides_esbuild",
+      "community": 37,
+      "norm_label": "esbuild"
+    },
+    {
+      "label": "postcss",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "package_overrides_postcss",
+      "community": 37,
+      "norm_label": "postcss"
     },
     {
       "label": "dependencies",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L25",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "package_dependencies",
       "community": 30,
       "norm_label": "dependencies"
     },
     {
-      "label": "@emulatorjs/core-vice_x64",
-      "file_type": "code",
-      "source_file": "package.json",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "package_dependencies_emulatorjs_core_vice_x64",
-      "community": 30,
-      "norm_label": "@emulatorjs/core-vice_x64"
-    },
-    {
-      "label": "@emulatorjs/core-vice_x64sc",
-      "file_type": "code",
-      "source_file": "package.json",
-      "source_location": "L27",
-      "_origin": "ast",
-      "id": "package_dependencies_emulatorjs_core_vice_x64sc",
-      "community": 30,
-      "norm_label": "@emulatorjs/core-vice_x64sc"
-    },
-    {
-      "label": "@emulatorjs/emulatorjs",
-      "file_type": "code",
-      "source_file": "package.json",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "package_dependencies_emulatorjs_emulatorjs",
-      "community": 30,
-      "norm_label": "@emulatorjs/emulatorjs"
-    },
-    {
       "label": "@tauri-apps/api",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L29",
+      "source_location": "L31",
       "_origin": "ast",
       "id": "package_dependencies_tauri_apps_api",
       "community": 30,
@@ -1244,7 +1244,7 @@
       "label": "@tauri-apps/plugin-dialog",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L30",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "package_dependencies_tauri_apps_plugin_dialog",
       "community": 30,
@@ -1254,7 +1254,7 @@
       "label": "@tauri-apps/plugin-fs",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L31",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "package_dependencies_tauri_apps_plugin_fs",
       "community": 30,
@@ -1264,7 +1264,7 @@
       "label": "@tauri-apps/plugin-log",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L32",
+      "source_location": "L34",
       "_origin": "ast",
       "id": "package_dependencies_tauri_apps_plugin_log",
       "community": 30,
@@ -1274,7 +1274,7 @@
       "label": "@tauri-apps/plugin-shell",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L33",
+      "source_location": "L35",
       "_origin": "ast",
       "id": "package_dependencies_tauri_apps_plugin_shell",
       "community": 30,
@@ -1284,7 +1284,7 @@
       "label": "next",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L34",
+      "source_location": "L36",
       "_origin": "ast",
       "id": "package_dependencies_next",
       "community": 30,
@@ -1294,7 +1294,7 @@
       "label": "react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L35",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "package_dependencies_react",
       "community": 30,
@@ -1304,7 +1304,7 @@
       "label": "react-dom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L36",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "package_dependencies_react_dom",
       "community": 30,
@@ -1314,7 +1314,7 @@
       "label": "devDependencies",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L38",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "package_devdependencies",
       "community": 18,
@@ -1324,7 +1324,7 @@
       "label": "@playwright/test",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L39",
+      "source_location": "L41",
       "_origin": "ast",
       "id": "package_devdependencies_playwright_test",
       "community": 18,
@@ -1334,7 +1334,7 @@
       "label": "@tailwindcss/postcss",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L40",
+      "source_location": "L42",
       "_origin": "ast",
       "id": "package_devdependencies_tailwindcss_postcss",
       "community": 18,
@@ -1344,7 +1344,7 @@
       "label": "@tauri-apps/cli",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L41",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "package_devdependencies_tauri_apps_cli",
       "community": 18,
@@ -1354,7 +1354,7 @@
       "label": "@testing-library/dom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L42",
+      "source_location": "L44",
       "_origin": "ast",
       "id": "package_devdependencies_testing_library_dom",
       "community": 18,
@@ -1364,7 +1364,7 @@
       "label": "@testing-library/react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L43",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "package_devdependencies_testing_library_react",
       "community": 18,
@@ -1374,7 +1374,7 @@
       "label": "@types/node",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L44",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "package_devdependencies_types_node",
       "community": 18,
@@ -1384,7 +1384,7 @@
       "label": "@types/react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L45",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "package_devdependencies_types_react",
       "community": 18,
@@ -1394,7 +1394,7 @@
       "label": "@types/react-dom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L46",
+      "source_location": "L48",
       "_origin": "ast",
       "id": "package_devdependencies_types_react_dom",
       "community": 18,
@@ -1404,7 +1404,7 @@
       "label": "@vitejs/plugin-react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L47",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "package_devdependencies_vitejs_plugin_react",
       "community": 18,
@@ -1414,7 +1414,7 @@
       "label": "@vitest/coverage-v8",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L48",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "package_devdependencies_vitest_coverage_v8",
       "community": 18,
@@ -1424,7 +1424,7 @@
       "label": "better-sqlite3",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L49",
+      "source_location": "L51",
       "_origin": "ast",
       "id": "package_devdependencies_better_sqlite3",
       "community": 18,
@@ -1434,7 +1434,7 @@
       "label": "csv-parse",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L50",
+      "source_location": "L52",
       "_origin": "ast",
       "id": "package_devdependencies_csv_parse",
       "community": 18,
@@ -1444,7 +1444,7 @@
       "label": "eslint",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L51",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "package_devdependencies_eslint",
       "community": 18,
@@ -1454,7 +1454,7 @@
       "label": "eslint-config-next",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L52",
+      "source_location": "L54",
       "_origin": "ast",
       "id": "package_devdependencies_eslint_config_next",
       "community": 18,
@@ -1464,7 +1464,7 @@
       "label": "happy-dom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L53",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "package_devdependencies_happy_dom",
       "community": 18,
@@ -1474,7 +1474,7 @@
       "label": "jsdom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L54",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "package_devdependencies_jsdom",
       "community": 18,
@@ -1484,7 +1484,7 @@
       "label": "tailwindcss",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L55",
+      "source_location": "L57",
       "_origin": "ast",
       "id": "package_devdependencies_tailwindcss",
       "community": 18,
@@ -1494,17 +1494,27 @@
       "label": "typescript",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L56",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "package_devdependencies_typescript",
       "community": 18,
       "norm_label": "typescript"
     },
     {
+      "label": "vite",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "package_devdependencies_vite",
+      "community": 18,
+      "norm_label": "vite"
+    },
+    {
       "label": "vitest",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L57",
+      "source_location": "L60",
       "_origin": "ast",
       "id": "package_devdependencies_vitest",
       "community": 18,
@@ -1591,14 +1601,14 @@
       "norm_label": "database"
     },
     {
-      "label": "{\n  getPlatformImportConfig,\n  performanceIndexes,\n  requiredPlatformColumns,\n  supportObjects,\n}",
+      "label": "{\r\n  getPlatformImportConfig,\r\n  performanceIndexes,\r\n  requiredPlatformColumns,\r\n  supportObjects,\r\n}",
       "file_type": "code",
       "source_file": "scripts/convert_csv_to_sqlite.js",
       "source_location": "L6",
       "_origin": "ast",
       "id": "scripts_convert_csv_to_sqlite_getplatformimportconfig_performanceindexes_requiredplatformcolumns_supportobjects",
       "community": 14,
-      "norm_label": "{\n  getplatformimportconfig,\n  performanceindexes,\n  requiredplatformcolumns,\n  supportobjects,\n}"
+      "norm_label": "{\r\n  getplatformimportconfig,\r\n  performanceindexes,\r\n  requiredplatformcolumns,\r\n  supportobjects,\r\n}"
     },
     {
       "label": "platformScopedTables",
@@ -1798,226 +1808,6 @@
       "_origin": "ast",
       "id": "scripts_convert_csv_to_sqlite_main",
       "community": 14,
-      "norm_label": "main()"
-    },
-    {
-      "label": "convert_csv_to_sqlite.test.js",
-      "file_type": "code",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_convert_csv_to_sqlite_test",
-      "community": 14,
-      "norm_label": "convert_csv_to_sqlite.test.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_convert_csv_to_sqlite_test_fs",
-      "community": 14,
-      "norm_label": "fs"
-    },
-    {
-      "label": "os",
-      "file_type": "code",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L2",
-      "_origin": "ast",
-      "id": "scripts_convert_csv_to_sqlite_test_os",
-      "community": 14,
-      "norm_label": "os"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "scripts_convert_csv_to_sqlite_test_path",
-      "community": 14,
-      "norm_label": "path"
-    },
-    {
-      "label": "Database",
-      "file_type": "code",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L4",
-      "_origin": "ast",
-      "id": "scripts_convert_csv_to_sqlite_test_database",
-      "community": 14,
-      "norm_label": "database"
-    },
-    {
-      "label": "{ auditSqliteSupport }",
-      "file_type": "code",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "scripts_convert_csv_to_sqlite_test_auditsqlitesupport",
-      "community": 14,
-      "norm_label": "{ auditsqlitesupport }"
-    },
-    {
-      "label": "{ convertCsvToSqlite }",
-      "file_type": "code",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "scripts_convert_csv_to_sqlite_test_convertcsvtosqlite",
-      "community": 14,
-      "norm_label": "{ convertcsvtosqlite }"
-    },
-    {
-      "label": "writeCsv()",
-      "file_type": "code",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L9",
-      "_origin": "ast",
-      "id": "scripts_convert_csv_to_sqlite_test_writecsv",
-      "community": 14,
-      "norm_label": "writecsv()"
-    },
-    {
-      "label": "createMiniGameBaseExport()",
-      "file_type": "code",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L18",
-      "_origin": "ast",
-      "id": "scripts_convert_csv_to_sqlite_test_createminigamebaseexport",
-      "community": 14,
-      "norm_label": "createminigamebaseexport()"
-    },
-    {
-      "label": "convert_ui_sounds_to_mp3.js",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3",
-      "community": 29,
-      "norm_label": "convert_ui_sounds_to_mp3.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_fs",
-      "community": 29,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L2",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_path",
-      "community": 29,
-      "norm_label": "path"
-    },
-    {
-      "label": "{ spawnSync }",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_spawnsync",
-      "community": 29,
-      "norm_label": "{ spawnsync }"
-    },
-    {
-      "label": "ROOT_DIR",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_root_dir",
-      "community": 29,
-      "norm_label": "root_dir"
-    },
-    {
-      "label": "INPUT_DIR",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_input_dir",
-      "community": 29,
-      "norm_label": "input_dir"
-    },
-    {
-      "label": "OUTPUT_DIR",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_output_dir",
-      "community": 29,
-      "norm_label": "output_dir"
-    },
-    {
-      "label": "ensureFfmpegAvailable()",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L11",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_ensureffmpegavailable",
-      "community": 29,
-      "norm_label": "ensureffmpegavailable()"
-    },
-    {
-      "label": "getInputFiles()",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L24",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_getinputfiles",
-      "community": 29,
-      "norm_label": "getinputfiles()"
-    },
-    {
-      "label": "ensureOutputDir()",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L35",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_ensureoutputdir",
-      "community": 29,
-      "norm_label": "ensureoutputdir()"
-    },
-    {
-      "label": "convertFile()",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L39",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_convertfile",
-      "community": 29,
-      "norm_label": "convertfile()"
-    },
-    {
-      "label": "writeManifest()",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L84",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_writemanifest",
-      "community": 29,
-      "norm_label": "writemanifest()"
-    },
-    {
-      "label": "main()",
-      "file_type": "code",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L102",
-      "_origin": "ast",
-      "id": "scripts_convert_ui_sounds_to_mp3_main",
-      "community": 29,
       "norm_label": "main()"
     },
     {
@@ -2221,106 +2011,6 @@
       "norm_label": "main()"
     },
     {
-      "label": "db_pipeline.test.js",
-      "file_type": "code",
-      "source_file": "scripts/db_pipeline.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_db_pipeline_test",
-      "community": 14,
-      "norm_label": "db_pipeline.test.js"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scripts/db_pipeline.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_db_pipeline_test_path",
-      "community": 14,
-      "norm_label": "path"
-    },
-    {
-      "label": "{\n  buildAuditArgs,\n  buildConvertArgs,\n  resolvePipelineConfig,\n}",
-      "file_type": "code",
-      "source_file": "scripts/db_pipeline.test.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "scripts_db_pipeline_test_buildauditargs_buildconvertargs_resolvepipelineconfig",
-      "community": 14,
-      "norm_label": "{\n  buildauditargs,\n  buildconvertargs,\n  resolvepipelineconfig,\n}"
-    },
-    {
-      "label": "debug_csv_count.js",
-      "file_type": "code",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_debug_csv_count",
-      "community": 34,
-      "norm_label": "debug_csv_count.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_debug_csv_count_fs",
-      "community": 34,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L2",
-      "_origin": "ast",
-      "id": "scripts_debug_csv_count_path",
-      "community": 34,
-      "norm_label": "path"
-    },
-    {
-      "label": "{ parse }",
-      "file_type": "code",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "scripts_debug_csv_count_parse",
-      "community": 34,
-      "norm_label": "{ parse }"
-    },
-    {
-      "label": "csvFile",
-      "file_type": "code",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "id": "scripts_debug_csv_count_csvfile",
-      "community": 34,
-      "norm_label": "csvfile"
-    },
-    {
-      "label": "fileContent",
-      "file_type": "code",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "scripts_debug_csv_count_filecontent",
-      "community": 34,
-      "norm_label": "filecontent"
-    },
-    {
-      "label": "records",
-      "file_type": "code",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "scripts_debug_csv_count_records",
-      "community": 34,
-      "norm_label": "records"
-    },
-    {
       "label": "exportMdb.ps1",
       "file_type": "code",
       "source_file": "scripts/exportMdb.ps1",
@@ -2354,39 +2044,9 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "id": "d_mysource_vic40gamebase64_scripts_import_gb64_sh__entry",
+      "id": "d_mysource_gamebasebox_scripts_import_gb64_sh__entry",
       "community": 40,
       "norm_label": "import_gb64.sh script"
-    },
-    {
-      "label": "list_tables.js",
-      "file_type": "code",
-      "source_file": "scripts/list_tables.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_list_tables",
-      "community": 38,
-      "norm_label": "list_tables.js"
-    },
-    {
-      "label": "Database",
-      "file_type": "code",
-      "source_file": "scripts/list_tables.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_list_tables_database",
-      "community": 38,
-      "norm_label": "database"
-    },
-    {
-      "label": "db",
-      "file_type": "code",
-      "source_file": "scripts/list_tables.js",
-      "source_location": "L2",
-      "_origin": "ast",
-      "id": "scripts_list_tables_db",
-      "community": 38,
-      "norm_label": "db"
     },
     {
       "label": "mdb-export-all.sh",
@@ -2412,89 +2072,9 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "id": "d_mysource_vic40gamebase64_scripts_mdb_export_all_sh__entry",
+      "id": "d_mysource_gamebasebox_scripts_mdb_export_all_sh__entry",
       "community": 41,
       "norm_label": "mdb-export-all.sh script"
-    },
-    {
-      "label": "platform_import_config.test.js",
-      "file_type": "code",
-      "source_file": "scripts/platform_import_config.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_platform_import_config_test",
-      "community": 14,
-      "norm_label": "platform_import_config.test.js"
-    },
-    {
-      "label": "{\n  platformImportConfigs,\n  getPlatformImportConfig,\n  requiredPlatformColumns,\n}",
-      "file_type": "code",
-      "source_file": "scripts/platform_import_config.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_platform_import_config_test_platformimportconfigs_getplatformimportconfig_requiredplatformcolumns",
-      "community": 14,
-      "norm_label": "{\n  platformimportconfigs,\n  getplatformimportconfig,\n  requiredplatformcolumns,\n}"
-    },
-    {
-      "label": "release_branding.test.js",
-      "file_type": "code",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_release_branding_test",
-      "community": 98,
-      "norm_label": "release_branding.test.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_release_branding_test_fs",
-      "community": 98,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L2",
-      "_origin": "ast",
-      "id": "scripts_release_branding_test_path",
-      "community": 98,
-      "norm_label": "path"
-    },
-    {
-      "label": "root",
-      "file_type": "code",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L4",
-      "_origin": "ast",
-      "id": "scripts_release_branding_test_root",
-      "community": 98,
-      "norm_label": "root"
-    },
-    {
-      "label": "readJson()",
-      "file_type": "code",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "scripts_release_branding_test_readjson",
-      "community": 98,
-      "norm_label": "readjson()"
-    },
-    {
-      "label": "readText()",
-      "file_type": "code",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "scripts_release_branding_test_readtext",
-      "community": 98,
-      "norm_label": "readtext()"
     },
     {
       "label": "setup_emulator.js",
@@ -4693,7 +4273,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "commands_setup",
-      "community": 4,
+      "community": 6,
       "norm_label": "setup.rs"
     },
     {
@@ -4703,7 +4283,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "commands_setup_open_mdb_file_dialog",
-      "community": 4,
+      "community": 6,
       "norm_label": "open_mdb_file_dialog()"
     },
     {
@@ -4713,7 +4293,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_apphandle",
-      "community": 4,
+      "community": 6,
       "norm_label": "apphandle"
     },
     {
@@ -4723,7 +4303,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_option",
-      "community": 4,
+      "community": 6,
       "norm_label": "option"
     },
     {
@@ -4733,7 +4313,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_string",
-      "community": 4,
+      "community": 6,
       "norm_label": "string"
     },
     {
@@ -4743,7 +4323,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "commands_setup_get_database_bootstrap_status",
-      "community": 4,
+      "community": 6,
       "norm_label": "get_database_bootstrap_status()"
     },
     {
@@ -4753,7 +4333,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_result",
-      "community": 4,
+      "community": 6,
       "norm_label": "result"
     },
     {
@@ -4763,7 +4343,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "databasebootstrapstatus",
-      "community": 4,
+      "community": 6,
       "norm_label": "databasebootstrapstatus"
     },
     {
@@ -4773,7 +4353,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "commands_setup_import_database_from_mdb",
-      "community": 4,
+      "community": 6,
       "norm_label": "import_database_from_mdb()"
     },
     {
@@ -4783,7 +4363,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_databaseimportresult",
-      "community": 4,
+      "community": 6,
       "norm_label": "databaseimportresult"
     },
     {
@@ -4793,7 +4373,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "commands_setup_get_platform_import_status",
-      "community": 4,
+      "community": 6,
       "norm_label": "get_platform_import_status()"
     },
     {
@@ -4803,7 +4383,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_platformimportstatus",
-      "community": 4,
+      "community": 6,
       "norm_label": "platformimportstatus"
     },
     {
@@ -4813,7 +4393,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "commands_setup_import_platform_database_from_mdb",
-      "community": 4,
+      "community": 6,
       "norm_label": "import_platform_database_from_mdb()"
     },
     {
@@ -4823,7 +4403,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_importplatformdatabaserequest",
-      "community": 4,
+      "community": 6,
       "norm_label": "importplatformdatabaserequest"
     },
     {
@@ -4833,7 +4413,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "platformdatabaseimportresult",
-      "community": 4,
+      "community": 6,
       "norm_label": "platformdatabaseimportresult"
     },
     {
@@ -4843,7 +4423,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "commands_setup_validate_platform_import_request",
-      "community": 4,
+      "community": 6,
       "norm_label": "validate_platform_import_request()"
     },
     {
@@ -4853,7 +4433,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "commands_setup_validate_existing_folder",
-      "community": 4,
+      "community": 6,
       "norm_label": "validate_existing_folder()"
     },
     {
@@ -4863,7 +4443,7 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "commands_setup_reject_obvious_wrong_platform_mdb",
-      "community": 4,
+      "community": 6,
       "norm_label": "reject_obvious_wrong_platform_mdb()"
     },
     {
@@ -4873,7 +4453,7 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_path",
-      "community": 4,
+      "community": 6,
       "norm_label": "path"
     },
     {
@@ -6763,7 +6343,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_layout",
-      "community": 25,
+      "community": 29,
       "norm_label": "layout.tsx"
     },
     {
@@ -6773,7 +6353,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "app_layout_metadata",
-      "community": 25,
+      "community": 29,
       "norm_label": "metadata"
     },
     {
@@ -6783,7 +6363,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "app_layout_rootlayout",
-      "community": 25,
+      "community": 29,
       "norm_label": "rootlayout()"
     },
     {
@@ -6800,7 +6380,7 @@
       "label": "SetupFolderKey",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L41",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "app_page_setupfolderkey",
       "community": 60,
@@ -6810,7 +6390,7 @@
       "label": "REQUIRED_PLATFORM_FOLDER_KEYS",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L46",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "app_page_required_platform_folder_keys",
       "community": 60,
@@ -6820,7 +6400,7 @@
       "label": "getRequiredPlatformFolderKeys()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L51",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "app_page_getrequiredplatformfolderkeys",
       "community": 60,
@@ -6830,7 +6410,7 @@
       "label": "LibraryApp()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L55",
+      "source_location": "L54",
       "_origin": "ast",
       "id": "app_page_libraryapp",
       "community": 60,
@@ -6840,7 +6420,7 @@
       "label": "Home()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L516",
+      "source_location": "L515",
       "_origin": "ast",
       "id": "app_page_home",
       "community": 60,
@@ -6973,7 +6553,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_getcoverurl",
-      "community": 93,
+      "community": 96,
       "norm_label": "getcoverurl()"
     },
     {
@@ -7113,7 +6693,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_detailview_detailviewprops",
-      "community": 35,
+      "community": 60,
       "norm_label": "detailviewprops"
     },
     {
@@ -7173,7 +6753,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_extrasdetail",
-      "community": 23,
+      "community": 38,
       "norm_label": "extrasdetail.tsx"
     },
     {
@@ -7183,7 +6763,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasdetailprops",
-      "community": 23,
+      "community": 38,
       "norm_label": "extrasdetailprops"
     },
     {
@@ -7193,7 +6773,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasbigscreennavigation",
-      "community": 23,
+      "community": 38,
       "norm_label": "extrasbigscreennavigation"
     },
     {
@@ -7203,7 +6783,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasdetail",
-      "community": 61,
+      "community": 24,
       "norm_label": "extrasdetail()"
     },
     {
@@ -7223,7 +6803,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_gridview_gridviewprops",
-      "community": 35,
+      "community": 60,
       "norm_label": "gridviewprops"
     },
     {
@@ -7373,7 +6953,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_musicplayer",
-      "community": 54,
+      "community": 103,
       "norm_label": "musicplayer.tsx"
     },
     {
@@ -7383,7 +6963,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_musicplayer_musicplayerprops",
-      "community": 54,
+      "community": 103,
       "norm_label": "musicplayerprops"
     },
     {
@@ -7393,7 +6973,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_musicplayer_musicplayer",
-      "community": 54,
+      "community": 103,
       "norm_label": "musicplayer()"
     },
     {
@@ -7403,7 +6983,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_musicianphoto",
-      "community": 24,
+      "community": 96,
       "norm_label": "musicianphoto.tsx"
     },
     {
@@ -7413,7 +6993,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_musicianphoto_musicianphotoprops",
-      "community": 24,
+      "community": 96,
       "norm_label": "musicianphotoprops"
     },
     {
@@ -7433,7 +7013,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_platformswitcher",
-      "community": 54,
+      "community": 100,
       "norm_label": "platformswitcher.tsx"
     },
     {
@@ -7443,7 +7023,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_platformswitcher_platformswitcherprops",
-      "community": 54,
+      "community": 100,
       "norm_label": "platformswitcherprops"
     },
     {
@@ -7453,7 +7033,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_platformswitcher_platformswitcher",
-      "community": 54,
+      "community": 100,
       "norm_label": "platformswitcher()"
     },
     {
@@ -7463,7 +7043,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_sapplayer",
-      "community": 103,
+      "community": 96,
       "norm_label": "sapplayer.tsx"
     },
     {
@@ -7473,7 +7053,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_sapplayer_sapplayerruntime",
-      "community": 103,
+      "community": 96,
       "norm_label": "sapplayerruntime"
     },
     {
@@ -7483,7 +7063,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_sapplayer_sapruntimeconstructor",
-      "community": 103,
+      "community": 96,
       "norm_label": "sapruntimeconstructor"
     },
     {
@@ -7493,7 +7073,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "components_sapplayer_window",
-      "community": 103,
+      "community": 96,
       "norm_label": "window"
     },
     {
@@ -7503,7 +7083,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "components_sapplayer_sapplayerprops",
-      "community": 103,
+      "community": 96,
       "norm_label": "sapplayerprops"
     },
     {
@@ -7513,7 +7093,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_sapplayer_isnativepath",
-      "community": 103,
+      "community": 96,
       "norm_label": "isnativepath()"
     },
     {
@@ -7523,7 +7103,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "components_sapplayer_resolveplayablesapurl",
-      "community": 103,
+      "community": 96,
       "norm_label": "resolveplayablesapurl()"
     },
     {
@@ -7533,7 +7113,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "components_sapplayer_sapplayer",
-      "community": 103,
+      "community": 96,
       "norm_label": "sapplayer()"
     },
     {
@@ -7603,7 +7183,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "components_settingsmodal_settingsview",
-      "community": 142,
+      "community": 60,
       "norm_label": "settingsview()"
     },
     {
@@ -7703,7 +7283,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_subgenrepickermodal",
-      "community": 95,
+      "community": 23,
       "norm_label": "subgenrepickermodal.tsx"
     },
     {
@@ -7713,7 +7293,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodalprops",
-      "community": 95,
+      "community": 23,
       "norm_label": "subgenrepickermodalprops"
     },
     {
@@ -7723,7 +7303,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodal",
-      "community": 95,
+      "community": 23,
       "norm_label": "subgenrepickermodal()"
     },
     {
@@ -7733,7 +7313,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_uisoundruntime",
-      "community": 25,
+      "community": 29,
       "norm_label": "uisoundruntime.tsx"
     },
     {
@@ -7743,7 +7323,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_uisoundruntime_error_sounds",
-      "community": 25,
+      "community": 29,
       "norm_label": "error_sounds"
     },
     {
@@ -7753,7 +7333,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_uisoundruntime_uisoundruntime",
-      "community": 25,
+      "community": 29,
       "norm_label": "uisoundruntime()"
     },
     {
@@ -7763,7 +7343,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_wasmplayer",
-      "community": 60,
+      "community": 61,
       "norm_label": "wasmplayer.tsx"
     },
     {
@@ -7773,7 +7353,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_wasmplayer_wasmplayerprops",
-      "community": 60,
+      "community": 61,
       "norm_label": "wasmplayerprops"
     },
     {
@@ -7783,7 +7363,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_wasmplayer_wasmplayer",
-      "community": 60,
+      "community": 61,
       "norm_label": "wasmplayer()"
     },
     {
@@ -7893,7 +7473,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bigbox_bigboxheader",
-      "community": 13,
+      "community": 100,
       "norm_label": "bigboxheader.tsx"
     },
     {
@@ -7903,7 +7483,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "bigbox_bigboxheader_bigboxheaderprops",
-      "community": 13,
+      "community": 100,
       "norm_label": "bigboxheaderprops"
     },
     {
@@ -7913,7 +7493,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "bigbox_bigboxheader_bigboxheader",
-      "community": 13,
+      "community": 100,
       "norm_label": "bigboxheader()"
     },
     {
@@ -7923,7 +7503,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "detail_detailgametitle",
-      "community": 0,
+      "community": 24,
       "norm_label": "detailgametitle.tsx"
     },
     {
@@ -7933,7 +7513,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "detail_detailgametitle_detailgametitleprops",
-      "community": 0,
+      "community": 24,
       "norm_label": "detailgametitleprops"
     },
     {
@@ -7943,7 +7523,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "detail_detailgametitle_outlined_title_style",
-      "community": 0,
+      "community": 24,
       "norm_label": "outlined_title_style"
     },
     {
@@ -7953,7 +7533,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "detail_detailgametitle_detailgametitle",
-      "community": 0,
+      "community": 24,
       "norm_label": "detailgametitle()"
     },
     {
@@ -7993,7 +7573,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "extras_resolvedextramedia",
-      "community": 23,
+      "community": 38,
       "norm_label": "resolvedextramedia.tsx"
     },
     {
@@ -8003,7 +7583,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "extras_resolvedextramedia_video_extensions",
-      "community": 23,
+      "community": 38,
       "norm_label": "video_extensions"
     },
     {
@@ -8013,7 +7593,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "extras_resolvedextramedia_audio_extensions",
-      "community": 23,
+      "community": 38,
       "norm_label": "audio_extensions"
     },
     {
@@ -8023,7 +7603,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "extras_resolvedextramedia_isvideoextra",
-      "community": 23,
+      "community": 38,
       "norm_label": "isvideoextra()"
     },
     {
@@ -8033,7 +7613,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "extras_resolvedextramedia_isaudioextra",
-      "community": 23,
+      "community": 38,
       "norm_label": "isaudioextra()"
     },
     {
@@ -8043,7 +7623,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "extras_resolvedextramedia_visualextrathumb",
-      "community": 23,
+      "community": 38,
       "norm_label": "visualextrathumb()"
     },
     {
@@ -8053,7 +7633,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "extras_resolvedextramedia_resolvedextramedia",
-      "community": 23,
+      "community": 38,
       "norm_label": "resolvedextramedia()"
     },
     {
@@ -8103,7 +7683,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "library_libraryheader",
-      "community": 95,
+      "community": 5,
       "norm_label": "libraryheader.tsx"
     },
     {
@@ -8123,7 +7703,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "library_libraryheader_libraryheader",
-      "community": 95,
+      "community": 5,
       "norm_label": "libraryheader()"
     },
     {
@@ -8973,7 +8553,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "contexts_settingscontext",
-      "community": 54,
+      "community": 29,
       "norm_label": "settingscontext.tsx"
     },
     {
@@ -8993,7 +8573,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "contexts_settingscontext_settingscontexttype",
-      "community": 54,
+      "community": 100,
       "norm_label": "settingscontexttype"
     },
     {
@@ -9003,7 +8583,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "contexts_settingscontext_defaultsettings",
-      "community": 54,
+      "community": 29,
       "norm_label": "defaultsettings"
     },
     {
@@ -9013,7 +8593,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "contexts_settingscontext_settingscontext",
-      "community": 54,
+      "community": 29,
       "norm_label": "settingscontext"
     },
     {
@@ -9023,7 +8603,7 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "contexts_settingscontext_secure_fields",
-      "community": 54,
+      "community": 29,
       "norm_label": "secure_fields"
     },
     {
@@ -9033,7 +8613,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "contexts_settingscontext_migrateplatformsettings",
-      "community": 54,
+      "community": 29,
       "norm_label": "migrateplatformsettings()"
     },
     {
@@ -9043,7 +8623,7 @@
       "source_location": "L199",
       "_origin": "ast",
       "id": "contexts_settingscontext_platformfolderstoflatsettings",
-      "community": 54,
+      "community": 29,
       "norm_label": "platformfolderstoflatsettings()"
     },
     {
@@ -9053,7 +8633,7 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "contexts_settingscontext_platformimportstatussnapshot",
-      "community": 54,
+      "community": 29,
       "norm_label": "platformimportstatussnapshot"
     },
     {
@@ -9063,7 +8643,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "contexts_settingscontext_isplatformimportstatus",
-      "community": 54,
+      "community": 29,
       "norm_label": "isplatformimportstatus()"
     },
     {
@@ -9073,7 +8653,7 @@
       "source_location": "L223",
       "_origin": "ast",
       "id": "contexts_settingscontext_applyplatformimportstatuses",
-      "community": 54,
+      "community": 29,
       "norm_label": "applyplatformimportstatuses()"
     },
     {
@@ -9083,7 +8663,7 @@
       "source_location": "L252",
       "_origin": "ast",
       "id": "contexts_settingscontext_resolvestartupplatformid",
-      "community": 54,
+      "community": 29,
       "norm_label": "resolvestartupplatformid()"
     },
     {
@@ -9093,7 +8673,7 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "contexts_settingscontext_settingsprovider",
-      "community": 25,
+      "community": 29,
       "norm_label": "settingsprovider()"
     },
     {
@@ -9213,7 +8793,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata",
-      "community": 13,
+      "community": 101,
       "norm_label": "usebigboxlibrarydata.ts"
     },
     {
@@ -9223,7 +8803,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_bigbox_letters",
-      "community": 13,
+      "community": 100,
       "norm_label": "bigbox_letters"
     },
     {
@@ -9253,7 +8833,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_letter_rail_cache",
-      "community": 13,
+      "community": 101,
       "norm_label": "letter_rail_cache"
     },
     {
@@ -9263,7 +8843,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_getalphabetrailcachekey",
-      "community": 13,
+      "community": 101,
       "norm_label": "getalphabetrailcachekey()"
     },
     {
@@ -9273,7 +8853,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_sortrecentgames",
-      "community": 13,
+      "community": 101,
       "norm_label": "sortrecentgames()"
     },
     {
@@ -9323,7 +8903,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "hooks_usebigboxnavigation_usebigboxnavigationprops",
-      "community": 5,
+      "community": 93,
       "norm_label": "usebigboxnavigationprops"
     },
     {
@@ -9373,7 +8953,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation",
-      "community": 25,
+      "community": 60,
       "norm_label": "usedetailnavigation.ts"
     },
     {
@@ -9383,7 +8963,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailzone",
-      "community": 25,
+      "community": 60,
       "norm_label": "detailzone"
     },
     {
@@ -9393,7 +8973,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_direction",
-      "community": 25,
+      "community": 60,
       "norm_label": "direction"
     },
     {
@@ -9403,7 +8983,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_navigationconfig",
-      "community": 25,
+      "community": 60,
       "norm_label": "navigationconfig"
     },
     {
@@ -9423,7 +9003,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailnavprops",
-      "community": 25,
+      "community": 60,
       "norm_label": "detailnavprops"
     },
     {
@@ -9473,7 +9053,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics",
-      "community": 7,
+      "community": 93,
       "norm_label": "usefullscreenlayoutmetrics.ts"
     },
     {
@@ -9483,7 +9063,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedfullscreendensity",
-      "community": 7,
+      "community": 93,
       "norm_label": "resolvedfullscreendensity"
     },
     {
@@ -9493,7 +9073,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_viewportsnapshot",
-      "community": 7,
+      "community": 93,
       "norm_label": "viewportsnapshot"
     },
     {
@@ -9513,7 +9093,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_default_viewport",
-      "community": 7,
+      "community": 93,
       "norm_label": "default_viewport"
     },
     {
@@ -9523,7 +9103,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_clamp",
-      "community": 7,
+      "community": 93,
       "norm_label": "clamp()"
     },
     {
@@ -9533,7 +9113,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_round",
-      "community": 7,
+      "community": 93,
       "norm_label": "round()"
     },
     {
@@ -9543,7 +9123,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_getviewportsnapshot",
-      "community": 7,
+      "community": 93,
       "norm_label": "getviewportsnapshot()"
     },
     {
@@ -9553,7 +9133,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedensitymode",
-      "community": 7,
+      "community": 93,
       "norm_label": "resolvedensitymode()"
     },
     {
@@ -9563,7 +9143,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_buildfullscreenlayoutmetrics",
-      "community": 7,
+      "community": 93,
       "norm_label": "buildfullscreenlayoutmetrics()"
     },
     {
@@ -9693,7 +9273,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate",
-      "community": 60,
+      "community": 5,
       "norm_label": "uselibrarybrowserstate.ts"
     },
     {
@@ -9793,7 +9373,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl",
-      "community": 24,
+      "community": 96,
       "norm_label": "useresolvedboxarturl.ts"
     },
     {
@@ -9803,7 +9383,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_cover_art_url_cache",
-      "community": 24,
+      "community": 96,
       "norm_label": "cover_art_url_cache"
     },
     {
@@ -9813,7 +9393,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_normalizepath",
-      "community": 24,
+      "community": 96,
       "norm_label": "normalizepath()"
     },
     {
@@ -9823,7 +9403,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_getresolvedcoverarturl",
-      "community": 24,
+      "community": 96,
       "norm_label": "getresolvedcoverarturl()"
     },
     {
@@ -9833,7 +9413,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_resolvedboxartgame",
-      "community": 24,
+      "community": 96,
       "norm_label": "resolvedboxartgame"
     },
     {
@@ -9853,7 +9433,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usewindowlibraryshelves",
-      "community": 5,
+      "community": 60,
       "norm_label": "usewindowlibraryshelves.ts"
     },
     {
@@ -9863,7 +9443,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "hooks_usewindowlibraryshelves_usewindowlibraryshelvesprops",
-      "community": 5,
+      "community": 60,
       "norm_label": "usewindowlibraryshelvesprops"
     },
     {
@@ -9913,7 +9493,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "lib_detail_layout_detaillayoutspec",
-      "community": 23,
+      "community": 38,
       "norm_label": "detaillayoutspec"
     },
     {
@@ -10093,7 +9673,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_extras",
-      "community": 23,
+      "community": 34,
       "norm_label": "extras.ts"
     },
     {
@@ -10103,7 +9683,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "lib_extras_extragroup",
-      "community": 23,
+      "community": 38,
       "norm_label": "extragroup"
     },
     {
@@ -10113,7 +9693,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "lib_extras_visual_folders",
-      "community": 23,
+      "community": 34,
       "norm_label": "visual_folders"
     },
     {
@@ -10123,7 +9703,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "lib_extras_doc_folders",
-      "community": 23,
+      "community": 34,
       "norm_label": "doc_folders"
     },
     {
@@ -10133,7 +9713,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "lib_extras_media_folders",
-      "community": 23,
+      "community": 34,
       "norm_label": "media_folders"
     },
     {
@@ -10143,7 +9723,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "lib_extras_game_folders",
-      "community": 23,
+      "community": 34,
       "norm_label": "game_folders"
     },
     {
@@ -10153,7 +9733,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "lib_extras_img_ext",
-      "community": 23,
+      "community": 34,
       "norm_label": "img_ext"
     },
     {
@@ -10163,7 +9743,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_extras_game_ext",
-      "community": 23,
+      "community": 34,
       "norm_label": "game_ext"
     },
     {
@@ -10173,7 +9753,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "lib_extras_media_ext",
-      "community": 23,
+      "community": 34,
       "norm_label": "media_ext"
     },
     {
@@ -10183,7 +9763,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "lib_extras_doc_ext",
-      "community": 23,
+      "community": 34,
       "norm_label": "doc_ext"
     },
     {
@@ -10193,7 +9773,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_extras_groupextras",
-      "community": 23,
+      "community": 38,
       "norm_label": "groupextras()"
     },
     {
@@ -10203,7 +9783,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "lib_extras_buildextraassetpath",
-      "community": 23,
+      "community": 38,
       "norm_label": "buildextraassetpath()"
     },
     {
@@ -10213,7 +9793,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "lib_extras_getextraextension",
-      "community": 23,
+      "community": 34,
       "norm_label": "getextraextension()"
     },
     {
@@ -10223,7 +9803,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "lib_extras_isimageextra",
-      "community": 23,
+      "community": 34,
       "norm_label": "isimageextra()"
     },
     {
@@ -10233,7 +9813,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "lib_extras_isvideoextra",
-      "community": 23,
+      "community": 34,
       "norm_label": "isvideoextra()"
     },
     {
@@ -10243,7 +9823,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "lib_extras_getextrasourcelabel",
-      "community": 23,
+      "community": 34,
       "norm_label": "getextrasourcelabel()"
     },
     {
@@ -10253,7 +9833,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "lib_extras_getextralaunchlabel",
-      "community": 23,
+      "community": 34,
       "norm_label": "getextralaunchlabel()"
     },
     {
@@ -10263,7 +9843,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "lib_extras_islaunchableextra",
-      "community": 23,
+      "community": 34,
       "norm_label": "islaunchableextra()"
     },
     {
@@ -10273,7 +9853,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "lib_extras_isatariadvertextra",
-      "community": 23,
+      "community": 34,
       "norm_label": "isatariadvertextra()"
     },
     {
@@ -10283,7 +9863,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "lib_extras_isataricoverartextra",
-      "community": 23,
+      "community": 34,
       "norm_label": "isataricoverartextra()"
     },
     {
@@ -10313,7 +9893,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_game_display",
-      "community": 93,
+      "community": 0,
       "norm_label": "game-display.ts"
     },
     {
@@ -10323,7 +9903,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_game_display_unknown_values",
-      "community": 93,
+      "community": 0,
       "norm_label": "unknown_values"
     },
     {
@@ -10343,7 +9923,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_game_display_getgamestudios",
-      "community": 93,
+      "community": 0,
       "norm_label": "getgamestudios()"
     },
     {
@@ -10353,7 +9933,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "lib_game_display_getprimarystudiolabel",
-      "community": 93,
+      "community": 0,
       "norm_label": "getprimarystudiolabel()"
     },
     {
@@ -10463,7 +10043,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_platform_capabilities",
-      "community": 54,
+      "community": 98,
       "norm_label": "platform-capabilities.ts"
     },
     {
@@ -10483,7 +10063,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "lib_platform_capabilities_platform_profiles",
-      "community": 142,
+      "community": 60,
       "norm_label": "platform_profiles"
     },
     {
@@ -10493,7 +10073,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "lib_platform_capabilities_supported_platforms",
-      "community": 54,
+      "community": 100,
       "norm_label": "supported_platforms"
     },
     {
@@ -10503,7 +10083,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "lib_platform_capabilities_embedded_emulation_platform_ids",
-      "community": 54,
+      "community": 98,
       "norm_label": "embedded_emulation_platform_ids"
     },
     {
@@ -10513,7 +10093,7 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "lib_platform_capabilities_getplatformprofile",
-      "community": 54,
+      "community": 98,
       "norm_label": "getplatformprofile()"
     },
     {
@@ -10533,7 +10113,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "lib_platform_capabilities_isplatformid",
-      "community": 54,
+      "community": 29,
       "norm_label": "isplatformid()"
     },
     {
@@ -10543,7 +10123,7 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformlibrarystatus",
-      "community": 54,
+      "community": 98,
       "norm_label": "createdefaultplatformlibrarystatus()"
     },
     {
@@ -10553,7 +10133,7 @@
       "source_location": "L141",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformfolders",
-      "community": 54,
+      "community": 98,
       "norm_label": "createdefaultplatformfolders()"
     },
     {
@@ -10563,7 +10143,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformnavigation",
-      "community": 54,
+      "community": 98,
       "norm_label": "createdefaultplatformnavigation()"
     },
     {
@@ -10573,7 +10153,7 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettings",
-      "community": 54,
+      "community": 98,
       "norm_label": "createdefaultplatformsettings()"
     },
     {
@@ -10583,7 +10163,7 @@
       "source_location": "L180",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettingsmap",
-      "community": 54,
+      "community": 29,
       "norm_label": "createdefaultplatformsettingsmap()"
     },
     {
@@ -10593,7 +10173,7 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasmusiccapability",
-      "community": 54,
+      "community": 98,
       "norm_label": "hasmusiccapability()"
     },
     {
@@ -10603,7 +10183,7 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasphotoscapability",
-      "community": 54,
+      "community": 98,
       "norm_label": "hasphotoscapability()"
     },
     {
@@ -10613,7 +10193,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasscreenshotscapability",
-      "community": 54,
+      "community": 98,
       "norm_label": "hasscreenshotscapability()"
     },
     {
@@ -10623,7 +10203,7 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasextrascapability",
-      "community": 54,
+      "community": 98,
       "norm_label": "hasextrascapability()"
     },
     {
@@ -10633,7 +10213,7 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasvideoscapability",
-      "community": 54,
+      "community": 98,
       "norm_label": "hasvideoscapability()"
     },
     {
@@ -11083,7 +10663,7 @@
       "source_location": "L256",
       "_origin": "ast",
       "id": "lib_tauri_bridge_resolvemediapath",
-      "community": 24,
+      "community": 96,
       "norm_label": "resolvemediapath()"
     },
     {
@@ -11113,7 +10693,7 @@
       "source_location": "L294",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getasseturl",
-      "community": 24,
+      "community": 96,
       "norm_label": "getasseturl()"
     },
     {
@@ -11123,7 +10703,7 @@
       "source_location": "L308",
       "_origin": "ast",
       "id": "lib_tauri_bridge_readfilebytes",
-      "community": 103,
+      "community": 96,
       "norm_label": "readfilebytes()"
     },
     {
@@ -11133,7 +10713,7 @@
       "source_location": "L324",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getmediaurl",
-      "community": 103,
+      "community": 96,
       "norm_label": "getmediaurl()"
     },
     {
@@ -11293,7 +10873,7 @@
       "source_location": "L520",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getgenres",
-      "community": 13,
+      "community": 101,
       "norm_label": "getgenres()"
     },
     {
@@ -11303,7 +10883,7 @@
       "source_location": "L530",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getsubgenres",
-      "community": 96,
+      "community": 101,
       "norm_label": "getsubgenres()"
     },
     {
@@ -11313,7 +10893,7 @@
       "source_location": "L554",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgamecount",
-      "community": 96,
+      "community": 101,
       "norm_label": "getdbgamecount()"
     },
     {
@@ -11333,7 +10913,7 @@
       "source_location": "L597",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgames",
-      "community": 96,
+      "community": 101,
       "norm_label": "getdbgames()"
     },
     {
@@ -11603,7 +11183,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "types_game_extra",
-      "community": 23,
+      "community": 38,
       "norm_label": "extra"
     },
     {
@@ -11643,7 +11223,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "types_platform_platformid",
-      "community": 54,
+      "community": 100,
       "norm_label": "platformid"
     },
     {
@@ -11663,7 +11243,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "types_platform_platformimportstatus",
-      "community": 54,
+      "community": 29,
       "norm_label": "platformimportstatus"
     },
     {
@@ -11763,7 +11343,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "types_platform_platformnavigationstate",
-      "community": 54,
+      "community": 98,
       "norm_label": "platformnavigationstate"
     },
     {
@@ -11793,7 +11373,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils_sorting",
-      "community": 35,
+      "community": 5,
       "norm_label": "sorting.ts"
     },
     {
@@ -11803,7 +11383,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "utils_sorting_sortdirection",
-      "community": 35,
+      "community": 5,
       "norm_label": "sortdirection"
     },
     {
@@ -11813,7 +11393,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "utils_sorting_sortgames",
-      "community": 35,
+      "community": 5,
       "norm_label": "sortgames()"
     },
     {
@@ -15979,9 +15559,9 @@
       "source_file": ".specify/extensions/agent-context/scripts/bash/update-agent-context.sh",
       "source_location": "L1",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "bash_update_agent_context",
-      "target": "d_mysource_vic40gamebase64_specify_extensions_agent_context_scripts_bash_update_agent_context_sh__entry"
+      "target": "d_mysource_gamebasebox_specify_extensions_agent_context_scripts_bash_update_agent_context_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -16847,11 +16427,31 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_engines",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "package",
       "target": "package_name"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_overrides",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -16967,26 +16567,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "package_scripts",
-      "target": "package_scripts_postinstall"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L22",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "package_scripts",
-      "target": "package_scripts_setup_emu"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
       "source_location": "L17",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -17067,11 +16647,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L26",
+      "source_location": "L24",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "package_dependencies",
-      "target": "package_dependencies_emulatorjs_core_vice_x64"
+      "source": "package_engines",
+      "target": "package_engines_node",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17079,9 +16659,9 @@
       "source_file": "package.json",
       "source_location": "L27",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "package_dependencies",
-      "target": "package_dependencies_emulatorjs_core_vice_x64sc"
+      "source": "package_overrides",
+      "target": "package_overrides_esbuild",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17089,9 +16669,9 @@
       "source_file": "package.json",
       "source_location": "L28",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "package_dependencies",
-      "target": "package_dependencies_emulatorjs_emulatorjs"
+      "source": "package_overrides",
+      "target": "package_overrides_postcss",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17332,6 +16912,16 @@
       "confidence_score": 1.0,
       "source": "package_devdependencies",
       "target": "package_devdependencies_typescript"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_vite",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17679,17 +17269,6 @@
       "target": "scripts_sqlite_support_config_supportobjects"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -18009,272 +17588,6 @@
       "target": "scripts_convert_csv_to_sqlite_convertcsvtosqlite"
     },
     {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite_convertcsvtosqlite"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite_test_auditsqlitesupport"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite_test_convertcsvtosqlite"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite_test_createminigamebaseexport"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite_test_database"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite_test_fs"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite_test_os"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite_test_path"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test",
-      "target": "scripts_convert_csv_to_sqlite_test_writecsv"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_csv_to_sqlite.test.js",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_csv_to_sqlite_test_createminigamebaseexport",
-      "target": "scripts_convert_csv_to_sqlite_test_writecsv"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L39",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_convertfile"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_ensureffmpegavailable"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L35",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_ensureoutputdir"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_fs"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_getinputfiles"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_input_dir"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L102",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_main"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_output_dir"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_path"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_root_dir"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_spawnsync"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L84",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3",
-      "target": "scripts_convert_ui_sounds_to_mp3_writemanifest"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L103",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3_main",
-      "target": "scripts_convert_ui_sounds_to_mp3_ensureffmpegavailable"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L106",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3_main",
-      "target": "scripts_convert_ui_sounds_to_mp3_getinputfiles"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L104",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3_main",
-      "target": "scripts_convert_ui_sounds_to_mp3_ensureoutputdir"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/convert_ui_sounds_to_mp3.js",
-      "source_location": "L113",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_convert_ui_sounds_to_mp3_main",
-      "target": "scripts_convert_ui_sounds_to_mp3_writemanifest"
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/db_pipeline.js",
@@ -18487,17 +17800,6 @@
       "target": "scripts_sqlite_support_config_getplatformimportconfig"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/db_pipeline.test.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_db_pipeline_test",
-      "target": "scripts_db_pipeline"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -18573,17 +17875,6 @@
       "weight": 1.0,
       "source": "scripts_db_pipeline_resolvepipelineconfig",
       "target": "scripts_sqlite_support_config_getplatformimportconfig"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/db_pipeline.test.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_db_pipeline_test",
-      "target": "scripts_db_pipeline_resolvepipelineconfig"
     },
     {
       "relation": "calls",
@@ -18685,17 +17976,6 @@
       "target": "scripts_db_pipeline_buildconvertargs"
     },
     {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/db_pipeline.test.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_db_pipeline_test",
-      "target": "scripts_db_pipeline_buildconvertargs"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -18718,17 +17998,6 @@
       "target": "scripts_db_pipeline_buildauditargs"
     },
     {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/db_pipeline.test.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_db_pipeline_test",
-      "target": "scripts_db_pipeline_buildauditargs"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -18742,112 +18011,12 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "scripts/db_pipeline.test.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_db_pipeline_test",
-      "target": "scripts_db_pipeline_test_buildauditargs_buildconvertargs_resolvepipelineconfig"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/db_pipeline.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_db_pipeline_test",
-      "target": "scripts_db_pipeline_test_path"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_debug_csv_count",
-      "target": "scripts_debug_csv_count_csvfile"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_debug_csv_count",
-      "target": "scripts_debug_csv_count_filecontent"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_debug_csv_count",
-      "target": "scripts_debug_csv_count_fs"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_debug_csv_count",
-      "target": "scripts_debug_csv_count_parse"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_debug_csv_count",
-      "target": "scripts_debug_csv_count_path"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/debug_csv_count.js",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_debug_csv_count",
-      "target": "scripts_debug_csv_count_records"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "scripts/import_gb64.sh",
       "source_location": "L1",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "scripts_import_gb64",
-      "target": "d_mysource_vic40gamebase64_scripts_import_gb64_sh__entry"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/list_tables.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_list_tables",
-      "target": "scripts_list_tables_database"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/list_tables.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_list_tables",
-      "target": "scripts_list_tables_db"
+      "target": "d_mysource_gamebasebox_scripts_import_gb64_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18855,112 +18024,8 @@
       "source_file": "scripts/mdb-export-all.sh",
       "source_location": "L1",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "scripts_mdb_export_all",
-      "target": "d_mysource_vic40gamebase64_scripts_mdb_export_all_sh__entry"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/platform_import_config.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_platform_import_config_test",
-      "target": "scripts_platform_import_config_test_platformimportconfigs_getplatformimportconfig_requiredplatformcolumns"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/platform_import_config.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_platform_import_config_test",
-      "target": "scripts_sqlite_support_config"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/platform_import_config.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_platform_import_config_test",
-      "target": "scripts_sqlite_support_config_getplatformimportconfig"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/platform_import_config.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_platform_import_config_test",
-      "target": "scripts_sqlite_support_config_platformimportconfigs"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/platform_import_config.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "scripts_platform_import_config_test",
-      "target": "scripts_sqlite_support_config_requiredplatformcolumns"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "scripts_release_branding_test",
-      "target": "scripts_release_branding_test_fs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scripts_release_branding_test",
-      "target": "scripts_release_branding_test_path",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "scripts_release_branding_test",
-      "target": "scripts_release_branding_test_readjson",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L10",
-      "weight": 1.0,
-      "source": "scripts_release_branding_test",
-      "target": "scripts_release_branding_test_readtext",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/release_branding.test.js",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "scripts_release_branding_test",
-      "target": "scripts_release_branding_test_root",
+      "target": "d_mysource_gamebasebox_scripts_mdb_export_all_sh__entry",
       "confidence_score": 1.0
     },
     {
@@ -30933,6 +29998,39 @@
       "target": "types_platform_platformfoldersettings"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "app_page",
+      "target": "types_platform_platformid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "app_page",
+      "target": "types_platform_platformsettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
+      "source_location": "L722",
+      "weight": 1.0,
+      "source": "app_page_home",
+      "target": "app_page_getrequiredplatformfolderkeys",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -31008,6 +30106,17 @@
       "weight": 1.0,
       "source": "app_page_libraryapp",
       "target": "hooks_usewindowlibraryshelves_usewindowlibraryshelves"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/page.tsx",
+      "source_location": "L516",
+      "weight": 1.0,
+      "source": "app_page_home",
+      "target": "contexts_settingscontext_usesettings"
     },
     {
       "relation": "contains",
@@ -44030,9 +43139,9 @@
       "source_file": ".specify/memory/constitution.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memory_constitution",
-      "target": "memory_constitution_gbbox_constitution",
-      "confidence_score": 1.0
+      "target": "memory_constitution_gbbox_constitution"
     },
     {
       "relation": "contains",
@@ -44040,9 +43149,9 @@
       "source_file": ".specify/memory/constitution.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memory_constitution_gbbox_constitution",
-      "target": "memory_constitution_core_principles",
-      "confidence_score": 1.0
+      "target": "memory_constitution_core_principles"
     },
     {
       "relation": "contains",
@@ -44050,9 +43159,9 @@
       "source_file": ".specify/memory/constitution.md",
       "source_location": "L111",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memory_constitution_gbbox_constitution",
-      "target": "memory_constitution_governance",
-      "confidence_score": 1.0
+      "target": "memory_constitution_governance"
     },
     {
       "relation": "contains",
@@ -44060,9 +43169,9 @@
       "source_file": ".specify/memory/constitution.md",
       "source_location": "L93",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memory_constitution_gbbox_constitution",
-      "target": "memory_constitution_spec_kit_and_beads_workflow",
-      "confidence_score": 1.0
+      "target": "memory_constitution_spec_kit_and_beads_workflow"
     },
     {
       "relation": "contains",
@@ -44070,9 +43179,9 @@
       "source_file": ".specify/memory/constitution.md",
       "source_location": "L71",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memory_constitution_gbbox_constitution",
-      "target": "memory_constitution_technical_standards",
-      "confidence_score": 1.0
+      "target": "memory_constitution_technical_standards"
     },
     {
       "relation": "contains",
@@ -44930,9 +44039,9 @@
       "source_file": "README.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme",
-      "target": "readme_gbbox",
-      "confidence_score": 1.0
+      "target": "readme_gbbox"
     },
     {
       "relation": "contains",
@@ -44940,9 +44049,9 @@
       "source_file": "README.md",
       "source_location": "L137",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_building_the_sqlite_database",
-      "confidence_score": 1.0
+      "target": "readme_building_the_sqlite_database"
     },
     {
       "relation": "contains",
@@ -44950,9 +44059,9 @@
       "source_file": "README.md",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_controls_and_shortcuts",
-      "confidence_score": 1.0
+      "target": "readme_controls_and_shortcuts"
     },
     {
       "relation": "contains",
@@ -44960,9 +44069,9 @@
       "source_file": "README.md",
       "source_location": "L170",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_development",
-      "confidence_score": 1.0
+      "target": "readme_development"
     },
     {
       "relation": "contains",
@@ -44970,9 +44079,9 @@
       "source_file": "README.md",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_download",
-      "confidence_score": 1.0
+      "target": "readme_download"
     },
     {
       "relation": "contains",
@@ -44980,9 +44089,9 @@
       "source_file": "README.md",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_features",
-      "confidence_score": 1.0
+      "target": "readme_features"
     },
     {
       "relation": "contains",
@@ -44990,9 +44099,9 @@
       "source_file": "README.md",
       "source_location": "L194",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_post_setup_configuration",
-      "confidence_score": 1.0
+      "target": "readme_post_setup_configuration"
     },
     {
       "relation": "contains",
@@ -45000,9 +44109,9 @@
       "source_file": "README.md",
       "source_location": "L101",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_prerequisites",
-      "confidence_score": 1.0
+      "target": "readme_prerequisites"
     },
     {
       "relation": "contains",
@@ -45010,9 +44119,9 @@
       "source_file": "README.md",
       "source_location": "L182",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_production_build",
-      "confidence_score": 1.0
+      "target": "readme_production_build"
     },
     {
       "relation": "contains",
@@ -45020,9 +44129,9 @@
       "source_file": "README.md",
       "source_location": "L206",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_release_notes",
-      "confidence_score": 1.0
+      "target": "readme_release_notes"
     },
     {
       "relation": "contains",
@@ -45030,9 +44139,9 @@
       "source_file": "README.md",
       "source_location": "L55",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_screenshots",
-      "confidence_score": 1.0
+      "target": "readme_screenshots"
     },
     {
       "relation": "contains",
@@ -45040,9 +44149,9 @@
       "source_file": "README.md",
       "source_location": "L113",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_setting_up_platform_databases_and_assets",
-      "confidence_score": 1.0
+      "target": "readme_setting_up_platform_databases_and_assets"
     },
     {
       "relation": "contains",
@@ -45050,9 +44159,9 @@
       "source_file": "README.md",
       "source_location": "L210",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_skills_used_to_build_this",
-      "confidence_score": 1.0
+      "target": "readme_skills_used_to_build_this"
     },
     {
       "relation": "contains",
@@ -45060,9 +44169,9 @@
       "source_file": "README.md",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_gbbox",
-      "target": "readme_supported_imports",
-      "confidence_score": 1.0
+      "target": "readme_supported_imports"
     },
     {
       "relation": "contains",
@@ -45160,9 +44269,9 @@
       "source_file": "README.md",
       "source_location": "L130",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_setting_up_platform_databases_and_assets",
-      "target": "readme_atari_2600",
-      "confidence_score": 1.0
+      "target": "readme_atari_2600"
     },
     {
       "relation": "contains",
@@ -45170,9 +44279,9 @@
       "source_file": "README.md",
       "source_location": "L123",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_setting_up_platform_databases_and_assets",
-      "target": "readme_atari_800",
-      "confidence_score": 1.0
+      "target": "readme_atari_800"
     },
     {
       "relation": "contains",
@@ -45180,9 +44289,9 @@
       "source_file": "README.md",
       "source_location": "L115",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_setting_up_platform_databases_and_assets",
-      "target": "readme_commodore_64",
-      "confidence_score": 1.0
+      "target": "readme_commodore_64"
     },
     {
       "relation": "contains",
@@ -45190,9 +44299,9 @@
       "source_file": "README.md",
       "source_location": "L153",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_building_the_sqlite_database",
-      "target": "readme_linux_and_macos",
-      "confidence_score": 1.0
+      "target": "readme_linux_and_macos"
     },
     {
       "relation": "contains",
@@ -45200,9 +44309,9 @@
       "source_file": "README.md",
       "source_location": "L141",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_building_the_sqlite_database",
-      "target": "readme_windows",
-      "confidence_score": 1.0
+      "target": "readme_windows"
     },
     {
       "relation": "contains",
@@ -45210,9 +44319,9 @@
       "source_file": "RELEASE_NOTES_0.1.0.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "release_notes_0_1_0",
-      "target": "release_notes_0_1_0_gbbox_0_1_0_release_notes",
-      "confidence_score": 1.0
+      "target": "release_notes_0_1_0_gbbox_0_1_0_release_notes"
     },
     {
       "relation": "contains",
@@ -45220,9 +44329,9 @@
       "source_file": "RELEASE_NOTES_0.1.0.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "release_notes_0_1_0_gbbox_0_1_0_release_notes",
-      "target": "release_notes_0_1_0_highlights",
-      "confidence_score": 1.0
+      "target": "release_notes_0_1_0_highlights"
     },
     {
       "relation": "contains",
@@ -45230,9 +44339,9 @@
       "source_file": "RELEASE_NOTES_0.1.0.md",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "release_notes_0_1_0_gbbox_0_1_0_release_notes",
-      "target": "release_notes_0_1_0_installation_and_artifacts",
-      "confidence_score": 1.0
+      "target": "release_notes_0_1_0_installation_and_artifacts"
     },
     {
       "relation": "contains",
@@ -45240,9 +44349,9 @@
       "source_file": "RELEASE_NOTES_0.1.0.md",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "release_notes_0_1_0_gbbox_0_1_0_release_notes",
-      "target": "release_notes_0_1_0_known_limitations",
-      "confidence_score": 1.0
+      "target": "release_notes_0_1_0_known_limitations"
     },
     {
       "relation": "contains",
@@ -45250,9 +44359,9 @@
       "source_file": "RELEASE_NOTES_0.1.0.md",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "release_notes_0_1_0_gbbox_0_1_0_release_notes",
-      "target": "release_notes_0_1_0_migration_from_64box",
-      "confidence_score": 1.0
+      "target": "release_notes_0_1_0_migration_from_64box"
     },
     {
       "relation": "contains",
@@ -45260,9 +44369,9 @@
       "source_file": "RELEASE_NOTES_0.1.0.md",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "release_notes_0_1_0_gbbox_0_1_0_release_notes",
-      "target": "release_notes_0_1_0_supported_imports",
-      "confidence_score": 1.0
+      "target": "release_notes_0_1_0_supported_imports"
     },
     {
       "relation": "contains",
@@ -45270,9 +44379,9 @@
       "source_file": "RELEASE_NOTES_0.1.0.md",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "release_notes_0_1_0_gbbox_0_1_0_release_notes",
-      "target": "release_notes_0_1_0_validation",
-      "confidence_score": 1.0
+      "target": "release_notes_0_1_0_validation"
     },
     {
       "relation": "contains",
@@ -45390,9 +44499,9 @@
       "source_file": "specs/001-multi-platform-gamebases/checklists/requirements.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "specs_001_multi_platform_gamebases_checklists_requirements_md_checklists_requirements",
-      "target": "checklists_requirements_specification_quality_checklist_multi_platform_gamebase_libraries",
-      "confidence_score": 1.0
+      "target": "checklists_requirements_specification_quality_checklist_multi_platform_gamebase_libraries"
     },
     {
       "relation": "contains",
@@ -45400,9 +44509,9 @@
       "source_file": "specs/001-multi-platform-gamebases/checklists/requirements.md",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checklists_requirements_specification_quality_checklist_multi_platform_gamebase_libraries",
-      "target": "specs_001_multi_platform_gamebases_checklists_requirements_md_checklists_requirements_content_quality",
-      "confidence_score": 1.0
+      "target": "specs_001_multi_platform_gamebases_checklists_requirements_md_checklists_requirements_content_quality"
     },
     {
       "relation": "contains",
@@ -45410,9 +44519,9 @@
       "source_file": "specs/001-multi-platform-gamebases/checklists/requirements.md",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checklists_requirements_specification_quality_checklist_multi_platform_gamebase_libraries",
-      "target": "specs_001_multi_platform_gamebases_checklists_requirements_md_checklists_requirements_feature_readiness",
-      "confidence_score": 1.0
+      "target": "specs_001_multi_platform_gamebases_checklists_requirements_md_checklists_requirements_feature_readiness"
     },
     {
       "relation": "contains",
@@ -45420,9 +44529,9 @@
       "source_file": "specs/001-multi-platform-gamebases/checklists/requirements.md",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checklists_requirements_specification_quality_checklist_multi_platform_gamebase_libraries",
-      "target": "specs_001_multi_platform_gamebases_checklists_requirements_md_checklists_requirements_notes",
-      "confidence_score": 1.0
+      "target": "specs_001_multi_platform_gamebases_checklists_requirements_md_checklists_requirements_notes"
     },
     {
       "relation": "contains",
@@ -45430,9 +44539,9 @@
       "source_file": "specs/001-multi-platform-gamebases/checklists/requirements.md",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checklists_requirements_specification_quality_checklist_multi_platform_gamebase_libraries",
-      "target": "specs_001_multi_platform_gamebases_checklists_requirements_md_checklists_requirements_requirement_completeness",
-      "confidence_score": 1.0
+      "target": "specs_001_multi_platform_gamebases_checklists_requirements_md_checklists_requirements_requirement_completeness"
     },
     {
       "relation": "contains",
@@ -46030,9 +45139,9 @@
       "source_file": "specs/001-multi-platform-gamebases/quickstart.md",
       "source_location": "L142",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "001_multi_platform_gamebases_quickstart_quickstart_validate_multi_platform_gamebase_libraries",
-      "target": "001_multi_platform_gamebases_quickstart_closure_note",
-      "confidence_score": 1.0
+      "target": "001_multi_platform_gamebases_quickstart_closure_note"
     },
     {
       "relation": "contains",
@@ -46690,9 +45799,9 @@
       "source_file": "specs/002-gamebasebox-public-release/checklists/requirements.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "specs_002_gamebasebox_public_release_checklists_requirements_md_checklists_requirements",
-      "target": "checklists_requirements_specification_quality_checklist_gamebasebox_public_0_1_release",
-      "confidence_score": 1.0
+      "target": "checklists_requirements_specification_quality_checklist_gamebasebox_public_0_1_release"
     },
     {
       "relation": "contains",
@@ -46700,9 +45809,9 @@
       "source_file": "specs/002-gamebasebox-public-release/checklists/requirements.md",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checklists_requirements_specification_quality_checklist_gamebasebox_public_0_1_release",
-      "target": "specs_002_gamebasebox_public_release_checklists_requirements_md_checklists_requirements_content_quality",
-      "confidence_score": 1.0
+      "target": "specs_002_gamebasebox_public_release_checklists_requirements_md_checklists_requirements_content_quality"
     },
     {
       "relation": "contains",
@@ -46710,9 +45819,9 @@
       "source_file": "specs/002-gamebasebox-public-release/checklists/requirements.md",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checklists_requirements_specification_quality_checklist_gamebasebox_public_0_1_release",
-      "target": "specs_002_gamebasebox_public_release_checklists_requirements_md_checklists_requirements_feature_readiness",
-      "confidence_score": 1.0
+      "target": "specs_002_gamebasebox_public_release_checklists_requirements_md_checklists_requirements_feature_readiness"
     },
     {
       "relation": "contains",
@@ -46720,9 +45829,9 @@
       "source_file": "specs/002-gamebasebox-public-release/checklists/requirements.md",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checklists_requirements_specification_quality_checklist_gamebasebox_public_0_1_release",
-      "target": "specs_002_gamebasebox_public_release_checklists_requirements_md_checklists_requirements_notes",
-      "confidence_score": 1.0
+      "target": "specs_002_gamebasebox_public_release_checklists_requirements_md_checklists_requirements_notes"
     },
     {
       "relation": "contains",
@@ -46730,9 +45839,9 @@
       "source_file": "specs/002-gamebasebox-public-release/checklists/requirements.md",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checklists_requirements_specification_quality_checklist_gamebasebox_public_0_1_release",
-      "target": "specs_002_gamebasebox_public_release_checklists_requirements_md_checklists_requirements_requirement_completeness",
-      "confidence_score": 1.0
+      "target": "specs_002_gamebasebox_public_release_checklists_requirements_md_checklists_requirements_requirement_completeness"
     },
     {
       "relation": "contains",
@@ -46740,9 +45849,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/branding-contract.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_branding_contract",
-      "target": "contracts_branding_contract_branding_contract",
-      "confidence_score": 1.0
+      "target": "contracts_branding_contract_branding_contract"
     },
     {
       "relation": "contains",
@@ -46750,9 +45859,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/branding-contract.md",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_branding_contract_branding_contract",
-      "target": "contracts_branding_contract_replacement_rules",
-      "confidence_score": 1.0
+      "target": "contracts_branding_contract_replacement_rules"
     },
     {
       "relation": "contains",
@@ -46760,9 +45869,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/branding-contract.md",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_branding_contract_branding_contract",
-      "target": "contracts_branding_contract_required_public_identity",
-      "confidence_score": 1.0
+      "target": "contracts_branding_contract_required_public_identity"
     },
     {
       "relation": "contains",
@@ -46770,9 +45879,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/branding-contract.md",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_branding_contract_branding_contract",
-      "target": "contracts_branding_contract_verification",
-      "confidence_score": 1.0
+      "target": "contracts_branding_contract_verification"
     },
     {
       "relation": "contains",
@@ -46780,9 +45889,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/release-contract.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_release_contract",
-      "target": "contracts_release_contract_release_contract",
-      "confidence_score": 1.0
+      "target": "contracts_release_contract_release_contract"
     },
     {
       "relation": "contains",
@@ -46790,9 +45899,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/release-contract.md",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_release_contract_release_contract",
-      "target": "contracts_release_contract_release_notes_sections",
-      "confidence_score": 1.0
+      "target": "contracts_release_contract_release_notes_sections"
     },
     {
       "relation": "contains",
@@ -46800,9 +45909,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/release-contract.md",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_release_contract_release_contract",
-      "target": "contracts_release_contract_required_artifact_behavior",
-      "confidence_score": 1.0
+      "target": "contracts_release_contract_required_artifact_behavior"
     },
     {
       "relation": "contains",
@@ -46810,9 +45919,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/release-contract.md",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_release_contract_release_contract",
-      "target": "contracts_release_contract_verification",
-      "confidence_score": 1.0
+      "target": "contracts_release_contract_verification"
     },
     {
       "relation": "contains",
@@ -46820,9 +45929,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/release-contract.md",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_release_contract_release_contract",
-      "target": "contracts_release_contract_version",
-      "confidence_score": 1.0
+      "target": "contracts_release_contract_version"
     },
     {
       "relation": "contains",
@@ -46830,9 +45939,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/repository-contract.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_repository_contract",
-      "target": "contracts_repository_contract_repository_publication_contract",
-      "confidence_score": 1.0
+      "target": "contracts_repository_contract_repository_publication_contract"
     },
     {
       "relation": "contains",
@@ -46840,9 +45949,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/repository-contract.md",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_repository_contract_repository_publication_contract",
-      "target": "contracts_repository_contract_new_repository",
-      "confidence_score": 1.0
+      "target": "contracts_repository_contract_new_repository"
     },
     {
       "relation": "contains",
@@ -46850,9 +45959,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/repository-contract.md",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_repository_contract_repository_publication_contract",
-      "target": "contracts_repository_contract_old_repository_redirect",
-      "confidence_score": 1.0
+      "target": "contracts_repository_contract_old_repository_redirect"
     },
     {
       "relation": "contains",
@@ -46860,9 +45969,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/repository-contract.md",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_repository_contract_repository_publication_contract",
-      "target": "contracts_repository_contract_recommended_topics",
-      "confidence_score": 1.0
+      "target": "contracts_repository_contract_recommended_topics"
     },
     {
       "relation": "contains",
@@ -46870,9 +45979,9 @@
       "source_file": "specs/002-gamebasebox-public-release/contracts/repository-contract.md",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "contracts_repository_contract_repository_publication_contract",
-      "target": "contracts_repository_contract_verification",
-      "confidence_score": 1.0
+      "target": "contracts_repository_contract_verification"
     },
     {
       "relation": "contains",
@@ -46880,9 +45989,9 @@
       "source_file": "specs/002-gamebasebox-public-release/data-model.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_data_model",
-      "target": "002_gamebasebox_public_release_data_model_data_model_gamebasebox_public_0_1_release",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_data_model_data_model_gamebasebox_public_0_1_release"
     },
     {
       "relation": "contains",
@@ -46890,9 +45999,9 @@
       "source_file": "specs/002-gamebasebox-public-release/data-model.md",
       "source_location": "L56",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_data_model_data_model_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_data_model_oldrepositoryredirect",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_data_model_oldrepositoryredirect"
     },
     {
       "relation": "contains",
@@ -46900,9 +46009,9 @@
       "source_file": "specs/002-gamebasebox-public-release/data-model.md",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_data_model_data_model_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_data_model_productidentity",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_data_model_productidentity"
     },
     {
       "relation": "contains",
@@ -46910,9 +46019,9 @@
       "source_file": "specs/002-gamebasebox-public-release/data-model.md",
       "source_location": "L39",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_data_model_data_model_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_data_model_releaseversion",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_data_model_releaseversion"
     },
     {
       "relation": "contains",
@@ -46920,9 +46029,9 @@
       "source_file": "specs/002-gamebasebox-public-release/data-model.md",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_data_model_data_model_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_data_model_repositorypublication",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_data_model_repositorypublication"
     },
     {
       "relation": "contains",
@@ -46930,9 +46039,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan",
-      "target": "002_gamebasebox_public_release_plan_implementation_plan_gamebasebox_public_0_1_release",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_implementation_plan_gamebasebox_public_0_1_release"
     },
     {
       "relation": "contains",
@@ -46940,9 +46049,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L104",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan_implementation_plan_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_plan_complexity_tracking",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_complexity_tracking"
     },
     {
       "relation": "contains",
@@ -46950,9 +46059,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan_implementation_plan_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_plan_constitution_check",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_constitution_check"
     },
     {
       "relation": "contains",
@@ -46960,9 +46069,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L81",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan_implementation_plan_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_plan_phase_0_research_summary",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_phase_0_research_summary"
     },
     {
       "relation": "contains",
@@ -46970,9 +46079,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L91",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan_implementation_plan_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_plan_phase_1_design_summary",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_phase_1_design_summary"
     },
     {
       "relation": "contains",
@@ -46980,9 +46089,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan_implementation_plan_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_plan_project_structure",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_project_structure"
     },
     {
       "relation": "contains",
@@ -46990,9 +46099,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan_implementation_plan_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_plan_summary",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_summary"
     },
     {
       "relation": "contains",
@@ -47000,9 +46109,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan_implementation_plan_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_plan_technical_context",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_technical_context"
     },
     {
       "relation": "contains",
@@ -47010,9 +46119,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan_project_structure",
-      "target": "002_gamebasebox_public_release_plan_documentation_this_feature",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_documentation_this_feature"
     },
     {
       "relation": "contains",
@@ -47020,9 +46129,9 @@
       "source_file": "specs/002-gamebasebox-public-release/plan.md",
       "source_location": "L63",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_plan_project_structure",
-      "target": "002_gamebasebox_public_release_plan_source_code_repository_root",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_plan_source_code_repository_root"
     },
     {
       "relation": "contains",
@@ -47030,9 +46139,9 @@
       "source_file": "specs/002-gamebasebox-public-release/quickstart.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_quickstart",
-      "target": "002_gamebasebox_public_release_quickstart_quickstart_gamebasebox_public_0_1_release_validation",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_quickstart_quickstart_gamebasebox_public_0_1_release_validation"
     },
     {
       "relation": "contains",
@@ -47040,9 +46149,9 @@
       "source_file": "specs/002-gamebasebox-public-release/quickstart.md",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_quickstart_quickstart_gamebasebox_public_0_1_release_validation",
-      "target": "002_gamebasebox_public_release_quickstart_branding_audit",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_quickstart_branding_audit"
     },
     {
       "relation": "contains",
@@ -47050,9 +46159,9 @@
       "source_file": "specs/002-gamebasebox-public-release/quickstart.md",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_quickstart_quickstart_gamebasebox_public_0_1_release_validation",
-      "target": "002_gamebasebox_public_release_quickstart_new_repository_verification",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_quickstart_new_repository_verification"
     },
     {
       "relation": "contains",
@@ -47060,9 +46169,9 @@
       "source_file": "specs/002-gamebasebox-public-release/quickstart.md",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_quickstart_quickstart_gamebasebox_public_0_1_release_validation",
-      "target": "002_gamebasebox_public_release_quickstart_old_repository_verification",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_quickstart_old_repository_verification"
     },
     {
       "relation": "contains",
@@ -47070,9 +46179,9 @@
       "source_file": "specs/002-gamebasebox-public-release/quickstart.md",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_quickstart_quickstart_gamebasebox_public_0_1_release_validation",
-      "target": "002_gamebasebox_public_release_quickstart_prerequisites",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_quickstart_prerequisites"
     },
     {
       "relation": "contains",
@@ -47080,9 +46189,9 @@
       "source_file": "specs/002-gamebasebox-public-release/quickstart.md",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_quickstart_quickstart_gamebasebox_public_0_1_release_validation",
-      "target": "002_gamebasebox_public_release_quickstart_release_verification",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_quickstart_release_verification"
     },
     {
       "relation": "contains",
@@ -47090,9 +46199,9 @@
       "source_file": "specs/002-gamebasebox-public-release/quickstart.md",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_quickstart_quickstart_gamebasebox_public_0_1_release_validation",
-      "target": "002_gamebasebox_public_release_quickstart_validation_commands",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_quickstart_validation_commands"
     },
     {
       "relation": "contains",
@@ -47100,9 +46209,9 @@
       "source_file": "specs/002-gamebasebox-public-release/research.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_research",
-      "target": "002_gamebasebox_public_release_research_research_gamebasebox_public_0_1_release",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_research_research_gamebasebox_public_0_1_release"
     },
     {
       "relation": "contains",
@@ -47110,9 +46219,9 @@
       "source_file": "specs/002-gamebasebox-public-release/research.md",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_research_research_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_research_decision_attach_built_artifacts_to_v0_1_0",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_research_decision_attach_built_artifacts_to_v0_1_0"
     },
     {
       "relation": "contains",
@@ -47120,9 +46229,9 @@
       "source_file": "specs/002-gamebasebox-public-release/research.md",
       "source_location": "L36",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_research_research_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_research_decision_keep_platform_support_claims_factual",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_research_decision_keep_platform_support_claims_factual"
     },
     {
       "relation": "contains",
@@ -47130,9 +46239,9 @@
       "source_file": "specs/002-gamebasebox-public-release/research.md",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_research_research_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_research_decision_preserve_existing_local_data_compatibility",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_research_decision_preserve_existing_local_data_compatibility"
     },
     {
       "relation": "contains",
@@ -47140,9 +46249,9 @@
       "source_file": "specs/002-gamebasebox-public-release/research.md",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_research_research_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_research_decision_publish_new_repository_as_gamebasebox_with_clean_history",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_research_decision_publish_new_repository_as_gamebasebox_with_clean_history"
     },
     {
       "relation": "contains",
@@ -47150,9 +46259,9 @@
       "source_file": "specs/002-gamebasebox-public-release/research.md",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_research_research_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_research_decision_use_gbbox_gamebase_box_as_public_identity",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_research_decision_use_gbbox_gamebase_box_as_public_identity"
     },
     {
       "relation": "contains",
@@ -47160,9 +46269,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec",
-      "target": "002_gamebasebox_public_release_spec_feature_specification_gamebasebox_public_0_1_release",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_feature_specification_gamebasebox_public_0_1_release"
     },
     {
       "relation": "contains",
@@ -47170,9 +46279,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L105",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_feature_specification_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_spec_assumptions",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_assumptions"
     },
     {
       "relation": "contains",
@@ -47180,9 +46289,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L69",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_feature_specification_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_spec_requirements_mandatory",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_requirements_mandatory"
     },
     {
       "relation": "contains",
@@ -47190,9 +46299,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_feature_specification_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_spec_success_criteria_mandatory",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_success_criteria_mandatory"
     },
     {
       "relation": "contains",
@@ -47200,9 +46309,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_feature_specification_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_spec_user_scenarios_testing_mandatory",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_user_scenarios_testing_mandatory"
     },
     {
       "relation": "contains",
@@ -47210,9 +46319,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L61",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_user_scenarios_testing_mandatory",
-      "target": "002_gamebasebox_public_release_spec_edge_cases",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_edge_cases"
     },
     {
       "relation": "contains",
@@ -47220,9 +46329,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_user_scenarios_testing_mandatory",
-      "target": "002_gamebasebox_public_release_spec_user_story_1_rebrand_the_app_identity_priority_p1",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_user_story_1_rebrand_the_app_identity_priority_p1"
     },
     {
       "relation": "contains",
@@ -47230,9 +46339,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_user_scenarios_testing_mandatory",
-      "target": "002_gamebasebox_public_release_spec_user_story_2_publish_a_new_public_repository_priority_p1",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_user_story_2_publish_a_new_public_repository_priority_p1"
     },
     {
       "relation": "contains",
@@ -47240,9 +46349,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_user_scenarios_testing_mandatory",
-      "target": "002_gamebasebox_public_release_spec_user_story_3_ship_version_0_1_0_with_release_artifacts_priority_p1",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_user_story_3_ship_version_0_1_0_with_release_artifacts_priority_p1"
     },
     {
       "relation": "contains",
@@ -47250,9 +46359,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L71",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_requirements_mandatory",
-      "target": "002_gamebasebox_public_release_spec_functional_requirements",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_functional_requirements"
     },
     {
       "relation": "contains",
@@ -47260,9 +46369,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L87",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_requirements_mandatory",
-      "target": "002_gamebasebox_public_release_spec_key_entities",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_key_entities"
     },
     {
       "relation": "contains",
@@ -47270,9 +46379,9 @@
       "source_file": "specs/002-gamebasebox-public-release/spec.md",
       "source_location": "L96",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_spec_success_criteria_mandatory",
-      "target": "002_gamebasebox_public_release_spec_measurable_outcomes",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_spec_measurable_outcomes"
     },
     {
       "relation": "contains",
@@ -47280,9 +46389,9 @@
       "source_file": "specs/002-gamebasebox-public-release/tasks.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_tasks",
-      "target": "002_gamebasebox_public_release_tasks_tasks_gamebasebox_public_0_1_release",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_tasks_tasks_gamebasebox_public_0_1_release"
     },
     {
       "relation": "contains",
@@ -47290,9 +46399,9 @@
       "source_file": "specs/002-gamebasebox-public-release/tasks.md",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_tasks_tasks_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_tasks_phase_1_spec_closure_and_audit",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_tasks_phase_1_spec_closure_and_audit"
     },
     {
       "relation": "contains",
@@ -47300,9 +46409,9 @@
       "source_file": "specs/002-gamebasebox-public-release/tasks.md",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_tasks_tasks_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_tasks_phase_2_product_rebrand",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_tasks_phase_2_product_rebrand"
     },
     {
       "relation": "contains",
@@ -47310,9 +46419,9 @@
       "source_file": "specs/002-gamebasebox-public-release/tasks.md",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_tasks_tasks_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_tasks_phase_3_readme_and_repository_content",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_tasks_phase_3_readme_and_repository_content"
     },
     {
       "relation": "contains",
@@ -47320,9 +46429,9 @@
       "source_file": "specs/002-gamebasebox-public-release/tasks.md",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_tasks_tasks_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_tasks_phase_4_validation_and_build_artifacts",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_tasks_phase_4_validation_and_build_artifacts"
     },
     {
       "relation": "contains",
@@ -47330,9 +46439,9 @@
       "source_file": "specs/002-gamebasebox-public-release/tasks.md",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_tasks_tasks_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_tasks_phase_5_new_public_repository_and_release",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_tasks_phase_5_new_public_repository_and_release"
     },
     {
       "relation": "contains",
@@ -47340,9 +46449,9 @@
       "source_file": "specs/002-gamebasebox-public-release/tasks.md",
       "source_location": "L53",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "002_gamebasebox_public_release_tasks_tasks_gamebasebox_public_0_1_release",
-      "target": "002_gamebasebox_public_release_tasks_phase_6_old_repo_redirect_and_close_out",
-      "confidence_score": 1.0
+      "target": "002_gamebasebox_public_release_tasks_phase_6_old_repo_redirect_and_close_out"
     },
     {
       "relation": "references",
@@ -47483,5 +46592,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "44cf6edb3c2792f5e01b122958fd39492c0e2c80"
+  "built_at_commit": "a22f79e508c90bc8dfeb446dd5991b352d116961"
 }

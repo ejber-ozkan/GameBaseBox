@@ -18,20 +18,22 @@
     "tauri": "tauri",
     "tauri:dev": "tauri-dev.bat",
     "tauri:build": "tauri-build.bat",
-    "test": "npm run test:frontend",
-    "setup:emu": "node scripts/setup_emulator.js",
-    "postinstall": "npm run setup:emu"
+    "test": "npm run test:frontend"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1",
+    "postcss": "^8.5.10"
   },
   "dependencies": {
-    "@emulatorjs/core-vice_x64": "^4.2.3",
-    "@emulatorjs/core-vice_x64sc": "^4.2.3",
-    "@emulatorjs/emulatorjs": "^4.2.3",
     "@tauri-apps/api": "^2.10.1",
     "@tauri-apps/plugin-dialog": "^2.6.0",
     "@tauri-apps/plugin-fs": "^2.4.5",
     "@tauri-apps/plugin-log": "^2.8.0",
     "@tauri-apps/plugin-shell": "^2.3.5",
-    "next": "16.1.6",
+    "next": "16.2.9",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
@@ -41,19 +43,20 @@
     "@tauri-apps/cli": "^2.10.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
-    "@types/node": "^20",
+    "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^5.1.4",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitejs/plugin-react": "^6.0.3",
+    "@vitest/coverage-v8": "^4.1.9",
     "better-sqlite3": "^12.9.0",
     "csv-parse": "^6.2.1",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "16.2.9",
     "happy-dom": "^20.8.3",
     "jsdom": "^28.1.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.4"
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9"
   }
 }

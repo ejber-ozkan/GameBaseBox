@@ -7,7 +7,6 @@ import {
   getDatabaseBootstrapStatus,
   getGenres,
   getSubGenres,
-  importDatabaseFromMdb,
   importPlatformDatabaseFromMdb,
   openDirectoryDialog,
   openMdbFileDialog,
@@ -31,7 +30,7 @@ import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
 import { useWindowLibraryShelves } from '@/hooks/useWindowLibraryShelves';
 import { PLATFORM_PROFILES, SUPPORTED_PLATFORMS } from '@/lib/platform-capabilities';
-import type { PlatformFolderSettings } from '@/types/platform';
+import type { PlatformFolderSettings, PlatformId, PlatformSettings } from '@/types/platform';
 import {
   playRotatingUiSoundEffectAndWait,
   playUiSoundEffect,
@@ -514,6 +513,7 @@ function LibraryApp() {
 }
 
 export default function Home() {
+  const { settings, updateSettings, setActivePlatform } = useSettings();
   const [bootstrapStatus, setBootstrapStatus] = useState<{
     dbPath: string;
     ready: boolean;
@@ -521,9 +521,14 @@ export default function Home() {
   } | null>(null);
   const [isCheckingSetup, setIsCheckingSetup] = useState(true);
   const [isImporting, setIsImporting] = useState(false);
-  const [mdbPath, setMdbPath] = useState('');
+  const [setupPlatformId, setSetupPlatformId] = useState<PlatformId>(settings.activePlatformId);
+  const [setupPlatformSettings, setSetupPlatformSettings] = useState<Record<PlatformId, PlatformSettings>>(
+    settings.platformSettings,
+  );
   const [setupError, setSetupError] = useState<string | null>(null);
   const [setupSuccess, setSetupSuccess] = useState<string | null>(null);
+  const activeSetupPlatform = PLATFORM_PROFILES[setupPlatformId];
+  const activeSetupPlatformSettings = setupPlatformSettings[setupPlatformId];
 
   const refreshBootstrapStatus = useCallback(async () => {
     setIsCheckingSetup(true);
@@ -553,17 +558,65 @@ export default function Home() {
     void refreshBootstrapStatus();
   }, [refreshBootstrapStatus]);
 
-  const handleBrowseMdb = useCallback(async () => {
-    const selected = await openMdbFileDialog();
-    if (selected) {
-      setMdbPath(selected);
-      setSetupError(null);
-    }
-  }, []);
+  const updateSetupPlatform = useCallback((
+    platformId: PlatformId,
+    updater: (current: PlatformSettings) => PlatformSettings,
+  ) => {
+    setSetupPlatformSettings((currentSettings) => {
+      const nextSettings = {
+        ...currentSettings,
+        [platformId]: updater(currentSettings[platformId]),
+      };
+      updateSettings({ platformSettings: nextSettings });
+      return nextSettings;
+    });
+  }, [updateSettings]);
 
-  const handleImportDatabase = useCallback(async () => {
-    if (!mdbPath) {
-      setSetupError('Select the GameBase64 v19 MDB file first.');
+  const handleBrowseSetupMdb = useCallback(async () => {
+    const selected = await openMdbFileDialog();
+    if (!selected) {
+      return;
+    }
+
+    setSetupError(null);
+    setSetupSuccess(`Selected MDB for ${activeSetupPlatform.displayName}.`);
+    updateSetupPlatform(setupPlatformId, (current) => ({
+      ...current,
+      library: {
+        ...current.library,
+        sourceMdbPath: selected,
+      },
+    }));
+  }, [activeSetupPlatform.displayName, setupPlatformId, updateSetupPlatform]);
+
+  const handleSetupFolderChange = useCallback((folderKey: SetupFolderKey, value: string) => {
+    updateSetupPlatform(setupPlatformId, (current) => ({
+      ...current,
+      folders: {
+        ...current.folders,
+        [folderKey]: value,
+      },
+    }));
+  }, [setupPlatformId, updateSetupPlatform]);
+
+  const handleBrowseSetupFolder = useCallback(async (folderKey: SetupFolderKey) => {
+    const selected = await openDirectoryDialog();
+    if (!selected) {
+      return;
+    }
+    handleSetupFolderChange(folderKey, selected);
+  }, [handleSetupFolderChange]);
+
+  const handleImportSetupPlatform = useCallback(async () => {
+    if (!activeSetupPlatformSettings.library.sourceMdbPath) {
+      setSetupError(`Select the ${activeSetupPlatform.displayName} MDB file first.`);
+      return;
+    }
+
+    const missingFolder = getRequiredPlatformFolderKeys(setupPlatformId)
+      .find((folderKey) => !activeSetupPlatformSettings.folders[folderKey]?.trim());
+    if (missingFolder) {
+      setSetupError(`Select the ${missingFolder.replace('Path', '')} folder first.`);
       return;
     }
 
@@ -572,17 +625,69 @@ export default function Home() {
     setSetupSuccess(null);
 
     try {
-      const result = await importDatabaseFromMdb(mdbPath);
+      const result = await importPlatformDatabaseFromMdb({
+        platformId: setupPlatformId,
+        mdbPath: activeSetupPlatformSettings.library.sourceMdbPath,
+        folderSettings: {
+          gamesPath: activeSetupPlatformSettings.folders.gamesPath,
+          musicPath: activeSetupPlatformSettings.folders.musicPath,
+          photosPath: activeSetupPlatformSettings.folders.photosPath,
+          screenshotsPath: activeSetupPlatformSettings.folders.screenshotsPath,
+          extrasPath: activeSetupPlatformSettings.folders.extrasPath,
+        },
+      });
+      const importedSettings = {
+        ...activeSetupPlatformSettings,
+        library: {
+          ...activeSetupPlatformSettings.library,
+          importStatus: 'imported' as const,
+          sourceMdbPath: activeSetupPlatformSettings.library.sourceMdbPath,
+          sqliteScope: result.platformId,
+          lastImportedAt: new Date().toISOString(),
+          lastImportError: null,
+          gameCount: result.gameCount,
+        },
+      };
+      const nextPlatformSettings = {
+        ...setupPlatformSettings,
+        [setupPlatformId]: importedSettings,
+      };
+      setSetupPlatformSettings(nextPlatformSettings);
+      updateSettings({
+        romsPath: activeSetupPlatformSettings.folders.gamesPath,
+        soundsPath: activeSetupPlatformSettings.folders.musicPath,
+        musicianPhotosPath: activeSetupPlatformSettings.folders.photosPath,
+        screenshotsPath: activeSetupPlatformSettings.folders.screenshotsPath,
+        extrasPath: activeSetupPlatformSettings.folders.extrasPath,
+        platformSettings: nextPlatformSettings,
+      });
       setSetupSuccess(
-        `Imported ${result.importedTables} tables and prepared the GB64 database at ${result.dbPath}.`,
+        `Imported ${activeSetupPlatform.displayName} and prepared ${result.importedTables} tables at ${result.dbPath}.`,
       );
       await refreshBootstrapStatus();
     } catch (error) {
-      setSetupError(error instanceof Error ? error.message : 'Database import failed.');
+      const message = error instanceof Error ? error.message : `${activeSetupPlatform.displayName} import failed.`;
+      setSetupError(message);
+      updateSetupPlatform(setupPlatformId, (current) => ({
+        ...current,
+        library: {
+          ...current.library,
+          importStatus: 'failed',
+          lastImportError: message,
+        },
+      }));
     } finally {
       setIsImporting(false);
     }
-  }, [mdbPath, refreshBootstrapStatus]);
+  }, [
+    activeSetupPlatform.displayName,
+    activeSetupPlatformSettings,
+    refreshBootstrapStatus,
+    setupPlatformId,
+    setupPlatformSettings,
+    updateSettings,
+    updateSetupPlatform,
+  ]);
 
   if (isCheckingSetup || bootstrapStatus === null) {
     return (
@@ -606,9 +711,29 @@ export default function Home() {
         error={setupError ?? bootstrapStatus.reason}
         importResult={setupSuccess}
         isImporting={isImporting}
-        mdbPath={mdbPath}
-        onBrowse={handleBrowseMdb}
-        onImport={handleImportDatabase}
+        mdbPath={activeSetupPlatformSettings.library.sourceMdbPath ?? ''}
+        platformName={activeSetupPlatform.displayName}
+        platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
+          id: platform.id,
+          displayName: platform.displayName,
+          importStatus: setupPlatformSettings[platform.id].library.importStatus,
+        }))}
+        folderSettings={activeSetupPlatformSettings.folders}
+        requiredFolderKeys={getRequiredPlatformFolderKeys(setupPlatformId)}
+        selectedPlatformId={setupPlatformId}
+        onBrowse={handleBrowseSetupMdb}
+        onBrowseFolder={handleBrowseSetupFolder}
+        onFolderChange={handleSetupFolderChange}
+        onPlatformSelect={(platformId) => {
+          if (platformId in PLATFORM_PROFILES) {
+            const nextPlatformId = platformId as PlatformId;
+            setSetupPlatformId(nextPlatformId);
+            setActivePlatform(nextPlatformId);
+            setSetupError(null);
+            setSetupSuccess(null);
+          }
+        }}
+        onImport={handleImportSetupPlatform}
       />
     );
   }
