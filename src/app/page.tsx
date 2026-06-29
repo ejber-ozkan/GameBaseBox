@@ -562,15 +562,13 @@ export default function Home() {
     platformId: PlatformId,
     updater: (current: PlatformSettings) => PlatformSettings,
   ) => {
-    setSetupPlatformSettings((currentSettings) => {
-      const nextSettings = {
-        ...currentSettings,
-        [platformId]: updater(currentSettings[platformId]),
-      };
-      updateSettings({ platformSettings: nextSettings });
-      return nextSettings;
-    });
-  }, [updateSettings]);
+    const nextSettings = {
+      ...setupPlatformSettings,
+      [platformId]: updater(setupPlatformSettings[platformId]),
+    };
+    setSetupPlatformSettings(nextSettings);
+    updateSettings({ platformSettings: nextSettings });
+  }, [setupPlatformSettings, updateSettings]);
 
   const handleBrowseSetupMdb = useCallback(async () => {
     const selected = await openMdbFileDialog();
@@ -640,6 +638,7 @@ export default function Home() {
         ...activeSetupPlatformSettings,
         library: {
           ...activeSetupPlatformSettings.library,
+          active: true,
           importStatus: 'imported' as const,
           sourceMdbPath: activeSetupPlatformSettings.library.sourceMdbPath,
           sqliteScope: result.platformId,
@@ -648,12 +647,23 @@ export default function Home() {
           gameCount: result.gameCount,
         },
       };
-      const nextPlatformSettings = {
-        ...setupPlatformSettings,
-        [setupPlatformId]: importedSettings,
-      };
+      const nextPlatformSettings = (Object.keys(setupPlatformSettings) as PlatformId[]).reduce(
+        (next, platformId) => ({
+          ...next,
+          [platformId]: {
+            ...(platformId === setupPlatformId ? importedSettings : setupPlatformSettings[platformId]),
+            library: {
+              ...(platformId === setupPlatformId ? importedSettings : setupPlatformSettings[platformId]).library,
+              active: platformId === setupPlatformId,
+            },
+          },
+        }),
+        {} as Record<PlatformId, PlatformSettings>,
+      );
       setSetupPlatformSettings(nextPlatformSettings);
       updateSettings({
+        activePlatformId: setupPlatformId,
+        lastUsedPlatformId: setupPlatformId,
         romsPath: activeSetupPlatformSettings.folders.gamesPath,
         soundsPath: activeSetupPlatformSettings.folders.musicPath,
         musicianPhotosPath: activeSetupPlatformSettings.folders.photosPath,

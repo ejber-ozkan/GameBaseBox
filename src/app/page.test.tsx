@@ -6,6 +6,34 @@ import type { Settings } from '@/contexts/SettingsContext';
 
 const mockUpdateSettings = vi.fn();
 const mockSetActivePlatform = vi.fn();
+let isInsideSetupStateUpdater = false;
+
+vi.mock('react', async () => {
+  const actual = await vi.importActual<typeof import('react')>('react');
+  return {
+    ...actual,
+    useState: <T,>(initialState: T | (() => T)) => {
+      const [value, setValue] = actual.useState(initialState);
+      const guardedSetValue: typeof setValue = (nextValue) => {
+        if (typeof nextValue !== 'function') {
+          setValue(nextValue);
+          return;
+        }
+
+        setValue((currentValue) => {
+          isInsideSetupStateUpdater = true;
+          try {
+            return (nextValue as (current: T) => T)(currentValue);
+          } finally {
+            isInsideSetupStateUpdater = false;
+          }
+        });
+      };
+
+      return [value, guardedSetValue] as const;
+    },
+  };
+});
 
 vi.mock('@/contexts/SettingsContext', async () => {
   const actual = await vi.importActual<typeof import('@/contexts/SettingsContext')>('@/contexts/SettingsContext');
@@ -42,6 +70,12 @@ let mockSettings: Settings;
 describe('Home first-run setup', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    isInsideSetupStateUpdater = false;
+    mockUpdateSettings.mockImplementation(() => {
+      if (isInsideSetupStateUpdater) {
+        throw new Error('updateSettings called from inside setup state updater');
+      }
+    });
     mockSettings = {
       screenshotsPath: '',
       soundsPath: '',
@@ -135,6 +169,58 @@ describe('Home first-run setup', () => {
           extrasPath: 'E:/Atari/Extras',
         },
       });
+    });
+  });
+
+  it('does not persist setup changes from inside the setup state updater', async () => {
+    render(<Home />);
+
+    expect(await screen.findByRole('heading', { name: 'Build Your Atari 800 Database' })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Choose MDB' }));
+
+    await waitFor(() => {
+      expect(mockUpdateSettings).toHaveBeenCalledWith(
+        expect.objectContaining({
+          platformSettings: expect.objectContaining({
+            atari800: expect.objectContaining({
+              library: expect.objectContaining({
+                sourceMdbPath: 'E:/Atari/Atari 800 v12.mdb',
+              }),
+            }),
+          }),
+        }),
+      );
+    });
+  });
+
+  it('activates the imported platform after a fresh setup with no saved local paths', async () => {
+    render(<Home />);
+
+    expect(await screen.findByRole('heading', { name: 'Build Your Atari 800 Database' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Choose MDB' }));
+    await waitFor(() => expect(mockUpdateSettings).toHaveBeenCalled());
+
+    fireEvent.click(screen.getByRole('button', { name: 'Build Database' }));
+
+    await waitFor(() => {
+      expect(mockUpdateSettings).toHaveBeenCalledWith(
+        expect.objectContaining({
+          activePlatformId: 'atari800',
+          lastUsedPlatformId: 'atari800',
+          platformSettings: expect.objectContaining({
+            c64: expect.objectContaining({
+              library: expect.objectContaining({ active: false }),
+            }),
+            atari800: expect.objectContaining({
+              library: expect.objectContaining({
+                active: true,
+                importStatus: 'imported',
+              }),
+            }),
+          }),
+        }),
+      );
     });
   });
 });
