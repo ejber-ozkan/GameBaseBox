@@ -100,7 +100,7 @@ GameBase database (`.mdb`) files, ROMs, screenshots, music, extras, and other me
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en) v20+
+- [Node.js](https://nodejs.org/en) v24+
 - [Rust](https://rustup.rs/) for the Tauri backend
 - [Tauri CLI prerequisites](https://tauri.app/2/guides/getting-started/prerequisites/)
 - Linux packages on Ubuntu/Debian:
