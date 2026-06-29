@@ -73,7 +73,7 @@ jobs:
           Copy-Item $installer.FullName "release-assets/64Box-Windows-x64-Setup.exe"
 
       - name: Upload Windows bundles
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: 64box-windows-bundles
           path: release-assets/**
@@ -142,7 +142,7 @@ jobs:
           cp "$installer" release-assets/64Box-Linux.AppImage
 
       - name: Upload Linux bundles
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: 64box-linux-bundles
           path: release-assets/**
@@ -197,7 +197,7 @@ jobs:
           cp "$installer" release-assets/64Box-macOS.dmg
 
       - name: Upload macOS bundles
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: 64box-macos-bundles
           path: release-assets/**
