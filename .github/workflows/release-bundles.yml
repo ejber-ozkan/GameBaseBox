@@ -70,12 +70,12 @@ jobs:
           New-Item -ItemType Directory -Force release-assets | Out-Null
           $installer = Get-ChildItem "src-tauri/target/release/bundle/nsis" -Recurse -Filter *.exe | Select-Object -First 1
           if (-not $installer) { throw "Windows installer not found" }
-          Copy-Item $installer.FullName "release-assets/64Box-Windows-x64-Setup.exe"
+          Copy-Item $installer.FullName "release-assets/GBBox-Windows-x64-Setup.exe"
 
       - name: Upload Windows bundles
         uses: actions/upload-artifact@v7
         with:
-          name: 64box-windows-bundles
+          name: gbbox-windows-bundles
           path: release-assets/**
           if-no-files-found: error
 
@@ -84,7 +84,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          files: release-assets/64Box-Windows-x64-Setup.exe
+          files: release-assets/GBBox-Windows-x64-Setup.exe
 
   build-linux:
     if: github.event_name == 'push' || github.event.inputs.build_linux == 'true'
@@ -139,12 +139,12 @@ jobs:
             echo "Linux AppImage not found" >&2
             exit 1
           fi
-          cp "$installer" release-assets/64Box-Linux.AppImage
+          cp "$installer" release-assets/GBBox-Linux.AppImage
 
       - name: Upload Linux bundles
         uses: actions/upload-artifact@v7
         with:
-          name: 64box-linux-bundles
+          name: gbbox-linux-bundles
           path: release-assets/**
           if-no-files-found: warn
 
@@ -153,7 +153,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          files: release-assets/64Box-Linux.AppImage
+          files: release-assets/GBBox-Linux.AppImage
 
   build-macos:
     if: github.event_name == 'push' || github.event.inputs.build_macos == 'true'
@@ -194,12 +194,12 @@ jobs:
             echo "macOS DMG not found" >&2
             exit 1
           fi
-          cp "$installer" release-assets/64Box-macOS.dmg
+          cp "$installer" release-assets/GBBox-macOS.dmg
 
       - name: Upload macOS bundles
         uses: actions/upload-artifact@v7
         with:
-          name: 64box-macos-bundles
+          name: gbbox-macos-bundles
           path: release-assets/**
           if-no-files-found: error
 
@@ -208,4 +208,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          files: release-assets/64Box-macOS.dmg
+          files: release-assets/GBBox-macOS.dmg
