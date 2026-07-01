@@ -287,7 +287,7 @@ pub fn get_db_path() -> String {
 pub fn normalize_platform_id(platform_id: Option<&str>) -> Result<String, String> {
     let platform_id = platform_id.unwrap_or("c64");
     match platform_id {
-        "c64" | "atari800" | "atari2600" => Ok(platform_id.to_string()),
+        "c64" | "atari800" | "atari2600" | "zxspectrum" => Ok(platform_id.to_string()),
         _ => Err(format!("Unsupported platform: {platform_id}")),
     }
 }
@@ -1189,6 +1189,7 @@ fn platform_display_name(platform_id: &str) -> &str {
         "c64" => "Commodore 64",
         "atari800" => "Atari 800",
         "atari2600" => "Atari 2600",
+        "zxspectrum" => "ZX Spectrum",
         _ => platform_id,
     }
 }

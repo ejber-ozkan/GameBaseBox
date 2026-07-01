@@ -7,6 +7,7 @@ use rusqlite::{Connection, OptionalExtension};
 const C64_PLATFORM_ID: &str = "c64";
 const ATARI800_PLATFORM_ID: &str = "atari800";
 const ATARI2600_PLATFORM_ID: &str = "atari2600";
+const ZXSPECTRUM_PLATFORM_ID: &str = "zxspectrum";
 
 fn c64_profile() -> PlatformProfile {
     PlatformProfile {
@@ -105,8 +106,45 @@ fn atari2600_profile() -> PlatformProfile {
     }
 }
 
+fn zxspectrum_profile() -> PlatformProfile {
+    PlatformProfile {
+        id: ZXSPECTRUM_PLATFORM_ID.to_string(),
+        display_name: "ZX Spectrum".to_string(),
+        status: "available".to_string(),
+        import_status: "notImported".to_string(),
+        default_emulator_profile_id: "retroarch-zxspectrum".to_string(),
+        supported_emulator_profile_ids: vec![
+            "retroarch-zxspectrum".to_string(),
+            "spectaculator-zxspectrum".to_string(),
+        ],
+        capabilities: PlatformCapabilities {
+            screenshots: true,
+            photos: true,
+            music: "ay".to_string(),
+            extras: true,
+            videos: false,
+            in_app_emulation: false,
+            launch_extensions: vec![
+                ".tzx", ".tap", ".z80", ".sna", ".szx", ".trd", ".dsk", ".zip", ".7z",
+            ]
+            .into_iter()
+            .map(String::from)
+            .collect(),
+        },
+        folder_types: vec!["extras", "games", "screenshots", "photos", "music"]
+            .into_iter()
+            .map(String::from)
+            .collect(),
+    }
+}
+
 fn supported_platforms() -> Vec<PlatformProfile> {
-    vec![c64_profile(), atari800_profile(), atari2600_profile()]
+    vec![
+        c64_profile(),
+        atari800_profile(),
+        atari2600_profile(),
+        zxspectrum_profile(),
+    ]
 }
 
 fn find_platform(platform_id: &str) -> Option<PlatformProfile> {

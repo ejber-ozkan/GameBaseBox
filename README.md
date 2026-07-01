@@ -1,6 +1,6 @@
 # GBBox
 
-**GameBase Box** is a local-first desktop frontend for GameBase-style retro game libraries. It started life as 64Box for the GameBase64 collection and now supports platform-scoped imports for **Commodore 64, Atari 800, and Atari 2600**, with more GameBase platforms coming soon.
+**GameBase Box** is a local-first desktop frontend for GameBase-style retro game libraries. It started life as 64Box for the GameBase64 collection and now supports platform-scoped imports for **Commodore 64, Atari 800, Atari 2600, and ZX Spectrum**, with more GameBase platforms coming soon.
 
 > Formerly 64Box. The new public repository is [GameBaseBox](https://github.com/ejber-ozkan/GameBaseBox).
 
@@ -38,6 +38,7 @@ Download the latest GBBox build from the platform links below, or browse the ful
 | Commodore 64 / GameBase64 | Supported | Compatibility baseline with VICE, RetroArch, SID playback, extras, screenshots, and GameBase64 metadata. |
 | Atari 800 | Supported | Imports Atari 800 v12-compatible GameBase MDBs with Games, Music, Photos, Screenshots, and Extras folders. Supports RetroArch Atari800 and Altirra launch settings. |
 | Atari 2600 | Supported | Imports Atari 2600 GameBase MDBs with Games, Screenshots, and Extras folders. Uses RetroArch/Stella-style launch settings. |
+| ZX Spectrum / GameBaseZX / SpeccyMania | Supported | Imports Sinclair ZX Spectrum v6-compatible GameBase MDBs with Extras, Games, Screenshots, Musician Photos, and Music folders. RetroArch is the default launch profile, with Spectaculator as an external emulator option. `.ay` music files are recognized as ZX Spectrum music media; in-app JavaScript playback still needs evaluation. |
 | More GameBase platforms | Coming soon | The platform model is now data-driven so additional GameBase databases can be added without cloning the app. |
 
 GameBase database (`.mdb`) files, ROMs, screenshots, music, extras, and other media are not included. You point GBBox at the databases and local folders you own.
@@ -133,6 +134,14 @@ GBBox remains grateful to the GameBase64 project and GB64 Team for decades of Co
 2. Prepare folder roots for Games, Screenshots, and Extras.
 3. Select Atari 2600 from the platform switcher. If it has not been imported, GBBox opens the Atari 2600 import flow.
 4. Configure RetroArch executable and Atari 2600 core paths under **Atari 2600 Platform Paths**.
+
+### ZX Spectrum
+
+1. Obtain `Sinclair ZX Spectrum v6.mdb` from a GameBaseZX / SpeccyMania-compatible collection.
+2. Prepare folder roots for Extras, Games, Screenshots, Musician Photos, and Music.
+3. Select ZX Spectrum from the platform switcher. If it has not been imported, GBBox opens the ZX Spectrum import flow and mentions both GameBaseZX and SpeccyMania.
+4. Configure ZX Spectrum launch paths under **ZX Spectrum Platform Paths**. RetroArch is the default profile and typically uses a Fuse-compatible libretro core; Spectaculator can be configured as a secondary external emulator.
+5. `.ay` music files are tracked as ZX Spectrum music media. In-app browser playback is not enabled yet; a JavaScript/WebAudio player needs a separate evaluation before it is surfaced in the UI.
 
 ## Building the SQLite Database
 

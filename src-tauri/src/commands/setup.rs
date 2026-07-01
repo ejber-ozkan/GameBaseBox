@@ -94,7 +94,7 @@ pub(super) fn validate_platform_import_request(
     request: &ImportPlatformDatabaseRequest,
 ) -> Result<(), String> {
     match request.platform_id.as_str() {
-        "c64" | "atari800" | "atari2600" => {}
+        "c64" | "atari800" | "atari2600" | "zxspectrum" => {}
         other => return Err(format!("Unsupported platform import: {other}")),
     }
 
@@ -125,6 +125,13 @@ pub(super) fn validate_platform_import_request(
             validate_existing_folder("Games", &request.folder_settings.games_path)?;
             validate_existing_folder("Screenshots", &request.folder_settings.screenshots_path)?;
             validate_existing_folder("Extras", &request.folder_settings.extras_path)?;
+        }
+        "zxspectrum" => {
+            validate_existing_folder("Extras", &request.folder_settings.extras_path)?;
+            validate_existing_folder("Games", &request.folder_settings.games_path)?;
+            validate_existing_folder("Screenshots", &request.folder_settings.screenshots_path)?;
+            validate_existing_folder("Musician Photos", &request.folder_settings.photos_path)?;
+            validate_existing_folder("Music", &request.folder_settings.music_path)?;
         }
         _ => {}
     }

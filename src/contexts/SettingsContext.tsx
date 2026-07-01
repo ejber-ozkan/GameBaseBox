@@ -456,28 +456,18 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       lastBigBoxRailId: targetNav.lastBigBoxRailId,
       lastBigBoxGameId: targetNav.lastBigBoxGameId,
       platformSettings: {
-        ...settings.platformSettings,
-        c64: {
-          ...settings.platformSettings.c64,
-          library: {
-            ...settings.platformSettings.c64.library,
-            active: platformId === 'c64',
-          },
-        },
-        atari800: {
-          ...settings.platformSettings.atari800,
-          library: {
-            ...settings.platformSettings.atari800.library,
-            active: platformId === 'atari800',
-          },
-        },
-        atari2600: {
-          ...settings.platformSettings.atari2600,
-          library: {
-            ...settings.platformSettings.atari2600.library,
-            active: platformId === 'atari2600',
-          },
-        },
+        ...(Object.fromEntries(
+          (Object.keys(settings.platformSettings) as PlatformId[]).map((candidatePlatformId) => [
+            candidatePlatformId,
+            {
+              ...settings.platformSettings[candidatePlatformId],
+              library: {
+                ...settings.platformSettings[candidatePlatformId].library,
+                active: platformId === candidatePlatformId,
+              },
+            },
+          ]),
+        ) as Record<PlatformId, PlatformSettings>),
       },
     });
   }, [settings.platformSettings, updateSettings]);

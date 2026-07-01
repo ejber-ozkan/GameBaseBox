@@ -70,6 +70,18 @@ const platformImportConfigs = {
     musicExtensions: [],
     launchExtensions: [".a26", ".bin", ".rom", ".zip", ".7z"],
   },
+  zxspectrum: {
+    platformId: "zxspectrum",
+    displayName: "ZX Spectrum",
+    status: "available",
+    defaultImported: false,
+    sourceMdbName: "Sinclair ZX Spectrum v6.mdb",
+    referenceMdbPath: "E:\\Backups\\RETRO-BACKUPS\\ZXSpectrum\\Sinclair ZX Spectrum v6\\Sinclair ZX Spectrum v6.mdb",
+    aliases: ["GameBaseZX", "SpeccyMania"],
+    requiredFolders: ["extrasPath", "gamesPath", "screenshotsPath", "photosPath", "musicPath"],
+    musicExtensions: [".ay"],
+    launchExtensions: [".tzx", ".tap", ".z80", ".sna", ".szx", ".trd", ".dsk", ".zip", ".7z"],
+  },
 };
 
 function getPlatformImportConfig(platformId = "c64") {

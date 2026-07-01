@@ -2210,11 +2210,21 @@
       "label": "getPlatformImportConfig()",
       "file_type": "code",
       "source_file": "scripts/sqlite_support_config.js",
-      "source_location": "L75",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "scripts_sqlite_support_config_getplatformimportconfig",
       "community": 14,
       "norm_label": "getplatformimportconfig()"
+    },
+    {
+      "label": "sqlite_support_config.test.js",
+      "file_type": "code",
+      "source_file": "scripts/sqlite_support_config.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_sqlite_support_config_test",
+      "community": 14,
+      "norm_label": "sqlite_support_config.test.js"
     },
     {
       "label": "build.rs",
@@ -3360,7 +3370,7 @@
       "label": "emulator_profile_display_name()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L55",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "commands_emulator_emulator_profile_display_name",
       "community": 10,
@@ -3370,7 +3380,7 @@
       "label": "launch_extensions_for_platform()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L66",
+      "source_location": "L69",
       "_origin": "ast",
       "id": "commands_emulator_launch_extensions_for_platform",
       "community": 10,
@@ -3380,7 +3390,7 @@
       "label": "retroarch_core_not_found_message()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L75",
+      "source_location": "L79",
       "_origin": "ast",
       "id": "commands_emulator_retroarch_core_not_found_message",
       "community": 10,
@@ -3390,7 +3400,7 @@
       "label": "retroarch_core_not_file_message()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L82",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "commands_emulator_retroarch_core_not_file_message",
       "community": 10,
@@ -3400,7 +3410,7 @@
       "label": "is_supported_emulator_profile()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L89",
+      "source_location": "L95",
       "_origin": "ast",
       "id": "commands_emulator_is_supported_emulator_profile",
       "community": 10,
@@ -3410,7 +3420,7 @@
       "label": "is_retroarch_profile()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L100",
+      "source_location": "L108",
       "_origin": "ast",
       "id": "commands_emulator_is_retroarch_profile",
       "community": 10,
@@ -3420,7 +3430,7 @@
       "label": "push_altirra_rom_args()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L104",
+      "source_location": "L112",
       "_origin": "ast",
       "id": "commands_emulator_push_altirra_rom_args",
       "community": 10,
@@ -3430,7 +3440,7 @@
       "label": "Vec",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L104",
+      "source_location": "L112",
       "_origin": "ast",
       "id": "src_tauri_src_commands_emulator_rs_vec",
       "community": 10,
@@ -3440,7 +3450,7 @@
       "label": "test_emulator_profile()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L141",
+      "source_location": "L149",
       "_origin": "ast",
       "id": "commands_emulator_test_emulator_profile",
       "community": 10,
@@ -3450,7 +3460,7 @@
       "label": "EmulatorProfileTestRequest",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L141",
+      "source_location": "L149",
       "_origin": "ast",
       "id": "emulatorprofiletestrequest",
       "community": 10,
@@ -3460,7 +3470,7 @@
       "label": "LaunchResult",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L141",
+      "source_location": "L149",
       "_origin": "ast",
       "id": "launchresult",
       "community": 10,
@@ -3470,7 +3480,7 @@
       "label": "launch_emulator()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L221",
+      "source_location": "L229",
       "_origin": "ast",
       "id": "commands_emulator_launch_emulator",
       "community": 10,
@@ -3480,7 +3490,7 @@
       "label": "LaunchRequest",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L221",
+      "source_location": "L229",
       "_origin": "ast",
       "id": "launchrequest",
       "community": 10,
@@ -3490,7 +3500,7 @@
       "label": "test_altirra_rom_args_extension_mapping()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L501",
+      "source_location": "L520",
       "_origin": "ast",
       "id": "commands_emulator_test_altirra_rom_args_extension_mapping",
       "community": 10,
@@ -3500,7 +3510,7 @@
       "label": "system_shell_executable()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L529",
+      "source_location": "L548",
       "_origin": "ast",
       "id": "commands_emulator_system_shell_executable",
       "community": 10,
@@ -3510,7 +3520,7 @@
       "label": "copy_test_emulator()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L540",
+      "source_location": "L559",
       "_origin": "ast",
       "id": "commands_emulator_copy_test_emulator",
       "community": 10,
@@ -3520,7 +3530,7 @@
       "label": "write_zip()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L544",
+      "source_location": "L563",
       "_origin": "ast",
       "id": "commands_emulator_write_zip",
       "community": 10,
@@ -3530,7 +3540,7 @@
       "label": "test_launch_emulator_non_existent()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L558",
+      "source_location": "L577",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_non_existent",
       "community": 10,
@@ -3540,7 +3550,7 @@
       "label": "test_launch_emulator_invalid_zip()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L573",
+      "source_location": "L592",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_invalid_zip",
       "community": 10,
@@ -3550,7 +3560,7 @@
       "label": "test_is_retroarch_detection()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L593",
+      "source_location": "L612",
       "_origin": "ast",
       "id": "commands_emulator_test_is_retroarch_detection",
       "community": 10,
@@ -3560,7 +3570,7 @@
       "label": "test_launch_emulator_directory_and_non_zip_success()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L613",
+      "source_location": "L632",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_directory_and_non_zip_success",
       "community": 10,
@@ -3570,7 +3580,7 @@
       "label": "test_launch_emulator_retroarch_missing_core()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L637",
+      "source_location": "L656",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_retroarch_missing_core",
       "community": 10,
@@ -3580,7 +3590,7 @@
       "label": "test_launch_emulator_retroarch_core_directory_rejected()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L664",
+      "source_location": "L683",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_retroarch_core_directory_rejected",
       "community": 10,
@@ -3590,7 +3600,7 @@
       "label": "test_launch_emulator_zip_prefers_file_to_run()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L694",
+      "source_location": "L713",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_zip_prefers_file_to_run",
       "community": 10,
@@ -3600,7 +3610,7 @@
       "label": "test_launch_emulator_rom_directory_rejected()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L728",
+      "source_location": "L747",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_rom_directory_rejected",
       "community": 10,
@@ -3610,7 +3620,7 @@
       "label": "test_launch_emulator_retroarch_zip_success()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L750",
+      "source_location": "L769",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_retroarch_zip_success",
       "community": 10,
@@ -3620,7 +3630,7 @@
       "label": "test_launch_emulator_zip_does_not_delete_shared_temp_directory()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L781",
+      "source_location": "L800",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_zip_does_not_delete_shared_temp_directory",
       "community": 10,
@@ -3630,7 +3640,7 @@
       "label": "test_launch_emulator_atari800_retroarch_zip_success()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L814",
+      "source_location": "L833",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_atari800_retroarch_zip_success",
       "community": 10,
@@ -3640,7 +3650,7 @@
       "label": "test_launch_emulator_atari800_zip_accepts_tape_and_cart_formats()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L846",
+      "source_location": "L865",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_atari800_zip_accepts_tape_and_cart_formats",
       "community": 10,
@@ -3650,7 +3660,7 @@
       "label": "test_launch_emulator_atari800_retroarch_missing_core_names_platform_and_profile()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L875",
+      "source_location": "L894",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_atari800_retroarch_missing_core_names_platform_and_profile",
       "community": 10,
@@ -3660,7 +3670,7 @@
       "label": "test_launch_emulator_atari800_altirra_missing_executable_names_platform_and_profile()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L901",
+      "source_location": "L920",
       "_origin": "ast",
       "id": "commands_emulator_test_launch_emulator_atari800_altirra_missing_executable_names_platform_and_profile",
       "community": 10,
@@ -3670,7 +3680,7 @@
       "label": "test_emulator_profile_atari800_retroarch_success()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L923",
+      "source_location": "L942",
       "_origin": "ast",
       "id": "commands_emulator_test_emulator_profile_atari800_retroarch_success",
       "community": 10,
@@ -3680,17 +3690,37 @@
       "label": "test_emulator_profile_atari800_retroarch_requires_core()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L947",
+      "source_location": "L966",
       "_origin": "ast",
       "id": "commands_emulator_test_emulator_profile_atari800_retroarch_requires_core",
       "community": 10,
       "norm_label": "test_emulator_profile_atari800_retroarch_requires_core()"
     },
     {
+      "label": "test_emulator_profile_zxspectrum_retroarch_requires_core()",
+      "file_type": "code",
+      "source_file": "src-tauri/src/commands/emulator.rs",
+      "source_location": "L990",
+      "_origin": "ast",
+      "id": "commands_emulator_test_emulator_profile_zxspectrum_retroarch_requires_core",
+      "community": 10,
+      "norm_label": "test_emulator_profile_zxspectrum_retroarch_requires_core()"
+    },
+    {
+      "label": "test_emulator_profile_zxspectrum_spectaculator_success()",
+      "file_type": "code",
+      "source_file": "src-tauri/src/commands/emulator.rs",
+      "source_location": "L1014",
+      "_origin": "ast",
+      "id": "commands_emulator_test_emulator_profile_zxspectrum_spectaculator_success",
+      "community": 10,
+      "norm_label": "test_emulator_profile_zxspectrum_spectaculator_success()"
+    },
+    {
       "label": "test_emulator_profile_c64_vice_preserves_legacy_success()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/emulator.rs",
-      "source_location": "L971",
+      "source_location": "L1038",
       "_origin": "ast",
       "id": "commands_emulator_test_emulator_profile_c64_vice_preserves_legacy_success",
       "community": 10,
@@ -4020,7 +4050,7 @@
       "label": "c64_profile()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L11",
+      "source_location": "L12",
       "_origin": "ast",
       "id": "commands_platforms_c64_profile",
       "community": 53,
@@ -4030,7 +4060,7 @@
       "label": "PlatformProfile",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L11",
+      "source_location": "L12",
       "_origin": "ast",
       "id": "platformprofile",
       "community": 53,
@@ -4040,7 +4070,7 @@
       "label": "atari800_profile()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L48",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "commands_platforms_atari800_profile",
       "community": 53,
@@ -4050,17 +4080,27 @@
       "label": "atari2600_profile()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L81",
+      "source_location": "L82",
       "_origin": "ast",
       "id": "commands_platforms_atari2600_profile",
       "community": 53,
       "norm_label": "atari2600_profile()"
     },
     {
+      "label": "zxspectrum_profile()",
+      "file_type": "code",
+      "source_file": "src-tauri/src/commands/platforms.rs",
+      "source_location": "L109",
+      "_origin": "ast",
+      "id": "commands_platforms_zxspectrum_profile",
+      "community": 53,
+      "norm_label": "zxspectrum_profile()"
+    },
+    {
       "label": "supported_platforms()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L108",
+      "source_location": "L141",
       "_origin": "ast",
       "id": "commands_platforms_supported_platforms",
       "community": 53,
@@ -4070,7 +4110,7 @@
       "label": "Vec",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L108",
+      "source_location": "L141",
       "_origin": "ast",
       "id": "src_tauri_src_commands_platforms_rs_vec",
       "community": 53,
@@ -4080,7 +4120,7 @@
       "label": "find_platform()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L112",
+      "source_location": "L150",
       "_origin": "ast",
       "id": "commands_platforms_find_platform",
       "community": 53,
@@ -4090,7 +4130,7 @@
       "label": "Option",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L112",
+      "source_location": "L150",
       "_origin": "ast",
       "id": "src_tauri_src_commands_platforms_rs_option",
       "community": 53,
@@ -4100,7 +4140,7 @@
       "label": "get_supported_platforms()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L119",
+      "source_location": "L157",
       "_origin": "ast",
       "id": "commands_platforms_get_supported_platforms",
       "community": 53,
@@ -4110,7 +4150,7 @@
       "label": "Result",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L119",
+      "source_location": "L157",
       "_origin": "ast",
       "id": "src_tauri_src_commands_platforms_rs_result",
       "community": 53,
@@ -4120,7 +4160,7 @@
       "label": "String",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L119",
+      "source_location": "L157",
       "_origin": "ast",
       "id": "src_tauri_src_commands_platforms_rs_string",
       "community": 53,
@@ -4130,7 +4170,7 @@
       "label": "get_active_platform()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L124",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "commands_platforms_get_active_platform",
       "community": 53,
@@ -4140,7 +4180,7 @@
       "label": "ActivePlatformState",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L124",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "activeplatformstate",
       "community": 53,
@@ -4150,7 +4190,7 @@
       "label": "set_active_platform()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L133",
+      "source_location": "L171",
       "_origin": "ast",
       "id": "commands_platforms_set_active_platform",
       "community": 53,
@@ -4160,7 +4200,7 @@
       "label": "SetActivePlatformResponse",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L133",
+      "source_location": "L171",
       "_origin": "ast",
       "id": "setactiveplatformresponse",
       "community": 53,
@@ -4170,7 +4210,7 @@
       "label": "get_platform_import_status_sync()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L149",
+      "source_location": "L187",
       "_origin": "ast",
       "id": "commands_platforms_get_platform_import_status_sync",
       "community": 53,
@@ -4180,7 +4220,7 @@
       "label": "PlatformImportStatus",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms.rs",
-      "source_location": "L149",
+      "source_location": "L187",
       "_origin": "ast",
       "id": "src_tauri_src_commands_platforms_rs_platformimportstatus",
       "community": 53,
@@ -4217,10 +4257,20 @@
       "norm_label": "test_get_supported_platforms_includes_importable_atari2600_capabilities()"
     },
     {
-      "label": "test_active_platform_defaults_to_c64()",
+      "label": "test_get_supported_platforms_includes_zxspectrum_capabilities()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms/tests.rs",
       "source_location": "L54",
+      "_origin": "ast",
+      "id": "platforms_tests_test_get_supported_platforms_includes_zxspectrum_capabilities",
+      "community": 53,
+      "norm_label": "test_get_supported_platforms_includes_zxspectrum_capabilities()"
+    },
+    {
+      "label": "test_active_platform_defaults_to_c64()",
+      "file_type": "code",
+      "source_file": "src-tauri/src/commands/platforms/tests.rs",
+      "source_location": "L90",
       "_origin": "ast",
       "id": "platforms_tests_test_active_platform_defaults_to_c64",
       "community": 53,
@@ -4230,7 +4280,7 @@
       "label": "test_set_active_platform_routes_unimported_atari800_to_import()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms/tests.rs",
-      "source_location": "L63",
+      "source_location": "L99",
       "_origin": "ast",
       "id": "platforms_tests_test_set_active_platform_routes_unimported_atari800_to_import",
       "community": 53,
@@ -4240,7 +4290,7 @@
       "label": "test_platform_import_status_is_platform_scoped()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms/tests.rs",
-      "source_location": "L72",
+      "source_location": "L108",
       "_origin": "ast",
       "id": "platforms_tests_test_platform_import_status_is_platform_scoped",
       "community": 53,
@@ -4250,7 +4300,7 @@
       "label": "test_platform_import_status_reads_imported_sqlite_library()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms/tests.rs",
-      "source_location": "L85",
+      "source_location": "L121",
       "_origin": "ast",
       "id": "platforms_tests_test_platform_import_status_reads_imported_sqlite_library",
       "community": 53,
@@ -4260,7 +4310,7 @@
       "label": "test_platform_import_status_treats_missing_library_row_as_not_imported()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/platforms/tests.rs",
-      "source_location": "L138",
+      "source_location": "L174",
       "_origin": "ast",
       "id": "platforms_tests_test_platform_import_status_treats_missing_library_row_as_not_imported",
       "community": 53,
@@ -4430,7 +4480,7 @@
       "label": "validate_existing_folder()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L135",
+      "source_location": "L142",
       "_origin": "ast",
       "id": "commands_setup_validate_existing_folder",
       "community": 6,
@@ -4440,7 +4490,7 @@
       "label": "reject_obvious_wrong_platform_mdb()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L148",
+      "source_location": "L155",
       "_origin": "ast",
       "id": "commands_setup_reject_obvious_wrong_platform_mdb",
       "community": 6,
@@ -4450,7 +4500,7 @@
       "label": "Path",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L148",
+      "source_location": "L155",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_path",
       "community": 6,
@@ -4537,10 +4587,20 @@
       "norm_label": "create_atari2600_folder_settings()"
     },
     {
+      "label": "create_zxspectrum_folder_settings()",
+      "file_type": "code",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L58",
+      "_origin": "ast",
+      "id": "setup_tests_create_zxspectrum_folder_settings",
+      "community": 6,
+      "norm_label": "create_zxspectrum_folder_settings()"
+    },
+    {
       "label": "validates_atari800_import_request_with_required_folders()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup/tests.rs",
-      "source_location": "L59",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "setup_tests_validates_atari800_import_request_with_required_folders",
       "community": 6,
@@ -4550,7 +4610,7 @@
       "label": "rejects_atari800_import_request_missing_required_folder()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup/tests.rs",
-      "source_location": "L73",
+      "source_location": "L95",
       "_origin": "ast",
       "id": "setup_tests_rejects_atari800_import_request_missing_required_folder",
       "community": 6,
@@ -4560,7 +4620,7 @@
       "label": "rejects_atari800_import_request_missing_extras_folder()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup/tests.rs",
-      "source_location": "L90",
+      "source_location": "L112",
       "_origin": "ast",
       "id": "setup_tests_rejects_atari800_import_request_missing_extras_folder",
       "community": 6,
@@ -4570,7 +4630,7 @@
       "label": "rejects_obvious_c64_mdb_for_atari800_import()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup/tests.rs",
-      "source_location": "L107",
+      "source_location": "L129",
       "_origin": "ast",
       "id": "setup_tests_rejects_obvious_c64_mdb_for_atari800_import",
       "community": 6,
@@ -4580,7 +4640,7 @@
       "label": "validates_atari2600_import_request_with_required_folders()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup/tests.rs",
-      "source_location": "L122",
+      "source_location": "L144",
       "_origin": "ast",
       "id": "setup_tests_validates_atari2600_import_request_with_required_folders",
       "community": 6,
@@ -4590,11 +4650,31 @@
       "label": "rejects_atari2600_import_request_missing_screenshots_folder()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup/tests.rs",
-      "source_location": "L136",
+      "source_location": "L158",
       "_origin": "ast",
       "id": "setup_tests_rejects_atari2600_import_request_missing_screenshots_folder",
       "community": 6,
       "norm_label": "rejects_atari2600_import_request_missing_screenshots_folder()"
+    },
+    {
+      "label": "validates_zxspectrum_import_request_with_required_folders()",
+      "file_type": "code",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L175",
+      "_origin": "ast",
+      "id": "setup_tests_validates_zxspectrum_import_request_with_required_folders",
+      "community": 6,
+      "norm_label": "validates_zxspectrum_import_request_with_required_folders()"
+    },
+    {
+      "label": "rejects_zxspectrum_import_request_missing_musician_photos_folder()",
+      "file_type": "code",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L189",
+      "_origin": "ast",
+      "id": "setup_tests_rejects_zxspectrum_import_request_missing_musician_photos_folder",
+      "community": 6,
+      "norm_label": "rejects_zxspectrum_import_request_missing_musician_photos_folder()"
     },
     {
       "label": "system.rs",
@@ -5390,7 +5470,7 @@
       "label": "refresh_platform_libraries()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1196",
+      "source_location": "L1197",
       "_origin": "ast",
       "id": "src_database_refresh_platform_libraries",
       "community": 4,
@@ -5400,7 +5480,7 @@
       "label": "merge_imported_database()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1255",
+      "source_location": "L1256",
       "_origin": "ast",
       "id": "src_database_merge_imported_database",
       "community": 4,
@@ -5410,7 +5490,7 @@
       "label": "import_csv_directory_to_sqlite()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1301",
+      "source_location": "L1302",
       "_origin": "ast",
       "id": "src_database_import_csv_directory_to_sqlite",
       "community": 4,
@@ -5420,7 +5500,7 @@
       "label": "cleanup_export_directory()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1349",
+      "source_location": "L1350",
       "_origin": "ast",
       "id": "src_database_cleanup_export_directory",
       "community": 4,
@@ -5430,7 +5510,7 @@
       "label": "import_mdb_to_sqlite()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1353",
+      "source_location": "L1354",
       "_origin": "ast",
       "id": "src_database_import_mdb_to_sqlite",
       "community": 4,
@@ -5440,7 +5520,7 @@
       "label": "DatabaseImportResult",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1353",
+      "source_location": "L1354",
       "_origin": "ast",
       "id": "src_tauri_src_database_rs_databaseimportresult",
       "community": 4,
@@ -5450,7 +5530,7 @@
       "label": "import_mdb_to_sqlite_for_platform()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1357",
+      "source_location": "L1358",
       "_origin": "ast",
       "id": "src_database_import_mdb_to_sqlite_for_platform",
       "community": 4,
@@ -5460,7 +5540,7 @@
       "label": "init_secure_table()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1392",
+      "source_location": "L1393",
       "_origin": "ast",
       "id": "src_database_init_secure_table",
       "community": 4,
@@ -5470,7 +5550,7 @@
       "label": "test_init_secure_table()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1404",
+      "source_location": "L1405",
       "_origin": "ast",
       "id": "src_database_test_init_secure_table",
       "community": 4,
@@ -5480,7 +5560,7 @@
       "label": "test_get_db_path_prefers_environment_variable()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1420",
+      "source_location": "L1421",
       "_origin": "ast",
       "id": "src_database_test_get_db_path_prefers_environment_variable",
       "community": 4,
@@ -5490,7 +5570,7 @@
       "label": "test_platform_db_helpers_default_to_c64_and_validate_platforms()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1426",
+      "source_location": "L1427",
       "_origin": "ast",
       "id": "src_database_test_platform_db_helpers_default_to_c64_and_validate_platforms",
       "community": 4,
@@ -5500,7 +5580,7 @@
       "label": "test_get_db_path_falls_back_to_local_files()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1436",
+      "source_location": "L1437",
       "_origin": "ast",
       "id": "src_database_test_get_db_path_falls_back_to_local_files",
       "community": 4,
@@ -5510,7 +5590,7 @@
       "label": "test_init_database_creates_cover_index_and_query_indexes()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1464",
+      "source_location": "L1465",
       "_origin": "ast",
       "id": "src_database_test_init_database_creates_cover_index_and_query_indexes",
       "community": 4,
@@ -5520,7 +5600,7 @@
       "label": "test_init_database_refreshes_stale_support_indexes()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1545",
+      "source_location": "L1546",
       "_origin": "ast",
       "id": "src_database_test_init_database_refreshes_stale_support_indexes",
       "community": 4,
@@ -5530,7 +5610,7 @@
       "label": "test_is_database_ready_returns_false_without_base_tables()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1650",
+      "source_location": "L1651",
       "_origin": "ast",
       "id": "src_database_test_is_database_ready_returns_false_without_base_tables",
       "community": 4,
@@ -5540,7 +5620,7 @@
       "label": "test_import_csv_directory_to_sqlite_builds_ready_database()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1659",
+      "source_location": "L1660",
       "_origin": "ast",
       "id": "src_database_test_import_csv_directory_to_sqlite_builds_ready_database",
       "community": 4,
@@ -5550,7 +5630,7 @@
       "label": "test_import_csv_directory_to_sqlite_preserves_requested_platform_scope()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1699",
+      "source_location": "L1700",
       "_origin": "ast",
       "id": "src_database_test_import_csv_directory_to_sqlite_preserves_requested_platform_scope",
       "community": 4,
@@ -5560,7 +5640,7 @@
       "label": "test_import_csv_directory_to_sqlite_merges_platforms_without_replacing_existing_library()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1757",
+      "source_location": "L1758",
       "_origin": "ast",
       "id": "src_database_test_import_csv_directory_to_sqlite_merges_platforms_without_replacing_existing_library",
       "community": 4,
@@ -5570,7 +5650,7 @@
       "label": "test_parse_csv_line_handles_quotes_and_commas()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1869",
+      "source_location": "L1870",
       "_origin": "ast",
       "id": "src_database_test_parse_csv_line_handles_quotes_and_commas",
       "community": 4,
@@ -5580,7 +5660,7 @@
       "label": "test_import_single_csv_table_preserves_multiline_quoted_fields()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1882",
+      "source_location": "L1883",
       "_origin": "ast",
       "id": "src_database_test_import_single_csv_table_preserves_multiline_quoted_fields",
       "community": 4,
@@ -5590,7 +5670,7 @@
       "label": "test_import_csv_directory_to_sqlite_is_atomic_on_failure()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1919",
+      "source_location": "L1920",
       "_origin": "ast",
       "id": "src_database_test_import_csv_directory_to_sqlite_is_atomic_on_failure",
       "community": 4,
@@ -5910,7 +5990,7 @@
       "label": ".as_str()",
       "file_type": "code",
       "source_file": "src-tauri/src/models.rs",
-      "source_location": "L169",
+      "source_location": "L170",
       "_origin": "ast",
       "id": "src_models_platformid_as_str",
       "community": 28,
@@ -5920,7 +6000,7 @@
       "label": "PlatformCapabilities",
       "file_type": "code",
       "source_file": "src-tauri/src/models.rs",
-      "source_location": "L180",
+      "source_location": "L182",
       "_origin": "ast",
       "id": "src_models_platformcapabilities",
       "community": 28,
@@ -5930,7 +6010,7 @@
       "label": "PlatformProfile",
       "file_type": "code",
       "source_file": "src-tauri/src/models.rs",
-      "source_location": "L192",
+      "source_location": "L194",
       "_origin": "ast",
       "id": "src_models_platformprofile",
       "community": 28,
@@ -5940,7 +6020,7 @@
       "label": "ActivePlatformState",
       "file_type": "code",
       "source_file": "src-tauri/src/models.rs",
-      "source_location": "L205",
+      "source_location": "L207",
       "_origin": "ast",
       "id": "src_models_activeplatformstate",
       "community": 28,
@@ -5950,7 +6030,7 @@
       "label": "SetActivePlatformResponse",
       "file_type": "code",
       "source_file": "src-tauri/src/models.rs",
-      "source_location": "L213",
+      "source_location": "L215",
       "_origin": "ast",
       "id": "src_models_setactiveplatformresponse",
       "community": 28,
@@ -5960,7 +6040,7 @@
       "label": "PlatformFolderSettings",
       "file_type": "code",
       "source_file": "src-tauri/src/models.rs",
-      "source_location": "L221",
+      "source_location": "L223",
       "_origin": "ast",
       "id": "src_models_platformfoldersettings",
       "community": 28,
@@ -5970,7 +6050,7 @@
       "label": "PlatformImportStatus",
       "file_type": "code",
       "source_file": "src-tauri/src/models.rs",
-      "source_location": "L231",
+      "source_location": "L233",
       "_origin": "ast",
       "id": "src_models_platformimportstatus",
       "community": 28,
@@ -6343,7 +6423,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_layout",
-      "community": 29,
+      "community": 25,
       "norm_label": "layout.tsx"
     },
     {
@@ -6353,7 +6433,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "app_layout_metadata",
-      "community": 29,
+      "community": 25,
       "norm_label": "metadata"
     },
     {
@@ -6363,7 +6443,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "app_layout_rootlayout",
-      "community": 29,
+      "community": 25,
       "norm_label": "rootlayout()"
     },
     {
@@ -6397,10 +6477,20 @@
       "norm_label": "required_platform_folder_keys"
     },
     {
+      "label": "PLATFORM_IMPORT_ALIASES",
+      "file_type": "code",
+      "source_file": "src/app/page.tsx",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "app_page_platform_import_aliases",
+      "community": 60,
+      "norm_label": "platform_import_aliases"
+    },
+    {
       "label": "getRequiredPlatformFolderKeys()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L50",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "app_page_getrequiredplatformfolderkeys",
       "community": 60,
@@ -6410,7 +6500,7 @@
       "label": "LibraryApp()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L54",
+      "source_location": "L59",
       "_origin": "ast",
       "id": "app_page_libraryapp",
       "community": 60,
@@ -6420,7 +6510,7 @@
       "label": "Home()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L515",
+      "source_location": "L521",
       "_origin": "ast",
       "id": "app_page_home",
       "community": 60,
@@ -6493,7 +6583,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_bigboxtilemedia",
-      "community": 93,
+      "community": 103,
       "norm_label": "bigboxtilemedia.tsx"
     },
     {
@@ -6503,7 +6593,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_bigboxtilemediaprops",
-      "community": 93,
+      "community": 103,
       "norm_label": "bigboxtilemediaprops"
     },
     {
@@ -6513,7 +6603,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_screenshot_cache",
-      "community": 93,
+      "community": 103,
       "norm_label": "screenshot_cache"
     },
     {
@@ -6523,7 +6613,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_cover_cache",
-      "community": 93,
+      "community": 103,
       "norm_label": "cover_cache"
     },
     {
@@ -6533,7 +6623,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_normalizepath",
-      "community": 93,
+      "community": 103,
       "norm_label": "normalizepath()"
     },
     {
@@ -6543,7 +6633,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_getscreenshoturls",
-      "community": 93,
+      "community": 103,
       "norm_label": "getscreenshoturls()"
     },
     {
@@ -6553,7 +6643,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_getcoverurl",
-      "community": 96,
+      "community": 103,
       "norm_label": "getcoverurl()"
     },
     {
@@ -6573,7 +6663,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_bigboxview",
-      "community": 95,
+      "community": 60,
       "norm_label": "bigboxview.tsx"
     },
     {
@@ -6583,7 +6673,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "components_bigboxview_bigboxviewprops",
-      "community": 5,
+      "community": 100,
       "norm_label": "bigboxviewprops"
     },
     {
@@ -6593,7 +6683,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "components_bigboxview_bigboxsessionstate",
-      "community": 95,
+      "community": 60,
       "norm_label": "bigboxsessionstate"
     },
     {
@@ -6603,7 +6693,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "components_bigboxview_bigboxview",
-      "community": 95,
+      "community": 60,
       "norm_label": "bigboxview()"
     },
     {
@@ -6683,7 +6773,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_detailview",
-      "community": 60,
+      "community": 95,
       "norm_label": "detailview.tsx"
     },
     {
@@ -6693,7 +6783,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_detailview_detailviewprops",
-      "community": 60,
+      "community": 95,
       "norm_label": "detailviewprops"
     },
     {
@@ -6713,7 +6803,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_detailview_detailfullscreenmedia",
-      "community": 60,
+      "community": 95,
       "norm_label": "detailfullscreenmedia"
     },
     {
@@ -6723,7 +6813,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "components_detailview_detailfullscreenrequest",
-      "community": 0,
+      "community": 95,
       "norm_label": "detailfullscreenrequest"
     },
     {
@@ -6733,7 +6823,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "components_detailview_detail_config",
-      "community": 60,
+      "community": 95,
       "norm_label": "detail_config"
     },
     {
@@ -6743,7 +6833,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "components_detailview_detailview",
-      "community": 60,
+      "community": 95,
       "norm_label": "detailview()"
     },
     {
@@ -6783,7 +6873,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasdetail",
-      "community": 24,
+      "community": 61,
       "norm_label": "extrasdetail()"
     },
     {
@@ -6803,7 +6893,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_gridview_gridviewprops",
-      "community": 60,
+      "community": 35,
       "norm_label": "gridviewprops"
     },
     {
@@ -6863,7 +6953,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_imageslider",
-      "community": 60,
+      "community": 95,
       "norm_label": "imageslider.tsx"
     },
     {
@@ -6873,7 +6963,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_imageslider_imagesliderprops",
-      "community": 60,
+      "community": 95,
       "norm_label": "imagesliderprops"
     },
     {
@@ -6883,7 +6973,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_imageslider_imageslider",
-      "community": 60,
+      "community": 95,
       "norm_label": "imageslider()"
     },
     {
@@ -6893,7 +6983,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_imagewithfallback",
-      "community": 23,
+      "community": 38,
       "norm_label": "imagewithfallback.tsx"
     },
     {
@@ -6903,7 +6993,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_imagewithfallback_imagewithfallbackprops",
-      "community": 23,
+      "community": 38,
       "norm_label": "imagewithfallbackprops"
     },
     {
@@ -6913,7 +7003,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_imagewithfallback_imagewithfallback",
-      "community": 23,
+      "community": 38,
       "norm_label": "imagewithfallback()"
     },
     {
@@ -6963,7 +7053,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_musicplayer_musicplayerprops",
-      "community": 103,
+      "community": 100,
       "norm_label": "musicplayerprops"
     },
     {
@@ -6973,7 +7063,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_musicplayer_musicplayer",
-      "community": 103,
+      "community": 24,
       "norm_label": "musicplayer()"
     },
     {
@@ -6983,7 +7073,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_musicianphoto",
-      "community": 96,
+      "community": 24,
       "norm_label": "musicianphoto.tsx"
     },
     {
@@ -6993,7 +7083,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_musicianphoto_musicianphotoprops",
-      "community": 96,
+      "community": 24,
       "norm_label": "musicianphotoprops"
     },
     {
@@ -7043,7 +7133,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_sapplayer",
-      "community": 96,
+      "community": 103,
       "norm_label": "sapplayer.tsx"
     },
     {
@@ -7053,7 +7143,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_sapplayer_sapplayerruntime",
-      "community": 96,
+      "community": 103,
       "norm_label": "sapplayerruntime"
     },
     {
@@ -7063,7 +7153,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_sapplayer_sapruntimeconstructor",
-      "community": 96,
+      "community": 103,
       "norm_label": "sapruntimeconstructor"
     },
     {
@@ -7073,7 +7163,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "components_sapplayer_window",
-      "community": 96,
+      "community": 103,
       "norm_label": "window"
     },
     {
@@ -7083,7 +7173,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "components_sapplayer_sapplayerprops",
-      "community": 96,
+      "community": 103,
       "norm_label": "sapplayerprops"
     },
     {
@@ -7093,7 +7183,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_sapplayer_isnativepath",
-      "community": 96,
+      "community": 103,
       "norm_label": "isnativepath()"
     },
     {
@@ -7103,7 +7193,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "components_sapplayer_resolveplayablesapurl",
-      "community": 96,
+      "community": 103,
       "norm_label": "resolveplayablesapurl()"
     },
     {
@@ -7113,7 +7203,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "components_sapplayer_sapplayer",
-      "community": 96,
+      "community": 103,
       "norm_label": "sapplayer()"
     },
     {
@@ -7183,7 +7273,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "components_settingsmodal_settingsview",
-      "community": 60,
+      "community": 142,
       "norm_label": "settingsview()"
     },
     {
@@ -7313,7 +7403,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_uisoundruntime",
-      "community": 29,
+      "community": 25,
       "norm_label": "uisoundruntime.tsx"
     },
     {
@@ -7323,7 +7413,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_uisoundruntime_error_sounds",
-      "community": 29,
+      "community": 25,
       "norm_label": "error_sounds"
     },
     {
@@ -7333,7 +7423,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_uisoundruntime_uisoundruntime",
-      "community": 29,
+      "community": 25,
       "norm_label": "uisoundruntime()"
     },
     {
@@ -7343,7 +7433,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_wasmplayer",
-      "community": 61,
+      "community": 60,
       "norm_label": "wasmplayer.tsx"
     },
     {
@@ -7353,7 +7443,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_wasmplayer_wasmplayerprops",
-      "community": 61,
+      "community": 60,
       "norm_label": "wasmplayerprops"
     },
     {
@@ -7363,7 +7453,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_wasmplayer_wasmplayer",
-      "community": 61,
+      "community": 60,
       "norm_label": "wasmplayer()"
     },
     {
@@ -7373,7 +7463,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bigbox_bigboxalphabetrail",
-      "community": 93,
+      "community": 101,
       "norm_label": "bigboxalphabetrail.tsx"
     },
     {
@@ -7383,7 +7473,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "bigbox_bigboxalphabetrail_bigboxalphabetrailprops",
-      "community": 93,
+      "community": 101,
       "norm_label": "bigboxalphabetrailprops"
     },
     {
@@ -7393,7 +7483,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "bigbox_bigboxalphabetrail_bigboxalphabetrail",
-      "community": 93,
+      "community": 101,
       "norm_label": "bigboxalphabetrail()"
     },
     {
@@ -7443,7 +7533,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bigbox_bigboxfooter",
-      "community": 95,
+      "community": 60,
       "norm_label": "bigboxfooter.tsx"
     },
     {
@@ -7453,7 +7543,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "bigbox_bigboxfooter_bigboxfooterprops",
-      "community": 95,
+      "community": 60,
       "norm_label": "bigboxfooterprops"
     },
     {
@@ -7463,7 +7553,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "bigbox_bigboxfooter_bigboxfooter",
-      "community": 95,
+      "community": 60,
       "norm_label": "bigboxfooter()"
     },
     {
@@ -7473,7 +7563,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bigbox_bigboxheader",
-      "community": 100,
+      "community": 101,
       "norm_label": "bigboxheader.tsx"
     },
     {
@@ -7483,7 +7573,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "bigbox_bigboxheader_bigboxheaderprops",
-      "community": 100,
+      "community": 101,
       "norm_label": "bigboxheaderprops"
     },
     {
@@ -7493,7 +7583,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "bigbox_bigboxheader_bigboxheader",
-      "community": 100,
+      "community": 101,
       "norm_label": "bigboxheader()"
     },
     {
@@ -7643,7 +7733,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "extras_visualextracard",
-      "community": 23,
+      "community": 38,
       "norm_label": "visualextracard.tsx"
     },
     {
@@ -7663,7 +7753,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "extras_visualextrasbrowser",
-      "community": 23,
+      "community": 38,
       "norm_label": "visualextrasbrowser.tsx"
     },
     {
@@ -7673,7 +7763,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "extras_visualextrasbrowser_visualextrasbrowser",
-      "community": 23,
+      "community": 38,
       "norm_label": "visualextrasbrowser()"
     },
     {
@@ -7683,7 +7773,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "library_libraryheader",
-      "community": 5,
+      "community": 100,
       "norm_label": "libraryheader.tsx"
     },
     {
@@ -7693,7 +7783,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "library_libraryheader_libraryheaderprops",
-      "community": 5,
+      "community": 100,
       "norm_label": "libraryheaderprops"
     },
     {
@@ -7703,7 +7793,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "library_libraryheader_libraryheader",
-      "community": 5,
+      "community": 100,
       "norm_label": "libraryheader()"
     },
     {
@@ -7743,7 +7833,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "library_windowgameshelf",
-      "community": 35,
+      "community": 95,
       "norm_label": "windowgameshelf.tsx"
     },
     {
@@ -7753,7 +7843,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "library_windowgameshelf_windowgameshelfprops",
-      "community": 35,
+      "community": 95,
       "norm_label": "windowgameshelfprops"
     },
     {
@@ -7763,7 +7853,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "library_windowgameshelf_windowgameshelf",
-      "community": 35,
+      "community": 95,
       "norm_label": "windowgameshelf()"
     },
     {
@@ -8100,7 +8190,7 @@
       "label": "folderLabels",
       "file_type": "code",
       "source_file": "src/components/setup/DatabaseSetupView.tsx",
-      "source_location": "L32",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "setup_databasesetupview_folderlabels",
       "community": 54,
@@ -8110,7 +8200,7 @@
       "label": "DatabaseSetupView()",
       "file_type": "code",
       "source_file": "src/components/setup/DatabaseSetupView.tsx",
-      "source_location": "L40",
+      "source_location": "L41",
       "_origin": "ast",
       "id": "setup_databasesetupview_databasesetupview",
       "community": 54,
@@ -8563,7 +8653,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "contexts_settingscontext_settings",
-      "community": 5,
+      "community": 29,
       "norm_label": "settings"
     },
     {
@@ -8673,17 +8763,17 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "contexts_settingscontext_settingsprovider",
-      "community": 29,
+      "community": 25,
       "norm_label": "settingsprovider()"
     },
     {
       "label": "useSettings()",
       "file_type": "code",
       "source_file": "src/contexts/SettingsContext.tsx",
-      "source_location": "L572",
+      "source_location": "L562",
       "_origin": "ast",
       "id": "contexts_settingscontext_usesettings",
-      "community": 60,
+      "community": 95,
       "norm_label": "usesettings()"
     },
     {
@@ -8803,7 +8893,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_bigbox_letters",
-      "community": 100,
+      "community": 101,
       "norm_label": "bigbox_letters"
     },
     {
@@ -8813,7 +8903,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_bigboxrailcategory",
-      "community": 93,
+      "community": 101,
       "norm_label": "bigboxrailcategory"
     },
     {
@@ -8823,7 +8913,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_usebigboxlibrarydataprops",
-      "community": 5,
+      "community": 101,
       "norm_label": "usebigboxlibrarydataprops"
     },
     {
@@ -8863,7 +8953,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_usebigboxlibrarydata",
-      "community": 95,
+      "community": 60,
       "norm_label": "usebigboxlibrarydata()"
     },
     {
@@ -8903,7 +8993,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "hooks_usebigboxnavigation_usebigboxnavigationprops",
-      "community": 93,
+      "community": 101,
       "norm_label": "usebigboxnavigationprops"
     },
     {
@@ -8913,7 +9003,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "hooks_usebigboxnavigation_usebigboxnavigation",
-      "community": 95,
+      "community": 60,
       "norm_label": "usebigboxnavigation()"
     },
     {
@@ -8923,7 +9013,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usebigboxscrollsync",
-      "community": 95,
+      "community": 60,
       "norm_label": "usebigboxscrollsync.ts"
     },
     {
@@ -8933,7 +9023,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "hooks_usebigboxscrollsync_usebigboxscrollsyncprops",
-      "community": 95,
+      "community": 60,
       "norm_label": "usebigboxscrollsyncprops"
     },
     {
@@ -8943,7 +9033,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "hooks_usebigboxscrollsync_usebigboxscrollsync",
-      "community": 95,
+      "community": 60,
       "norm_label": "usebigboxscrollsync()"
     },
     {
@@ -8953,7 +9043,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation",
-      "community": 60,
+      "community": 95,
       "norm_label": "usedetailnavigation.ts"
     },
     {
@@ -8963,7 +9053,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailzone",
-      "community": 60,
+      "community": 95,
       "norm_label": "detailzone"
     },
     {
@@ -8973,7 +9063,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_direction",
-      "community": 60,
+      "community": 95,
       "norm_label": "direction"
     },
     {
@@ -8983,7 +9073,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_navigationconfig",
-      "community": 60,
+      "community": 95,
       "norm_label": "navigationconfig"
     },
     {
@@ -9003,7 +9093,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailnavprops",
-      "community": 60,
+      "community": 95,
       "norm_label": "detailnavprops"
     },
     {
@@ -9013,7 +9103,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_usedetailnavigation",
-      "community": 60,
+      "community": 95,
       "norm_label": "usedetailnavigation()"
     },
     {
@@ -9053,7 +9143,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics",
-      "community": 93,
+      "community": 7,
       "norm_label": "usefullscreenlayoutmetrics.ts"
     },
     {
@@ -9063,7 +9153,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedfullscreendensity",
-      "community": 93,
+      "community": 7,
       "norm_label": "resolvedfullscreendensity"
     },
     {
@@ -9073,7 +9163,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_viewportsnapshot",
-      "community": 93,
+      "community": 7,
       "norm_label": "viewportsnapshot"
     },
     {
@@ -9083,7 +9173,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_fullscreenlayoutmetrics",
-      "community": 93,
+      "community": 101,
       "norm_label": "fullscreenlayoutmetrics"
     },
     {
@@ -9093,7 +9183,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_default_viewport",
-      "community": 93,
+      "community": 7,
       "norm_label": "default_viewport"
     },
     {
@@ -9103,7 +9193,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_clamp",
-      "community": 93,
+      "community": 7,
       "norm_label": "clamp()"
     },
     {
@@ -9113,7 +9203,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_round",
-      "community": 93,
+      "community": 7,
       "norm_label": "round()"
     },
     {
@@ -9123,7 +9213,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_getviewportsnapshot",
-      "community": 93,
+      "community": 7,
       "norm_label": "getviewportsnapshot()"
     },
     {
@@ -9133,7 +9223,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedensitymode",
-      "community": 93,
+      "community": 7,
       "norm_label": "resolvedensitymode()"
     },
     {
@@ -9143,7 +9233,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_buildfullscreenlayoutmetrics",
-      "community": 93,
+      "community": 7,
       "norm_label": "buildfullscreenlayoutmetrics()"
     },
     {
@@ -9153,7 +9243,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_usefullscreenlayoutmetrics",
-      "community": 60,
+      "community": 95,
       "norm_label": "usefullscreenlayoutmetrics()"
     },
     {
@@ -9163,7 +9253,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usegamepad",
-      "community": 23,
+      "community": 98,
       "norm_label": "usegamepad.ts"
     },
     {
@@ -9173,7 +9263,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "hooks_usegamepad_gamepadbuttonmap",
-      "community": 23,
+      "community": 98,
       "norm_label": "gamepadbuttonmap"
     },
     {
@@ -9183,7 +9273,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usegamepad_standard_map",
-      "community": 23,
+      "community": 98,
       "norm_label": "standard_map"
     },
     {
@@ -9193,7 +9283,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "hooks_usegamepad_gamepadhandlers",
-      "community": 23,
+      "community": 98,
       "norm_label": "gamepadhandlers"
     },
     {
@@ -9203,7 +9293,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "hooks_usegamepad_subscribers",
-      "community": 23,
+      "community": 98,
       "norm_label": "subscribers"
     },
     {
@@ -9213,7 +9303,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "hooks_usegamepad_laststates",
-      "community": 23,
+      "community": 98,
       "norm_label": "laststates"
     },
     {
@@ -9223,7 +9313,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "hooks_usegamepad_lastaxes",
-      "community": 23,
+      "community": 98,
       "norm_label": "lastaxes"
     },
     {
@@ -9233,7 +9323,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "hooks_usegamepad_pollgamepads",
-      "community": 23,
+      "community": 98,
       "norm_label": "pollgamepads()"
     },
     {
@@ -9273,7 +9363,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate",
-      "community": 5,
+      "community": 60,
       "norm_label": "uselibrarybrowserstate.ts"
     },
     {
@@ -9283,7 +9373,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate_libraryviewmode",
-      "community": 5,
+      "community": 100,
       "norm_label": "libraryviewmode"
     },
     {
@@ -9323,7 +9413,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "hooks_uselibraryshellinput_uselibraryshellinputprops",
-      "community": 5,
+      "community": 100,
       "norm_label": "uselibraryshellinputprops"
     },
     {
@@ -9373,7 +9463,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl",
-      "community": 96,
+      "community": 24,
       "norm_label": "useresolvedboxarturl.ts"
     },
     {
@@ -9383,7 +9473,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_cover_art_url_cache",
-      "community": 96,
+      "community": 24,
       "norm_label": "cover_art_url_cache"
     },
     {
@@ -9393,7 +9483,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_normalizepath",
-      "community": 96,
+      "community": 24,
       "norm_label": "normalizepath()"
     },
     {
@@ -9413,7 +9503,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_resolvedboxartgame",
-      "community": 96,
+      "community": 24,
       "norm_label": "resolvedboxartgame"
     },
     {
@@ -9433,7 +9523,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usewindowlibraryshelves",
-      "community": 60,
+      "community": 101,
       "norm_label": "usewindowlibraryshelves.ts"
     },
     {
@@ -9443,7 +9533,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "hooks_usewindowlibraryshelves_usewindowlibraryshelvesprops",
-      "community": 60,
+      "community": 101,
       "norm_label": "usewindowlibraryshelvesprops"
     },
     {
@@ -9773,7 +9863,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_extras_groupextras",
-      "community": 38,
+      "community": 24,
       "norm_label": "groupextras()"
     },
     {
@@ -9843,7 +9933,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "lib_extras_islaunchableextra",
-      "community": 34,
+      "community": 24,
       "norm_label": "islaunchableextra()"
     },
     {
@@ -9893,7 +9983,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_game_display",
-      "community": 0,
+      "community": 93,
       "norm_label": "game-display.ts"
     },
     {
@@ -9903,7 +9993,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_game_display_unknown_values",
-      "community": 0,
+      "community": 93,
       "norm_label": "unknown_values"
     },
     {
@@ -9923,7 +10013,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_game_display_getgamestudios",
-      "community": 0,
+      "community": 93,
       "norm_label": "getgamestudios()"
     },
     {
@@ -9933,7 +10023,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "lib_game_display_getprimarystudiolabel",
-      "community": 0,
+      "community": 93,
       "norm_label": "getprimarystudiolabel()"
     },
     {
@@ -10043,34 +10133,34 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_platform_capabilities",
-      "community": 98,
+      "community": 54,
       "norm_label": "platform-capabilities.ts"
     },
     {
       "label": "PLATFORM_EMULATOR_PROFILES",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L14",
+      "source_location": "L16",
       "_origin": "ast",
       "id": "lib_platform_capabilities_platform_emulator_profiles",
-      "community": 61,
+      "community": 142,
       "norm_label": "platform_emulator_profiles"
     },
     {
       "label": "PLATFORM_PROFILES",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L55",
+      "source_location": "L72",
       "_origin": "ast",
       "id": "lib_platform_capabilities_platform_profiles",
-      "community": 60,
+      "community": 103,
       "norm_label": "platform_profiles"
     },
     {
       "label": "SUPPORTED_PLATFORMS",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L112",
+      "source_location": "L147",
       "_origin": "ast",
       "id": "lib_platform_capabilities_supported_platforms",
       "community": 100,
@@ -10080,27 +10170,27 @@
       "label": "EMBEDDED_EMULATION_PLATFORM_IDS",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L113",
+      "source_location": "L148",
       "_origin": "ast",
       "id": "lib_platform_capabilities_embedded_emulation_platform_ids",
-      "community": 98,
+      "community": 54,
       "norm_label": "embedded_emulation_platform_ids"
     },
     {
       "label": "getPlatformProfile()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L115",
+      "source_location": "L150",
       "_origin": "ast",
       "id": "lib_platform_capabilities_getplatformprofile",
-      "community": 98,
+      "community": 54,
       "norm_label": "getplatformprofile()"
     },
     {
       "label": "supportsEmbeddedEmulation()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L119",
+      "source_location": "L154",
       "_origin": "ast",
       "id": "lib_platform_capabilities_supportsembeddedemulation",
       "community": 61,
@@ -10110,7 +10200,7 @@
       "label": "isPlatformId()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L123",
+      "source_location": "L158",
       "_origin": "ast",
       "id": "lib_platform_capabilities_isplatformid",
       "community": 29,
@@ -10120,47 +10210,47 @@
       "label": "createDefaultPlatformLibraryStatus()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L127",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformlibrarystatus",
-      "community": 98,
+      "community": 54,
       "norm_label": "createdefaultplatformlibrarystatus()"
     },
     {
       "label": "createDefaultPlatformFolders()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L141",
+      "source_location": "L176",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformfolders",
-      "community": 98,
+      "community": 54,
       "norm_label": "createdefaultplatformfolders()"
     },
     {
       "label": "createDefaultPlatformNavigation()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L154",
+      "source_location": "L189",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformnavigation",
-      "community": 98,
+      "community": 54,
       "norm_label": "createdefaultplatformnavigation()"
     },
     {
       "label": "createDefaultPlatformSettings()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L165",
+      "source_location": "L200",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettings",
-      "community": 98,
+      "community": 54,
       "norm_label": "createdefaultplatformsettings()"
     },
     {
       "label": "createDefaultPlatformSettingsMap()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L180",
+      "source_location": "L215",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettingsmap",
       "community": 29,
@@ -10170,50 +10260,50 @@
       "label": "hasMusicCapability()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L188",
+      "source_location": "L224",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasmusiccapability",
-      "community": 98,
+      "community": 54,
       "norm_label": "hasmusiccapability()"
     },
     {
       "label": "hasPhotosCapability()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L192",
+      "source_location": "L228",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasphotoscapability",
-      "community": 98,
+      "community": 54,
       "norm_label": "hasphotoscapability()"
     },
     {
       "label": "hasScreenshotsCapability()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L196",
+      "source_location": "L232",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasscreenshotscapability",
-      "community": 98,
+      "community": 54,
       "norm_label": "hasscreenshotscapability()"
     },
     {
       "label": "hasExtrasCapability()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L200",
+      "source_location": "L236",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasextrascapability",
-      "community": 98,
+      "community": 54,
       "norm_label": "hasextrascapability()"
     },
     {
       "label": "hasVideosCapability()",
       "file_type": "code",
       "source_file": "src/lib/platform-capabilities.ts",
-      "source_location": "L204",
+      "source_location": "L240",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasvideoscapability",
-      "community": 98,
+      "community": 54,
       "norm_label": "hasvideoscapability()"
     },
     {
@@ -10223,7 +10313,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_platform_launch",
-      "community": 61,
+      "community": 29,
       "norm_label": "platform-launch.ts"
     },
     {
@@ -10233,7 +10323,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "lib_platform_launch_launchsource",
-      "community": 61,
+      "community": 29,
       "norm_label": "launchsource"
     },
     {
@@ -10243,7 +10333,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "lib_platform_launch_platformlaunchsettings",
-      "community": 61,
+      "community": 29,
       "norm_label": "platformlaunchsettings"
     },
     {
@@ -10253,7 +10343,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_platform_launch_normalizepathsegment",
-      "community": 61,
+      "community": 29,
       "norm_label": "normalizepathsegment()"
     },
     {
@@ -10383,7 +10473,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_subgenre_display",
-      "community": 95,
+      "community": 100,
       "norm_label": "subgenre-display.ts"
     },
     {
@@ -10393,7 +10483,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_subgenre_display_visiblesubgenresresult",
-      "community": 95,
+      "community": 100,
       "norm_label": "visiblesubgenresresult"
     },
     {
@@ -10403,7 +10493,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "lib_subgenre_display_getvisiblesubgenres",
-      "community": 95,
+      "community": 100,
       "norm_label": "getvisiblesubgenres()"
     },
     {
@@ -10463,7 +10553,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "lib_tauri_bridge_launchrequest",
-      "community": 61,
+      "community": 29,
       "norm_label": "launchrequest"
     },
     {
@@ -10663,7 +10753,7 @@
       "source_location": "L256",
       "_origin": "ast",
       "id": "lib_tauri_bridge_resolvemediapath",
-      "community": 96,
+      "community": 24,
       "norm_label": "resolvemediapath()"
     },
     {
@@ -10703,7 +10793,7 @@
       "source_location": "L308",
       "_origin": "ast",
       "id": "lib_tauri_bridge_readfilebytes",
-      "community": 96,
+      "community": 60,
       "norm_label": "readfilebytes()"
     },
     {
@@ -10713,7 +10803,7 @@
       "source_location": "L324",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getmediaurl",
-      "community": 96,
+      "community": 103,
       "norm_label": "getmediaurl()"
     },
     {
@@ -10863,7 +10953,7 @@
       "source_location": "L510",
       "_origin": "ast",
       "id": "lib_tauri_bridge_gamefilters",
-      "community": 5,
+      "community": 101,
       "norm_label": "gamefilters"
     },
     {
@@ -11137,6 +11227,36 @@
       "norm_label": "resetrotationstate()"
     },
     {
+      "label": "setup.ts",
+      "file_type": "code",
+      "source_file": "src/test/setup.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "test_setup",
+      "community": 102,
+      "norm_label": "setup.ts"
+    },
+    {
+      "label": "createMemoryStorage()",
+      "file_type": "code",
+      "source_file": "src/test/setup.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "test_setup_creatememorystorage",
+      "community": 102,
+      "norm_label": "creatememorystorage()"
+    },
+    {
+      "label": "storage",
+      "file_type": "code",
+      "source_file": "src/test/setup.ts",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "test_setup_storage",
+      "community": 102,
+      "norm_label": "storage"
+    },
+    {
       "label": "game.ts",
       "file_type": "code",
       "source_file": "src/types/game.ts",
@@ -11243,7 +11363,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "types_platform_platformimportstatus",
-      "community": 29,
+      "community": 54,
       "norm_label": "platformimportstatus"
     },
     {
@@ -11343,7 +11463,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "types_platform_platformnavigationstate",
-      "community": 98,
+      "community": 54,
       "norm_label": "platformnavigationstate"
     },
     {
@@ -11353,7 +11473,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "types_platform_platformsettings",
-      "community": 5,
+      "community": 29,
       "norm_label": "platformsettings"
     },
     {
@@ -11373,7 +11493,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils_sorting",
-      "community": 5,
+      "community": 35,
       "norm_label": "sorting.ts"
     },
     {
@@ -11383,7 +11503,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "utils_sorting_sortdirection",
-      "community": 5,
+      "community": 35,
       "norm_label": "sortdirection"
     },
     {
@@ -11393,7 +11513,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "utils_sorting_sortgames",
-      "community": 5,
+      "community": 35,
       "norm_label": "sortgames()"
     },
     {
@@ -12750,7 +12870,7 @@
       "label": "Features",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L45",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "readme_features",
       "community": 11,
@@ -12760,7 +12880,7 @@
       "label": "Screenshots",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L55",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "readme_screenshots",
       "community": 11,
@@ -12770,7 +12890,7 @@
       "label": "BigBox Search",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L57",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "readme_bigbox_search",
       "community": 11,
@@ -12780,7 +12900,7 @@
       "label": "BigBox Rails",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L61",
+      "source_location": "L62",
       "_origin": "ast",
       "id": "readme_bigbox_rails",
       "community": 11,
@@ -12790,7 +12910,7 @@
       "label": "BigBox Letter Jump",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L65",
+      "source_location": "L66",
       "_origin": "ast",
       "id": "readme_bigbox_letter_jump",
       "community": 11,
@@ -12800,7 +12920,7 @@
       "label": "Detail View: Gallery",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L69",
+      "source_location": "L70",
       "_origin": "ast",
       "id": "readme_detail_view_gallery",
       "community": 11,
@@ -12810,7 +12930,7 @@
       "label": "Detail View: Extras Gallery",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L73",
+      "source_location": "L74",
       "_origin": "ast",
       "id": "readme_detail_view_extras_gallery",
       "community": 11,
@@ -12820,7 +12940,7 @@
       "label": "Window Mode: Grid View",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L77",
+      "source_location": "L78",
       "_origin": "ast",
       "id": "readme_window_mode_grid_view",
       "community": 11,
@@ -12830,7 +12950,7 @@
       "label": "Window Mode: List View",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L81",
+      "source_location": "L82",
       "_origin": "ast",
       "id": "readme_window_mode_list_view",
       "community": 11,
@@ -12840,7 +12960,7 @@
       "label": "Controls and Shortcuts",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L85",
+      "source_location": "L86",
       "_origin": "ast",
       "id": "readme_controls_and_shortcuts",
       "community": 11,
@@ -12850,7 +12970,7 @@
       "label": "Controller",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L87",
+      "source_location": "L88",
       "_origin": "ast",
       "id": "readme_controller",
       "community": 11,
@@ -12860,7 +12980,7 @@
       "label": "Keyboard",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L94",
+      "source_location": "L95",
       "_origin": "ast",
       "id": "readme_keyboard",
       "community": 11,
@@ -12870,7 +12990,7 @@
       "label": "Prerequisites",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L101",
+      "source_location": "L102",
       "_origin": "ast",
       "id": "readme_prerequisites",
       "community": 11,
@@ -12880,7 +13000,7 @@
       "label": "Setting up Platform Databases and Assets",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L113",
+      "source_location": "L114",
       "_origin": "ast",
       "id": "readme_setting_up_platform_databases_and_assets",
       "community": 11,
@@ -12890,7 +13010,7 @@
       "label": "Commodore 64",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L115",
+      "source_location": "L116",
       "_origin": "ast",
       "id": "readme_commodore_64",
       "community": 11,
@@ -12900,7 +13020,7 @@
       "label": "Atari 800",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L123",
+      "source_location": "L124",
       "_origin": "ast",
       "id": "readme_atari_800",
       "community": 11,
@@ -12910,17 +13030,27 @@
       "label": "Atari 2600",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L130",
+      "source_location": "L131",
       "_origin": "ast",
       "id": "readme_atari_2600",
       "community": 11,
       "norm_label": "atari 2600"
     },
     {
+      "label": "ZX Spectrum",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L138",
+      "_origin": "ast",
+      "id": "readme_zx_spectrum",
+      "community": 11,
+      "norm_label": "zx spectrum"
+    },
+    {
       "label": "Building the SQLite Database",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L137",
+      "source_location": "L146",
       "_origin": "ast",
       "id": "readme_building_the_sqlite_database",
       "community": 11,
@@ -12930,7 +13060,7 @@
       "label": "Windows",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L141",
+      "source_location": "L150",
       "_origin": "ast",
       "id": "readme_windows",
       "community": 11,
@@ -12940,7 +13070,7 @@
       "label": "Linux and macOS",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L153",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "readme_linux_and_macos",
       "community": 11,
@@ -12950,7 +13080,7 @@
       "label": "Development",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L170",
+      "source_location": "L179",
       "_origin": "ast",
       "id": "readme_development",
       "community": 11,
@@ -12960,7 +13090,7 @@
       "label": "Production Build",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L182",
+      "source_location": "L191",
       "_origin": "ast",
       "id": "readme_production_build",
       "community": 11,
@@ -12970,7 +13100,7 @@
       "label": "Post-Setup Configuration",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L194",
+      "source_location": "L203",
       "_origin": "ast",
       "id": "readme_post_setup_configuration",
       "community": 11,
@@ -12980,7 +13110,7 @@
       "label": "Release Notes",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L206",
+      "source_location": "L215",
       "_origin": "ast",
       "id": "readme_release_notes",
       "community": 11,
@@ -12990,7 +13120,7 @@
       "label": "Skills used to build this",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L210",
+      "source_location": "L219",
       "_origin": "ast",
       "id": "readme_skills_used_to_build_this",
       "community": 11,
@@ -15559,9 +15689,9 @@
       "source_file": ".specify/extensions/agent-context/scripts/bash/update-agent-context.sh",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "bash_update_agent_context",
-      "target": "d_mysource_gamebasebox_specify_extensions_agent_context_scripts_bash_update_agent_context_sh__entry",
-      "confidence_score": 1.0
+      "target": "d_mysource_gamebasebox_specify_extensions_agent_context_scripts_bash_update_agent_context_sh__entry"
     },
     {
       "relation": "contains",
@@ -16429,9 +16559,9 @@
       "source_file": "package.json",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "package",
-      "target": "package_engines",
-      "confidence_score": 1.0
+      "target": "package_engines"
     },
     {
       "relation": "contains",
@@ -16449,9 +16579,9 @@
       "source_file": "package.json",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "package",
-      "target": "package_overrides",
-      "confidence_score": 1.0
+      "target": "package_overrides"
     },
     {
       "relation": "contains",
@@ -16649,9 +16779,9 @@
       "source_file": "package.json",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "package_engines",
-      "target": "package_engines_node",
-      "confidence_score": 1.0
+      "target": "package_engines_node"
     },
     {
       "relation": "contains",
@@ -16659,9 +16789,9 @@
       "source_file": "package.json",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "package_overrides",
-      "target": "package_overrides_esbuild",
-      "confidence_score": 1.0
+      "target": "package_overrides_esbuild"
     },
     {
       "relation": "contains",
@@ -16669,9 +16799,9 @@
       "source_file": "package.json",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "package_overrides",
-      "target": "package_overrides_postcss",
-      "confidence_score": 1.0
+      "target": "package_overrides_postcss"
     },
     {
       "relation": "contains",
@@ -16919,9 +17049,9 @@
       "source_file": "package.json",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "package_devdependencies",
-      "target": "package_devdependencies_vite",
-      "confidence_score": 1.0
+      "target": "package_devdependencies_vite"
     },
     {
       "relation": "contains",
@@ -18014,9 +18144,9 @@
       "source_file": "scripts/import_gb64.sh",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_import_gb64",
-      "target": "d_mysource_gamebasebox_scripts_import_gb64_sh__entry",
-      "confidence_score": 1.0
+      "target": "d_mysource_gamebasebox_scripts_import_gb64_sh__entry"
     },
     {
       "relation": "contains",
@@ -18024,9 +18154,9 @@
       "source_file": "scripts/mdb-export-all.sh",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_mdb_export_all",
-      "target": "d_mysource_gamebasebox_scripts_mdb_export_all_sh__entry",
-      "confidence_score": 1.0
+      "target": "d_mysource_gamebasebox_scripts_mdb_export_all_sh__entry"
     },
     {
       "relation": "contains",
@@ -18147,6 +18277,28 @@
       "confidence_score": 1.0,
       "source": "scripts_sqlite_support_config",
       "target": "scripts_sqlite_support_config_supportobjects"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/sqlite_support_config.test.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scripts_sqlite_support_config_test",
+      "target": "scripts_sqlite_support_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/sqlite_support_config.test.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scripts_sqlite_support_config_test",
+      "target": "scripts_sqlite_support_config_getplatformimportconfig",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -20914,6 +21066,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/emulator.rs",
+      "source_location": "L990",
+      "weight": 1.0,
+      "source": "commands_emulator",
+      "target": "commands_emulator_test_emulator_profile_zxspectrum_retroarch_requires_core",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/emulator.rs",
+      "source_location": "L1014",
+      "weight": 1.0,
+      "source": "commands_emulator",
+      "target": "commands_emulator_test_emulator_profile_zxspectrum_spectaculator_success",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/emulator.rs",
       "source_location": "L349",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -21523,6 +21695,28 @@
       "target": "commands_emulator_test_emulator_profile"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/emulator.rs",
+      "source_location": "L1006",
+      "weight": 1.0,
+      "source": "commands_emulator_test_emulator_profile_zxspectrum_retroarch_requires_core",
+      "target": "commands_emulator_test_emulator_profile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/emulator.rs",
+      "source_location": "L1030",
+      "weight": 1.0,
+      "source": "commands_emulator_test_emulator_profile_zxspectrum_spectaculator_success",
+      "target": "commands_emulator_test_emulator_profile",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/emulator.rs",
@@ -21741,6 +21935,28 @@
       "confidence_score": 1.0,
       "source": "commands_emulator_test_emulator_profile_c64_vice_preserves_legacy_success",
       "target": "commands_emulator_copy_test_emulator"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/emulator.rs",
+      "source_location": "L997",
+      "weight": 1.0,
+      "source": "commands_emulator_test_emulator_profile_zxspectrum_retroarch_requires_core",
+      "target": "commands_emulator_copy_test_emulator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/emulator.rs",
+      "source_location": "L1021",
+      "weight": 1.0,
+      "source": "commands_emulator_test_emulator_profile_zxspectrum_spectaculator_success",
+      "target": "commands_emulator_copy_test_emulator",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -22637,6 +22853,16 @@
       "target": "commands_platforms_supported_platforms"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/platforms.rs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "commands_platforms",
+      "target": "commands_platforms_zxspectrum_profile",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/platforms.rs",
@@ -22701,6 +22927,17 @@
       "confidence_score": 1.0,
       "source": "commands_platforms_supported_platforms",
       "target": "platformprofile"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/platforms.rs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "commands_platforms_zxspectrum_profile",
+      "target": "platformprofile",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -22821,6 +23058,17 @@
       "source_location": "L34",
       "weight": 1.0,
       "source": "platforms_tests_test_get_supported_platforms_includes_importable_atari2600_capabilities",
+      "target": "commands_platforms_get_supported_platforms"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src-tauri/src/commands/platforms/tests.rs",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "platforms_tests_test_get_supported_platforms_includes_zxspectrum_capabilities",
       "target": "commands_platforms_get_supported_platforms"
     },
     {
@@ -23006,6 +23254,16 @@
       "confidence_score": 1.0,
       "source": "platforms_tests",
       "target": "platforms_tests_test_get_supported_platforms_includes_importable_atari2600_capabilities"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/platforms/tests.rs",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "platforms_tests",
+      "target": "platforms_tests_test_get_supported_platforms_includes_zxspectrum_capabilities",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -23590,6 +23848,17 @@
       "target": "commands_setup_validate_platform_import_request"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L201",
+      "weight": 1.0,
+      "source": "setup_tests_rejects_zxspectrum_import_request_missing_musician_photos_folder",
+      "target": "commands_setup_validate_platform_import_request"
+    },
+    {
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/setup.rs",
@@ -23619,6 +23888,16 @@
       "confidence_score": 1.0,
       "source": "setup_tests",
       "target": "setup_tests_create_atari_folder_settings"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "setup_tests",
+      "target": "setup_tests_create_zxspectrum_folder_settings",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -23664,6 +23943,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L189",
+      "weight": 1.0,
+      "source": "setup_tests",
+      "target": "setup_tests_rejects_zxspectrum_import_request_missing_musician_photos_folder",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L6",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -23689,6 +23978,16 @@
       "confidence_score": 1.0,
       "source": "setup_tests",
       "target": "setup_tests_validates_atari800_import_request_with_required_folders"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L175",
+      "weight": 1.0,
+      "source": "setup_tests",
+      "target": "setup_tests_validates_zxspectrum_import_request_with_required_folders",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -23733,6 +24032,17 @@
       "confidence_score": 1.0,
       "source": "setup_tests_rejects_obvious_c64_mdb_for_atari800_import",
       "target": "setup_tests_request_with_paths"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L199",
+      "weight": 1.0,
+      "source": "setup_tests_rejects_zxspectrum_import_request_missing_musician_photos_folder",
+      "target": "setup_tests_request_with_paths",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -23790,6 +24100,17 @@
       "target": "setup_tests_request_with_paths"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L179",
+      "weight": 1.0,
+      "source": "setup_tests_validates_zxspectrum_import_request_with_required_folders",
+      "target": "setup_tests_request_with_paths",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/setup/tests.rs",
@@ -23810,6 +24131,17 @@
       "confidence_score": 1.0,
       "source": "setup_tests_create_atari_folder_settings",
       "target": "src_tauri_src_commands_setup_tests_rs_platformfoldersettings"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L58",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "setup_tests_create_zxspectrum_folder_settings",
+      "target": "src_tauri_src_commands_setup_tests_rs_platformfoldersettings",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -23878,6 +24210,17 @@
       "target": "src_tauri_src_commands_setup_tests_rs_path"
     },
     {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L58",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "setup_tests_create_zxspectrum_folder_settings",
+      "target": "src_tauri_src_commands_setup_tests_rs_path",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -23898,6 +24241,28 @@
       "confidence_score": 1.0,
       "source": "setup_tests_validates_atari2600_import_request_with_required_folders",
       "target": "setup_tests_create_atari2600_folder_settings"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L193",
+      "weight": 1.0,
+      "source": "setup_tests_rejects_zxspectrum_import_request_missing_musician_photos_folder",
+      "target": "setup_tests_create_zxspectrum_folder_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup/tests.rs",
+      "source_location": "L182",
+      "weight": 1.0,
+      "source": "setup_tests_validates_zxspectrum_import_request_with_required_folders",
+      "target": "setup_tests_create_zxspectrum_folder_settings",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -29398,6 +29763,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.tsx",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "app_page",
+      "target": "app_page_platform_import_aliases",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
       "source_location": "L46",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -30004,9 +30379,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page",
-      "target": "types_platform_platformid",
-      "confidence_score": 1.0
+      "target": "types_platform_platformid"
     },
     {
       "relation": "imports",
@@ -30015,9 +30390,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page",
-      "target": "types_platform_platformsettings",
-      "confidence_score": 1.0
+      "target": "types_platform_platformsettings"
     },
     {
       "relation": "calls",
@@ -30026,9 +30401,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L722",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page_home",
-      "target": "app_page_getrequiredplatformfolderkeys",
-      "confidence_score": 1.0
+      "target": "app_page_getrequiredplatformfolderkeys"
     },
     {
       "relation": "calls",
@@ -42573,6 +42948,26 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/test/setup.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "test_setup",
+      "target": "test_setup_creatememorystorage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/test/setup.ts",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "test_setup",
+      "target": "test_setup_storage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/types/game.ts",
       "source_location": "L1",
       "weight": 1.0,
@@ -44292,6 +44687,16 @@
       "confidence_score": 1.0,
       "source": "readme_setting_up_platform_databases_and_assets",
       "target": "readme_commodore_64"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L138",
+      "weight": 1.0,
+      "source": "readme_setting_up_platform_databases_and_assets",
+      "target": "readme_zx_spectrum",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -46592,5 +46997,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "a22f79e508c90bc8dfeb446dd5991b352d116961"
+  "built_at_commit": "6b34c1bed696efdd3db1a4665f75b83939b936cf"
 }

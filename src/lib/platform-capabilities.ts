@@ -10,6 +10,8 @@ import type {
 
 export const ATARI800_REFERENCE_MDB_PATH =
   'E:\\Backups\\RETRO-BACKUPS\\Atari8bit\\Atari 800\\Atari 800 v12.mdb';
+export const ZXSPECTRUM_REFERENCE_MDB_PATH =
+  'E:\\Backups\\RETRO-BACKUPS\\ZXSpectrum\\Sinclair ZX Spectrum v6\\Sinclair ZX Spectrum v6.mdb';
 
 export const PLATFORM_EMULATOR_PROFILES: Record<string, PlatformEmulatorProfile> = {
   'vice-c64': {
@@ -49,6 +51,21 @@ export const PLATFORM_EMULATOR_PROFILES: Record<string, PlatformEmulatorProfile>
     emulatorType: 'retroarch',
     required: false,
     default: true,
+  },
+  'retroarch-zxspectrum': {
+    id: 'retroarch-zxspectrum',
+    platformId: 'zxspectrum',
+    displayName: 'RetroArch ZX Spectrum',
+    emulatorType: 'retroarch',
+    required: false,
+    default: true,
+  },
+  'spectaculator-zxspectrum': {
+    id: 'spectaculator-zxspectrum',
+    platformId: 'zxspectrum',
+    displayName: 'Spectaculator',
+    emulatorType: 'spectaculator',
+    required: false,
   },
 };
 
@@ -107,6 +124,24 @@ export const PLATFORM_PROFILES: Record<PlatformId, PlatformProfile> = {
     inAppEmulation: false,
     launchExtensions: ['.a26', '.bin', '.rom', '.zip', '.7z'],
   },
+  zxspectrum: {
+    id: 'zxspectrum',
+    displayName: 'ZX Spectrum',
+    status: 'available',
+    importStatus: 'notImported',
+    defaultEmulatorProfileId: 'retroarch-zxspectrum',
+    supportedEmulatorProfileIds: ['retroarch-zxspectrum', 'spectaculator-zxspectrum'],
+    folderTypes: ['extras', 'games', 'screenshots', 'photos', 'music'],
+    mediaCapabilities: {
+      screenshots: true,
+      photos: true,
+      music: 'ay',
+      extras: true,
+      videos: false,
+    },
+    inAppEmulation: false,
+    launchExtensions: ['.tzx', '.tap', '.z80', '.sna', '.szx', '.trd', '.dsk', '.zip', '.7z'],
+  },
 };
 
 export const SUPPORTED_PLATFORMS = Object.values(PLATFORM_PROFILES);
@@ -121,7 +156,7 @@ export function supportsEmbeddedEmulation(platformId: PlatformId): boolean {
 }
 
 export function isPlatformId(value: string): value is PlatformId {
-  return value === 'c64' || value === 'atari800' || value === 'atari2600';
+  return value === 'c64' || value === 'atari800' || value === 'atari2600' || value === 'zxspectrum';
 }
 
 export function createDefaultPlatformLibraryStatus(platformId: PlatformId): PlatformLibraryStatus {
@@ -182,6 +217,7 @@ export function createDefaultPlatformSettingsMap(): Record<PlatformId, PlatformS
     c64: createDefaultPlatformSettings('c64'),
     atari800: createDefaultPlatformSettings('atari800'),
     atari2600: createDefaultPlatformSettings('atari2600'),
+    zxspectrum: createDefaultPlatformSettings('zxspectrum'),
   };
 }
 
