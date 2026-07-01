@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-07-01
+
+### Added
+- Added ZX Spectrum import support for GameBaseZX / SpeccyMania-compatible Sinclair ZX Spectrum v6 MDBs.
+- Added ZX Spectrum folder setup for Extras, Games, Screenshots, Musician Photos, and Music, with `.ay` music media tracked for future playback evaluation.
+- Added ZX Spectrum emulator profiles with RetroArch as the default and Spectaculator as the secondary external emulator option.
+- Added release notes for the GBBox 0.2.0 release.
+
+### Changed
+- Updated release workflow asset names from legacy `64Box-*` names to the public `GBBox-*` download names.
+- Bumped package, Tauri, Cargo, and root version metadata to `0.2.0`.
+
+### Fixed
+- Fixed the first-run import transition so the library browser refreshes when an active platform changes from not imported to imported.
+
 ## [0.1.0] - 2026-06-28
 
 ### Added

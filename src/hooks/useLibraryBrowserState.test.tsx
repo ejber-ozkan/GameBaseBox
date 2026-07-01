@@ -1,6 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
+import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
 
 const mockUpdateSettings = vi.fn();
 const mockToggleFavorite = vi.fn();
@@ -44,6 +45,7 @@ const baseSettings = {
   theGamesDbApiKey: '',
   windowHeight: 800,
   windowWidth: 1200,
+  platformSettings: createDefaultPlatformSettingsMap(),
 };
 
 let currentSettings = { ...baseSettings };
@@ -65,7 +67,7 @@ vi.mock('../lib/tauri-bridge', () => ({
   getDbGames: (...args: unknown[]) => mockGetDbGames(...args),
 }));
 
-import { useLibraryBrowserState } from './useLibraryBrowserState';
+import { getLibraryRefreshToken, useLibraryBrowserState } from './useLibraryBrowserState';
 
 describe('useLibraryBrowserState', () => {
   beforeEach(() => {
@@ -239,5 +241,80 @@ describe('useLibraryBrowserState', () => {
     await waitFor(() => {
       expect(result.current.selectedGame?.id).toBe(5);
     });
+  });
+
+  it('reloads games when the active platform import status changes to imported', async () => {
+    const platformSettings = createDefaultPlatformSettingsMap();
+    platformSettings.atari800.library.importStatus = 'notImported';
+    currentSettings = {
+      ...baseSettings,
+      activePlatformId: 'atari800',
+      lastFocusedIndex: 0,
+      platformSettings,
+    };
+    mockGetDbGames.mockResolvedValueOnce([]);
+
+    const { result, rerender } = renderHook(() => useLibraryBrowserState());
+
+    await waitFor(() => {
+      expect(result.current.games).toEqual([]);
+    });
+    await waitFor(() => {
+      expect(mockGetDbGames).toHaveBeenCalledTimes(2);
+    });
+    mockGetDbGames.mockClear();
+
+    const importedPlatformSettings = createDefaultPlatformSettingsMap();
+    importedPlatformSettings.atari800.library = {
+      ...importedPlatformSettings.atari800.library,
+      importStatus: 'imported',
+      gameCount: 123,
+    };
+    currentSettings = {
+      ...baseSettings,
+      activePlatformId: 'atari800',
+      lastFocusedIndex: 0,
+      platformSettings: importedPlatformSettings,
+    };
+    mockGetDbGames.mockResolvedValueOnce(mockGames);
+
+    rerender();
+
+    await waitFor(() => {
+      expect(mockGetDbGames).toHaveBeenCalledTimes(1);
+      expect(result.current.games).toHaveLength(mockGames.length);
+    });
+    expect(mockGetDbGames).toHaveBeenLastCalledWith(
+      500,
+      0,
+      expect.objectContaining({ hideAdult: false }),
+      'atari800',
+    );
+  });
+
+  it('changes the library refresh token when active platform import metadata changes', () => {
+    const platformSettings = createDefaultPlatformSettingsMap();
+    const beforeImport = getLibraryRefreshToken({
+      ...baseSettings,
+      activePlatformId: 'atari800',
+      platformSettings,
+    });
+
+    platformSettings.atari800.library = {
+      ...platformSettings.atari800.library,
+      importStatus: 'imported',
+      gameCount: 123,
+      lastImportedAt: '2026-07-01T22:30:00.000Z',
+    };
+    const afterImport = getLibraryRefreshToken({
+      ...baseSettings,
+      activePlatformId: 'atari800',
+      platformSettings,
+    });
+
+    expect(afterImport).not.toBe(beforeImport);
+    expect(afterImport).toContain('atari800');
+    expect(afterImport).toContain('imported');
+    expect(afterImport).toContain('123');
   });
 });

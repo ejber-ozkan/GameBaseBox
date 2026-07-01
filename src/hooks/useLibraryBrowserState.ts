@@ -9,6 +9,16 @@ import { sortGames } from '../utils/sorting';
 
 export type LibraryViewMode = 'grid' | 'list' | 'settings';
 
+export function getLibraryRefreshToken(settings: Settings): string {
+  const library = settings.platformSettings[settings.activePlatformId]?.library;
+  return [
+    settings.activePlatformId,
+    library?.importStatus ?? 'unknown',
+    library?.gameCount ?? 0,
+    library?.lastImportedAt ?? '',
+  ].join(':');
+}
+
 export function useLibraryBrowserState() {
   const { settings, updateSettings } = useSettings();
   const { toggleFavorite } = useFavorites();
@@ -23,6 +33,7 @@ export function useLibraryBrowserState() {
   const [isRestored, setIsRestored] = useState(false);
   const [prevPlatformId, setPrevPlatformId] = useState(settings.activePlatformId);
   const shelfRef = useRef<HTMLDivElement>(null);
+  const libraryRefreshToken = getLibraryRefreshToken(settings);
 
   if (settings.activePlatformId !== prevPlatformId) {
     setPrevPlatformId(settings.activePlatformId);
@@ -93,6 +104,7 @@ export function useLibraryBrowserState() {
     isRestored,
     selectedGame,
     settings.activePlatformId,
+    libraryRefreshToken,
     settings.lastFocusedIndex,
     settings.lastSelectedGameId,
   ]);
