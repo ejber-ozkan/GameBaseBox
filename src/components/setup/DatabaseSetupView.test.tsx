@@ -25,6 +25,17 @@ const atari2600Folders: PlatformFolderSettings = {
   videosPath: '',
 };
 
+const zxSpectrumFolders: PlatformFolderSettings = {
+  platformId: 'zxspectrum',
+  gamesPath: 'E:/ZX/Games',
+  musicPath: 'E:/ZX/Music',
+  photosPath: 'E:/ZX/Musician Photos',
+  screenshotsPath: 'E:/ZX/Screenshots',
+  extrasPath: 'E:/ZX/Extras',
+  boxArtPath: '',
+  videosPath: '',
+};
+
 describe('DatabaseSetupView', () => {
   it('renders and edits an Atari 800 extras folder field', () => {
     const onFolderChange = vi.fn();
@@ -80,5 +91,33 @@ describe('DatabaseSetupView', () => {
     expect(screen.getByPlaceholderText('Select Extras folder')).toBeTruthy();
     expect(screen.queryByPlaceholderText('Select Music folder')).toBeNull();
     expect(screen.queryByPlaceholderText('Select Photos folder')).toBeNull();
+  });
+
+  it('mentions GameBaseZX and SpeccyMania while rendering ZX Spectrum import folders', () => {
+    render(
+      <DatabaseSetupView
+        dbPath="zxspectrum"
+        error={null}
+        folderSettings={zxSpectrumFolders}
+        importResult={null}
+        isImporting={false}
+        mdbPath="E:/ZX/Sinclair ZX Spectrum v6.mdb"
+        onBrowse={vi.fn()}
+        onBrowseFolder={vi.fn()}
+        onFolderChange={vi.fn()}
+        onImport={vi.fn()}
+        platformName="ZX Spectrum"
+        platformAliases={['GameBaseZX', 'SpeccyMania']}
+        requiredFolderKeys={['extrasPath', 'gamesPath', 'screenshotsPath', 'photosPath', 'musicPath']}
+      />,
+    );
+
+    expect(screen.getByText(/GameBaseZX/)).toBeTruthy();
+    expect(screen.getByText(/SpeccyMania/)).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Extras folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Games folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Screenshots folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Musician Photos folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Music folder')).toBeTruthy();
   });
 });

@@ -82,6 +82,7 @@ export function PathsSettingsTab({
   const isC64 = platformId === 'c64';
   const isAtari800 = platformId === 'atari800';
   const isAtari2600 = platformId === 'atari2600';
+  const isZxSpectrum = platformId === 'zxspectrum';
   const supportedEmulatorProfileIds = platformProfile.supportedEmulatorProfileIds;
   const preferredEmulatorProfileId =
     platformEmulatorSettings.preferredEmulatorProfileId || platformProfile.defaultEmulatorProfileId;
@@ -190,6 +191,7 @@ export function PathsSettingsTab({
     const emulatorType = PLATFORM_EMULATOR_PROFILES[profileId]?.emulatorType;
     if (emulatorType === 'retroarch') return 'RetroArch';
     if (emulatorType === 'altirra') return 'Altirra';
+    if (emulatorType === 'spectaculator') return 'Spectaculator';
     if (emulatorType === 'vice') return 'VICE';
     return PLATFORM_EMULATOR_PROFILES[profileId]?.displayName ?? profileId;
   };
@@ -276,10 +278,16 @@ export function PathsSettingsTab({
         )}
         {hasFolderType('photos') && (
           <PathRow
-            label={isC64 ? 'Photos (Musicians) folder' : 'Photos folder'}
+            label={isC64 || isZxSpectrum ? 'Photos (Musicians) folder' : 'Photos folder'}
             value={platformFolders.photosPath}
             onChange={(value) => setPlatformFolder('photosPath', value)}
-            placeholder={isC64 ? 'e.g. D:/GB64/Photos' : `Select ${platformProfile.displayName} photos folder`}
+            placeholder={
+              isC64
+                ? 'e.g. D:/GB64/Photos'
+                : isZxSpectrum
+                  ? `Select ${platformProfile.displayName} musician photos folder`
+                  : `Select ${platformProfile.displayName} photos folder`
+            }
             inputIndex={6}
             browseIndex={7}
             onBrowse={() => void browsePlatformFolder('photosPath')}
@@ -468,6 +476,60 @@ export function PathsSettingsTab({
                 inputIndex={14}
                 browseIndex={15}
                 onBrowse={() => void browsePlatformCore('retroarch-atari2600')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+          </div>
+        )}
+
+        {isZxSpectrum && (
+          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+            {renderEmulatorSelector(10)}
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'retroarch-zxspectrum' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="RetroArch Executable (retroarch.exe)"
+                value={platformEmulatorSettings.executablePaths['retroarch-zxspectrum'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('retroarch-zxspectrum', value)}
+                placeholder="e.g. C:/RetroArch/retroarch.exe"
+                inputIndex={12}
+                browseIndex={13}
+                onBrowse={() => void browsePlatformExecutable('retroarch-zxspectrum')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+              <PathRow
+                label="RetroArch ZX Spectrum Core"
+                value={platformEmulatorSettings.corePaths['retroarch-zxspectrum'] ?? ''}
+                onChange={(value) => setPlatformCorePath('retroarch-zxspectrum', value)}
+                placeholder="e.g. C:/RetroArch/cores/fuse_libretro.dll"
+                inputIndex={14}
+                browseIndex={15}
+                onBrowse={() => void browsePlatformCore('retroarch-zxspectrum')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'spectaculator-zxspectrum' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="Spectaculator Executable"
+                value={platformEmulatorSettings.executablePaths['spectaculator-zxspectrum'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('spectaculator-zxspectrum', value)}
+                placeholder="e.g. C:/Program Files/Spectaculator/Spectaculator.exe"
+                inputIndex={16}
+                browseIndex={17}
+                onBrowse={() => void browsePlatformExecutable('spectaculator-zxspectrum')}
                 isMouseMode={isMouseMode}
                 onMouseFocus={onMouseFocus}
                 isFocused={isFocused}

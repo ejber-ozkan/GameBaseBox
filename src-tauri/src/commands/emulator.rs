@@ -48,6 +48,7 @@ fn platform_display_name(platform_id: Option<&str>) -> &'static str {
     match platform_id {
         Some("atari800") => "Atari 800",
         Some("atari2600") => "Atari 2600",
+        Some("zxspectrum") => "ZX Spectrum",
         _ => "C64",
     }
 }
@@ -55,7 +56,9 @@ fn platform_display_name(platform_id: Option<&str>) -> &'static str {
 fn emulator_profile_display_name(profile_id: Option<&str>, is_retroarch: bool) -> &'static str {
     match profile_id {
         Some("altirra-atari800") => "Altirra",
+        Some("spectaculator-zxspectrum") => "Spectaculator",
         Some("retroarch-atari800") if is_retroarch => "RetroArch",
+        Some("retroarch-zxspectrum") if is_retroarch => "RetroArch",
         Some("retroarch-c64") if is_retroarch => "RetroArch",
         Some("vice-c64") => "VICE",
         _ if is_retroarch => "RetroArch",
@@ -68,6 +71,7 @@ fn launch_extensions_for_platform(platform_id: Option<&str>) -> &'static [&'stat
         Some("atari800") => &[
             "atr", "atx", "xfd", "dcm", "cas", "xex", "com", "bin", "car", "rom",
         ],
+        Some("zxspectrum") => &["tzx", "tap", "z80", "sna", "szx", "trd", "dsk"],
         _ => &["d64", "g64", "t64", "tap", "prg", "crt", "nib"],
     }
 }
@@ -75,6 +79,7 @@ fn launch_extensions_for_platform(platform_id: Option<&str>) -> &'static [&'stat
 fn retroarch_core_not_found_message(platform_id: Option<&str>, core_path: &str) -> String {
     match platform_id {
         Some("atari800") => format!("Atari 800 RetroArch core file not found: {}", core_path),
+        Some("zxspectrum") => format!("ZX Spectrum RetroArch core file not found: {}", core_path),
         _ => format!("RetroArch Core file not found: {}", core_path),
     }
 }
@@ -82,6 +87,7 @@ fn retroarch_core_not_found_message(platform_id: Option<&str>, core_path: &str) 
 fn retroarch_core_not_file_message(platform_id: Option<&str>, core_path: &str) -> String {
     match platform_id {
         Some("atari800") => format!("Atari 800 RetroArch core path is not a file: {}", core_path),
+        Some("zxspectrum") => format!("ZX Spectrum RetroArch core path is not a file: {}", core_path),
         _ => format!("RetroArch Core path is not a file: {}", core_path),
     }
 }
@@ -94,6 +100,8 @@ fn is_supported_emulator_profile(platform_id: &str, profile_id: &str) -> bool {
             | ("atari800", "retroarch-atari800")
             | ("atari800", "altirra-atari800")
             | ("atari2600", "retroarch-atari2600")
+            | ("zxspectrum", "retroarch-zxspectrum")
+            | ("zxspectrum", "spectaculator-zxspectrum")
     )
 }
 
@@ -257,6 +265,8 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             "altirra64",
             "altirra.exe",
             "altirra",
+            "spectaculator.exe",
+            "spectaculator",
         ];
         let mut found = false;
         for exe in possible_exes {
@@ -293,6 +303,11 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         .as_deref()
         .is_some_and(|profile_id| profile_id == "altirra-atari800")
         || exe_name.contains("altirra");
+    let is_spectaculator = request
+        .emulator_profile_id
+        .as_deref()
+        .is_some_and(|profile_id| profile_id == "spectaculator-zxspectrum")
+        || exe_name.contains("spectaculator");
 
     if is_retroarch {
         if let Some(cp) = &request.core_path {
@@ -313,7 +328,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         } else {
             args.push("/ntsc".to_string());
         }
-    } else if !is_retroarch {
+    } else if !is_retroarch && !is_spectaculator {
         if request.true_drive_emulation {
             args.push("-truedrive".to_string());
         }
@@ -427,6 +442,8 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             }
         } else if is_altirra {
             push_altirra_rom_args(&mut args, &resolved_primary_rom);
+        } else if is_spectaculator {
+            args.push(resolved_primary_rom.to_string_lossy().to_string());
         } else {
             args.push("-autostart".to_string());
             args.push(resolved_primary_rom.to_string_lossy().to_string());
@@ -460,6 +477,8 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             args.push(rom.to_string_lossy().to_string());
         } else if is_altirra {
             push_altirra_rom_args(&mut args, &rom);
+        } else if is_spectaculator {
+            args.push(rom.to_string_lossy().to_string());
         } else {
             args.push("-autostart".to_string());
             args.push(rom.to_string_lossy().to_string());
@@ -965,6 +984,54 @@ mod tests {
         assert!(result
             .message
             .contains("Atari 800 RetroArch core path is required"));
+    }
+
+    #[tokio::test]
+    async fn test_emulator_profile_zxspectrum_retroarch_requires_core() {
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "retroarch.exe"
+        } else {
+            "retroarch"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let request = EmulatorProfileTestRequest {
+            platform_id: "zxspectrum".to_string(),
+            emulator_profile_id: "retroarch-zxspectrum".to_string(),
+            executable_path: emulator_path.to_string_lossy().to_string(),
+            core_path: None,
+        };
+
+        let result = test_emulator_profile(request).await.unwrap();
+        assert!(!result.success);
+        assert!(result
+            .message
+            .contains("ZX Spectrum RetroArch core path is required"));
+    }
+
+    #[tokio::test]
+    async fn test_emulator_profile_zxspectrum_spectaculator_success() {
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "Spectaculator.exe"
+        } else {
+            "spectaculator"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let request = EmulatorProfileTestRequest {
+            platform_id: "zxspectrum".to_string(),
+            emulator_profile_id: "spectaculator-zxspectrum".to_string(),
+            executable_path: emulator_path.to_string_lossy().to_string(),
+            core_path: None,
+        };
+
+        let result = test_emulator_profile(request).await.unwrap();
+        assert!(result.success);
+        assert!(result
+            .message
+            .contains("ZX Spectrum Spectaculator profile is ready"));
     }
 
     #[tokio::test]

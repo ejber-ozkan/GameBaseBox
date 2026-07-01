@@ -14,6 +14,7 @@ interface DatabaseSetupViewProps {
   isImporting: boolean;
   mdbPath: string;
   platformName?: string;
+  platformAliases?: string[];
   selectedPlatformId?: string;
   platformOptions?: Array<{
     id: string;
@@ -32,7 +33,7 @@ interface DatabaseSetupViewProps {
 const folderLabels = {
   gamesPath: 'Games',
   musicPath: 'Music',
-  photosPath: 'Photos',
+  photosPath: 'Musician Photos',
   screenshotsPath: 'Screenshots',
   extrasPath: 'Extras',
 } as const;
@@ -44,6 +45,7 @@ export function DatabaseSetupView({
   isImporting,
   mdbPath,
   platformName = 'GameBase64',
+  platformAliases = [],
   selectedPlatformId,
   platformOptions = [],
   folderSettings,
@@ -71,6 +73,12 @@ export function DatabaseSetupView({
             <p className="mt-4 max-w-3xl text-base leading-8 text-white/68">
               GBBox needs the original <span className="font-bold text-white">{platformName}</span>{' '}
               MDB file to build the local SQLite database for search, filters, favorites, and BigBox browsing.
+              {platformAliases.length > 0 ? (
+                <>
+                  {' '}
+                  This importer supports {platformAliases.join(' and ')} GameBase databases for this platform.
+                </>
+              ) : null}
             </p>
             {showPlatformPicker ? (
               <label className="mt-6 block max-w-sm">

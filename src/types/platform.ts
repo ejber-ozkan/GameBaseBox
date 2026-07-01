@@ -1,9 +1,9 @@
-export type PlatformId = 'c64' | 'atari800' | 'atari2600';
+export type PlatformId = 'c64' | 'atari800' | 'atari2600' | 'zxspectrum';
 
 export type PlatformStatus = 'available' | 'planned' | 'disabled';
 export type PlatformImportStatus = 'notImported' | 'importing' | 'imported' | 'failed';
-export type PlatformMusicCapability = 'sid' | 'sap' | 'generic' | 'none';
-export type PlatformEmulatorType = 'vice' | 'retroarch' | 'altirra' | 'custom';
+export type PlatformMusicCapability = 'sid' | 'sap' | 'ay' | 'generic' | 'none';
+export type PlatformEmulatorType = 'vice' | 'retroarch' | 'altirra' | 'spectaculator' | 'custom';
 export type PlatformFolderType =
   | 'games'
   | 'music'

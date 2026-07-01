@@ -45,6 +45,11 @@ type SetupFolderKey = keyof Pick<
 const REQUIRED_PLATFORM_FOLDER_KEYS: Partial<Record<keyof typeof PLATFORM_PROFILES, SetupFolderKey[]>> = {
   atari800: ['gamesPath', 'musicPath', 'photosPath', 'screenshotsPath', 'extrasPath'],
   atari2600: ['gamesPath', 'screenshotsPath', 'extrasPath'],
+  zxspectrum: ['extrasPath', 'gamesPath', 'screenshotsPath', 'photosPath', 'musicPath'],
+};
+
+const PLATFORM_IMPORT_ALIASES: Partial<Record<keyof typeof PLATFORM_PROFILES, string[]>> = {
+  zxspectrum: ['GameBaseZX', 'SpeccyMania'],
 };
 
 function getRequiredPlatformFolderKeys(platformId: keyof typeof PLATFORM_PROFILES): SetupFolderKey[] {
@@ -306,6 +311,7 @@ function LibraryApp() {
           importResult={platformSetupResult}
           isImporting={isPlatformImporting}
           mdbPath={activePlatformSettings.library.sourceMdbPath ?? ''}
+          platformAliases={PLATFORM_IMPORT_ALIASES[settings.activePlatformId] ?? []}
           platformName={activePlatform.displayName}
           platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
             id: platform.id,
@@ -722,6 +728,7 @@ export default function Home() {
         importResult={setupSuccess}
         isImporting={isImporting}
         mdbPath={activeSetupPlatformSettings.library.sourceMdbPath ?? ''}
+        platformAliases={PLATFORM_IMPORT_ALIASES[setupPlatformId] ?? []}
         platformName={activeSetupPlatform.displayName}
         platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
           id: platform.id,

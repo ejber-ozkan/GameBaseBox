@@ -163,6 +163,7 @@ pub enum PlatformId {
     C64,
     Atari800,
     Atari2600,
+    ZxSpectrum,
 }
 
 impl PlatformId {
@@ -171,6 +172,7 @@ impl PlatformId {
             PlatformId::C64 => "c64",
             PlatformId::Atari800 => "atari800",
             PlatformId::Atari2600 => "atari2600",
+            PlatformId::ZxSpectrum => "zxspectrum",
         }
     }
 }

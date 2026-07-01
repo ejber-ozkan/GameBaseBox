@@ -51,6 +51,42 @@ async fn test_get_supported_platforms_includes_importable_atari2600_capabilities
 }
 
 #[tokio::test(flavor = "current_thread")]
+async fn test_get_supported_platforms_includes_zxspectrum_capabilities() {
+    let platforms = get_supported_platforms().await.unwrap();
+    let zxspectrum = platforms
+        .iter()
+        .find(|platform| platform.id == "zxspectrum")
+        .expect("ZX Spectrum profile should exist");
+
+    assert_eq!(zxspectrum.display_name, "ZX Spectrum");
+    assert_eq!(zxspectrum.status, "available");
+    assert_eq!(zxspectrum.import_status, "notImported");
+    assert_eq!(zxspectrum.default_emulator_profile_id, "retroarch-zxspectrum");
+    assert_eq!(
+        zxspectrum.supported_emulator_profile_ids,
+        vec![
+            "retroarch-zxspectrum".to_string(),
+            "spectaculator-zxspectrum".to_string(),
+        ]
+    );
+    assert_eq!(
+        zxspectrum.folder_types,
+        vec![
+            "extras".to_string(),
+            "games".to_string(),
+            "screenshots".to_string(),
+            "photos".to_string(),
+            "music".to_string(),
+        ]
+    );
+    assert_eq!(zxspectrum.capabilities.music, "ay");
+    assert!(zxspectrum
+        .capabilities
+        .launch_extensions
+        .contains(&".tzx".to_string()));
+}
+
+#[tokio::test(flavor = "current_thread")]
 async fn test_active_platform_defaults_to_c64() {
     let active = get_active_platform().await.unwrap();
 

@@ -16,7 +16,7 @@ export function AboutSettingsTab({
         <h3 className="mb-4 flex items-center gap-2 text-lg font-black text-white">GBBox</h3>
         <p className="mb-4 text-sm text-gray-300">
           GameBase Box is a local-first launcher for GameBase-style libraries, with imports for Commodore 64,
-          Atari 800, and Atari 2600.
+          Atari 800, Atari 2600, and ZX Spectrum.
         </p>
 
         <div className="mb-4 rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
