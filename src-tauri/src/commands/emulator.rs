@@ -243,6 +243,8 @@ fn collect_amiga_sibling_disk_archives(rom_path: &Path) -> Vec<PathBuf> {
 }
 
 fn push_uae_rom_args(args: &mut Vec<String>, rom_files: &[PathBuf]) {
+    args.push("-G".to_string());
+
     if rom_files.is_empty() {
         return;
     }
@@ -260,6 +262,102 @@ fn push_uae_rom_args(args: &mut Vec<String>, rom_files: &[PathBuf]) {
             .join(",");
         args.push(format!("-diskswapper={disk_swapper}"));
     }
+}
+
+fn push_uae_gemus_args(args: &mut Vec<String>, gemus: &str) {
+    for line in gemus.lines() {
+        let option = line.trim();
+        if option.is_empty() || option.starts_with(';') || option.starts_with('#') {
+            continue;
+        }
+        let Some((key, value)) = option.split_once('=') else {
+            continue;
+        };
+        let key = key.trim();
+        if key.is_empty() {
+            continue;
+        }
+        let normalized_option = format!("{}={}", key.to_lowercase(), value.trim());
+
+        args.push("-s".to_string());
+        args.push(normalized_option);
+    }
+}
+
+#[derive(Default)]
+struct GameLaunchMetadata {
+    file_to_run: String,
+    gemus: String,
+}
+
+fn games_table_has_column(conn: &rusqlite::Connection, column_name: &str) -> bool {
+    let Ok(mut stmt) = conn.prepare("PRAGMA table_info(Games)") else {
+        return false;
+    };
+    let Ok(columns) = stmt.query_map([], |row| row.get::<_, String>(1)) else {
+        return false;
+    };
+
+    let has_column = columns
+        .filter_map(Result::ok)
+        .any(|column| column.eq_ignore_ascii_case(column_name));
+    has_column
+}
+
+fn load_game_launch_metadata(
+    game_id: Option<&str>,
+    platform_id: Option<&str>,
+) -> GameLaunchMetadata {
+    let Some(game_id) = game_id else {
+        return GameLaunchMetadata::default();
+    };
+
+    use crate::database::get_db_path;
+    use rusqlite::{Connection, OptionalExtension};
+
+    let Ok(conn) = Connection::open(get_db_path()) else {
+        return GameLaunchMetadata::default();
+    };
+
+    let has_file_to_run = games_table_has_column(&conn, "FileToRun");
+    let has_gemus = games_table_has_column(&conn, "Gemus");
+    if !has_file_to_run && !has_gemus {
+        return GameLaunchMetadata::default();
+    }
+
+    let file_to_run_expr = if has_file_to_run { "FileToRun" } else { "''" };
+    let gemus_expr = if has_gemus { "Gemus" } else { "''" };
+    let has_platform_id = games_table_has_column(&conn, "platform_id");
+
+    let row = if has_platform_id {
+        if let Some(platform_id) = platform_id {
+            let sql = format!(
+                "SELECT COALESCE({file_to_run_expr}, ''), COALESCE({gemus_expr}, '') FROM Games WHERE GA_Id = ? AND platform_id = ?"
+            );
+            conn.query_row(&sql, [game_id, platform_id], |row| {
+                Ok(GameLaunchMetadata {
+                    file_to_run: row.get(0)?,
+                    gemus: row.get(1)?,
+                })
+            })
+            .optional()
+        } else {
+            Ok(None)
+        }
+    } else {
+        let sql = format!(
+            "SELECT COALESCE({file_to_run_expr}, ''), COALESCE({gemus_expr}, '') FROM Games WHERE GA_Id = ?"
+        );
+        conn.query_row(&sql, [game_id], |row| {
+            Ok(GameLaunchMetadata {
+                file_to_run: row.get(0)?,
+                gemus: row.get(1)?,
+            })
+        })
+        .optional()
+    };
+
+    row.ok().flatten().unwrap_or_default()
 }
 
 fn write_retroarch_m3u(
@@ -497,18 +595,9 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         }
     }
 
-    let mut file_to_run = String::new();
-    if let Some(gid) = &request.game_id {
-        use crate::database::get_db_path;
-        use rusqlite::Connection;
-        if let Ok(conn) = Connection::open(get_db_path()) {
-            if let Ok(mut stmt) = conn.prepare("SELECT FileToRun FROM Games WHERE GA_Id = ?") {
-                if let Ok(ftr) = stmt.query_row([gid], |row| row.get::<_, String>(0)) {
-                    file_to_run = ftr;
-                }
-            }
-        }
-    }
+    let launch_metadata =
+        load_game_launch_metadata(request.game_id.as_deref(), request.platform_id.as_deref());
+    let file_to_run = launch_metadata.file_to_run.clone();
 
     let is_zip = rom
         .extension()
@@ -607,6 +696,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             push_altirra_rom_args(&mut args, &resolved_primary_rom);
         } else if is_uae {
             push_uae_rom_args(&mut args, &extracted_roms);
+            push_uae_gemus_args(&mut args, &launch_metadata.gemus);
         } else if is_spectaculator || is_beebem {
             args.push(resolved_primary_rom.to_string_lossy().to_string());
         } else {
@@ -644,6 +734,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             push_altirra_rom_args(&mut args, &rom);
         } else if is_uae {
             push_uae_rom_args(&mut args, &[rom]);
+            push_uae_gemus_args(&mut args, &launch_metadata.gemus);
         } else if is_spectaculator || is_beebem {
             args.push(rom.to_string_lossy().to_string());
         } else {
@@ -737,6 +828,7 @@ mod tests {
         assert_eq!(
             args,
             vec![
+                "-G".to_string(),
                 "-0".to_string(),
                 "D:/Temp/D-Generation (AGA)_Disk1.adf".to_string(),
                 "-1".to_string(),
@@ -747,6 +839,69 @@ mod tests {
     }
 
     #[test]
+    fn test_winuae_gemus_lines_are_passed_as_lowercase_s_options() {
+        let gemus = "\n kickstart_rom=v1.3\r\nnr_floppies=2\nfloppy0type=0\n\n; comment\n";
+        let mut args = Vec::new();
+
+        push_uae_gemus_args(&mut args, gemus);
+
+        assert_eq!(
+            args,
+            vec![
+                "-s".to_string(),
+                "kickstart_rom=v1.3".to_string(),
+                "-s".to_string(),
+                "nr_floppies=2".to_string(),
+                "-s".to_string(),
+                "floppy0type=0".to_string(),
+            ]
+        );
+    }
+
+    #[test]
+    fn test_winuae_gemus_normalizes_option_names_without_lowercasing_values() {
+        let mut args = Vec::new();
+
+        push_uae_gemus_args(&mut args, "Kickstart_Rom_File=C:/ROMs/Kick31.rom");
+
+        assert_eq!(
+            args,
+            vec![
+                "-s".to_string(),
+                "kickstart_rom_file=C:/ROMs/Kick31.rom".to_string(),
+            ]
+        );
+    }
+
+    #[test]
+    fn test_launch_metadata_loads_platform_scoped_gemus() {
+        let temp_db = NamedTempFile::new().unwrap();
+        let db_path = temp_db.path().to_string_lossy().to_string();
+        let _env = DbEnvGuard::set(&db_path);
+        let conn = Connection::open(temp_db.path()).unwrap();
+        conn.execute(
+            "CREATE TABLE Games (GA_Id TEXT, platform_id TEXT, FileToRun TEXT, Gemus TEXT)",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO Games (GA_Id, platform_id, FileToRun, Gemus) VALUES (?, ?, ?, ?)",
+            ["1", "c64", "c64.d64", "chipmem_size=1"],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO Games (GA_Id, platform_id, FileToRun, Gemus) VALUES (?, ?, ?, ?)",
+            ["1", "amiga", "amiga.adf", "cpu_model=68020\nchipmem_size=4"],
+        )
+        .unwrap();
+
+        let metadata = load_game_launch_metadata(Some("1"), Some("amiga"));
+
+        assert_eq!(metadata.file_to_run, "amiga.adf");
+        assert_eq!(metadata.gemus, "cpu_model=68020\nchipmem_size=4");
+    }
+
+    #[test]
     fn test_retroarch_m3u_lists_extracted_amiga_disks_in_order() {
         let dir = tempdir().unwrap();
         let disk_1 = dir.path().join("D-Generation (AGA)_Disk1.adf");
@@ -754,8 +909,8 @@ mod tests {
         std::fs::write(&disk_1, b"disk1").unwrap();
         std::fs::write(&disk_2, b"disk2").unwrap();
 
-        let m3u_path = write_retroarch_m3u(dir.path(), &disk_1, &[disk_1.clone(), disk_2.clone()])
-            .unwrap();
+        let m3u_path =
+            write_retroarch_m3u(dir.path(), &disk_1, &[disk_1.clone(), disk_2.clone()]).unwrap();
 
         let contents = std::fs::read_to_string(m3u_path).unwrap();
         assert_eq!(
