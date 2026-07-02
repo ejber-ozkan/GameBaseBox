@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import {
+  LIBRARY_BACKGROUND_OPACITY,
   getLibraryBackgroundForPlatform,
   getLibraryBackgroundPool,
   getLibraryBackgroundPoolForPlatform,
@@ -44,5 +45,9 @@ describe('library-backgrounds', () => {
     expect(resolveLibraryBackground('bbcmicro', 'list', 0)).toBe('/docs/images/backgrounds/Acorn_BBC_Micro_2.jpeg');
     expect(resolveLibraryBackground('bbcmicro', 'grid', 1)).toBe('/docs/images/backgrounds/Acorn_BBC_Micro_2.jpeg');
     expect(resolveLibraryBackground('bbcmicro', 'list', 1)).toBe('/docs/images/backgrounds/Acorn_BBC_Micro_1.jpg');
+  });
+
+  test('sets the windowed library background visibility about twenty percent higher than the original layer', () => {
+    expect(LIBRARY_BACKGROUND_OPACITY).toBeCloseTo(0.13 * 1.2, 3);
   });
 });

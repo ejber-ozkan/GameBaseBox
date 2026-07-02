@@ -30,7 +30,7 @@ import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
 import { useWindowLibraryShelves } from '@/hooks/useWindowLibraryShelves';
 import { PLATFORM_PROFILES, SUPPORTED_PLATFORMS } from '@/lib/platform-capabilities';
-import { resolveLibraryBackground } from '@/lib/library-backgrounds';
+import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '@/lib/library-backgrounds';
 import type { PlatformFolderSettings, PlatformId, PlatformSettings } from '@/types/platform';
 import {
   playRotatingUiSoundEffectAndWait,
@@ -426,8 +426,11 @@ function LibraryApp() {
       }`}>
         <div
           aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.13] saturate-[0.85] contrast-[1.08]"
-          style={{ backgroundImage: `url('${libraryBackgroundImage}')` }}
+          className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat saturate-[0.85] contrast-[1.08]"
+          style={{
+            backgroundImage: `url('${libraryBackgroundImage}')`,
+            opacity: LIBRARY_BACKGROUND_OPACITY,
+          }}
         />
         <div
           aria-hidden="true"

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-07-02
+
+### Changed
+- Increased the windowed grid and list platform background image visibility by about 20% while keeping the existing overlay treatment.
+- Bumped package, Tauri, Cargo, lockfile, and root version metadata to `0.3.1`.
+
 ## [0.3.0] - 2026-07-02
 
 ### Added
