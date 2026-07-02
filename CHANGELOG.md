@@ -4,10 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-02
+
 ### Added
 - Added Acorn BBC Micro and Commodore Amiga GameBase import options with Extras, Games, Screenshots, and Music folder setup.
 - Added RetroArch defaults plus BeebEm and WinUAE/UAE external emulator profiles for BBC Micro and Amiga.
 - Added subtle rotating library backgrounds for windowed grid/list views using the images in `docs/images/backgrounds`.
+- Added release notes for the GBBox 0.3.0 release and linked all current public release notes from the README.
+
+### Changed
+- Bumped package, Tauri, Cargo, lockfile, and root version metadata to `0.3.0`.
+- Updated the GitHub Actions release workflow to use the matching `RELEASE_NOTES_<version>.md` file as the GitHub release body.
+
+### Fixed
+- Fixed Commodore Amiga multi-disk launch packaging so sibling `_DiskN.zip` archives are temporarily extracted together before RetroArch `.m3u` generation.
+- Fixed WinUAE/UAE launches for multi-disk Amiga games by attaching extracted disks with drive switches and preloading the Disk Swapper list.
+- Ignored local MDB CSV export dumps under `exports/` so inspection files stay out of Git history.
 
 ## [0.2.0] - 2026-07-01
 

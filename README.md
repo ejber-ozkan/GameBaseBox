@@ -232,7 +232,7 @@ Temporary extraction and launch playlists are generated outside your source libr
 
 ## Release Notes
 
-See [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_0.2.0.md](RELEASE_NOTES_0.2.0.md), and [RELEASE_NOTES_0.1.0.md](RELEASE_NOTES_0.1.0.md) for GBBox release notes.
+See [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_0.3.0.md](RELEASE_NOTES_0.3.0.md), [RELEASE_NOTES_0.2.0.md](RELEASE_NOTES_0.2.0.md), and [RELEASE_NOTES_0.1.0.md](RELEASE_NOTES_0.1.0.md) for GBBox release notes.
 
 ## Skills used to build this
 

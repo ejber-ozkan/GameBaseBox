@@ -71,6 +71,13 @@ jobs:
           $installer = Get-ChildItem "src-tauri/target/release/bundle/nsis" -Recurse -Filter *.exe | Select-Object -First 1
           if (-not $installer) { throw "Windows installer not found" }
           Copy-Item $installer.FullName "release-assets/GBBox-Windows-x64-Setup.exe"
+          $version = (Get-Content VERSION -Raw).Trim()
+          $notes = "RELEASE_NOTES_$version.md"
+          if (Test-Path $notes) {
+            Copy-Item $notes "release-assets/RELEASE_NOTES.md"
+          } else {
+            "GBBox $version release." | Set-Content "release-assets/RELEASE_NOTES.md"
+          }
 
       - name: Upload Windows bundles
         uses: actions/upload-artifact@v7
@@ -84,6 +91,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
+          body_path: release-assets/RELEASE_NOTES.md
           files: release-assets/GBBox-Windows-x64-Setup.exe
 
   build-linux:
@@ -140,6 +148,13 @@ jobs:
             exit 1
           fi
           cp "$installer" release-assets/GBBox-Linux.AppImage
+          version="$(tr -d '\r\n' < VERSION)"
+          notes="RELEASE_NOTES_${version}.md"
+          if [ -f "$notes" ]; then
+            cp "$notes" release-assets/RELEASE_NOTES.md
+          else
+            printf 'GBBox %s release.\n' "$version" > release-assets/RELEASE_NOTES.md
+          fi
 
       - name: Upload Linux bundles
         uses: actions/upload-artifact@v7
@@ -153,6 +168,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
+          body_path: release-assets/RELEASE_NOTES.md
           files: release-assets/GBBox-Linux.AppImage
 
   build-macos:
@@ -195,6 +211,13 @@ jobs:
             exit 1
           fi
           cp "$installer" release-assets/GBBox-macOS.dmg
+          version="$(tr -d '\r\n' < VERSION)"
+          notes="RELEASE_NOTES_${version}.md"
+          if [ -f "$notes" ]; then
+            cp "$notes" release-assets/RELEASE_NOTES.md
+          else
+            printf 'GBBox %s release.\n' "$version" > release-assets/RELEASE_NOTES.md
+          fi
 
       - name: Upload macOS bundles
         uses: actions/upload-artifact@v7
@@ -208,4 +231,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
+          body_path: release-assets/RELEASE_NOTES.md
           files: release-assets/GBBox-macOS.dmg
