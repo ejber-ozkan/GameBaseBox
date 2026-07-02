@@ -49,6 +49,8 @@ fn platform_display_name(platform_id: Option<&str>) -> &'static str {
         Some("atari800") => "Atari 800",
         Some("atari2600") => "Atari 2600",
         Some("zxspectrum") => "ZX Spectrum",
+        Some("bbcmicro") => "Acorn BBC Micro",
+        Some("amiga") => "Commodore Amiga",
         _ => "C64",
     }
 }
@@ -57,8 +59,12 @@ fn emulator_profile_display_name(profile_id: Option<&str>, is_retroarch: bool) -
     match profile_id {
         Some("altirra-atari800") => "Altirra",
         Some("spectaculator-zxspectrum") => "Spectaculator",
+        Some("beebem-bbcmicro") => "BeebEm",
+        Some("winuae-amiga") => "WinUAE / UAE",
         Some("retroarch-atari800") if is_retroarch => "RetroArch",
         Some("retroarch-zxspectrum") if is_retroarch => "RetroArch",
+        Some("retroarch-bbcmicro") if is_retroarch => "RetroArch",
+        Some("retroarch-amiga") if is_retroarch => "RetroArch",
         Some("retroarch-c64") if is_retroarch => "RetroArch",
         Some("vice-c64") => "VICE",
         _ if is_retroarch => "RetroArch",
@@ -72,6 +78,8 @@ fn launch_extensions_for_platform(platform_id: Option<&str>) -> &'static [&'stat
             "atr", "atx", "xfd", "dcm", "cas", "xex", "com", "bin", "car", "rom",
         ],
         Some("zxspectrum") => &["tzx", "tap", "z80", "sna", "szx", "trd", "dsk"],
+        Some("bbcmicro") => &["ssd", "dsd", "adl", "adf", "uef", "rom", "bin"],
+        Some("amiga") => &["adf", "adz", "dms", "ipf", "lha", "hdf", "hdz"],
         _ => &["d64", "g64", "t64", "tap", "prg", "crt", "nib"],
     }
 }
@@ -80,6 +88,8 @@ fn retroarch_core_not_found_message(platform_id: Option<&str>, core_path: &str) 
     match platform_id {
         Some("atari800") => format!("Atari 800 RetroArch core file not found: {}", core_path),
         Some("zxspectrum") => format!("ZX Spectrum RetroArch core file not found: {}", core_path),
+        Some("bbcmicro") => format!("Acorn BBC Micro RetroArch core file not found: {}", core_path),
+        Some("amiga") => format!("Commodore Amiga RetroArch core file not found: {}", core_path),
         _ => format!("RetroArch Core file not found: {}", core_path),
     }
 }
@@ -88,6 +98,8 @@ fn retroarch_core_not_file_message(platform_id: Option<&str>, core_path: &str) -
     match platform_id {
         Some("atari800") => format!("Atari 800 RetroArch core path is not a file: {}", core_path),
         Some("zxspectrum") => format!("ZX Spectrum RetroArch core path is not a file: {}", core_path),
+        Some("bbcmicro") => format!("Acorn BBC Micro RetroArch core path is not a file: {}", core_path),
+        Some("amiga") => format!("Commodore Amiga RetroArch core path is not a file: {}", core_path),
         _ => format!("RetroArch Core path is not a file: {}", core_path),
     }
 }
@@ -102,6 +114,10 @@ fn is_supported_emulator_profile(platform_id: &str, profile_id: &str) -> bool {
             | ("atari2600", "retroarch-atari2600")
             | ("zxspectrum", "retroarch-zxspectrum")
             | ("zxspectrum", "spectaculator-zxspectrum")
+            | ("bbcmicro", "retroarch-bbcmicro")
+            | ("bbcmicro", "beebem-bbcmicro")
+            | ("amiga", "retroarch-amiga")
+            | ("amiga", "winuae-amiga")
     )
 }
 
@@ -267,6 +283,15 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             "altirra",
             "spectaculator.exe",
             "spectaculator",
+            "beebem.exe",
+            "beebem",
+            "winuae64.exe",
+            "winuae.exe",
+            "winuae",
+            "fs-uae.exe",
+            "fs-uae",
+            "amiberry.exe",
+            "amiberry",
         ];
         let mut found = false;
         for exe in possible_exes {
@@ -308,6 +333,18 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         .as_deref()
         .is_some_and(|profile_id| profile_id == "spectaculator-zxspectrum")
         || exe_name.contains("spectaculator");
+    let is_beebem = request
+        .emulator_profile_id
+        .as_deref()
+        .is_some_and(|profile_id| profile_id == "beebem-bbcmicro")
+        || exe_name.contains("beebem");
+    let is_uae = request
+        .emulator_profile_id
+        .as_deref()
+        .is_some_and(|profile_id| profile_id == "winuae-amiga")
+        || exe_name.contains("winuae")
+        || exe_name.contains("fs-uae")
+        || exe_name.contains("amiberry");
 
     if is_retroarch {
         if let Some(cp) = &request.core_path {
@@ -328,7 +365,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         } else {
             args.push("/ntsc".to_string());
         }
-    } else if !is_retroarch && !is_spectaculator {
+    } else if !is_retroarch && !is_spectaculator && !is_beebem && !is_uae {
         if request.true_drive_emulation {
             args.push("-truedrive".to_string());
         }
@@ -442,7 +479,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             }
         } else if is_altirra {
             push_altirra_rom_args(&mut args, &resolved_primary_rom);
-        } else if is_spectaculator {
+        } else if is_spectaculator || is_beebem || is_uae {
             args.push(resolved_primary_rom.to_string_lossy().to_string());
         } else {
             args.push("-autostart".to_string());
@@ -477,7 +514,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             args.push(rom.to_string_lossy().to_string());
         } else if is_altirra {
             push_altirra_rom_args(&mut args, &rom);
-        } else if is_spectaculator {
+        } else if is_spectaculator || is_beebem || is_uae {
             args.push(rom.to_string_lossy().to_string());
         } else {
             args.push("-autostart".to_string());

@@ -164,6 +164,8 @@ pub enum PlatformId {
     Atari800,
     Atari2600,
     ZxSpectrum,
+    BbcMicro,
+    Amiga,
 }
 
 impl PlatformId {
@@ -173,6 +175,8 @@ impl PlatformId {
             PlatformId::Atari800 => "atari800",
             PlatformId::Atari2600 => "atari2600",
             PlatformId::ZxSpectrum => "zxspectrum",
+            PlatformId::BbcMicro => "bbcmicro",
+            PlatformId::Amiga => "amiga",
         }
     }
 }

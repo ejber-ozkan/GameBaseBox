@@ -30,6 +30,7 @@ import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
 import { useWindowLibraryShelves } from '@/hooks/useWindowLibraryShelves';
 import { PLATFORM_PROFILES, SUPPORTED_PLATFORMS } from '@/lib/platform-capabilities';
+import { resolveLibraryBackground } from '@/lib/library-backgrounds';
 import type { PlatformFolderSettings, PlatformId, PlatformSettings } from '@/types/platform';
 import {
   playRotatingUiSoundEffectAndWait,
@@ -46,6 +47,8 @@ const REQUIRED_PLATFORM_FOLDER_KEYS: Partial<Record<keyof typeof PLATFORM_PROFIL
   atari800: ['gamesPath', 'musicPath', 'photosPath', 'screenshotsPath', 'extrasPath'],
   atari2600: ['gamesPath', 'screenshotsPath', 'extrasPath'],
   zxspectrum: ['extrasPath', 'gamesPath', 'screenshotsPath', 'photosPath', 'musicPath'],
+  bbcmicro: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
+  amiga: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
 };
 
 const PLATFORM_IMPORT_ALIASES: Partial<Record<keyof typeof PLATFORM_PROFILES, string[]>> = {
@@ -87,6 +90,7 @@ function LibraryApp() {
   const [platformSetupError, setPlatformSetupError] = useState<string | null>(null);
   const [platformSetupResult, setPlatformSetupResult] = useState<string | null>(null);
   const [isPlatformImporting, setIsPlatformImporting] = useState(false);
+  const [libraryBackgroundSeed] = useState(() => Math.floor(Math.random() * 1000));
   const previousFullscreenRef = useRef(settings.isFullscreen);
   const { classicGames, favoriteGames, recentGames } = useWindowLibraryShelves({
     activePlatformId: settings.activePlatformId,
@@ -97,6 +101,12 @@ function LibraryApp() {
   });
   const activePlatform = PLATFORM_PROFILES[settings.activePlatformId];
   const activePlatformSettings = settings.platformSettings[settings.activePlatformId];
+  const libraryViewBackgroundMode = viewMode === 'list' ? 'list' : 'grid';
+  const libraryBackgroundImage = resolveLibraryBackground(
+    settings.activePlatformId,
+    libraryViewBackgroundMode,
+    libraryBackgroundSeed,
+  );
 
   useEffect(() => {
     void getGenres(settings.activePlatformId).then(setGenres);
@@ -414,6 +424,15 @@ function LibraryApp() {
       <main className={`h-screen overflow-hidden bg-gray-900 text-white flex flex-col font-sans transition-all ${
         settings.isFullscreen && !showMouse ? 'cursor-none' : ''
       }`}>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.13] saturate-[0.85] contrast-[1.08]"
+          style={{ backgroundImage: `url('${libraryBackgroundImage}')` }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.58),rgba(17,24,39,0.84)_52%,rgba(17,24,39,0.94))]"
+        />
         <LibraryHeader
           filters={filters}
           genres={genres}
@@ -429,7 +448,7 @@ function LibraryApp() {
           viewMode={viewMode}
         />
 
-        <div className="no-scrollbar flex-1 overflow-auto pl-8 pr-4">
+        <div className="no-scrollbar relative z-10 flex-1 overflow-auto pl-8 pr-4">
           <AlphabetJumpBar 
             activeLetter={filters.letter} 
             onLetterSelect={(l) => {

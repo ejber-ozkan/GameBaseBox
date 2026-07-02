@@ -87,6 +87,74 @@ async fn test_get_supported_platforms_includes_zxspectrum_capabilities() {
 }
 
 #[tokio::test(flavor = "current_thread")]
+async fn test_get_supported_platforms_includes_bbc_micro_capabilities() {
+    let platforms = get_supported_platforms().await.unwrap();
+    let bbc = platforms
+        .iter()
+        .find(|platform| platform.id == "bbcmicro")
+        .expect("BBC Micro profile should exist");
+
+    assert_eq!(bbc.display_name, "Acorn BBC Micro");
+    assert_eq!(bbc.import_status, "notImported");
+    assert_eq!(bbc.default_emulator_profile_id, "retroarch-bbcmicro");
+    assert_eq!(
+        bbc.supported_emulator_profile_ids,
+        vec![
+            "retroarch-bbcmicro".to_string(),
+            "beebem-bbcmicro".to_string(),
+        ]
+    );
+    assert_eq!(
+        bbc.folder_types,
+        vec![
+            "extras".to_string(),
+            "games".to_string(),
+            "screenshots".to_string(),
+            "music".to_string(),
+        ]
+    );
+    assert_eq!(bbc.capabilities.music, "generic");
+    assert!(bbc
+        .capabilities
+        .launch_extensions
+        .contains(&".ssd".to_string()));
+}
+
+#[tokio::test(flavor = "current_thread")]
+async fn test_get_supported_platforms_includes_amiga_capabilities() {
+    let platforms = get_supported_platforms().await.unwrap();
+    let amiga = platforms
+        .iter()
+        .find(|platform| platform.id == "amiga")
+        .expect("Amiga profile should exist");
+
+    assert_eq!(amiga.display_name, "Commodore Amiga");
+    assert_eq!(amiga.import_status, "notImported");
+    assert_eq!(amiga.default_emulator_profile_id, "retroarch-amiga");
+    assert_eq!(
+        amiga.supported_emulator_profile_ids,
+        vec![
+            "retroarch-amiga".to_string(),
+            "winuae-amiga".to_string(),
+        ]
+    );
+    assert_eq!(
+        amiga.folder_types,
+        vec![
+            "extras".to_string(),
+            "games".to_string(),
+            "screenshots".to_string(),
+            "music".to_string(),
+        ]
+    );
+    assert_eq!(amiga.capabilities.music, "generic");
+    assert!(amiga
+        .capabilities
+        .launch_extensions
+        .contains(&".adf".to_string()));
+}
+
+#[tokio::test(flavor = "current_thread")]
 async fn test_active_platform_defaults_to_c64() {
     let active = get_active_platform().await.unwrap();
 

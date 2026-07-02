@@ -83,6 +83,8 @@ export function PathsSettingsTab({
   const isAtari800 = platformId === 'atari800';
   const isAtari2600 = platformId === 'atari2600';
   const isZxSpectrum = platformId === 'zxspectrum';
+  const isBbcMicro = platformId === 'bbcmicro';
+  const isAmiga = platformId === 'amiga';
   const supportedEmulatorProfileIds = platformProfile.supportedEmulatorProfileIds;
   const preferredEmulatorProfileId =
     platformEmulatorSettings.preferredEmulatorProfileId || platformProfile.defaultEmulatorProfileId;
@@ -192,6 +194,8 @@ export function PathsSettingsTab({
     if (emulatorType === 'retroarch') return 'RetroArch';
     if (emulatorType === 'altirra') return 'Altirra';
     if (emulatorType === 'spectaculator') return 'Spectaculator';
+    if (emulatorType === 'beebem') return 'BeebEm';
+    if (emulatorType === 'uae') return 'WinUAE / UAE';
     if (emulatorType === 'vice') return 'VICE';
     return PLATFORM_EMULATOR_PROFILES[profileId]?.displayName ?? profileId;
   };
@@ -530,6 +534,114 @@ export function PathsSettingsTab({
                 inputIndex={16}
                 browseIndex={17}
                 onBrowse={() => void browsePlatformExecutable('spectaculator-zxspectrum')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+          </div>
+        )}
+
+        {isBbcMicro && (
+          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+            {renderEmulatorSelector(10)}
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'retroarch-bbcmicro' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="RetroArch Executable (retroarch.exe)"
+                value={platformEmulatorSettings.executablePaths['retroarch-bbcmicro'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('retroarch-bbcmicro', value)}
+                placeholder="e.g. C:/RetroArch/retroarch.exe"
+                inputIndex={12}
+                browseIndex={13}
+                onBrowse={() => void browsePlatformExecutable('retroarch-bbcmicro')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+              <PathRow
+                label="RetroArch BBC Micro Core"
+                value={platformEmulatorSettings.corePaths['retroarch-bbcmicro'] ?? ''}
+                onChange={(value) => setPlatformCorePath('retroarch-bbcmicro', value)}
+                placeholder="e.g. C:/RetroArch/cores/beetle_bbc_libretro.dll"
+                inputIndex={14}
+                browseIndex={15}
+                onBrowse={() => void browsePlatformCore('retroarch-bbcmicro')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'beebem-bbcmicro' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="BeebEm Executable"
+                value={platformEmulatorSettings.executablePaths['beebem-bbcmicro'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('beebem-bbcmicro', value)}
+                placeholder="e.g. C:/BeebEm/BeebEm.exe"
+                inputIndex={16}
+                browseIndex={17}
+                onBrowse={() => void browsePlatformExecutable('beebem-bbcmicro')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+          </div>
+        )}
+
+        {isAmiga && (
+          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+            {renderEmulatorSelector(10)}
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'retroarch-amiga' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="RetroArch Executable (retroarch.exe)"
+                value={platformEmulatorSettings.executablePaths['retroarch-amiga'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('retroarch-amiga', value)}
+                placeholder="e.g. C:/RetroArch/retroarch.exe"
+                inputIndex={12}
+                browseIndex={13}
+                onBrowse={() => void browsePlatformExecutable('retroarch-amiga')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+              <PathRow
+                label="RetroArch Amiga Core"
+                value={platformEmulatorSettings.corePaths['retroarch-amiga'] ?? ''}
+                onChange={(value) => setPlatformCorePath('retroarch-amiga', value)}
+                placeholder="e.g. C:/RetroArch/cores/puae_libretro.dll"
+                inputIndex={14}
+                browseIndex={15}
+                onBrowse={() => void browsePlatformCore('retroarch-amiga')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'winuae-amiga' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="WinUAE / UAE Executable"
+                value={platformEmulatorSettings.executablePaths['winuae-amiga'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('winuae-amiga', value)}
+                placeholder="Windows: C:/WinUAE/WinUAE.exe; Linux/macOS: fs-uae or amiberry executable"
+                inputIndex={16}
+                browseIndex={17}
+                onBrowse={() => void browsePlatformExecutable('winuae-amiga')}
                 isMouseMode={isMouseMode}
                 onMouseFocus={onMouseFocus}
                 isFocused={isFocused}

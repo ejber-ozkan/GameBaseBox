@@ -36,6 +36,28 @@ const zxSpectrumFolders: PlatformFolderSettings = {
   videosPath: '',
 };
 
+const bbcMicroFolders: PlatformFolderSettings = {
+  platformId: 'bbcmicro',
+  gamesPath: 'E:/BBC/Games',
+  musicPath: 'E:/BBC/Music',
+  photosPath: '',
+  screenshotsPath: 'E:/BBC/Screenshots',
+  extrasPath: 'E:/BBC/Extras',
+  boxArtPath: '',
+  videosPath: '',
+};
+
+const amigaFolders: PlatformFolderSettings = {
+  platformId: 'amiga',
+  gamesPath: 'E:/Amiga/Games',
+  musicPath: 'E:/Amiga/Music',
+  photosPath: '',
+  screenshotsPath: 'E:/Amiga/Screenshots',
+  extrasPath: 'E:/Amiga/Extras',
+  boxArtPath: '',
+  videosPath: '',
+};
+
 describe('DatabaseSetupView', () => {
   it('renders and edits an Atari 800 extras folder field', () => {
     const onFolderChange = vi.fn();
@@ -119,5 +141,57 @@ describe('DatabaseSetupView', () => {
     expect(screen.getByPlaceholderText('Select Screenshots folder')).toBeTruthy();
     expect(screen.getByPlaceholderText('Select Musician Photos folder')).toBeTruthy();
     expect(screen.getByPlaceholderText('Select Music folder')).toBeTruthy();
+  });
+
+  it('renders BBC Micro import folders without photos', () => {
+    render(
+      <DatabaseSetupView
+        dbPath="bbcmicro"
+        error={null}
+        folderSettings={bbcMicroFolders}
+        importResult={null}
+        isImporting={false}
+        mdbPath="E:/BBC/BBC Micro.mdb"
+        onBrowse={vi.fn()}
+        onBrowseFolder={vi.fn()}
+        onFolderChange={vi.fn()}
+        onImport={vi.fn()}
+        platformName="Acorn BBC Micro"
+        requiredFolderKeys={['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath']}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Build Your Acorn BBC Micro Database' })).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Extras folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Games folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Screenshots folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Music folder')).toBeTruthy();
+    expect(screen.queryByPlaceholderText('Select Photos folder')).toBeNull();
+  });
+
+  it('renders Amiga import folders without photos', () => {
+    render(
+      <DatabaseSetupView
+        dbPath="amiga"
+        error={null}
+        folderSettings={amigaFolders}
+        importResult={null}
+        isImporting={false}
+        mdbPath="E:/Amiga/Commodore Amiga.mdb"
+        onBrowse={vi.fn()}
+        onBrowseFolder={vi.fn()}
+        onFolderChange={vi.fn()}
+        onImport={vi.fn()}
+        platformName="Commodore Amiga"
+        requiredFolderKeys={['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath']}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Build Your Commodore Amiga Database' })).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Extras folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Games folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Screenshots folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Music folder')).toBeTruthy();
+    expect(screen.queryByPlaceholderText('Select Photos folder')).toBeNull();
   });
 });
