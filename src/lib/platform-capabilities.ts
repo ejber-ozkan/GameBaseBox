@@ -67,6 +67,36 @@ export const PLATFORM_EMULATOR_PROFILES: Record<string, PlatformEmulatorProfile>
     emulatorType: 'spectaculator',
     required: false,
   },
+  'retroarch-bbcmicro': {
+    id: 'retroarch-bbcmicro',
+    platformId: 'bbcmicro',
+    displayName: 'RetroArch BBC Micro',
+    emulatorType: 'retroarch',
+    required: false,
+    default: true,
+  },
+  'beebem-bbcmicro': {
+    id: 'beebem-bbcmicro',
+    platformId: 'bbcmicro',
+    displayName: 'BeebEm',
+    emulatorType: 'beebem',
+    required: false,
+  },
+  'retroarch-amiga': {
+    id: 'retroarch-amiga',
+    platformId: 'amiga',
+    displayName: 'RetroArch Amiga',
+    emulatorType: 'retroarch',
+    required: false,
+    default: true,
+  },
+  'winuae-amiga': {
+    id: 'winuae-amiga',
+    platformId: 'amiga',
+    displayName: 'WinUAE / UAE',
+    emulatorType: 'uae',
+    required: false,
+  },
 };
 
 export const PLATFORM_PROFILES: Record<PlatformId, PlatformProfile> = {
@@ -142,6 +172,42 @@ export const PLATFORM_PROFILES: Record<PlatformId, PlatformProfile> = {
     inAppEmulation: false,
     launchExtensions: ['.tzx', '.tap', '.z80', '.sna', '.szx', '.trd', '.dsk', '.zip', '.7z'],
   },
+  bbcmicro: {
+    id: 'bbcmicro',
+    displayName: 'Acorn BBC Micro',
+    status: 'available',
+    importStatus: 'notImported',
+    defaultEmulatorProfileId: 'retroarch-bbcmicro',
+    supportedEmulatorProfileIds: ['retroarch-bbcmicro', 'beebem-bbcmicro'],
+    folderTypes: ['extras', 'games', 'screenshots', 'music'],
+    mediaCapabilities: {
+      screenshots: true,
+      photos: false,
+      music: 'generic',
+      extras: true,
+      videos: false,
+    },
+    inAppEmulation: false,
+    launchExtensions: ['.ssd', '.dsd', '.adl', '.adf', '.uef', '.rom', '.bin', '.m3u', '.zip', '.7z'],
+  },
+  amiga: {
+    id: 'amiga',
+    displayName: 'Commodore Amiga',
+    status: 'available',
+    importStatus: 'notImported',
+    defaultEmulatorProfileId: 'retroarch-amiga',
+    supportedEmulatorProfileIds: ['retroarch-amiga', 'winuae-amiga'],
+    folderTypes: ['extras', 'games', 'screenshots', 'music'],
+    mediaCapabilities: {
+      screenshots: true,
+      photos: false,
+      music: 'generic',
+      extras: true,
+      videos: false,
+    },
+    inAppEmulation: false,
+    launchExtensions: ['.adf', '.adz', '.dms', '.ipf', '.lha', '.hdf', '.hdz', '.m3u', '.zip', '.7z'],
+  },
 };
 
 export const SUPPORTED_PLATFORMS = Object.values(PLATFORM_PROFILES);
@@ -156,7 +222,14 @@ export function supportsEmbeddedEmulation(platformId: PlatformId): boolean {
 }
 
 export function isPlatformId(value: string): value is PlatformId {
-  return value === 'c64' || value === 'atari800' || value === 'atari2600' || value === 'zxspectrum';
+  return (
+    value === 'c64'
+    || value === 'atari800'
+    || value === 'atari2600'
+    || value === 'zxspectrum'
+    || value === 'bbcmicro'
+    || value === 'amiga'
+  );
 }
 
 export function createDefaultPlatformLibraryStatus(platformId: PlatformId): PlatformLibraryStatus {
@@ -218,6 +291,8 @@ export function createDefaultPlatformSettingsMap(): Record<PlatformId, PlatformS
     atari800: createDefaultPlatformSettings('atari800'),
     atari2600: createDefaultPlatformSettings('atari2600'),
     zxspectrum: createDefaultPlatformSettings('zxspectrum'),
+    bbcmicro: createDefaultPlatformSettings('bbcmicro'),
+    amiga: createDefaultPlatformSettings('amiga'),
   };
 }
 

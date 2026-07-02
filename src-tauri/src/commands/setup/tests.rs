@@ -77,6 +77,26 @@ fn create_zxspectrum_folder_settings(root: &std::path::Path) -> PlatformFolderSe
     }
 }
 
+fn create_four_folder_settings(root: &std::path::Path) -> PlatformFolderSettings {
+    let extras = root.join("Extras");
+    let games = root.join("Games");
+    let screenshots = root.join("Screenshots");
+    let music = root.join("Music");
+
+    fs::create_dir_all(&extras).unwrap();
+    fs::create_dir_all(&games).unwrap();
+    fs::create_dir_all(&screenshots).unwrap();
+    fs::create_dir_all(&music).unwrap();
+
+    PlatformFolderSettings {
+        games_path: games.to_string_lossy().to_string(),
+        music_path: music.to_string_lossy().to_string(),
+        photos_path: String::new(),
+        screenshots_path: screenshots.to_string_lossy().to_string(),
+        extras_path: extras.to_string_lossy().to_string(),
+    }
+}
+
 #[test]
 fn validates_atari800_import_request_with_required_folders() {
     let temp = tempdir().unwrap();
@@ -200,4 +220,49 @@ fn rejects_zxspectrum_import_request_missing_musician_photos_folder() {
 
     let error = validate_platform_import_request(&request).unwrap_err();
     assert!(error.contains("Musician Photos folder does not exist"));
+}
+
+#[test]
+fn validates_bbc_micro_import_request_with_required_folders() {
+    let temp = tempdir().unwrap();
+    let mdb_path = temp.path().join("BBC Micro.mdb");
+    fs::write(&mdb_path, b"test").unwrap();
+    let request = request_with_paths(
+        "bbcmicro",
+        mdb_path.to_string_lossy().to_string(),
+        create_four_folder_settings(temp.path()),
+    );
+
+    assert!(validate_platform_import_request(&request).is_ok());
+}
+
+#[test]
+fn validates_amiga_import_request_with_required_folders() {
+    let temp = tempdir().unwrap();
+    let mdb_path = temp.path().join("Commodore Amiga.mdb");
+    fs::write(&mdb_path, b"test").unwrap();
+    let request = request_with_paths(
+        "amiga",
+        mdb_path.to_string_lossy().to_string(),
+        create_four_folder_settings(temp.path()),
+    );
+
+    assert!(validate_platform_import_request(&request).is_ok());
+}
+
+#[test]
+fn rejects_bbc_micro_import_request_missing_music_folder() {
+    let temp = tempdir().unwrap();
+    let mdb_path = temp.path().join("BBC Micro.mdb");
+    fs::write(&mdb_path, b"test").unwrap();
+    let mut folders = create_four_folder_settings(temp.path());
+    folders.music_path = temp
+        .path()
+        .join("MissingMusic")
+        .to_string_lossy()
+        .to_string();
+    let request = request_with_paths("bbcmicro", mdb_path.to_string_lossy().to_string(), folders);
+
+    let error = validate_platform_import_request(&request).unwrap_err();
+    assert!(error.contains("Music folder does not exist"));
 }

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- Added Acorn BBC Micro and Commodore Amiga GameBase import options with Extras, Games, Screenshots, and Music folder setup.
+- Added RetroArch defaults plus BeebEm and WinUAE/UAE external emulator profiles for BBC Micro and Amiga.
+- Added subtle rotating library backgrounds for windowed grid/list views using the images in `docs/images/backgrounds`.
+
 ## [0.2.0] - 2026-07-01
 
 ### Added

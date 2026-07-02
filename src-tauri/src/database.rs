@@ -287,7 +287,7 @@ pub fn get_db_path() -> String {
 pub fn normalize_platform_id(platform_id: Option<&str>) -> Result<String, String> {
     let platform_id = platform_id.unwrap_or("c64");
     match platform_id {
-        "c64" | "atari800" | "atari2600" | "zxspectrum" => Ok(platform_id.to_string()),
+        "c64" | "atari800" | "atari2600" | "zxspectrum" | "bbcmicro" | "amiga" => Ok(platform_id.to_string()),
         _ => Err(format!("Unsupported platform: {platform_id}")),
     }
 }
@@ -1190,6 +1190,8 @@ fn platform_display_name(platform_id: &str) -> &str {
         "atari800" => "Atari 800",
         "atari2600" => "Atari 2600",
         "zxspectrum" => "ZX Spectrum",
+        "bbcmicro" => "Acorn BBC Micro",
+        "amiga" => "Commodore Amiga",
         _ => platform_id,
     }
 }
@@ -1429,8 +1431,10 @@ mod tests {
 
         assert_eq!(get_platform_db_scope(None).unwrap(), "c64");
         assert_eq!(get_platform_db_scope(Some("atari800")).unwrap(), "atari800");
+        assert_eq!(get_platform_db_scope(Some("bbcmicro")).unwrap(), "bbcmicro");
+        assert_eq!(get_platform_db_scope(Some("amiga")).unwrap(), "amiga");
         assert_eq!(get_platform_db_path(Some("c64")).unwrap(), "custom.sqlite");
-        assert!(get_platform_db_scope(Some("amiga")).is_err());
+        assert!(get_platform_db_scope(Some("unknown")).is_err());
     }
 
     #[test]

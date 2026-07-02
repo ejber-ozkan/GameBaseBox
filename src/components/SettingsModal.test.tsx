@@ -54,6 +54,20 @@ function makeSettings(
   platformSettings.atari2600.folders.extrasPath = 'F:/Atari2600/Extras';
   platformSettings.atari2600.emulator.executablePaths['retroarch-atari2600'] = 'C:/RetroArch/retroarch.exe';
   platformSettings.atari2600.emulator.corePaths['retroarch-atari2600'] = 'C:/RetroArch/cores/stella_libretro.dll';
+  platformSettings.bbcmicro.folders.gamesPath = 'G:/BBC/Games';
+  platformSettings.bbcmicro.folders.screenshotsPath = 'G:/BBC/Screenshots';
+  platformSettings.bbcmicro.folders.musicPath = 'G:/BBC/Music';
+  platformSettings.bbcmicro.folders.extrasPath = 'G:/BBC/Extras';
+  platformSettings.bbcmicro.emulator.executablePaths['retroarch-bbcmicro'] = 'C:/RetroArch/retroarch.exe';
+  platformSettings.bbcmicro.emulator.corePaths['retroarch-bbcmicro'] = 'C:/RetroArch/cores/beetle_bbc_libretro.dll';
+  platformSettings.bbcmicro.emulator.executablePaths['beebem-bbcmicro'] = 'C:/BeebEm/BeebEm.exe';
+  platformSettings.amiga.folders.gamesPath = 'H:/Amiga/Games';
+  platformSettings.amiga.folders.screenshotsPath = 'H:/Amiga/Screenshots';
+  platformSettings.amiga.folders.musicPath = 'H:/Amiga/Music';
+  platformSettings.amiga.folders.extrasPath = 'H:/Amiga/Extras';
+  platformSettings.amiga.emulator.executablePaths['retroarch-amiga'] = 'C:/RetroArch/retroarch.exe';
+  platformSettings.amiga.emulator.corePaths['retroarch-amiga'] = 'C:/RetroArch/cores/puae_libretro.dll';
+  platformSettings.amiga.emulator.executablePaths['winuae-amiga'] = 'C:/WinUAE/WinUAE.exe';
   importedPlatformIds.forEach((platformId) => {
     platformSettings[platformId].library.importStatus = 'imported';
   });
@@ -170,6 +184,40 @@ describe('SettingsView platform emulator settings', () => {
     expect(screen.getByText('RetroArch Executable (retroarch.exe)')).toBeTruthy();
     expect(screen.getByText('RetroArch Atari 2600 Core')).toBeTruthy();
     expect(screen.queryByText('Altirra Executable (Altirra64.exe)')).toBeNull();
+  });
+
+  test('shows BBC Micro folders with RetroArch and BeebEm settings from the imported BBC tab', () => {
+    currentSettings = makeSettings('c64', ['c64', 'bbcmicro']);
+
+    openSettingsTab('Acorn BBC Micro Platform Paths');
+
+    expect(screen.getByDisplayValue('G:/BBC/Games')).toBeTruthy();
+    expect(screen.getByDisplayValue('G:/BBC/Screenshots')).toBeTruthy();
+    expect(screen.getByDisplayValue('G:/BBC/Music')).toBeTruthy();
+    expect(screen.getByDisplayValue('G:/BBC/Extras')).toBeTruthy();
+    expect(screen.queryByText('Photos folder')).toBeNull();
+    expect(screen.getByText('Default Desktop Emulator')).toBeTruthy();
+    expect(screen.getByText('RetroArch')).toBeTruthy();
+    expect(screen.getByText('BeebEm')).toBeTruthy();
+    expect(screen.getByText('RetroArch BBC Micro Core')).toBeTruthy();
+    expect(screen.getByText('BeebEm Executable')).toBeTruthy();
+  });
+
+  test('shows Amiga folders with RetroArch and UAE settings from the imported Amiga tab', () => {
+    currentSettings = makeSettings('c64', ['c64', 'amiga']);
+
+    openSettingsTab('Commodore Amiga Platform Paths');
+
+    expect(screen.getByDisplayValue('H:/Amiga/Games')).toBeTruthy();
+    expect(screen.getByDisplayValue('H:/Amiga/Screenshots')).toBeTruthy();
+    expect(screen.getByDisplayValue('H:/Amiga/Music')).toBeTruthy();
+    expect(screen.getByDisplayValue('H:/Amiga/Extras')).toBeTruthy();
+    expect(screen.queryByText('Photos folder')).toBeNull();
+    expect(screen.getByText('Default Desktop Emulator')).toBeTruthy();
+    expect(screen.getByText('RetroArch')).toBeTruthy();
+    expect(screen.getByText('WinUAE / UAE')).toBeTruthy();
+    expect(screen.getByText('RetroArch Amiga Core')).toBeTruthy();
+    expect(screen.getByText('WinUAE / UAE Executable')).toBeTruthy();
   });
 
   test('does not show scraped media in platform paths', () => {
