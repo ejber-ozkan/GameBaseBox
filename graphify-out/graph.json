@@ -6743,7 +6743,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_bigboxview",
-      "community": 60,
+      "community": 38,
       "norm_label": "bigboxview.tsx"
     },
     {
@@ -6763,7 +6763,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "components_bigboxview_bigboxsessionstate",
-      "community": 60,
+      "community": 38,
       "norm_label": "bigboxsessionstate"
     },
     {
@@ -6773,7 +6773,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "components_bigboxview_bigboxview",
-      "community": 60,
+      "community": 38,
       "norm_label": "bigboxview()"
     },
     {
@@ -6853,7 +6853,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_detailview",
-      "community": 35,
+      "community": 13,
       "norm_label": "detailview.tsx"
     },
     {
@@ -6883,7 +6883,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_detailview_detailfullscreenmedia",
-      "community": 35,
+      "community": 13,
       "norm_label": "detailfullscreenmedia"
     },
     {
@@ -6903,7 +6903,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "components_detailview_detail_config",
-      "community": 35,
+      "community": 13,
       "norm_label": "detail_config"
     },
     {
@@ -6973,7 +6973,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_gridview_gridviewprops",
-      "community": 13,
+      "community": 35,
       "norm_label": "gridviewprops"
     },
     {
@@ -7033,7 +7033,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_imageslider",
-      "community": 35,
+      "community": 13,
       "norm_label": "imageslider.tsx"
     },
     {
@@ -7043,7 +7043,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_imageslider_imagesliderprops",
-      "community": 35,
+      "community": 13,
       "norm_label": "imagesliderprops"
     },
     {
@@ -7053,7 +7053,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_imageslider_imageslider",
-      "community": 35,
+      "community": 13,
       "norm_label": "imageslider()"
     },
     {
@@ -7453,7 +7453,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_subgenrepickermodal",
-      "community": 60,
+      "community": 23,
       "norm_label": "subgenrepickermodal.tsx"
     },
     {
@@ -7463,7 +7463,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodalprops",
-      "community": 60,
+      "community": 23,
       "norm_label": "subgenrepickermodalprops"
     },
     {
@@ -7473,7 +7473,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodal",
-      "community": 60,
+      "community": 23,
       "norm_label": "subgenrepickermodal()"
     },
     {
@@ -7613,7 +7613,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bigbox_bigboxfooter",
-      "community": 60,
+      "community": 38,
       "norm_label": "bigboxfooter.tsx"
     },
     {
@@ -7623,7 +7623,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "bigbox_bigboxfooter_bigboxfooterprops",
-      "community": 60,
+      "community": 38,
       "norm_label": "bigboxfooterprops"
     },
     {
@@ -7633,7 +7633,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "bigbox_bigboxfooter_bigboxfooter",
-      "community": 60,
+      "community": 38,
       "norm_label": "bigboxfooter()"
     },
     {
@@ -7643,7 +7643,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bigbox_bigboxheader",
-      "community": 60,
+      "community": 38,
       "norm_label": "bigboxheader.tsx"
     },
     {
@@ -7653,7 +7653,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "bigbox_bigboxheader_bigboxheaderprops",
-      "community": 5,
+      "community": 38,
       "norm_label": "bigboxheaderprops"
     },
     {
@@ -7663,7 +7663,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "bigbox_bigboxheader_bigboxheader",
-      "community": 60,
+      "community": 38,
       "norm_label": "bigboxheader()"
     },
     {
@@ -7853,7 +7853,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "library_libraryheader",
-      "community": 60,
+      "community": 5,
       "norm_label": "libraryheader.tsx"
     },
     {
@@ -7873,7 +7873,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "library_libraryheader_libraryheader",
-      "community": 60,
+      "community": 5,
       "norm_label": "libraryheader()"
     },
     {
@@ -8963,7 +8963,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata",
-      "community": 60,
+      "community": 38,
       "norm_label": "usebigboxlibrarydata.ts"
     },
     {
@@ -8973,7 +8973,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_bigbox_letters",
-      "community": 60,
+      "community": 38,
       "norm_label": "bigbox_letters"
     },
     {
@@ -9003,7 +9003,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_letter_rail_cache",
-      "community": 60,
+      "community": 38,
       "norm_label": "letter_rail_cache"
     },
     {
@@ -9013,7 +9013,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_getalphabetrailcachekey",
-      "community": 60,
+      "community": 38,
       "norm_label": "getalphabetrailcachekey()"
     },
     {
@@ -9023,7 +9023,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_sortrecentgames",
-      "community": 60,
+      "community": 38,
       "norm_label": "sortrecentgames()"
     },
     {
@@ -9033,7 +9033,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_usebigboxlibrarydata",
-      "community": 60,
+      "community": 38,
       "norm_label": "usebigboxlibrarydata()"
     },
     {
@@ -9083,7 +9083,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "hooks_usebigboxnavigation_usebigboxnavigation",
-      "community": 60,
+      "community": 38,
       "norm_label": "usebigboxnavigation()"
     },
     {
@@ -9093,7 +9093,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usebigboxscrollsync",
-      "community": 60,
+      "community": 96,
       "norm_label": "usebigboxscrollsync.ts"
     },
     {
@@ -9103,7 +9103,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "hooks_usebigboxscrollsync_usebigboxscrollsyncprops",
-      "community": 60,
+      "community": 96,
       "norm_label": "usebigboxscrollsyncprops"
     },
     {
@@ -9113,7 +9113,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "hooks_usebigboxscrollsync_usebigboxscrollsync",
-      "community": 60,
+      "community": 38,
       "norm_label": "usebigboxscrollsync()"
     },
     {
@@ -9443,7 +9443,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate",
-      "community": 13,
+      "community": 5,
       "norm_label": "uselibrarybrowserstate.ts"
     },
     {
@@ -9463,7 +9463,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate_getlibraryrefreshtoken",
-      "community": 13,
+      "community": 5,
       "norm_label": "getlibraryrefreshtoken()"
     },
     {
@@ -9473,7 +9473,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate_uselibrarybrowserstate",
-      "community": 13,
+      "community": 5,
       "norm_label": "uselibrarybrowserstate()"
     },
     {
@@ -9513,7 +9513,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "hooks_uselibraryshellinput_uselibraryshellinput",
-      "community": 5,
+      "community": 13,
       "norm_label": "uselibraryshellinput()"
     },
     {
@@ -9633,7 +9633,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "hooks_usewindowlibraryshelves_usewindowlibraryshelves",
-      "community": 5,
+      "community": 13,
       "norm_label": "usewindowlibraryshelves()"
     },
     {
@@ -10137,20 +10137,20 @@
       "norm_label": "libraryviewmode"
     },
     {
-      "label": "PLATFORM_BACKGROUNDS",
+      "label": "PLATFORM_BACKGROUND_POOLS",
       "file_type": "code",
       "source_file": "src/lib/library-backgrounds.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "lib_library_backgrounds_platform_backgrounds",
+      "id": "lib_library_backgrounds_platform_background_pools",
       "community": 100,
-      "norm_label": "platform_backgrounds"
+      "norm_label": "platform_background_pools"
     },
     {
       "label": "BACKGROUND_POOL",
       "file_type": "code",
       "source_file": "src/lib/library-backgrounds.ts",
-      "source_location": "L14",
+      "source_location": "L35",
       "_origin": "ast",
       "id": "lib_library_backgrounds_background_pool",
       "community": 100,
@@ -10160,17 +10160,27 @@
       "label": "getLibraryBackgroundForPlatform()",
       "file_type": "code",
       "source_file": "src/lib/library-backgrounds.ts",
-      "source_location": "L21",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "lib_library_backgrounds_getlibrarybackgroundforplatform",
       "community": 100,
       "norm_label": "getlibrarybackgroundforplatform()"
     },
     {
+      "label": "getLibraryBackgroundPoolForPlatform()",
+      "file_type": "code",
+      "source_file": "src/lib/library-backgrounds.ts",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "lib_library_backgrounds_getlibrarybackgroundpoolforplatform",
+      "community": 100,
+      "norm_label": "getlibrarybackgroundpoolforplatform()"
+    },
+    {
       "label": "getLibraryBackgroundPool()",
       "file_type": "code",
       "source_file": "src/lib/library-backgrounds.ts",
-      "source_location": "L25",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "lib_library_backgrounds_getlibrarybackgroundpool",
       "community": 100,
@@ -10180,7 +10190,7 @@
       "label": "resolveLibraryBackground()",
       "file_type": "code",
       "source_file": "src/lib/library-backgrounds.ts",
-      "source_location": "L29",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "lib_library_backgrounds_resolvelibrarybackground",
       "community": 100,
@@ -10323,7 +10333,7 @@
       "source_location": "L213",
       "_origin": "ast",
       "id": "lib_platform_capabilities_supported_platforms",
-      "community": 60,
+      "community": 38,
       "norm_label": "supported_platforms"
     },
     {
@@ -10633,7 +10643,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_subgenre_display",
-      "community": 60,
+      "community": 5,
       "norm_label": "subgenre-display.ts"
     },
     {
@@ -10643,7 +10653,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_subgenre_display_visiblesubgenresresult",
-      "community": 60,
+      "community": 5,
       "norm_label": "visiblesubgenresresult"
     },
     {
@@ -10653,7 +10663,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "lib_subgenre_display_getvisiblesubgenres",
-      "community": 60,
+      "community": 5,
       "norm_label": "getvisiblesubgenres()"
     },
     {
@@ -11123,7 +11133,7 @@
       "source_location": "L520",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getgenres",
-      "community": 60,
+      "community": 38,
       "norm_label": "getgenres()"
     },
     {
@@ -11493,7 +11503,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "types_platform",
-      "community": 98,
+      "community": 54,
       "norm_label": "platform.ts"
     },
     {
@@ -11513,7 +11523,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "types_platform_platformstatus",
-      "community": 98,
+      "community": 54,
       "norm_label": "platformstatus"
     },
     {
@@ -11523,7 +11533,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "types_platform_platformimportstatus",
-      "community": 29,
+      "community": 54,
       "norm_label": "platformimportstatus"
     },
     {
@@ -11533,7 +11543,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "types_platform_platformmusiccapability",
-      "community": 98,
+      "community": 54,
       "norm_label": "platformmusiccapability"
     },
     {
@@ -11543,7 +11553,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "types_platform_platformemulatortype",
-      "community": 98,
+      "community": 54,
       "norm_label": "platformemulatortype"
     },
     {
@@ -11563,7 +11573,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "types_platform_platformmediacapabilities",
-      "community": 98,
+      "community": 54,
       "norm_label": "platformmediacapabilities"
     },
     {
@@ -11573,7 +11583,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "types_platform_platformemulatorprofile",
-      "community": 98,
+      "community": 54,
       "norm_label": "platformemulatorprofile"
     },
     {
@@ -11593,7 +11603,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "types_platform_platformlibrarystatus",
-      "community": 98,
+      "community": 54,
       "norm_label": "platformlibrarystatus"
     },
     {
@@ -11613,7 +11623,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "types_platform_platformemulatorsettings",
-      "community": 98,
+      "community": 54,
       "norm_label": "platformemulatorsettings"
     },
     {
@@ -11623,7 +11633,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "types_platform_platformnavigationstate",
-      "community": 98,
+      "community": 54,
       "norm_label": "platformnavigationstate"
     },
     {
@@ -11643,7 +11653,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "types_platform_activeplatformstate",
-      "community": 98,
+      "community": 54,
       "norm_label": "activeplatformstate"
     },
     {
@@ -23008,9 +23018,9 @@
       "source_file": "src-tauri/src/commands/platforms.rs",
       "source_location": "L175",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "commands_platforms",
-      "target": "commands_platforms_amiga_profile",
-      "confidence_score": 1.0
+      "target": "commands_platforms_amiga_profile"
     },
     {
       "relation": "contains",
@@ -23038,9 +23048,9 @@
       "source_file": "src-tauri/src/commands/platforms.rs",
       "source_location": "L143",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "commands_platforms",
-      "target": "commands_platforms_bbcmicro_profile",
-      "confidence_score": 1.0
+      "target": "commands_platforms_bbcmicro_profile"
     },
     {
       "relation": "contains",
@@ -23140,9 +23150,9 @@
       "source_location": "L175",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "commands_platforms_amiga_profile",
-      "target": "platformprofile",
-      "confidence_score": 1.0
+      "target": "platformprofile"
     },
     {
       "relation": "references",
@@ -23173,9 +23183,9 @@
       "source_location": "L143",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "commands_platforms_bbcmicro_profile",
-      "target": "platformprofile",
-      "confidence_score": 1.0
+      "target": "platformprofile"
     },
     {
       "relation": "references",
@@ -23545,9 +23555,9 @@
       "source_file": "src-tauri/src/commands/platforms/tests.rs",
       "source_location": "L124",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "platforms_tests",
-      "target": "platforms_tests_test_get_supported_platforms_includes_amiga_capabilities",
-      "confidence_score": 1.0
+      "target": "platforms_tests_test_get_supported_platforms_includes_amiga_capabilities"
     },
     {
       "relation": "contains",
@@ -23565,9 +23575,9 @@
       "source_file": "src-tauri/src/commands/platforms/tests.rs",
       "source_location": "L90",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "platforms_tests",
-      "target": "platforms_tests_test_get_supported_platforms_includes_bbc_micro_capabilities",
-      "confidence_score": 1.0
+      "target": "platforms_tests_test_get_supported_platforms_includes_bbc_micro_capabilities"
     },
     {
       "relation": "contains",
@@ -24230,9 +24240,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L80",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests",
-      "target": "setup_tests_create_four_folder_settings",
-      "confidence_score": 1.0
+      "target": "setup_tests_create_four_folder_settings"
     },
     {
       "relation": "contains",
@@ -24280,9 +24290,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L254",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests",
-      "target": "setup_tests_rejects_bbc_micro_import_request_missing_music_folder",
-      "confidence_score": 1.0
+      "target": "setup_tests_rejects_bbc_micro_import_request_missing_music_folder"
     },
     {
       "relation": "contains",
@@ -24320,9 +24330,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L240",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests",
-      "target": "setup_tests_validates_amiga_import_request_with_required_folders",
-      "confidence_score": 1.0
+      "target": "setup_tests_validates_amiga_import_request_with_required_folders"
     },
     {
       "relation": "contains",
@@ -24350,9 +24360,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L226",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests",
-      "target": "setup_tests_validates_bbc_micro_import_request_with_required_folders",
-      "confidence_score": 1.0
+      "target": "setup_tests_validates_bbc_micro_import_request_with_required_folders"
     },
     {
       "relation": "contains",
@@ -24404,9 +24414,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L264",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests_rejects_bbc_micro_import_request_missing_music_folder",
-      "target": "setup_tests_request_with_paths",
-      "confidence_score": 1.0
+      "target": "setup_tests_request_with_paths"
     },
     {
       "relation": "calls",
@@ -24470,9 +24480,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L244",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests_validates_amiga_import_request_with_required_folders",
-      "target": "setup_tests_request_with_paths",
-      "confidence_score": 1.0
+      "target": "setup_tests_request_with_paths"
     },
     {
       "relation": "calls",
@@ -24503,9 +24513,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L230",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests_validates_bbc_micro_import_request_with_required_folders",
-      "target": "setup_tests_request_with_paths",
-      "confidence_score": 1.0
+      "target": "setup_tests_request_with_paths"
     },
     {
       "relation": "calls",
@@ -24547,9 +24557,9 @@
       "source_location": "L80",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "setup_tests_create_four_folder_settings",
-      "target": "src_tauri_src_commands_setup_tests_rs_platformfoldersettings",
-      "confidence_score": 1.0
+      "target": "src_tauri_src_commands_setup_tests_rs_platformfoldersettings"
     },
     {
       "relation": "references",
@@ -24635,9 +24645,9 @@
       "source_location": "L80",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "setup_tests_create_four_folder_settings",
-      "target": "src_tauri_src_commands_setup_tests_rs_path",
-      "confidence_score": 1.0
+      "target": "src_tauri_src_commands_setup_tests_rs_path"
     },
     {
       "relation": "references",
@@ -24701,9 +24711,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L258",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests_rejects_bbc_micro_import_request_missing_music_folder",
-      "target": "setup_tests_create_four_folder_settings",
-      "confidence_score": 1.0
+      "target": "setup_tests_create_four_folder_settings"
     },
     {
       "relation": "calls",
@@ -24712,9 +24722,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L247",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests_validates_amiga_import_request_with_required_folders",
-      "target": "setup_tests_create_four_folder_settings",
-      "confidence_score": 1.0
+      "target": "setup_tests_create_four_folder_settings"
     },
     {
       "relation": "calls",
@@ -24723,9 +24733,9 @@
       "source_file": "src-tauri/src/commands/setup/tests.rs",
       "source_location": "L233",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "setup_tests_validates_bbc_micro_import_request_with_required_folders",
-      "target": "setup_tests_create_four_folder_settings",
-      "confidence_score": 1.0
+      "target": "setup_tests_create_four_folder_settings"
     },
     {
       "relation": "contains",
@@ -30556,9 +30566,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page",
-      "target": "lib_library_backgrounds",
-      "confidence_score": 1.0
+      "target": "lib_library_backgrounds"
     },
     {
       "relation": "imports",
@@ -30567,9 +30577,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page",
-      "target": "lib_library_backgrounds_resolvelibrarybackground",
-      "confidence_score": 1.0
+      "target": "lib_library_backgrounds_resolvelibrarybackground"
     },
     {
       "relation": "imports_from",
@@ -41325,9 +41335,9 @@
       "source_file": "src/lib/library-backgrounds.ts",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_library_backgrounds",
-      "target": "lib_library_backgrounds_background_pool",
-      "confidence_score": 1.0
+      "target": "lib_library_backgrounds_background_pool"
     },
     {
       "relation": "contains",
@@ -41335,9 +41345,9 @@
       "source_file": "src/lib/library-backgrounds.ts",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_library_backgrounds",
-      "target": "lib_library_backgrounds_getlibrarybackgroundforplatform",
-      "confidence_score": 1.0
+      "target": "lib_library_backgrounds_getlibrarybackgroundforplatform"
     },
     {
       "relation": "contains",
@@ -41345,8 +41355,18 @@
       "source_file": "src/lib/library-backgrounds.ts",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_library_backgrounds",
-      "target": "lib_library_backgrounds_getlibrarybackgroundpool",
+      "target": "lib_library_backgrounds_getlibrarybackgroundpool"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/library-backgrounds.ts",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "lib_library_backgrounds",
+      "target": "lib_library_backgrounds_getlibrarybackgroundpoolforplatform",
       "confidence_score": 1.0
     },
     {
@@ -41355,9 +41375,9 @@
       "source_file": "src/lib/library-backgrounds.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_library_backgrounds",
-      "target": "lib_library_backgrounds_libraryviewmode",
-      "confidence_score": 1.0
+      "target": "lib_library_backgrounds_libraryviewmode"
     },
     {
       "relation": "contains",
@@ -41366,7 +41386,7 @@
       "source_location": "L7",
       "weight": 1.0,
       "source": "lib_library_backgrounds",
-      "target": "lib_library_backgrounds_platform_backgrounds",
+      "target": "lib_library_backgrounds_platform_background_pools",
       "confidence_score": 1.0
     },
     {
@@ -41375,9 +41395,9 @@
       "source_file": "src/lib/library-backgrounds.ts",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_library_backgrounds",
-      "target": "lib_library_backgrounds_resolvelibrarybackground",
-      "confidence_score": 1.0
+      "target": "lib_library_backgrounds_resolvelibrarybackground"
     },
     {
       "relation": "imports_from",
@@ -41386,9 +41406,9 @@
       "source_file": "src/lib/library-backgrounds.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_library_backgrounds",
-      "target": "types_platform",
-      "confidence_score": 1.0
+      "target": "types_platform"
     },
     {
       "relation": "imports",
@@ -41397,9 +41417,9 @@
       "source_file": "src/lib/library-backgrounds.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_library_backgrounds",
-      "target": "types_platform_platformid",
-      "confidence_score": 1.0
+      "target": "types_platform_platformid"
     },
     {
       "relation": "calls",
@@ -41408,8 +41428,19 @@
       "source_file": "src/lib/library-backgrounds.ts",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_library_backgrounds_resolvelibrarybackground",
-      "target": "lib_library_backgrounds_getlibrarybackgroundforplatform",
+      "target": "lib_library_backgrounds_getlibrarybackgroundforplatform"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/library-backgrounds.ts",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "lib_library_backgrounds_resolvelibrarybackground",
+      "target": "lib_library_backgrounds_getlibrarybackgroundpoolforplatform",
       "confidence_score": 1.0
     },
     {
@@ -45274,9 +45305,9 @@
       "source_file": "README.md",
       "source_location": "L148",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_setting_up_platform_databases_and_assets",
-      "target": "readme_acorn_bbc_micro",
-      "confidence_score": 1.0
+      "target": "readme_acorn_bbc_micro"
     },
     {
       "relation": "contains",
@@ -45314,9 +45345,9 @@
       "source_file": "README.md",
       "source_location": "L155",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_setting_up_platform_databases_and_assets",
-      "target": "readme_commodore_amiga",
-      "confidence_score": 1.0
+      "target": "readme_commodore_amiga"
     },
     {
       "relation": "contains",
@@ -47677,5 +47708,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "301acca2db4c5554679a3f2570375282893a43f3"
+  "built_at_commit": "1f06cd31a89fa5b35d19310a4adaf5b6a0ed27bf"
 }

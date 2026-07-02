@@ -4,22 +4,42 @@ export type LibraryViewMode = 'grid' | 'list';
 
 const BACKGROUND_BASE_PATH = '/docs/images/backgrounds';
 
-const PLATFORM_BACKGROUNDS: Partial<Record<PlatformId, string>> = {
-  c64: `${BACKGROUND_BASE_PATH}/c64.jpg`,
-  atari800: `${BACKGROUND_BASE_PATH}/atari800.jpg`,
-  atari2600: `${BACKGROUND_BASE_PATH}/atari2600.jpg`,
-  amiga: `${BACKGROUND_BASE_PATH}/amiga-600.jpg`,
+const PLATFORM_BACKGROUND_POOLS: Partial<Record<PlatformId, readonly string[]>> = {
+  c64: [
+    `${BACKGROUND_BASE_PATH}/Commodore-64_1.jpg`,
+    `${BACKGROUND_BASE_PATH}/Commodore-64_2.jpg`,
+    `${BACKGROUND_BASE_PATH}/commodore-c64_3.jpg`,
+  ],
+  atari800: [
+    `${BACKGROUND_BASE_PATH}/Atari_800XL_1.jpg`,
+    `${BACKGROUND_BASE_PATH}/Atari_800XL_2.jpg`,
+  ],
+  atari2600: [
+    `${BACKGROUND_BASE_PATH}/atari_2600.jpg`,
+  ],
+  zxspectrum: [
+    `${BACKGROUND_BASE_PATH}/Sinclair_ZX_Spectrum_1.jpg`,
+    `${BACKGROUND_BASE_PATH}/sinclair-zx-spectrum_2.jpg`,
+  ],
+  bbcmicro: [
+    `${BACKGROUND_BASE_PATH}/Acorn_BBC_Micro_1.jpg`,
+    `${BACKGROUND_BASE_PATH}/Acorn_BBC_Micro_2.jpeg`,
+  ],
+  amiga: [
+    `${BACKGROUND_BASE_PATH}/Commodore_Amiga_1.jpg`,
+    `${BACKGROUND_BASE_PATH}/Commodore_amiga_2.jpg`,
+    `${BACKGROUND_BASE_PATH}/Commodore_Amiga_3.jpg`,
+  ],
 };
 
-const BACKGROUND_POOL = [
-  `${BACKGROUND_BASE_PATH}/c64.jpg`,
-  `${BACKGROUND_BASE_PATH}/atari800.jpg`,
-  `${BACKGROUND_BASE_PATH}/atari2600.jpg`,
-  `${BACKGROUND_BASE_PATH}/amiga-600.jpg`,
-] as const;
+const BACKGROUND_POOL = Object.values(PLATFORM_BACKGROUND_POOLS).flat();
 
 export function getLibraryBackgroundForPlatform(platformId: PlatformId): string | null {
-  return PLATFORM_BACKGROUNDS[platformId] ?? null;
+  return PLATFORM_BACKGROUND_POOLS[platformId]?.[0] ?? null;
+}
+
+export function getLibraryBackgroundPoolForPlatform(platformId: PlatformId): string[] {
+  return [...(PLATFORM_BACKGROUND_POOLS[platformId] ?? BACKGROUND_POOL)];
 }
 
 export function getLibraryBackgroundPool(): string[] {
@@ -31,11 +51,7 @@ export function resolveLibraryBackground(
   viewMode: LibraryViewMode,
   seed = 0,
 ): string {
-  const platformBackground = getLibraryBackgroundForPlatform(platformId);
-  if (platformBackground) {
-    return platformBackground;
-  }
-
+  const pool = getLibraryBackgroundPoolForPlatform(platformId);
   const viewOffset = viewMode === 'list' ? 1 : 0;
-  return BACKGROUND_POOL[(seed + viewOffset) % BACKGROUND_POOL.length];
+  return pool[(seed + viewOffset) % pool.length];
 }
