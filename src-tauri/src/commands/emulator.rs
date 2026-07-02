@@ -88,8 +88,14 @@ fn retroarch_core_not_found_message(platform_id: Option<&str>, core_path: &str) 
     match platform_id {
         Some("atari800") => format!("Atari 800 RetroArch core file not found: {}", core_path),
         Some("zxspectrum") => format!("ZX Spectrum RetroArch core file not found: {}", core_path),
-        Some("bbcmicro") => format!("Acorn BBC Micro RetroArch core file not found: {}", core_path),
-        Some("amiga") => format!("Commodore Amiga RetroArch core file not found: {}", core_path),
+        Some("bbcmicro") => format!(
+            "Acorn BBC Micro RetroArch core file not found: {}",
+            core_path
+        ),
+        Some("amiga") => format!(
+            "Commodore Amiga RetroArch core file not found: {}",
+            core_path
+        ),
         _ => format!("RetroArch Core file not found: {}", core_path),
     }
 }
@@ -97,9 +103,18 @@ fn retroarch_core_not_found_message(platform_id: Option<&str>, core_path: &str) 
 fn retroarch_core_not_file_message(platform_id: Option<&str>, core_path: &str) -> String {
     match platform_id {
         Some("atari800") => format!("Atari 800 RetroArch core path is not a file: {}", core_path),
-        Some("zxspectrum") => format!("ZX Spectrum RetroArch core path is not a file: {}", core_path),
-        Some("bbcmicro") => format!("Acorn BBC Micro RetroArch core path is not a file: {}", core_path),
-        Some("amiga") => format!("Commodore Amiga RetroArch core path is not a file: {}", core_path),
+        Some("zxspectrum") => format!(
+            "ZX Spectrum RetroArch core path is not a file: {}",
+            core_path
+        ),
+        Some("bbcmicro") => format!(
+            "Acorn BBC Micro RetroArch core path is not a file: {}",
+            core_path
+        ),
+        Some("amiga") => format!(
+            "Commodore Amiga RetroArch core path is not a file: {}",
+            core_path
+        ),
         _ => format!("RetroArch Core path is not a file: {}", core_path),
     }
 }
@@ -159,6 +174,114 @@ fn push_altirra_rom_args(args: &mut Vec<String>, rom_path: &Path) {
             args.push(rom_str);
         }
     }
+}
+
+fn amiga_disk_sort_key(path: &Path) -> (u32, String) {
+    let name = path
+        .file_stem()
+        .and_then(|name| name.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+    let disk_number = name
+        .rsplit_once("_disk")
+        .and_then(|(_, suffix)| suffix.parse::<u32>().ok())
+        .unwrap_or(u32::MAX);
+
+    (disk_number, name)
+}
+
+fn collect_amiga_sibling_disk_archives(rom_path: &Path) -> Vec<PathBuf> {
+    let is_amiga_disk_zip = rom_path
+        .file_stem()
+        .and_then(|name| name.to_str())
+        .and_then(|name| {
+            name.to_lowercase()
+                .rsplit_once("_disk")
+                .map(|(prefix, suffix)| {
+                    (!prefix.is_empty() && suffix.parse::<u32>().is_ok())
+                        .then(|| prefix.to_string())
+                })
+        })
+        .flatten();
+
+    let Some(prefix) = is_amiga_disk_zip else {
+        return vec![rom_path.to_path_buf()];
+    };
+    let Some(parent) = rom_path.parent() else {
+        return vec![rom_path.to_path_buf()];
+    };
+
+    let mut archives: Vec<PathBuf> = match std::fs::read_dir(parent) {
+        Ok(entries) => entries
+            .filter_map(Result::ok)
+            .map(|entry| entry.path())
+            .filter(|path| {
+                path.extension()
+                    .and_then(|ext| ext.to_str())
+                    .is_some_and(|ext| ext.eq_ignore_ascii_case("zip"))
+                    && path
+                        .file_stem()
+                        .and_then(|name| name.to_str())
+                        .map(|name| {
+                            let lower = name.to_lowercase();
+                            lower
+                                .strip_prefix(&format!("{prefix}_disk"))
+                                .is_some_and(|suffix| suffix.parse::<u32>().is_ok())
+                        })
+                        .unwrap_or(false)
+            })
+            .collect(),
+        Err(_) => vec![rom_path.to_path_buf()],
+    };
+
+    archives.sort_by_key(|path| amiga_disk_sort_key(path));
+    if archives.is_empty() {
+        vec![rom_path.to_path_buf()]
+    } else {
+        archives
+    }
+}
+
+fn push_uae_rom_args(args: &mut Vec<String>, rom_files: &[PathBuf]) {
+    if rom_files.is_empty() {
+        return;
+    }
+
+    for (index, rom_file) in rom_files.iter().take(4).enumerate() {
+        args.push(format!("-{index}"));
+        args.push(rom_file.to_string_lossy().to_string());
+    }
+
+    if rom_files.len() > 1 {
+        let disk_swapper = rom_files
+            .iter()
+            .map(|rom_file| rom_file.to_string_lossy().to_string())
+            .collect::<Vec<_>>()
+            .join(",");
+        args.push(format!("-diskswapper={disk_swapper}"));
+    }
+}
+
+fn write_retroarch_m3u(
+    temp_dir: &Path,
+    resolved_primary_rom: &Path,
+    rom_files: &[PathBuf],
+) -> Result<PathBuf, String> {
+    let m3u_path = temp_dir.join(format!(
+        "{}.m3u",
+        resolved_primary_rom
+            .file_stem()
+            .unwrap_or_default()
+            .to_string_lossy()
+    ));
+    let mut m3u = std::fs::File::create(&m3u_path).map_err(|e| e.to_string())?;
+    writeln!(m3u, "{}", resolved_primary_rom.to_string_lossy()).map_err(|e| e.to_string())?;
+    for rom_file in rom_files {
+        if *rom_file != resolved_primary_rom {
+            writeln!(m3u, "{}", rom_file.to_string_lossy()).map_err(|e| e.to_string())?;
+        }
+    }
+    Ok(m3u_path)
 }
 
 #[tauri::command]
@@ -397,31 +520,44 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
     if is_zip {
         let temp_dir = create_launch_temp_dir()?;
 
-        let file = std::fs::File::open(&rom).map_err(|e| e.to_string())?;
-        let mut archive = zip::ZipArchive::new(file).map_err(|e| e.to_string())?;
         let mut extracted_roms = Vec::new();
+        let zip_archives = if platform_id == Some("amiga") {
+            collect_amiga_sibling_disk_archives(&rom)
+        } else {
+            vec![rom.clone()]
+        };
 
-        for i in 0..archive.len() {
-            let mut file = archive.by_index(i).map_err(|e| e.to_string())?;
-            let outpath = temp_dir.join(file.mangled_name());
-            if (&*file.name()).ends_with('/') {
-                std::fs::create_dir_all(&outpath).map_err(|e| e.to_string())?;
-            } else {
-                if let Some(p) = outpath.parent() {
-                    if !p.exists() {
-                        std::fs::create_dir_all(&p).map_err(|e| e.to_string())?;
+        for archive_path in zip_archives {
+            let file = std::fs::File::open(&archive_path).map_err(|e| e.to_string())?;
+            let mut archive = zip::ZipArchive::new(file).map_err(|e| e.to_string())?;
+            let archive_stem = archive_path
+                .file_stem()
+                .and_then(|stem| stem.to_str())
+                .unwrap_or("archive");
+            let archive_extract_dir = temp_dir.join(archive_stem);
+
+            for i in 0..archive.len() {
+                let mut file = archive.by_index(i).map_err(|e| e.to_string())?;
+                let outpath = archive_extract_dir.join(file.mangled_name());
+                if (&*file.name()).ends_with('/') {
+                    std::fs::create_dir_all(&outpath).map_err(|e| e.to_string())?;
+                } else {
+                    if let Some(p) = outpath.parent() {
+                        if !p.exists() {
+                            std::fs::create_dir_all(&p).map_err(|e| e.to_string())?;
+                        }
                     }
-                }
-                let mut outfile = std::fs::File::create(&outpath).map_err(|e| e.to_string())?;
-                std::io::copy(&mut file, &mut outfile).map_err(|e| e.to_string())?;
+                    let mut outfile = std::fs::File::create(&outpath).map_err(|e| e.to_string())?;
+                    std::io::copy(&mut file, &mut outfile).map_err(|e| e.to_string())?;
 
-                let ext = outpath
-                    .extension()
-                    .and_then(|e| e.to_str())
-                    .unwrap_or("")
-                    .to_lowercase();
-                if launch_extensions_for_platform(platform_id).contains(&ext.as_str()) {
-                    extracted_roms.push(outpath.clone());
+                    let ext = outpath
+                        .extension()
+                        .and_then(|e| e.to_str())
+                        .unwrap_or("")
+                        .to_lowercase();
+                    if launch_extensions_for_platform(platform_id).contains(&ext.as_str()) {
+                        extracted_roms.push(outpath.clone());
+                    }
                 }
             }
         }
@@ -433,7 +569,11 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             ));
         }
 
-        extracted_roms.sort();
+        if platform_id == Some("amiga") {
+            extracted_roms.sort_by_key(|path| amiga_disk_sort_key(path));
+        } else {
+            extracted_roms.sort();
+        }
         let mut primary_rom = None;
         if !file_to_run.is_empty() {
             let target = file_to_run.to_lowercase();
@@ -457,29 +597,17 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                 }
             }
             if extracted_roms.len() > 1 {
-                let m3u_path = temp_dir.join(format!(
-                    "{}.m3u",
-                    resolved_primary_rom
-                        .file_stem()
-                        .unwrap_or_default()
-                        .to_string_lossy()
-                ));
-                let mut m3u = std::fs::File::create(&m3u_path).map_err(|e| e.to_string())?;
-                writeln!(m3u, "{}", resolved_primary_rom.to_string_lossy())
-                    .map_err(|e| e.to_string())?;
-                for rom_file in &extracted_roms {
-                    if *rom_file != resolved_primary_rom {
-                        writeln!(m3u, "{}", rom_file.to_string_lossy())
-                            .map_err(|e| e.to_string())?;
-                    }
-                }
+                let m3u_path =
+                    write_retroarch_m3u(&temp_dir, &resolved_primary_rom, &extracted_roms)?;
                 args.push(m3u_path.to_string_lossy().to_string());
             } else {
                 args.push(resolved_primary_rom.to_string_lossy().to_string());
             }
         } else if is_altirra {
             push_altirra_rom_args(&mut args, &resolved_primary_rom);
-        } else if is_spectaculator || is_beebem || is_uae {
+        } else if is_uae {
+            push_uae_rom_args(&mut args, &extracted_roms);
+        } else if is_spectaculator || is_beebem {
             args.push(resolved_primary_rom.to_string_lossy().to_string());
         } else {
             args.push("-autostart".to_string());
@@ -514,7 +642,9 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             args.push(rom.to_string_lossy().to_string());
         } else if is_altirra {
             push_altirra_rom_args(&mut args, &rom);
-        } else if is_spectaculator || is_beebem || is_uae {
+        } else if is_uae {
+            push_uae_rom_args(&mut args, &[rom]);
+        } else if is_spectaculator || is_beebem {
             args.push(rom.to_string_lossy().to_string());
         } else {
             args.push("-autostart".to_string());
@@ -577,6 +707,65 @@ mod tests {
             let expected_strs: Vec<String> = expected.iter().map(|s| s.to_string()).collect();
             assert_eq!(args, expected_strs, "Failed for {}", filename);
         }
+    }
+
+    #[test]
+    fn test_amiga_sibling_disk_zips_are_collected_in_disk_order() {
+        let dir = tempdir().unwrap();
+        let disk_1 = dir.path().join("D-Generation (AGA)_Disk1.zip");
+        let disk_2 = dir.path().join("D-Generation (AGA)_Disk2.zip");
+        let unrelated = dir.path().join("D-Generation (AGA) Manual.zip");
+        std::fs::write(&disk_1, b"disk1").unwrap();
+        std::fs::write(&disk_2, b"disk2").unwrap();
+        std::fs::write(&unrelated, b"manual").unwrap();
+
+        let archives = collect_amiga_sibling_disk_archives(&disk_1);
+
+        assert_eq!(archives, vec![disk_1, disk_2]);
+    }
+
+    #[test]
+    fn test_winuae_uses_drive_args_and_disk_swapper_for_multiple_disks() {
+        let disks = vec![
+            PathBuf::from("D:/Temp/D-Generation (AGA)_Disk1.adf"),
+            PathBuf::from("D:/Temp/D-Generation (AGA)_Disk2.adf"),
+        ];
+        let mut args = Vec::new();
+
+        push_uae_rom_args(&mut args, &disks);
+
+        assert_eq!(
+            args,
+            vec![
+                "-0".to_string(),
+                "D:/Temp/D-Generation (AGA)_Disk1.adf".to_string(),
+                "-1".to_string(),
+                "D:/Temp/D-Generation (AGA)_Disk2.adf".to_string(),
+                "-diskswapper=D:/Temp/D-Generation (AGA)_Disk1.adf,D:/Temp/D-Generation (AGA)_Disk2.adf".to_string(),
+            ]
+        );
+    }
+
+    #[test]
+    fn test_retroarch_m3u_lists_extracted_amiga_disks_in_order() {
+        let dir = tempdir().unwrap();
+        let disk_1 = dir.path().join("D-Generation (AGA)_Disk1.adf");
+        let disk_2 = dir.path().join("D-Generation (AGA)_Disk2.adf");
+        std::fs::write(&disk_1, b"disk1").unwrap();
+        std::fs::write(&disk_2, b"disk2").unwrap();
+
+        let m3u_path = write_retroarch_m3u(dir.path(), &disk_1, &[disk_1.clone(), disk_2.clone()])
+            .unwrap();
+
+        let contents = std::fs::read_to_string(m3u_path).unwrap();
+        assert_eq!(
+            contents,
+            format!(
+                "{}\n{}\n",
+                disk_1.to_string_lossy(),
+                disk_2.to_string_lossy()
+            )
+        );
     }
     use rusqlite::Connection;
     use tempfile::{tempdir, NamedTempFile};

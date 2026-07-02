@@ -48,6 +48,7 @@ gb64.sqlite.bk
 *.sqlite-wal
 *.sqlite-journal
 /gb64_export/
+/exports/
 /CSV_FILES_GBC_v19/
 /64BoxMedia/
 /emu-temp/
