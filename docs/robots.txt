@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ejber-ozkan.github.io/GameBaseBox/sitemap.xml

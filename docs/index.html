@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GBBox - GameBaseBox Retro Game Library Frontend</title>
+    <meta name="description" content="GBBox is a local-first desktop frontend for GameBase-style retro game libraries, supporting Commodore 64, Atari 800, Atari 2600, ZX Spectrum, Acorn BBC Micro, and Commodore Amiga collections.">
+    <meta name="keywords" content="GBBox, GameBaseBox, GameBase, GameBase64, retro game frontend, Commodore 64, Atari 800, Atari 2600, ZX Spectrum, BBC Micro, Commodore Amiga, BigBox, Tauri">
+    <meta name="author" content="GameBaseBox contributors">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ejber-ozkan.github.io/GameBaseBox/">
+    <link rel="icon" href="images/platform-windows.svg" type="image/svg+xml">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="GBBox - GameBaseBox Retro Game Library Frontend">
+    <meta property="og:description" content="A local-first desktop frontend for GameBase-style retro game libraries with platform-scoped imports, BigBox browsing, emulator launching, media, and extras.">
+    <meta property="og:url" content="https://ejber-ozkan.github.io/GameBaseBox/">
+    <meta property="og:image" content="https://ejber-ozkan.github.io/GameBaseBox/images/bigbox-home-rails.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GBBox - GameBaseBox Retro Game Library Frontend">
+    <meta name="twitter:description" content="Browse GameBase-style retro collections across Commodore 64, Atari, ZX Spectrum, BBC Micro, and Amiga libraries.">
+    <meta name="twitter:image" content="https://ejber-ozkan.github.io/GameBaseBox/images/bigbox-home-rails.png">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "GBBox",
+        "alternateName": "GameBaseBox",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": ["Windows", "Linux", "macOS"],
+        "description": "A local-first desktop frontend for GameBase-style retro game libraries.",
+        "downloadUrl": "https://github.com/ejber-ozkan/GameBaseBox/releases/latest",
+        "codeRepository": "https://github.com/ejber-ozkan/GameBaseBox",
+        "image": "https://ejber-ozkan.github.io/GameBaseBox/images/bigbox-home-rails.png"
+      }
+    </script>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #101315;
+        --panel: #181d20;
+        --panel-strong: #20272b;
+        --text: #f4eee6;
+        --muted: #b7c0bd;
+        --line: #394146;
+        --accent: #ffcc4d;
+        --accent-2: #41d6a3;
+        --accent-3: #ff6b5f;
+        --ink: #090b0c;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(90deg, rgba(255, 204, 77, 0.06) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(65, 214, 163, 0.045) 1px, transparent 1px),
+          var(--bg);
+        background-size: 44px 44px;
+        color: var(--text);
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .page-shell {
+        min-height: 100vh;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid rgba(244, 238, 230, 0.14);
+        background: rgba(16, 19, 21, 0.9);
+        backdrop-filter: blur(16px);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 0.8rem 0;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        text-decoration: none;
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 2rem;
+        height: 2rem;
+        place-items: center;
+        border: 2px solid var(--text);
+        background: var(--accent);
+        color: var(--ink);
+        box-shadow: 4px 4px 0 var(--accent-3);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      .nav-links a {
+        text-decoration: none;
+      }
+
+      .hero {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 4.5rem 0 2.8rem;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+        gap: clamp(1.5rem, 4vw, 4rem);
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        margin-bottom: 1.2rem;
+        border: 1px solid var(--line);
+        padding: 0.24rem 0.55rem;
+        background: var(--panel);
+        color: var(--accent-2);
+        font-size: 0.82rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 9ch;
+        font-size: clamp(4.8rem, 16vw, 12rem);
+      }
+
+      .subtitle {
+        max-width: 39rem;
+        margin: 1.25rem 0 1.6rem;
+        color: var(--muted);
+        font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+      }
+
+      .former {
+        margin: 0 0 1.7rem;
+        color: var(--muted);
+      }
+
+      .cta-row,
+      .quick-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.8rem;
+        border: 2px solid var(--text);
+        padding: 0.55rem 0.95rem;
+        background: var(--text);
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 900;
+        box-shadow: 5px 5px 0 var(--accent-2);
+        transition: transform 150ms ease, box-shadow 150ms ease;
+      }
+
+      .button.secondary {
+        background: var(--panel);
+        color: var(--text);
+        box-shadow: 5px 5px 0 var(--accent);
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        transform: translate(-2px, -2px);
+        box-shadow: 8px 8px 0 var(--accent-3);
+      }
+
+      .hero-image {
+        overflow: hidden;
+        border: 2px solid var(--text);
+        background: var(--panel-strong);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-image img {
+        aspect-ratio: 16 / 10;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      .hero-image figcaption {
+        border-top: 1px solid var(--line);
+        padding: 0.7rem 0.9rem;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      main {
+        display: grid;
+        gap: 4rem;
+        padding-bottom: 5rem;
+      }
+
+      section {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+        border-bottom: 2px solid var(--line);
+        padding-bottom: 0.8rem;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 4.2rem);
+      }
+
+      h3 {
+        margin: 0 0 0.55rem;
+        font-size: 1.35rem;
+      }
+
+      .section-kicker {
+        margin: 0;
+        color: var(--muted);
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .downloads {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .platform-link {
+        display: flex;
+        min-height: 10rem;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        border: 2px solid var(--line);
+        background: var(--panel);
+        color: var(--text);
+        text-decoration: none;
+        font-size: 1.15rem;
+        font-weight: 900;
+        transition: border-color 150ms ease, transform 150ms ease, background 150ms ease;
+      }
+
+      .platform-link:hover,
+      .platform-link:focus-visible {
+        border-color: var(--accent);
+        background: var(--panel-strong);
+        transform: translateY(-3px);
+      }
+
+      .platform-link img {
+        width: 88px;
+        height: 88px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border: 2px solid var(--line);
+        background: rgba(24, 29, 32, 0.82);
+      }
+
+      table {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 0.9rem;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--panel-strong);
+        color: var(--accent);
+        font-size: 0.92rem;
+        text-transform: uppercase;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .note {
+        max-width: 62rem;
+        margin: 1rem 0 0;
+        color: var(--muted);
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .feature {
+        border: 2px solid var(--line);
+        background: var(--panel);
+        padding: 1rem;
+      }
+
+      .feature p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .screenshots {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .shot {
+        border: 2px solid var(--line);
+        background: var(--panel);
+      }
+
+      .shot img {
+        aspect-ratio: 16 / 9;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      .shot figcaption {
+        border-top: 1px solid var(--line);
+        padding: 0.8rem 0.9rem;
+        font-weight: 900;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .control-panel {
+        border: 2px solid var(--line);
+        background: var(--panel);
+        padding: 1rem;
+      }
+
+      .control-panel ul {
+        display: grid;
+        gap: 0.75rem;
+        margin: 0;
+        padding-left: 1.2rem;
+        color: var(--muted);
+      }
+
+      code {
+        border: 1px solid rgba(244, 238, 230, 0.22);
+        padding: 0.1rem 0.28rem;
+        background: #0b0d0e;
+        color: var(--accent);
+        font-family: "Cascadia Mono", "Consolas", monospace;
+        font-size: 0.92em;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 2rem 0;
+        color: var(--muted);
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      @media (max-width: 860px) {
+        .nav {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .nav-links {
+          width: 100%;
+          overflow-x: auto;
+          padding-bottom: 0.2rem;
+        }
+
+        .hero {
+          padding-top: 2.6rem;
+        }
+
+        .hero-grid,
+        .downloads,
+        .feature-grid,
+        .screenshots,
+        .controls {
+          grid-template-columns: 1fr;
+        }
+
+        h1 {
+          max-width: 100%;
+          font-size: clamp(4rem, 24vw, 7rem);
+        }
+
+        .section-head,
+        .footer-inner {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        table {
+          min-width: 100%;
+        }
+
+        th,
+        td {
+          overflow-wrap: anywhere;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <nav class="nav" aria-label="Primary">
+          <a class="brand" href="#top" aria-label="GBBox home">
+            <span class="brand-mark">GB</span>
+            <span>GameBaseBox</span>
+          </a>
+          <div class="nav-links">
+            <a href="#download">Download</a>
+            <a href="#supported-imports">Supported Imports</a>
+            <a href="#features">Features</a>
+            <a href="#screenshots">Screenshots</a>
+            <a href="#controls">Controls</a>
+            <a href="https://github.com/ejber-ozkan/GameBaseBox">GitHub</a>
+          </div>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-grid">
+            <div>
+              <span class="eyebrow">Local-first desktop frontend</span>
+              <h1 id="hero-title">GBBox</h1>
+              <p class="subtitle">
+                GameBase Box is a local-first desktop frontend for GameBase-style retro game libraries. It started life as 64Box for the GameBase64 collection and now supports platform-scoped imports for Commodore 64, Atari 800, Atari 2600, ZX Spectrum, Acorn BBC Micro, and Commodore Amiga, with more GameBase platforms coming soon.
+              </p>
+              <p class="former">
+                Formerly 64Box. The public repository is <a href="https://github.com/ejber-ozkan/GameBaseBox">GameBaseBox on GitHub</a>.
+              </p>
+              <div class="cta-row">
+                <a class="button" href="https://github.com/ejber-ozkan/GameBaseBox/releases/latest">Download latest release</a>
+                <a class="button secondary" href="#screenshots">View screenshots</a>
+              </div>
+            </div>
+            <figure class="hero-image">
+              <img src="images/bigbox-home-rails.png" alt="GBBox BigBox home rails showing retro game library rows" width="1496" height="840">
+              <figcaption>BigBox mode turns large GameBase collections into controller-friendly browsing rails.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="download" aria-labelledby="download-title">
+          <div class="section-head">
+            <h2 id="download-title">Download</h2>
+            <p class="section-kicker">Latest release builds</p>
+          </div>
+          <p>
+            Download the latest GBBox build from the platform links below, or browse the full <a href="https://github.com/ejber-ozkan/GameBaseBox/releases/latest">GitHub Releases page</a>.
+          </p>
+          <div class="downloads" aria-label="Platform downloads">
+            <a class="platform-link" href="https://github.com/ejber-ozkan/GameBaseBox/releases/latest/download/GBBox-Windows-x64-Setup.exe">
+              <img src="images/platform-windows.svg" alt="" width="88" height="88">
+              <span>Windows</span>
+            </a>
+            <a class="platform-link" href="https://github.com/ejber-ozkan/GameBaseBox/releases/latest/download/GBBox-Linux.AppImage">
+              <img src="images/platform-linux.svg" alt="" width="88" height="88">
+              <span>Linux</span>
+            </a>
+            <a class="platform-link" href="https://github.com/ejber-ozkan/GameBaseBox/releases/latest/download/GBBox-macOS.dmg">
+              <img src="images/platform-macos.svg" alt="" width="88" height="88">
+              <span>macOS</span>
+            </a>
+          </div>
+        </section>
+
+        <section id="supported-imports" aria-labelledby="supported-imports-title">
+          <div class="section-head">
+            <h2 id="supported-imports-title">Supported Imports</h2>
+            <p class="section-kicker">Platform-scoped libraries</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Status</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Commodore 64 / GameBase64</td>
+                  <td>Supported</td>
+                  <td>Compatibility baseline with VICE, RetroArch, SID playback, extras, screenshots, and GameBase64 metadata.</td>
+                </tr>
+                <tr>
+                  <td>Atari 800</td>
+                  <td>Supported</td>
+                  <td>Imports Atari 800 v12-compatible GameBase MDBs with Games, Music, Photos, Screenshots, and Extras folders. Supports RetroArch Atari800 and Altirra launch settings.</td>
+                </tr>
+                <tr>
+                  <td>Atari 2600</td>
+                  <td>Supported</td>
+                  <td>Imports Atari 2600 GameBase MDBs with Games, Screenshots, and Extras folders. Uses RetroArch/Stella-style launch settings.</td>
+                </tr>
+                <tr>
+                  <td>ZX Spectrum / GameBaseZX / SpeccyMania</td>
+                  <td>Supported</td>
+                  <td>Imports Sinclair ZX Spectrum v6-compatible GameBase MDBs with Extras, Games, Screenshots, Musician Photos, and Music folders. RetroArch is the default launch profile, with Spectaculator as an external emulator option. <code>.ay</code> music files are recognized as ZX Spectrum music media; in-app JavaScript playback still needs evaluation.</td>
+                </tr>
+                <tr>
+                  <td>Acorn BBC Micro</td>
+                  <td>Supported</td>
+                  <td>Imports BBC Micro GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch is the default launch profile, with BeebEm as the external emulator option.</td>
+                </tr>
+                <tr>
+                  <td>Commodore Amiga</td>
+                  <td>Supported</td>
+                  <td>Imports Amiga GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch is the default launch profile, with WinUAE on Windows and UAE-style equivalents such as FS-UAE or Amiberry on Linux/macOS.</td>
+                </tr>
+                <tr>
+                  <td>More GameBase platforms</td>
+                  <td>Coming soon</td>
+                  <td>The platform model is now data-driven so additional GameBase databases can be added without cloning the app.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">
+            GameBase database (<code>.mdb</code>) files, ROMs, screenshots, music, extras, and other media are not included. You point GBBox at the databases and local folders you own.
+          </p>
+        </section>
+
+        <section id="features" aria-labelledby="features-title">
+          <div class="section-head">
+            <h2 id="features-title">Features</h2>
+            <p class="section-kicker">Built for large retro libraries</p>
+          </div>
+          <div class="feature-grid">
+            <article class="feature">
+              <h3>GameBase-style library frontend</h3>
+              <p>Browse imported collections in windowed mode or fullscreen BigBox mode.</p>
+            </article>
+            <article class="feature">
+              <h3>Platform-scoped libraries</h3>
+              <p>Keep catalog data, media roots, emulator paths, favorites, and navigation state separate per platform.</p>
+            </article>
+            <article class="feature">
+              <h3>Fast search and filtering</h3>
+              <p>Search by title and metadata, browse by genre/subgenre, and jump alphabetically through large collections.</p>
+            </article>
+            <article class="feature">
+              <h3>Native emulator bridge</h3>
+              <p>Launch through VICE, RetroArch, Altirra, and platform-specific emulator profiles where supported.</p>
+            </article>
+            <article class="feature">
+              <h3>In-app C64 emulation</h3>
+              <p>Play supported Commodore 64 games through the bundled EmulatorJS/VICE core.</p>
+            </article>
+            <article class="feature">
+              <h3>Multi-file launch handling</h3>
+              <p>Generate temporary <code>.vfl</code> or <code>.m3u</code> launch artifacts for multi-disk and multi-file games.</p>
+            </article>
+            <article class="feature">
+              <h3>Media and extras browsing</h3>
+              <p>View screenshots, box art, photos, manuals, maps, adverts, books, and other extras from local folders.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="screenshots" aria-labelledby="screenshots-title">
+          <div class="section-head">
+            <h2 id="screenshots-title">Screenshots</h2>
+            <p class="section-kicker">README image gallery</p>
+          </div>
+          <div class="screenshots">
+            <figure class="shot">
+              <img src="images/bigbox-search-results.png" alt="GBBox BigBox search results screen" loading="lazy" width="1496" height="840">
+              <figcaption>BigBox Search</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/bigbox-home-rails.png" alt="GBBox BigBox home rails screen" loading="lazy" width="1496" height="840">
+              <figcaption>BigBox Rails</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/bigbox-scroll-letter.png" alt="GBBox BigBox letter jump overlay" loading="lazy" width="1496" height="840">
+              <figcaption>BigBox Letter Jump</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/detail-gallery.png" alt="GBBox detail view gallery tab" loading="lazy" width="1496" height="840">
+              <figcaption>Detail View: Gallery</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/detail-extras-gallery.png" alt="GBBox detail view extras gallery tab" loading="lazy" width="1496" height="840">
+              <figcaption>Detail View: Extras Gallery</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/window-mode-gridview.png" alt="GBBox window mode grid view" loading="lazy" width="1496" height="840">
+              <figcaption>Window Mode: Grid View</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="images/window-mode-listview.png" alt="GBBox window mode list view" loading="lazy" width="1496" height="840">
+              <figcaption>Window Mode: List View</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="controls" aria-labelledby="controls-title">
+          <div class="section-head">
+            <h2 id="controls-title">Controls and Shortcuts</h2>
+            <p class="section-kicker">Controller and keyboard</p>
+          </div>
+          <div class="controls">
+            <article class="control-panel">
+              <h3>Controller</h3>
+              <ul>
+                <li><strong>Library / Grid / List:</strong> <code>D-pad</code> or <code>Left Stick</code> moves focus, <code>A</code> opens the focused game, <code>B</code> goes back or closes the current panel, <code>X</code> toggles Grid/List view, <code>Y</code> toggles favorite on the focused game, <code>LB</code> / <code>RB</code> jump by letter, and <code>Start</code> opens Settings.</li>
+                <li><strong>BigBox:</strong> <code>D-pad</code> or <code>Left Stick</code> moves through header rows, rails, and tiles, <code>A</code> activates the focused item, <code>B</code> goes back or exits the search field, <code>Y</code> toggles favorite on the focused game, <code>LB</code> / <code>RB</code> move between sections, and <code>Start</code> opens Settings.</li>
+                <li><strong>Single Game Detail View:</strong> <code>D-pad</code> or <code>Left Stick</code> moves between play buttons, gallery items, tabs, music player, and favorite button, <code>A</code> activates the focused item, <code>B</code> goes back, <code>Y</code> toggles favorite, and <code>LB</code> / <code>RB</code> switch tabs or media sections.</li>
+                <li><strong>Settings:</strong> <code>D-pad</code> or <code>Left Stick</code> navigates, <code>A</code> selects, <code>LB</code> / <code>RB</code> switch settings tabs, and <code>B</code> or <code>Start</code> saves and closes.</li>
+              </ul>
+            </article>
+            <article class="control-panel">
+              <h3>Keyboard</h3>
+              <ul>
+                <li><strong>Library / Grid / List:</strong> <code>Arrow keys</code> move focus, <code>Enter</code> opens the focused game, <code>F</code> toggles favorite, <code>Shift+F</code> opens Filters, <code>V</code> toggles Grid/List view, <code>S</code> opens Settings, <code>PageUp</code> / <code>PageDown</code> jump by letter, and <code>Alt+Enter</code> toggles fullscreen.</li>
+                <li><strong>BigBox:</strong> <code>Arrow keys</code> navigate header rows, rails, and tiles, <code>Enter</code> activates the focused item, <code>F</code> toggles favorite, and <code>Esc</code> exits the search box or, when pressed twice quickly, exits the app.</li>
+                <li><strong>Single Game Detail View:</strong> <code>Arrow keys</code> navigate, <code>Enter</code> or <code>Space</code> activates the focused item, <code>F</code> toggles favorite, <code>Tab</code> / <code>Shift+Tab</code> or <code>PageUp</code> / <code>PageDown</code> or <code>[</code> / <code>]</code> switch tabs, and <code>Esc</code> or <code>Backspace</code> goes back.</li>
+                <li><strong>Settings:</strong> <code>Arrow keys</code> navigate, <code>Enter</code> selects, and <code>Esc</code> saves and closes.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="footer-inner">
+          <span>GBBox / GameBaseBox</span>
+          <span><a href="https://github.com/ejber-ozkan/GameBaseBox">GitHub repository</a> | <a href="https://github.com/ejber-ozkan/GameBaseBox/releases/latest">Latest release</a></span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
