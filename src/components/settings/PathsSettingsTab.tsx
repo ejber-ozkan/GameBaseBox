@@ -85,6 +85,8 @@ export function PathsSettingsTab({
   const isZxSpectrum = platformId === 'zxspectrum';
   const isBbcMicro = platformId === 'bbcmicro';
   const isAmiga = platformId === 'amiga';
+  const isAtariSt = platformId === 'atarist';
+  const isVic20 = platformId === 'vic20';
   const supportedEmulatorProfileIds = platformProfile.supportedEmulatorProfileIds;
   const preferredEmulatorProfileId =
     platformEmulatorSettings.preferredEmulatorProfileId || platformProfile.defaultEmulatorProfileId;
@@ -196,6 +198,8 @@ export function PathsSettingsTab({
     if (emulatorType === 'spectaculator') return 'Spectaculator';
     if (emulatorType === 'beebem') return 'BeebEm';
     if (emulatorType === 'uae') return 'WinUAE / UAE';
+    if (emulatorType === 'steem') return 'STeem';
+    if (emulatorType === 'hatari') return 'Hatari';
     if (emulatorType === 'vice') return 'VICE';
     return PLATFORM_EMULATOR_PROFILES[profileId]?.displayName ?? profileId;
   };
@@ -642,6 +646,132 @@ export function PathsSettingsTab({
                 inputIndex={16}
                 browseIndex={17}
                 onBrowse={() => void browsePlatformExecutable('winuae-amiga')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+          </div>
+        )}
+
+        {isAtariSt && (
+          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+            {renderEmulatorSelector(10)}
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'retroarch-atarist' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="RetroArch Executable (retroarch.exe)"
+                value={platformEmulatorSettings.executablePaths['retroarch-atarist'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('retroarch-atarist', value)}
+                placeholder="e.g. C:/RetroArch/retroarch.exe"
+                inputIndex={12}
+                browseIndex={13}
+                onBrowse={() => void browsePlatformExecutable('retroarch-atarist')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+              <PathRow
+                label="RetroArch Atari ST Core"
+                value={platformEmulatorSettings.corePaths['retroarch-atarist'] ?? ''}
+                onChange={(value) => setPlatformCorePath('retroarch-atarist', value)}
+                placeholder="e.g. C:/RetroArch/cores/hatari_libretro.dll"
+                inputIndex={14}
+                browseIndex={15}
+                onBrowse={() => void browsePlatformCore('retroarch-atarist')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'steem-atarist' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="STeem Executable"
+                value={platformEmulatorSettings.executablePaths['steem-atarist'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('steem-atarist', value)}
+                placeholder="e.g. C:/STeem/Steem.exe"
+                inputIndex={16}
+                browseIndex={17}
+                onBrowse={() => void browsePlatformExecutable('steem-atarist')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'hatari-atarist' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="Hatari Executable"
+                value={platformEmulatorSettings.executablePaths['hatari-atarist'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('hatari-atarist', value)}
+                placeholder="e.g. C:/Hatari/hatari.exe"
+                inputIndex={18}
+                browseIndex={19}
+                onBrowse={() => void browsePlatformExecutable('hatari-atarist')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+          </div>
+        )}
+
+        {isVic20 && (
+          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+            {renderEmulatorSelector(10)}
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'retroarch-vic20' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="RetroArch Executable (retroarch.exe)"
+                value={platformEmulatorSettings.executablePaths['retroarch-vic20'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('retroarch-vic20', value)}
+                placeholder="e.g. C:/RetroArch/retroarch.exe"
+                inputIndex={12}
+                browseIndex={13}
+                onBrowse={() => void browsePlatformExecutable('retroarch-vic20')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+              <PathRow
+                label="RetroArch VIC-20 Core"
+                value={platformEmulatorSettings.corePaths['retroarch-vic20'] ?? ''}
+                onChange={(value) => setPlatformCorePath('retroarch-vic20', value)}
+                placeholder="e.g. C:/RetroArch/cores/vice_xvic_libretro.dll"
+                inputIndex={14}
+                browseIndex={15}
+                onBrowse={() => void browsePlatformCore('retroarch-vic20')}
+                isMouseMode={isMouseMode}
+                onMouseFocus={onMouseFocus}
+                isFocused={isFocused}
+              />
+            </div>
+            <div
+              className={`space-y-3 transition-opacity ${
+                preferredEmulatorProfileId !== 'vice-vic20' ? 'opacity-50' : ''
+              }`}
+            >
+              <PathRow
+                label="VICE VIC-20 Executable (xvic.exe)"
+                value={platformEmulatorSettings.executablePaths['vice-vic20'] ?? ''}
+                onChange={(value) => setPlatformExecutablePath('vice-vic20', value)}
+                placeholder="e.g. C:/VICE/xvic.exe"
+                inputIndex={16}
+                browseIndex={17}
+                onBrowse={() => void browsePlatformExecutable('vice-vic20')}
                 isMouseMode={isMouseMode}
                 onMouseFocus={onMouseFocus}
                 isFocused={isFocused}

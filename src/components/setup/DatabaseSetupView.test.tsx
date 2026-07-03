@@ -58,6 +58,28 @@ const amigaFolders: PlatformFolderSettings = {
   videosPath: '',
 };
 
+const atariStFolders: PlatformFolderSettings = {
+  platformId: 'atarist',
+  gamesPath: 'E:/AtariST/Games',
+  musicPath: 'E:/AtariST/Music',
+  photosPath: '',
+  screenshotsPath: 'E:/AtariST/Screenshots',
+  extrasPath: 'E:/AtariST/Extras',
+  boxArtPath: '',
+  videosPath: '',
+};
+
+const vic20Folders: PlatformFolderSettings = {
+  platformId: 'vic20',
+  gamesPath: 'E:/VIC20/Games',
+  musicPath: 'E:/VIC20/Music',
+  photosPath: '',
+  screenshotsPath: 'E:/VIC20/Screenshots',
+  extrasPath: 'E:/VIC20/Extras',
+  boxArtPath: '',
+  videosPath: '',
+};
+
 describe('DatabaseSetupView', () => {
   it('renders and edits an Atari 800 extras folder field', () => {
     const onFolderChange = vi.fn();
@@ -188,6 +210,58 @@ describe('DatabaseSetupView', () => {
     );
 
     expect(screen.getByRole('heading', { name: 'Build Your Commodore Amiga Database' })).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Extras folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Games folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Screenshots folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Music folder')).toBeTruthy();
+    expect(screen.queryByPlaceholderText('Select Photos folder')).toBeNull();
+  });
+
+  it('renders Atari ST import folders without photos', () => {
+    render(
+      <DatabaseSetupView
+        dbPath="atarist"
+        error={null}
+        folderSettings={atariStFolders}
+        importResult={null}
+        isImporting={false}
+        mdbPath="E:/AtariST/Atari ST.mdb"
+        onBrowse={vi.fn()}
+        onBrowseFolder={vi.fn()}
+        onFolderChange={vi.fn()}
+        onImport={vi.fn()}
+        platformName="Atari ST"
+        requiredFolderKeys={['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath']}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Build Your Atari ST Database' })).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Extras folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Games folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Screenshots folder')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Select Music folder')).toBeTruthy();
+    expect(screen.queryByPlaceholderText('Select Photos folder')).toBeNull();
+  });
+
+  it('renders VIC-20 import folders without photos', () => {
+    render(
+      <DatabaseSetupView
+        dbPath="vic20"
+        error={null}
+        folderSettings={vic20Folders}
+        importResult={null}
+        isImporting={false}
+        mdbPath="E:/VIC20/Commodore VIC-20.mdb"
+        onBrowse={vi.fn()}
+        onBrowseFolder={vi.fn()}
+        onFolderChange={vi.fn()}
+        onImport={vi.fn()}
+        platformName="Commodore VIC-20"
+        requiredFolderKeys={['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath']}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Build Your Commodore VIC-20 Database' })).toBeTruthy();
     expect(screen.getByPlaceholderText('Select Extras folder')).toBeTruthy();
     expect(screen.getByPlaceholderText('Select Games folder')).toBeTruthy();
     expect(screen.getByPlaceholderText('Select Screenshots folder')).toBeTruthy();

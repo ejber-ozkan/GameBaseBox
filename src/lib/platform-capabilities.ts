@@ -97,6 +97,43 @@ export const PLATFORM_EMULATOR_PROFILES: Record<string, PlatformEmulatorProfile>
     emulatorType: 'uae',
     required: false,
   },
+  'retroarch-atarist': {
+    id: 'retroarch-atarist',
+    platformId: 'atarist',
+    displayName: 'RetroArch Atari ST',
+    emulatorType: 'retroarch',
+    required: false,
+    default: true,
+  },
+  'steem-atarist': {
+    id: 'steem-atarist',
+    platformId: 'atarist',
+    displayName: 'STeem',
+    emulatorType: 'steem',
+    required: false,
+  },
+  'hatari-atarist': {
+    id: 'hatari-atarist',
+    platformId: 'atarist',
+    displayName: 'Hatari',
+    emulatorType: 'hatari',
+    required: false,
+  },
+  'retroarch-vic20': {
+    id: 'retroarch-vic20',
+    platformId: 'vic20',
+    displayName: 'RetroArch VIC-20',
+    emulatorType: 'retroarch',
+    required: false,
+    default: true,
+  },
+  'vice-vic20': {
+    id: 'vice-vic20',
+    platformId: 'vic20',
+    displayName: 'VICE VIC-20',
+    emulatorType: 'vice',
+    required: false,
+  },
 };
 
 export const PLATFORM_PROFILES: Record<PlatformId, PlatformProfile> = {
@@ -208,6 +245,42 @@ export const PLATFORM_PROFILES: Record<PlatformId, PlatformProfile> = {
     inAppEmulation: false,
     launchExtensions: ['.adf', '.adz', '.dms', '.ipf', '.lha', '.hdf', '.hdz', '.m3u', '.zip', '.7z'],
   },
+  atarist: {
+    id: 'atarist',
+    displayName: 'Atari ST',
+    status: 'available',
+    importStatus: 'notImported',
+    defaultEmulatorProfileId: 'retroarch-atarist',
+    supportedEmulatorProfileIds: ['retroarch-atarist', 'steem-atarist', 'hatari-atarist'],
+    folderTypes: ['extras', 'games', 'screenshots', 'music'],
+    mediaCapabilities: {
+      screenshots: true,
+      photos: false,
+      music: 'generic',
+      extras: true,
+      videos: false,
+    },
+    inAppEmulation: false,
+    launchExtensions: ['.st', '.msa', '.stx', '.dim', '.ipf', '.m3u', '.zip', '.7z'],
+  },
+  vic20: {
+    id: 'vic20',
+    displayName: 'Commodore VIC-20',
+    status: 'available',
+    importStatus: 'notImported',
+    defaultEmulatorProfileId: 'retroarch-vic20',
+    supportedEmulatorProfileIds: ['retroarch-vic20', 'vice-vic20'],
+    folderTypes: ['extras', 'games', 'screenshots', 'music'],
+    mediaCapabilities: {
+      screenshots: true,
+      photos: false,
+      music: 'generic',
+      extras: true,
+      videos: false,
+    },
+    inAppEmulation: false,
+    launchExtensions: ['.d64', '.t64', '.tap', '.prg', '.crt', '.a0', '.20', '.40', '.60', '.zip', '.7z'],
+  },
 };
 
 export const SUPPORTED_PLATFORMS = Object.values(PLATFORM_PROFILES);
@@ -229,6 +302,8 @@ export function isPlatformId(value: string): value is PlatformId {
     || value === 'zxspectrum'
     || value === 'bbcmicro'
     || value === 'amiga'
+    || value === 'atarist'
+    || value === 'vic20'
   );
 }
 
@@ -293,6 +368,8 @@ export function createDefaultPlatformSettingsMap(): Record<PlatformId, PlatformS
     zxspectrum: createDefaultPlatformSettings('zxspectrum'),
     bbcmicro: createDefaultPlatformSettings('bbcmicro'),
     amiga: createDefaultPlatformSettings('amiga'),
+    atarist: createDefaultPlatformSettings('atarist'),
+    vic20: createDefaultPlatformSettings('vic20'),
   };
 }
 

@@ -166,6 +166,8 @@ pub enum PlatformId {
     ZxSpectrum,
     BbcMicro,
     Amiga,
+    AtariSt,
+    Vic20,
 }
 
 impl PlatformId {
@@ -177,6 +179,8 @@ impl PlatformId {
             PlatformId::ZxSpectrum => "zxspectrum",
             PlatformId::BbcMicro => "bbcmicro",
             PlatformId::Amiga => "amiga",
+            PlatformId::AtariSt => "atarist",
+            PlatformId::Vic20 => "vic20",
         }
     }
 }

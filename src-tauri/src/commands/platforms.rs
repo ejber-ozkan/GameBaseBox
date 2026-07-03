@@ -10,6 +10,8 @@ const ATARI2600_PLATFORM_ID: &str = "atari2600";
 const ZXSPECTRUM_PLATFORM_ID: &str = "zxspectrum";
 const BBCMICRO_PLATFORM_ID: &str = "bbcmicro";
 const AMIGA_PLATFORM_ID: &str = "amiga";
+const ATARIST_PLATFORM_ID: &str = "atarist";
+const VIC20_PLATFORM_ID: &str = "vic20";
 
 fn c64_profile() -> PlatformProfile {
     PlatformProfile {
@@ -204,6 +206,70 @@ fn amiga_profile() -> PlatformProfile {
     }
 }
 
+fn atarist_profile() -> PlatformProfile {
+    PlatformProfile {
+        id: ATARIST_PLATFORM_ID.to_string(),
+        display_name: "Atari ST".to_string(),
+        status: "available".to_string(),
+        import_status: "notImported".to_string(),
+        default_emulator_profile_id: "retroarch-atarist".to_string(),
+        supported_emulator_profile_ids: vec![
+            "retroarch-atarist".to_string(),
+            "steem-atarist".to_string(),
+            "hatari-atarist".to_string(),
+        ],
+        capabilities: PlatformCapabilities {
+            screenshots: true,
+            photos: false,
+            music: "generic".to_string(),
+            extras: true,
+            videos: false,
+            in_app_emulation: false,
+            launch_extensions: vec![".st", ".msa", ".stx", ".dim", ".ipf", ".m3u", ".zip", ".7z"]
+                .into_iter()
+                .map(String::from)
+                .collect(),
+        },
+        folder_types: vec!["extras", "games", "screenshots", "music"]
+            .into_iter()
+            .map(String::from)
+            .collect(),
+    }
+}
+
+fn vic20_profile() -> PlatformProfile {
+    PlatformProfile {
+        id: VIC20_PLATFORM_ID.to_string(),
+        display_name: "Commodore VIC-20".to_string(),
+        status: "available".to_string(),
+        import_status: "notImported".to_string(),
+        default_emulator_profile_id: "retroarch-vic20".to_string(),
+        supported_emulator_profile_ids: vec![
+            "retroarch-vic20".to_string(),
+            "vice-vic20".to_string(),
+        ],
+        capabilities: PlatformCapabilities {
+            screenshots: true,
+            photos: false,
+            music: "generic".to_string(),
+            extras: true,
+            videos: false,
+            in_app_emulation: false,
+            launch_extensions: vec![
+                ".d64", ".t64", ".tap", ".prg", ".crt", ".a0", ".20", ".40", ".60", ".zip",
+                ".7z",
+            ]
+            .into_iter()
+            .map(String::from)
+            .collect(),
+        },
+        folder_types: vec!["extras", "games", "screenshots", "music"]
+            .into_iter()
+            .map(String::from)
+            .collect(),
+    }
+}
+
 fn supported_platforms() -> Vec<PlatformProfile> {
     vec![
         c64_profile(),
@@ -212,6 +278,8 @@ fn supported_platforms() -> Vec<PlatformProfile> {
         zxspectrum_profile(),
         bbcmicro_profile(),
         amiga_profile(),
+        atarist_profile(),
+        vic20_profile(),
     ]
 }
 

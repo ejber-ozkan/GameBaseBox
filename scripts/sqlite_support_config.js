@@ -82,6 +82,26 @@ const platformImportConfigs = {
     musicExtensions: [".ay"],
     launchExtensions: [".tzx", ".tap", ".z80", ".sna", ".szx", ".trd", ".dsk", ".zip", ".7z"],
   },
+  atarist: {
+    platformId: "atarist",
+    displayName: "Atari ST",
+    status: "available",
+    defaultImported: false,
+    sourceMdbName: "Atari ST.mdb",
+    requiredFolders: ["extrasPath", "gamesPath", "screenshotsPath", "musicPath"],
+    musicExtensions: [],
+    launchExtensions: [".st", ".msa", ".stx", ".dim", ".ipf", ".m3u", ".zip", ".7z"],
+  },
+  vic20: {
+    platformId: "vic20",
+    displayName: "Commodore VIC-20",
+    status: "available",
+    defaultImported: false,
+    sourceMdbName: "Commodore VIC-20.mdb",
+    requiredFolders: ["extrasPath", "gamesPath", "screenshotsPath", "musicPath"],
+    musicExtensions: [],
+    launchExtensions: [".d64", ".t64", ".tap", ".prg", ".crt", ".a0", ".20", ".40", ".60", ".zip", ".7z"],
+  },
 };
 
 function getPlatformImportConfig(platformId = "c64") {

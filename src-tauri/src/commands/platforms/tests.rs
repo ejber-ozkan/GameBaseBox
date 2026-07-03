@@ -155,6 +155,72 @@ async fn test_get_supported_platforms_includes_amiga_capabilities() {
 }
 
 #[tokio::test(flavor = "current_thread")]
+async fn test_get_supported_platforms_includes_atari_st_capabilities() {
+    let platforms = get_supported_platforms().await.unwrap();
+    let atari_st = platforms
+        .iter()
+        .find(|platform| platform.id == "atarist")
+        .expect("Atari ST profile should exist");
+
+    assert_eq!(atari_st.display_name, "Atari ST");
+    assert_eq!(atari_st.import_status, "notImported");
+    assert_eq!(atari_st.default_emulator_profile_id, "retroarch-atarist");
+    assert_eq!(
+        atari_st.supported_emulator_profile_ids,
+        vec![
+            "retroarch-atarist".to_string(),
+            "steem-atarist".to_string(),
+            "hatari-atarist".to_string(),
+        ]
+    );
+    assert_eq!(
+        atari_st.folder_types,
+        vec![
+            "extras".to_string(),
+            "games".to_string(),
+            "screenshots".to_string(),
+            "music".to_string(),
+        ]
+    );
+    assert_eq!(atari_st.capabilities.music, "generic");
+    assert!(atari_st
+        .capabilities
+        .launch_extensions
+        .contains(&".st".to_string()));
+}
+
+#[tokio::test(flavor = "current_thread")]
+async fn test_get_supported_platforms_includes_vic20_capabilities() {
+    let platforms = get_supported_platforms().await.unwrap();
+    let vic20 = platforms
+        .iter()
+        .find(|platform| platform.id == "vic20")
+        .expect("VIC-20 profile should exist");
+
+    assert_eq!(vic20.display_name, "Commodore VIC-20");
+    assert_eq!(vic20.import_status, "notImported");
+    assert_eq!(vic20.default_emulator_profile_id, "retroarch-vic20");
+    assert_eq!(
+        vic20.supported_emulator_profile_ids,
+        vec!["retroarch-vic20".to_string(), "vice-vic20".to_string()]
+    );
+    assert_eq!(
+        vic20.folder_types,
+        vec![
+            "extras".to_string(),
+            "games".to_string(),
+            "screenshots".to_string(),
+            "music".to_string(),
+        ]
+    );
+    assert_eq!(vic20.capabilities.music, "generic");
+    assert!(vic20
+        .capabilities
+        .launch_extensions
+        .contains(&".prg".to_string()));
+}
+
+#[tokio::test(flavor = "current_thread")]
 async fn test_active_platform_defaults_to_c64() {
     let active = get_active_platform().await.unwrap();
 

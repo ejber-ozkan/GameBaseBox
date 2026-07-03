@@ -49,6 +49,8 @@ const REQUIRED_PLATFORM_FOLDER_KEYS: Partial<Record<keyof typeof PLATFORM_PROFIL
   zxspectrum: ['extrasPath', 'gamesPath', 'screenshotsPath', 'photosPath', 'musicPath'],
   bbcmicro: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
   amiga: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
+  atarist: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
+  vic20: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
 };
 
 const PLATFORM_IMPORT_ALIASES: Partial<Record<keyof typeof PLATFORM_PROFILES, string[]>> = {

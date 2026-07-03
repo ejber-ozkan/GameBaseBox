@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-03
+
+### Added
+- Added Atari ST and Commodore VIC-20 as importable GameBase platforms with Extras, Games, Screenshots, and Music folder setup.
+- Added Atari ST emulator profiles for RetroArch, STeem, and Hatari.
+- Added Commodore VIC-20 emulator profiles for RetroArch and VICE.
+- Added platform-specific windowed library backgrounds for Atari ST and VIC-20 using the images in `docs/images/backgrounds`.
+- Added release notes for the GBBox 0.4.0 release.
+
+### Changed
+- Bumped package, Tauri, Cargo, lockfile, and root version metadata to `0.4.0`.
+
 ## [0.3.1] - 2026-07-02
 
 ### Changed

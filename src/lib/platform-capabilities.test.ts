@@ -16,7 +16,7 @@ import {
 } from './platform-capabilities';
 
 describe('platform-capabilities', () => {
-  test('registers C64, Atari 800, Atari 2600, ZX Spectrum, BBC Micro, and Amiga profiles', () => {
+  test('registers all importable platform profiles', () => {
     expect(SUPPORTED_PLATFORMS.map((platform) => platform.id)).toEqual([
       'c64',
       'atari800',
@@ -24,6 +24,8 @@ describe('platform-capabilities', () => {
       'zxspectrum',
       'bbcmicro',
       'amiga',
+      'atarist',
+      'vic20',
     ]);
   });
 
@@ -103,6 +105,39 @@ describe('platform-capabilities', () => {
     );
   });
 
+  test('defines Atari ST GameBase import folders and emulator capabilities', () => {
+    const atariSt = PLATFORM_PROFILES.atarist;
+
+    expect(atariSt.displayName).toBe('Atari ST');
+    expect(atariSt.status).toBe('available');
+    expect(atariSt.importStatus).toBe('notImported');
+    expect(atariSt.folderTypes).toEqual(['extras', 'games', 'screenshots', 'music']);
+    expect(atariSt.mediaCapabilities.music).toBe('generic');
+    expect(atariSt.defaultEmulatorProfileId).toBe('retroarch-atarist');
+    expect(atariSt.supportedEmulatorProfileIds).toEqual(['retroarch-atarist', 'steem-atarist', 'hatari-atarist']);
+    expect(PLATFORM_EMULATOR_PROFILES['steem-atarist'].displayName).toBe('STeem');
+    expect(PLATFORM_EMULATOR_PROFILES['hatari-atarist'].displayName).toBe('Hatari');
+    expect(atariSt.launchExtensions).toEqual(
+      expect.arrayContaining(['.st', '.msa', '.stx', '.dim', '.ipf', '.zip', '.7z']),
+    );
+  });
+
+  test('defines Commodore VIC-20 GameBase import folders and emulator capabilities', () => {
+    const vic20 = PLATFORM_PROFILES.vic20;
+
+    expect(vic20.displayName).toBe('Commodore VIC-20');
+    expect(vic20.status).toBe('available');
+    expect(vic20.importStatus).toBe('notImported');
+    expect(vic20.folderTypes).toEqual(['extras', 'games', 'screenshots', 'music']);
+    expect(vic20.mediaCapabilities.music).toBe('generic');
+    expect(vic20.defaultEmulatorProfileId).toBe('retroarch-vic20');
+    expect(vic20.supportedEmulatorProfileIds).toEqual(['retroarch-vic20', 'vice-vic20']);
+    expect(PLATFORM_EMULATOR_PROFILES['vice-vic20'].displayName).toBe('VICE VIC-20');
+    expect(vic20.launchExtensions).toEqual(
+      expect.arrayContaining(['.d64', '.t64', '.tap', '.prg', '.crt', '.a0', '.20', '.zip', '.7z']),
+    );
+  });
+
   test('keeps SID and in-app emulation scoped to C64', () => {
     expect(PLATFORM_PROFILES.c64.mediaCapabilities.music).toBe('sid');
     expect(PLATFORM_PROFILES.c64.inAppEmulation).toBe(true);
@@ -110,6 +145,8 @@ describe('platform-capabilities', () => {
     expect(PLATFORM_PROFILES.zxspectrum.inAppEmulation).toBe(false);
     expect(PLATFORM_PROFILES.bbcmicro.inAppEmulation).toBe(false);
     expect(PLATFORM_PROFILES.amiga.inAppEmulation).toBe(false);
+    expect(PLATFORM_PROFILES.atarist.inAppEmulation).toBe(false);
+    expect(PLATFORM_PROFILES.vic20.inAppEmulation).toBe(false);
     expect(PLATFORM_EMULATOR_PROFILES['altirra-atari800'].platformId).toBe('atari800');
   });
 
@@ -121,6 +158,8 @@ describe('platform-capabilities', () => {
     expect(supportsEmbeddedEmulation('zxspectrum')).toBe(false);
     expect(supportsEmbeddedEmulation('bbcmicro')).toBe(false);
     expect(supportsEmbeddedEmulation('amiga')).toBe(false);
+    expect(supportsEmbeddedEmulation('atarist')).toBe(false);
+    expect(supportsEmbeddedEmulation('vic20')).toBe(false);
   });
 
   test('creates platform settings from profile defaults', () => {
@@ -138,6 +177,8 @@ describe('platform-capabilities', () => {
     expect(isPlatformId('zxspectrum')).toBe(true);
     expect(isPlatformId('bbcmicro')).toBe(true);
     expect(isPlatformId('amiga')).toBe(true);
+    expect(isPlatformId('atarist')).toBe(true);
+    expect(isPlatformId('vic20')).toBe(true);
   });
 
   test('validates platform capability query helpers', () => {
@@ -148,6 +189,8 @@ describe('platform-capabilities', () => {
     expect(hasMusicCapability('zxspectrum')).toBe(true);
     expect(hasMusicCapability('bbcmicro')).toBe(true);
     expect(hasMusicCapability('amiga')).toBe(true);
+    expect(hasMusicCapability('atarist')).toBe(true);
+    expect(hasMusicCapability('vic20')).toBe(true);
 
     expect(hasPhotosCapability('c64')).toBe(true);
     expect(hasPhotosCapability('atari800')).toBe(true);
@@ -155,6 +198,8 @@ describe('platform-capabilities', () => {
     expect(hasPhotosCapability('zxspectrum')).toBe(true);
     expect(hasPhotosCapability('bbcmicro')).toBe(false);
     expect(hasPhotosCapability('amiga')).toBe(false);
+    expect(hasPhotosCapability('atarist')).toBe(false);
+    expect(hasPhotosCapability('vic20')).toBe(false);
 
     expect(hasScreenshotsCapability('c64')).toBe(true);
     expect(hasScreenshotsCapability('atari800')).toBe(true);
@@ -162,6 +207,8 @@ describe('platform-capabilities', () => {
     expect(hasScreenshotsCapability('zxspectrum')).toBe(true);
     expect(hasScreenshotsCapability('bbcmicro')).toBe(true);
     expect(hasScreenshotsCapability('amiga')).toBe(true);
+    expect(hasScreenshotsCapability('atarist')).toBe(true);
+    expect(hasScreenshotsCapability('vic20')).toBe(true);
 
     expect(hasExtrasCapability('c64')).toBe(true);
     expect(hasExtrasCapability('atari800')).toBe(true);
@@ -169,6 +216,8 @@ describe('platform-capabilities', () => {
     expect(hasExtrasCapability('zxspectrum')).toBe(true);
     expect(hasExtrasCapability('bbcmicro')).toBe(true);
     expect(hasExtrasCapability('amiga')).toBe(true);
+    expect(hasExtrasCapability('atarist')).toBe(true);
+    expect(hasExtrasCapability('vic20')).toBe(true);
 
     expect(hasVideosCapability('c64')).toBe(true);
     expect(hasVideosCapability('atari800')).toBe(false);
@@ -176,5 +225,7 @@ describe('platform-capabilities', () => {
     expect(hasVideosCapability('zxspectrum')).toBe(false);
     expect(hasVideosCapability('bbcmicro')).toBe(false);
     expect(hasVideosCapability('amiga')).toBe(false);
+    expect(hasVideosCapability('atarist')).toBe(false);
+    expect(hasVideosCapability('vic20')).toBe(false);
   });
 });

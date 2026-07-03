@@ -251,6 +251,34 @@ fn validates_amiga_import_request_with_required_folders() {
 }
 
 #[test]
+fn validates_atari_st_import_request_with_required_folders() {
+    let temp = tempdir().unwrap();
+    let mdb_path = temp.path().join("Atari ST.mdb");
+    fs::write(&mdb_path, b"test").unwrap();
+    let request = request_with_paths(
+        "atarist",
+        mdb_path.to_string_lossy().to_string(),
+        create_four_folder_settings(temp.path()),
+    );
+
+    assert!(validate_platform_import_request(&request).is_ok());
+}
+
+#[test]
+fn validates_vic20_import_request_with_required_folders() {
+    let temp = tempdir().unwrap();
+    let mdb_path = temp.path().join("Commodore VIC-20.mdb");
+    fs::write(&mdb_path, b"test").unwrap();
+    let request = request_with_paths(
+        "vic20",
+        mdb_path.to_string_lossy().to_string(),
+        create_four_folder_settings(temp.path()),
+    );
+
+    assert!(validate_platform_import_request(&request).is_ok());
+}
+
+#[test]
 fn rejects_bbc_micro_import_request_missing_music_folder() {
     let temp = tempdir().unwrap();
     let mdb_path = temp.path().join("BBC Micro.mdb");

@@ -1,9 +1,18 @@
-export type PlatformId = 'c64' | 'atari800' | 'atari2600' | 'zxspectrum' | 'bbcmicro' | 'amiga';
+export type PlatformId = 'c64' | 'atari800' | 'atari2600' | 'zxspectrum' | 'bbcmicro' | 'amiga' | 'atarist' | 'vic20';
 
 export type PlatformStatus = 'available' | 'planned' | 'disabled';
 export type PlatformImportStatus = 'notImported' | 'importing' | 'imported' | 'failed';
 export type PlatformMusicCapability = 'sid' | 'sap' | 'ay' | 'generic' | 'none';
-export type PlatformEmulatorType = 'vice' | 'retroarch' | 'altirra' | 'spectaculator' | 'beebem' | 'uae' | 'custom';
+export type PlatformEmulatorType =
+  | 'vice'
+  | 'retroarch'
+  | 'altirra'
+  | 'spectaculator'
+  | 'beebem'
+  | 'uae'
+  | 'steem'
+  | 'hatari'
+  | 'custom';
 export type PlatformFolderType =
   | 'games'
   | 'music'

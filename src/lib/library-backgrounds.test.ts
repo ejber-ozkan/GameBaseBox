@@ -15,6 +15,8 @@ describe('library-backgrounds', () => {
     expect(getLibraryBackgroundForPlatform('zxspectrum')).toBe('/docs/images/backgrounds/Sinclair_ZX_Spectrum_1.jpg');
     expect(getLibraryBackgroundForPlatform('bbcmicro')).toBe('/docs/images/backgrounds/Acorn_BBC_Micro_1.jpg');
     expect(getLibraryBackgroundForPlatform('amiga')).toBe('/docs/images/backgrounds/Commodore_Amiga_1.jpg');
+    expect(getLibraryBackgroundForPlatform('atarist')).toBe('/docs/images/backgrounds/Atari_520_ST_1.jpg');
+    expect(getLibraryBackgroundForPlatform('vic20')).toBe('/docs/images/backgrounds/Commodore-VIC-20_1.jpg');
   });
 
   test('exposes the shared rotation pool from all available platform backgrounds', () => {
@@ -32,6 +34,8 @@ describe('library-backgrounds', () => {
       '/docs/images/backgrounds/Commodore_Amiga_1.jpg',
       '/docs/images/backgrounds/Commodore_amiga_2.jpg',
       '/docs/images/backgrounds/Commodore_Amiga_3.jpg',
+      '/docs/images/backgrounds/Atari_520_ST_1.jpg',
+      '/docs/images/backgrounds/Commodore-VIC-20_1.jpg',
     ]);
   });
 

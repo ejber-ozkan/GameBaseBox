@@ -32,6 +32,12 @@ const PLATFORM_BACKGROUND_POOLS: Partial<Record<PlatformId, readonly string[]>> 
     `${BACKGROUND_BASE_PATH}/Commodore_amiga_2.jpg`,
     `${BACKGROUND_BASE_PATH}/Commodore_Amiga_3.jpg`,
   ],
+  atarist: [
+    `${BACKGROUND_BASE_PATH}/Atari_520_ST_1.jpg`,
+  ],
+  vic20: [
+    `${BACKGROUND_BASE_PATH}/Commodore-VIC-20_1.jpg`,
+  ],
 };
 
 const BACKGROUND_POOL = Object.values(PLATFORM_BACKGROUND_POOLS).flat();
