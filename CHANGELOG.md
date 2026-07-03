@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-07-03
+
+### Fixed
+- Fixed VIC-20 platform imports so the backend conversion path accepts the canonical `vic20` platform ID.
+- Normalized user-facing VIC-20 names such as `VIC-20`, `VIC 20`, and `Commodore VIC-20` to the same canonical platform.
+- Updated the VIC-20 import helper metadata to recognize the real `Vic20_v03.mdb` source filename.
+
+### Changed
+- Bumped package, Tauri, Cargo, lockfile, and root version metadata to `0.4.1`.
+- Removed the dated `graphify-out/2026-06-28` backup snapshot from Git and ignored future dated Graphify backup folders.
+
 ## [0.4.0] - 2026-07-03
 
 ### Added

@@ -279,6 +279,20 @@ fn validates_vic20_import_request_with_required_folders() {
 }
 
 #[test]
+fn validates_commodore_vic20_import_alias_with_required_folders() {
+    let temp = tempdir().unwrap();
+    let mdb_path = temp.path().join("Vic20_v03.mdb");
+    fs::write(&mdb_path, b"test").unwrap();
+    let request = request_with_paths(
+        "Commodore VIC-20",
+        mdb_path.to_string_lossy().to_string(),
+        create_four_folder_settings(temp.path()),
+    );
+
+    assert!(validate_platform_import_request(&request).is_ok());
+}
+
+#[test]
 fn rejects_bbc_micro_import_request_missing_music_folder() {
     let temp = tempdir().unwrap();
     let mdb_path = temp.path().join("BBC Micro.mdb");

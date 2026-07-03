@@ -64,6 +64,7 @@ gb64.sqlite.bk
 # AI Agent Specific Folders
 /.agent
 /.agents
+/.specify/
 /skills-lock.json
 /plans/
 /.claude/
@@ -91,6 +92,7 @@ handover-*.md
 
 # Graphify
 graphify-out/cache/
+graphify-out/20??-??-??/
 graphify-out/manifest.json
 graphify-out/.graphify_python
 graphify-out/.graphify_root

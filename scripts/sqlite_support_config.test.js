@@ -36,9 +36,16 @@ describe('sqlite_support_config', () => {
     const config = getPlatformImportConfig('vic20');
 
     expect(config.displayName).toBe('Commodore VIC-20');
-    expect(config.sourceMdbName).toBe('Commodore VIC-20.mdb');
+    expect(config.sourceMdbName).toBe('Vic20_v03.mdb');
+    expect(config.aliases).toEqual(['VIC-20', 'VIC 20', 'Commodore VIC-20', 'Commodore VIC 20', 'GameBase VIC-20']);
     expect(config.requiredFolders).toEqual(['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath']);
     expect(config.musicExtensions).toEqual([]);
     expect(config.launchExtensions).toEqual(expect.arrayContaining(['.d64', '.t64', '.tap', '.prg', '.crt']));
+  });
+
+  test('normalizes user-facing VIC-20 platform names to the canonical import config', () => {
+    expect(getPlatformImportConfig('VIC-20')).toBe(getPlatformImportConfig('vic20'));
+    expect(getPlatformImportConfig('Commodore VIC-20')).toBe(getPlatformImportConfig('vic20'));
+    expect(getPlatformImportConfig('Commodore VIC 20')).toBe(getPlatformImportConfig('vic20'));
   });
 });

@@ -285,9 +285,22 @@ pub fn get_db_path() -> String {
 }
 
 pub fn normalize_platform_id(platform_id: Option<&str>) -> Result<String, String> {
-    let platform_id = platform_id.unwrap_or("c64");
-    match platform_id {
-        "c64" | "atari800" | "atari2600" | "zxspectrum" | "bbcmicro" | "amiga" => Ok(platform_id.to_string()),
+    let platform_id = platform_id.unwrap_or("c64").trim();
+    let key = platform_id
+        .chars()
+        .filter(|value| value.is_ascii_alphanumeric())
+        .flat_map(char::to_lowercase)
+        .collect::<String>();
+
+    match key.as_str() {
+        "c64" | "commodore64" => Ok("c64".to_string()),
+        "atari800" => Ok("atari800".to_string()),
+        "atari2600" => Ok("atari2600".to_string()),
+        "zxspectrum" | "sinclairzxspectrum" => Ok("zxspectrum".to_string()),
+        "bbcmicro" | "acornbbcmicro" => Ok("bbcmicro".to_string()),
+        "amiga" | "commodoreamiga" => Ok("amiga".to_string()),
+        "atarist" => Ok("atarist".to_string()),
+        "vic20" | "commodorevic20" => Ok("vic20".to_string()),
         _ => Err(format!("Unsupported platform: {platform_id}")),
     }
 }
@@ -1433,6 +1446,17 @@ mod tests {
         assert_eq!(get_platform_db_scope(Some("atari800")).unwrap(), "atari800");
         assert_eq!(get_platform_db_scope(Some("bbcmicro")).unwrap(), "bbcmicro");
         assert_eq!(get_platform_db_scope(Some("amiga")).unwrap(), "amiga");
+        assert_eq!(get_platform_db_scope(Some("atarist")).unwrap(), "atarist");
+        assert_eq!(get_platform_db_scope(Some("vic20")).unwrap(), "vic20");
+        assert_eq!(get_platform_db_scope(Some("VIC-20")).unwrap(), "vic20");
+        assert_eq!(
+            get_platform_db_scope(Some("Commodore VIC-20")).unwrap(),
+            "vic20"
+        );
+        assert_eq!(
+            get_platform_db_scope(Some("Commodore VIC 20")).unwrap(),
+            "vic20"
+        );
         assert_eq!(get_platform_db_path(Some("c64")).unwrap(), "custom.sqlite");
         assert!(get_platform_db_scope(Some("unknown")).is_err());
     }

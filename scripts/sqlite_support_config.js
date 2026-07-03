@@ -97,15 +97,32 @@ const platformImportConfigs = {
     displayName: "Commodore VIC-20",
     status: "available",
     defaultImported: false,
-    sourceMdbName: "Commodore VIC-20.mdb",
+    sourceMdbName: "Vic20_v03.mdb",
+    aliases: ["VIC-20", "VIC 20", "Commodore VIC-20", "Commodore VIC 20", "GameBase VIC-20"],
     requiredFolders: ["extrasPath", "gamesPath", "screenshotsPath", "musicPath"],
     musicExtensions: [],
     launchExtensions: [".d64", ".t64", ".tap", ".prg", ".crt", ".a0", ".20", ".40", ".60", ".zip", ".7z"],
   },
 };
 
+function normalizePlatformConfigKey(platformId = "c64") {
+  return String(platformId)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
+
+const platformConfigAliases = Object.fromEntries(
+  Object.values(platformImportConfigs).flatMap((config) => [
+    [normalizePlatformConfigKey(config.platformId), config.platformId],
+    [normalizePlatformConfigKey(config.displayName), config.platformId],
+    ...(config.aliases ?? []).map((alias) => [normalizePlatformConfigKey(alias), config.platformId]),
+  ]),
+);
+
 function getPlatformImportConfig(platformId = "c64") {
-  const config = platformImportConfigs[platformId];
+  const canonicalPlatformId = platformConfigAliases[normalizePlatformConfigKey(platformId)] ?? platformId;
+  const config = platformImportConfigs[canonicalPlatformId];
   if (!config) {
     throw new Error(`Unsupported platform: ${platformId}`);
   }

@@ -1,6 +1,6 @@
 use crate::database::{
     configure_runtime_db_path, get_db_path, import_mdb_to_sqlite, import_mdb_to_sqlite_for_platform,
-    is_database_ready,
+    is_database_ready, normalize_platform_id,
 };
 use crate::models::{
     DatabaseBootstrapStatus, DatabaseImportResult, ImportPlatformDatabaseRequest,
@@ -64,6 +64,7 @@ pub fn import_platform_database_from_mdb(
     app: tauri::AppHandle,
     request: ImportPlatformDatabaseRequest,
 ) -> Result<PlatformDatabaseImportResult, String> {
+    let platform_id = normalize_platform_id(Some(&request.platform_id))?;
     if let Err(err) = validate_platform_import_request(&request) {
         if std::env::var("VIC40_DEBUG_LAUNCH").is_ok() {
             eprintln!("[DEBUG IMPORT ERROR] Validation failed for {}: {}", request.platform_id, err);
@@ -71,10 +72,10 @@ pub fn import_platform_database_from_mdb(
         return Err(err);
     }
     let _ = configure_runtime_db_path(&app)?;
-    match import_mdb_to_sqlite_for_platform(&request.mdb_path, &request.platform_id) {
+    match import_mdb_to_sqlite_for_platform(&request.mdb_path, &platform_id) {
         Ok(result) => {
             Ok(PlatformDatabaseImportResult {
-                platform_id: request.platform_id,
+                platform_id,
                 db_path: result.db_path,
                 exported_tables: result.exported_tables,
                 imported_tables: result.imported_tables,
@@ -93,11 +94,8 @@ pub fn import_platform_database_from_mdb(
 pub(super) fn validate_platform_import_request(
     request: &ImportPlatformDatabaseRequest,
 ) -> Result<(), String> {
-    match request.platform_id.as_str() {
-        "c64" | "atari800" | "atari2600" | "zxspectrum" | "bbcmicro" | "amiga"
-        | "atarist" | "vic20" => {}
-        other => return Err(format!("Unsupported platform import: {other}")),
-    }
+    let platform_id = normalize_platform_id(Some(&request.platform_id))
+        .map_err(|error| error.replace("Unsupported platform", "Unsupported platform import"))?;
 
     let mdb_path = Path::new(&request.mdb_path);
     if !mdb_path.exists() {
@@ -113,7 +111,7 @@ pub(super) fn validate_platform_import_request(
         return Err("Selected database must be an MDB file.".to_string());
     }
 
-    match request.platform_id.as_str() {
+    match platform_id.as_str() {
         "atari800" => {
             reject_obvious_wrong_platform_mdb(mdb_path)?;
             validate_existing_folder("Games", &request.folder_settings.games_path)?;
