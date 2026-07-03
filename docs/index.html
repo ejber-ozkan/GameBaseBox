@@ -226,9 +226,9 @@
       }
 
       .hero-image img {
-        aspect-ratio: 16 / 10;
         width: 100%;
-        object-fit: cover;
+        height: auto;
+        object-fit: contain;
       }
 
       .hero-image figcaption {
@@ -366,6 +366,7 @@
 
       .screenshots {
         display: grid;
+        align-items: start;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 1rem;
       }
@@ -376,9 +377,10 @@
       }
 
       .shot img {
-        aspect-ratio: 16 / 9;
         width: 100%;
-        object-fit: cover;
+        height: auto;
+        background: #0b0d0e;
+        object-fit: contain;
       }
 
       .shot figcaption {
