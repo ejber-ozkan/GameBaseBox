@@ -376,6 +376,21 @@
         background: var(--panel);
       }
 
+      .shot-trigger {
+        display: block;
+        width: 100%;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        cursor: zoom-in;
+      }
+
+      .shot-trigger:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+      }
+
       .shot img {
         width: 100%;
         height: auto;
@@ -387,6 +402,77 @@
         border-top: 1px solid var(--line);
         padding: 0.8rem 0.9rem;
         font-weight: 900;
+      }
+
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: none;
+        place-items: center;
+        padding: clamp(1rem, 3vw, 2rem);
+        background: rgba(5, 7, 8, 0.88);
+        backdrop-filter: blur(12px);
+      }
+
+      .lightbox.is-open {
+        display: grid;
+      }
+
+      .lightbox-panel {
+        display: grid;
+        width: min(1400px, 100%);
+        max-height: min(92vh, 980px);
+        border: 2px solid var(--text);
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .lightbox-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        border-bottom: 1px solid var(--line);
+        padding: 0.7rem 0.9rem;
+      }
+
+      .lightbox-title {
+        margin: 0;
+        font-weight: 900;
+      }
+
+      .lightbox-close {
+        display: inline-grid;
+        width: 2.3rem;
+        height: 2.3rem;
+        place-items: center;
+        border: 2px solid var(--text);
+        background: var(--accent);
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 1.4rem;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .lightbox-close:focus-visible {
+        outline: 3px solid var(--accent-2);
+        outline-offset: 3px;
+      }
+
+      .lightbox-image-wrap {
+        display: grid;
+        min-height: 0;
+        place-items: center;
+        padding: clamp(0.5rem, 2vw, 1rem);
+        background: #07090a;
+      }
+
+      .lightbox-image {
+        max-width: 100%;
+        max-height: calc(92vh - 5.5rem);
+        object-fit: contain;
       }
 
       .controls {
@@ -647,31 +733,45 @@
           </div>
           <div class="screenshots">
             <figure class="shot">
-              <img src="images/bigbox-search-results.png" alt="GBBox BigBox search results screen" loading="lazy" width="1496" height="840">
+              <button class="shot-trigger" type="button" data-full="images/bigbox-search-results.png" data-title="BigBox Search" aria-label="Open BigBox Search screenshot">
+                <img src="images/bigbox-search-results.png" alt="GBBox BigBox search results screen" loading="lazy" width="1496" height="840">
+              </button>
               <figcaption>BigBox Search</figcaption>
             </figure>
             <figure class="shot">
-              <img src="images/bigbox-home-rails.png" alt="GBBox BigBox home rails screen" loading="lazy" width="1496" height="840">
+              <button class="shot-trigger" type="button" data-full="images/bigbox-home-rails.png" data-title="BigBox Rails" aria-label="Open BigBox Rails screenshot">
+                <img src="images/bigbox-home-rails.png" alt="GBBox BigBox home rails screen" loading="lazy" width="1496" height="840">
+              </button>
               <figcaption>BigBox Rails</figcaption>
             </figure>
             <figure class="shot">
-              <img src="images/bigbox-scroll-letter.png" alt="GBBox BigBox letter jump overlay" loading="lazy" width="1496" height="840">
+              <button class="shot-trigger" type="button" data-full="images/bigbox-scroll-letter.png" data-title="BigBox Letter Jump" aria-label="Open BigBox Letter Jump screenshot">
+                <img src="images/bigbox-scroll-letter.png" alt="GBBox BigBox letter jump overlay" loading="lazy" width="1496" height="840">
+              </button>
               <figcaption>BigBox Letter Jump</figcaption>
             </figure>
             <figure class="shot">
-              <img src="images/detail-gallery.png" alt="GBBox detail view gallery tab" loading="lazy" width="1496" height="840">
+              <button class="shot-trigger" type="button" data-full="images/detail-gallery.png" data-title="Detail View: Gallery" aria-label="Open Detail View: Gallery screenshot">
+                <img src="images/detail-gallery.png" alt="GBBox detail view gallery tab" loading="lazy" width="1496" height="840">
+              </button>
               <figcaption>Detail View: Gallery</figcaption>
             </figure>
             <figure class="shot">
-              <img src="images/detail-extras-gallery.png" alt="GBBox detail view extras gallery tab" loading="lazy" width="1496" height="840">
+              <button class="shot-trigger" type="button" data-full="images/detail-extras-gallery.png" data-title="Detail View: Extras Gallery" aria-label="Open Detail View: Extras Gallery screenshot">
+                <img src="images/detail-extras-gallery.png" alt="GBBox detail view extras gallery tab" loading="lazy" width="1496" height="840">
+              </button>
               <figcaption>Detail View: Extras Gallery</figcaption>
             </figure>
             <figure class="shot">
-              <img src="images/window-mode-gridview.png" alt="GBBox window mode grid view" loading="lazy" width="1496" height="840">
+              <button class="shot-trigger" type="button" data-full="images/window-mode-gridview.png" data-title="Window Mode: Grid View" aria-label="Open Window Mode: Grid View screenshot">
+                <img src="images/window-mode-gridview.png" alt="GBBox window mode grid view" loading="lazy" width="1496" height="840">
+              </button>
               <figcaption>Window Mode: Grid View</figcaption>
             </figure>
             <figure class="shot">
-              <img src="images/window-mode-listview.png" alt="GBBox window mode list view" loading="lazy" width="1496" height="840">
+              <button class="shot-trigger" type="button" data-full="images/window-mode-listview.png" data-title="Window Mode: List View" aria-label="Open Window Mode: List View screenshot">
+                <img src="images/window-mode-listview.png" alt="GBBox window mode list view" loading="lazy" width="1496" height="840">
+              </button>
               <figcaption>Window Mode: List View</figcaption>
             </figure>
           </div>
@@ -712,5 +812,60 @@
         </div>
       </footer>
     </div>
+    <div class="lightbox" id="screenshot-lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-title" hidden>
+      <div class="lightbox-panel">
+        <div class="lightbox-bar">
+          <p class="lightbox-title" id="lightbox-title">Screenshot</p>
+          <button class="lightbox-close" type="button" aria-label="Close screenshot view">&times;</button>
+        </div>
+        <div class="lightbox-image-wrap">
+          <img class="lightbox-image" alt="" src="">
+        </div>
+      </div>
+    </div>
+    <script>
+      const lightbox = document.querySelector("#screenshot-lightbox");
+      const lightboxImage = lightbox.querySelector(".lightbox-image");
+      const lightboxTitle = lightbox.querySelector("#lightbox-title");
+      const lightboxClose = lightbox.querySelector(".lightbox-close");
+      let lastFocusedTrigger = null;
+
+      function closeLightbox() {
+        lightbox.classList.remove("is-open");
+        lightbox.hidden = true;
+        lightboxImage.removeAttribute("src");
+        document.body.style.overflow = "";
+        lastFocusedTrigger?.focus();
+      }
+
+      function openLightbox(trigger) {
+        const thumbnail = trigger.querySelector("img");
+        lastFocusedTrigger = trigger;
+        lightboxImage.src = trigger.dataset.full;
+        lightboxImage.alt = thumbnail?.alt || trigger.dataset.title || "GBBox screenshot";
+        lightboxTitle.textContent = trigger.dataset.title || "Screenshot";
+        lightbox.hidden = false;
+        lightbox.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+        lightboxClose.focus();
+      }
+
+      document.querySelectorAll(".shot-trigger").forEach((trigger) => {
+        trigger.addEventListener("click", () => openLightbox(trigger));
+      });
+
+      lightboxClose.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (!lightbox.hidden && event.key === "Escape") {
+          closeLightbox();
+        }
+      });
+    </script>
   </body>
 </html>
