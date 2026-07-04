@@ -2,11 +2,15 @@
 
 **GameBase Box** is a local-first desktop frontend for GameBase-style retro game libraries. It started life as 64Box for the GameBase64 collection and now supports platform-scoped imports for **Commodore 64, Atari 800, Atari 2600, ZX Spectrum, Acorn BBC Micro, and Commodore Amiga**, with more GameBase platforms coming soon.
 
-> Formerly 64Box. The new public repository is [GameBaseBox](https://github.com/ejber-ozkan/GameBaseBox).
+GitHub Pages: [GameBaseBox](https://ejber-ozkan.github.io/GameBaseBox/)
+
+> Previously 64Box.
 
 ## Download
 
 Download the latest GBBox build from the platform links below, or browse the full [GitHub Releases page](https://github.com/ejber-ozkan/GameBaseBox/releases/latest).
+
+Install the latest single executable applciation release and run it, no need to build it yourself.
 
 <table>
   <tr>
