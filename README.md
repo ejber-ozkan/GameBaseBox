@@ -10,7 +10,7 @@ GitHub Pages: [GameBaseBox](https://ejber-ozkan.github.io/GameBaseBox/)
 
 Download the latest GBBox build from the platform links below, or browse the full [GitHub Releases page](https://github.com/ejber-ozkan/GameBaseBox/releases/latest).
 
-Install the latest single executable applciation release and run it, no need to build it yourself.
+Install the latest single executable application release and run it, no need to build it yourself.
 
 <table>
   <tr>
