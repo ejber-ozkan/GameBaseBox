@@ -20,6 +20,7 @@ async fn test_get_supported_platforms_includes_atari800_capabilities() {
     assert!(atari800.folder_types.contains(&"music".to_string()));
     assert!(atari800.folder_types.contains(&"photos".to_string()));
     assert!(atari800.folder_types.contains(&"screenshots".to_string()));
+    assert!(atari800.folder_types.contains(&"extras".to_string()));
     assert!(atari800
         .supported_emulator_profile_ids
         .contains(&"altirra-atari800".to_string()));
@@ -152,6 +153,38 @@ async fn test_get_supported_platforms_includes_amiga_capabilities() {
         .capabilities
         .launch_extensions
         .contains(&".adf".to_string()));
+}
+
+#[tokio::test(flavor = "current_thread")]
+async fn test_get_supported_platforms_uses_persisted_import_status() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+    let conn = Connection::open(&db_path).unwrap();
+    conn.execute(
+        "CREATE TABLE PlatformLibraries (
+            platform_id TEXT PRIMARY KEY,
+            display_name TEXT NOT NULL,
+            import_status TEXT NOT NULL,
+            source_mdb_path TEXT,
+            game_count INTEGER NOT NULL DEFAULT 0,
+            last_import_error TEXT,
+            last_imported_at TEXT
+        )",
+        [],
+    ).unwrap();
+    conn.execute(
+        "INSERT INTO PlatformLibraries (platform_id, display_name, import_status, game_count)
+         VALUES ('atari800', 'Atari 800', 'imported', 7288)",
+        [],
+    ).unwrap();
+
+    let atari800 = get_supported_platforms().await.unwrap()
+        .into_iter()
+        .find(|platform| platform.id == "atari800")
+        .unwrap();
+
+    assert_eq!(atari800.import_status, "imported");
 }
 
 #[tokio::test(flavor = "current_thread")]

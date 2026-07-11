@@ -74,12 +74,13 @@ pub fn import_platform_database_from_mdb(
     let _ = configure_runtime_db_path(&app)?;
     match import_mdb_to_sqlite_for_platform(&request.mdb_path, &platform_id) {
         Ok(result) => {
+            let import_status = crate::commands::platforms::get_platform_import_status_sync(&platform_id)?;
             Ok(PlatformDatabaseImportResult {
                 platform_id,
                 db_path: result.db_path,
                 exported_tables: result.exported_tables,
                 imported_tables: result.imported_tables,
-                game_count: 0,
+                game_count: import_status.game_count,
             })
         }
         Err(err) => {
@@ -111,37 +112,31 @@ pub(super) fn validate_platform_import_request(
         return Err("Selected database must be an MDB file.".to_string());
     }
 
-    match platform_id.as_str() {
-        "atari800" => {
-            reject_obvious_wrong_platform_mdb(mdb_path)?;
-            validate_existing_folder("Games", &request.folder_settings.games_path)?;
-            validate_existing_folder("Music", &request.folder_settings.music_path)?;
-            validate_existing_folder("Photos", &request.folder_settings.photos_path)?;
-            validate_existing_folder("Screenshots", &request.folder_settings.screenshots_path)?;
-            validate_existing_folder("Extras", &request.folder_settings.extras_path)?;
-        }
-        "atari2600" => {
-            validate_existing_folder("Games", &request.folder_settings.games_path)?;
-            validate_existing_folder("Screenshots", &request.folder_settings.screenshots_path)?;
-            validate_existing_folder("Extras", &request.folder_settings.extras_path)?;
-        }
-        "zxspectrum" => {
-            validate_existing_folder("Extras", &request.folder_settings.extras_path)?;
-            validate_existing_folder("Games", &request.folder_settings.games_path)?;
-            validate_existing_folder("Screenshots", &request.folder_settings.screenshots_path)?;
-            validate_existing_folder("Musician Photos", &request.folder_settings.photos_path)?;
-            validate_existing_folder("Music", &request.folder_settings.music_path)?;
-        }
-        "bbcmicro" | "amiga" | "atarist" | "vic20" => {
-            validate_existing_folder("Extras", &request.folder_settings.extras_path)?;
-            validate_existing_folder("Games", &request.folder_settings.games_path)?;
-            validate_existing_folder("Screenshots", &request.folder_settings.screenshots_path)?;
-            validate_existing_folder("Music", &request.folder_settings.music_path)?;
-        }
-        _ => {}
+    if platform_id == "atari800" {
+        reject_obvious_wrong_platform_mdb(mdb_path)?;
+    }
+
+    for folder_type in crate::platform_manifest::required_folder_types(&platform_id)? {
+        let (label, folder_path) = required_folder(&request.folder_settings, &folder_type, &platform_id)?;
+        validate_existing_folder(label, folder_path)?;
     }
 
     Ok(())
+}
+
+fn required_folder<'a>(
+    settings: &'a crate::models::PlatformFolderSettings,
+    folder_type: &str,
+    platform_id: &str,
+) -> Result<(&'static str, &'a str), String> {
+    match folder_type {
+        "games" => Ok(("Games", &settings.games_path)),
+        "music" => Ok(("Music", &settings.music_path)),
+        "photos" => Ok((if platform_id == "zxspectrum" { "Musician Photos" } else { "Photos" }, &settings.photos_path)),
+        "screenshots" => Ok(("Screenshots", &settings.screenshots_path)),
+        "extras" => Ok(("Extras", &settings.extras_path)),
+        _ => Err(format!("Unsupported required folder type: {folder_type}")),
+    }
 }
 
 fn validate_existing_folder(label: &str, folder_path: &str) -> Result<(), String> {

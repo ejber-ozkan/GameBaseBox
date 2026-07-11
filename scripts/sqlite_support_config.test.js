@@ -2,6 +2,16 @@ import { describe, expect, test } from 'vitest';
 import { getPlatformImportConfig } from './sqlite_support_config.js';
 
 describe('sqlite_support_config', () => {
+  test('requires Atari 800 extras consistently with the application setup flow', () => {
+    expect(getPlatformImportConfig('atari800').requiredFolders).toEqual([
+      'gamesPath',
+      'musicPath',
+      'photosPath',
+      'screenshotsPath',
+      'extrasPath',
+    ]);
+  });
+
   test('defines ZX Spectrum GameBaseZX and SpeccyMania import defaults', () => {
     const config = getPlatformImportConfig('zxspectrum');
 
@@ -10,7 +20,7 @@ describe('sqlite_support_config', () => {
     expect(config.referenceMdbPath).toBe(
       'E:\\Backups\\RETRO-BACKUPS\\ZXSpectrum\\Sinclair ZX Spectrum v6\\Sinclair ZX Spectrum v6.mdb',
     );
-    expect(config.aliases).toEqual(['GameBaseZX', 'SpeccyMania']);
+    expect(config.aliases).toEqual(expect.arrayContaining(['GameBaseZX', 'SpeccyMania']));
     expect(config.requiredFolders).toEqual([
       'extrasPath',
       'gamesPath',

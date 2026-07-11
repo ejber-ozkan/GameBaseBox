@@ -30,6 +30,10 @@ import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
 import { useWindowLibraryShelves } from '@/hooks/useWindowLibraryShelves';
 import { PLATFORM_PROFILES, SUPPORTED_PLATFORMS } from '@/lib/platform-capabilities';
+import {
+  getPlatformAliases,
+  getRequiredPlatformFolderKeys as getManifestRequiredPlatformFolderKeys,
+} from '@/lib/platform-manifest';
 import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '@/lib/library-backgrounds';
 import type { PlatformFolderSettings, PlatformId, PlatformSettings } from '@/types/platform';
 import {
@@ -43,22 +47,8 @@ type SetupFolderKey = keyof Pick<
   'gamesPath' | 'musicPath' | 'photosPath' | 'screenshotsPath' | 'extrasPath'
 >;
 
-const REQUIRED_PLATFORM_FOLDER_KEYS: Partial<Record<keyof typeof PLATFORM_PROFILES, SetupFolderKey[]>> = {
-  atari800: ['gamesPath', 'musicPath', 'photosPath', 'screenshotsPath', 'extrasPath'],
-  atari2600: ['gamesPath', 'screenshotsPath', 'extrasPath'],
-  zxspectrum: ['extrasPath', 'gamesPath', 'screenshotsPath', 'photosPath', 'musicPath'],
-  bbcmicro: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
-  amiga: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
-  atarist: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
-  vic20: ['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath'],
-};
-
-const PLATFORM_IMPORT_ALIASES: Partial<Record<keyof typeof PLATFORM_PROFILES, string[]>> = {
-  zxspectrum: ['GameBaseZX', 'SpeccyMania'],
-};
-
 function getRequiredPlatformFolderKeys(platformId: keyof typeof PLATFORM_PROFILES): SetupFolderKey[] {
-  return REQUIRED_PLATFORM_FOLDER_KEYS[platformId] ?? [];
+  return getManifestRequiredPlatformFolderKeys(platformId) as SetupFolderKey[];
 }
 
 function LibraryApp() {
@@ -323,7 +313,7 @@ function LibraryApp() {
           importResult={platformSetupResult}
           isImporting={isPlatformImporting}
           mdbPath={activePlatformSettings.library.sourceMdbPath ?? ''}
-          platformAliases={PLATFORM_IMPORT_ALIASES[settings.activePlatformId] ?? []}
+          platformAliases={getPlatformAliases(settings.activePlatformId)}
           platformName={activePlatform.displayName}
           platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
             id: platform.id,
@@ -752,7 +742,7 @@ export default function Home() {
         importResult={setupSuccess}
         isImporting={isImporting}
         mdbPath={activeSetupPlatformSettings.library.sourceMdbPath ?? ''}
-        platformAliases={PLATFORM_IMPORT_ALIASES[setupPlatformId] ?? []}
+        platformAliases={getPlatformAliases(setupPlatformId)}
         platformName={activeSetupPlatform.displayName}
         platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
           id: platform.id,

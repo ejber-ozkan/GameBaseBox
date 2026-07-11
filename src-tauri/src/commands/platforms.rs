@@ -1,297 +1,19 @@
-use crate::models::{
-    ActivePlatformState, PlatformCapabilities, PlatformImportStatus, PlatformProfile,
-    SetActivePlatformResponse,
-};
+use crate::models::{ActivePlatformState, PlatformImportStatus, PlatformProfile, SetActivePlatformResponse};
+use crate::platform_manifest::{find_platform, supported_platforms};
 use rusqlite::{Connection, OptionalExtension};
 
 const C64_PLATFORM_ID: &str = "c64";
-const ATARI800_PLATFORM_ID: &str = "atari800";
-const ATARI2600_PLATFORM_ID: &str = "atari2600";
-const ZXSPECTRUM_PLATFORM_ID: &str = "zxspectrum";
-const BBCMICRO_PLATFORM_ID: &str = "bbcmicro";
-const AMIGA_PLATFORM_ID: &str = "amiga";
-const ATARIST_PLATFORM_ID: &str = "atarist";
-const VIC20_PLATFORM_ID: &str = "vic20";
-
-fn c64_profile() -> PlatformProfile {
-    PlatformProfile {
-        id: C64_PLATFORM_ID.to_string(),
-        display_name: "Commodore 64".to_string(),
-        status: "available".to_string(),
-        import_status: "imported".to_string(),
-        default_emulator_profile_id: "vice-c64".to_string(),
-        supported_emulator_profile_ids: vec!["vice-c64".to_string(), "retroarch-c64".to_string()],
-        capabilities: PlatformCapabilities {
-            screenshots: true,
-            photos: true,
-            music: "sid".to_string(),
-            extras: true,
-            videos: true,
-            in_app_emulation: true,
-            launch_extensions: vec![
-                ".d64", ".t64", ".tap", ".prg", ".crt", ".g64", ".zip", ".7z", ".m3u", ".vfl",
-            ]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-        },
-        folder_types: vec![
-            "games",
-            "music",
-            "photos",
-            "screenshots",
-            "extras",
-            "boxArt",
-            "videos",
-        ]
-        .into_iter()
-        .map(String::from)
-        .collect(),
-    }
-}
-
-fn atari800_profile() -> PlatformProfile {
-    PlatformProfile {
-        id: ATARI800_PLATFORM_ID.to_string(),
-        display_name: "Atari 800".to_string(),
-        status: "available".to_string(),
-        import_status: "notImported".to_string(),
-        default_emulator_profile_id: "retroarch-atari800".to_string(),
-        supported_emulator_profile_ids: vec![
-            "retroarch-atari800".to_string(),
-            "altirra-atari800".to_string(),
-        ],
-        capabilities: PlatformCapabilities {
-            screenshots: true,
-            photos: true,
-            music: "sap".to_string(),
-            extras: true,
-            videos: false,
-            in_app_emulation: false,
-            launch_extensions: vec![
-                ".atr", ".xfd", ".atx", ".cas", ".car", ".rom", ".bin", ".xex", ".com", ".m3u",
-                ".zip", ".7z",
-            ]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-        },
-        folder_types: vec!["games", "music", "photos", "screenshots"]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-    }
-}
-
-fn atari2600_profile() -> PlatformProfile {
-    PlatformProfile {
-        id: ATARI2600_PLATFORM_ID.to_string(),
-        display_name: "Atari 2600".to_string(),
-        status: "available".to_string(),
-        import_status: "notImported".to_string(),
-        default_emulator_profile_id: "retroarch-atari2600".to_string(),
-        supported_emulator_profile_ids: vec!["retroarch-atari2600".to_string()],
-        capabilities: PlatformCapabilities {
-            screenshots: true,
-            photos: false,
-            music: "none".to_string(),
-            extras: true,
-            videos: false,
-            in_app_emulation: false,
-            launch_extensions: vec![".a26", ".bin", ".rom", ".zip", ".7z"]
-                .into_iter()
-                .map(String::from)
-                .collect(),
-        },
-        folder_types: vec!["games", "screenshots", "extras"]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-    }
-}
-
-fn zxspectrum_profile() -> PlatformProfile {
-    PlatformProfile {
-        id: ZXSPECTRUM_PLATFORM_ID.to_string(),
-        display_name: "ZX Spectrum".to_string(),
-        status: "available".to_string(),
-        import_status: "notImported".to_string(),
-        default_emulator_profile_id: "retroarch-zxspectrum".to_string(),
-        supported_emulator_profile_ids: vec![
-            "retroarch-zxspectrum".to_string(),
-            "spectaculator-zxspectrum".to_string(),
-        ],
-        capabilities: PlatformCapabilities {
-            screenshots: true,
-            photos: true,
-            music: "ay".to_string(),
-            extras: true,
-            videos: false,
-            in_app_emulation: false,
-            launch_extensions: vec![
-                ".tzx", ".tap", ".z80", ".sna", ".szx", ".trd", ".dsk", ".zip", ".7z",
-            ]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-        },
-        folder_types: vec!["extras", "games", "screenshots", "photos", "music"]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-    }
-}
-
-fn bbcmicro_profile() -> PlatformProfile {
-    PlatformProfile {
-        id: BBCMICRO_PLATFORM_ID.to_string(),
-        display_name: "Acorn BBC Micro".to_string(),
-        status: "available".to_string(),
-        import_status: "notImported".to_string(),
-        default_emulator_profile_id: "retroarch-bbcmicro".to_string(),
-        supported_emulator_profile_ids: vec![
-            "retroarch-bbcmicro".to_string(),
-            "beebem-bbcmicro".to_string(),
-        ],
-        capabilities: PlatformCapabilities {
-            screenshots: true,
-            photos: false,
-            music: "generic".to_string(),
-            extras: true,
-            videos: false,
-            in_app_emulation: false,
-            launch_extensions: vec![
-                ".ssd", ".dsd", ".adl", ".adf", ".uef", ".rom", ".bin", ".m3u", ".zip", ".7z",
-            ]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-        },
-        folder_types: vec!["extras", "games", "screenshots", "music"]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-    }
-}
-
-fn amiga_profile() -> PlatformProfile {
-    PlatformProfile {
-        id: AMIGA_PLATFORM_ID.to_string(),
-        display_name: "Commodore Amiga".to_string(),
-        status: "available".to_string(),
-        import_status: "notImported".to_string(),
-        default_emulator_profile_id: "retroarch-amiga".to_string(),
-        supported_emulator_profile_ids: vec![
-            "retroarch-amiga".to_string(),
-            "winuae-amiga".to_string(),
-        ],
-        capabilities: PlatformCapabilities {
-            screenshots: true,
-            photos: false,
-            music: "generic".to_string(),
-            extras: true,
-            videos: false,
-            in_app_emulation: false,
-            launch_extensions: vec![
-                ".adf", ".adz", ".dms", ".ipf", ".lha", ".hdf", ".hdz", ".m3u", ".zip", ".7z",
-            ]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-        },
-        folder_types: vec!["extras", "games", "screenshots", "music"]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-    }
-}
-
-fn atarist_profile() -> PlatformProfile {
-    PlatformProfile {
-        id: ATARIST_PLATFORM_ID.to_string(),
-        display_name: "Atari ST".to_string(),
-        status: "available".to_string(),
-        import_status: "notImported".to_string(),
-        default_emulator_profile_id: "retroarch-atarist".to_string(),
-        supported_emulator_profile_ids: vec![
-            "retroarch-atarist".to_string(),
-            "steem-atarist".to_string(),
-            "hatari-atarist".to_string(),
-        ],
-        capabilities: PlatformCapabilities {
-            screenshots: true,
-            photos: false,
-            music: "generic".to_string(),
-            extras: true,
-            videos: false,
-            in_app_emulation: false,
-            launch_extensions: vec![".st", ".msa", ".stx", ".dim", ".ipf", ".m3u", ".zip", ".7z"]
-                .into_iter()
-                .map(String::from)
-                .collect(),
-        },
-        folder_types: vec!["extras", "games", "screenshots", "music"]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-    }
-}
-
-fn vic20_profile() -> PlatformProfile {
-    PlatformProfile {
-        id: VIC20_PLATFORM_ID.to_string(),
-        display_name: "Commodore VIC-20".to_string(),
-        status: "available".to_string(),
-        import_status: "notImported".to_string(),
-        default_emulator_profile_id: "retroarch-vic20".to_string(),
-        supported_emulator_profile_ids: vec![
-            "retroarch-vic20".to_string(),
-            "vice-vic20".to_string(),
-        ],
-        capabilities: PlatformCapabilities {
-            screenshots: true,
-            photos: false,
-            music: "generic".to_string(),
-            extras: true,
-            videos: false,
-            in_app_emulation: false,
-            launch_extensions: vec![
-                ".d64", ".t64", ".tap", ".prg", ".crt", ".a0", ".20", ".40", ".60", ".zip",
-                ".7z",
-            ]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-        },
-        folder_types: vec!["extras", "games", "screenshots", "music"]
-            .into_iter()
-            .map(String::from)
-            .collect(),
-    }
-}
-
-fn supported_platforms() -> Vec<PlatformProfile> {
-    vec![
-        c64_profile(),
-        atari800_profile(),
-        atari2600_profile(),
-        zxspectrum_profile(),
-        bbcmicro_profile(),
-        amiga_profile(),
-        atarist_profile(),
-        vic20_profile(),
-    ]
-}
-
-fn find_platform(platform_id: &str) -> Option<PlatformProfile> {
-    supported_platforms()
-        .into_iter()
-        .find(|platform| platform.id == platform_id)
-}
 
 #[tauri::command]
 pub async fn get_supported_platforms() -> Result<Vec<PlatformProfile>, String> {
-    Ok(supported_platforms())
+    supported_platforms()?
+        .into_iter()
+        .map(|mut platform| {
+            let status = get_platform_import_status_sync(&platform.id)?;
+            platform.import_status = status.import_status;
+            Ok(platform)
+        })
+        .collect()
 }
 
 #[tauri::command]
@@ -305,7 +27,7 @@ pub async fn get_active_platform() -> Result<ActivePlatformState, String> {
 
 #[tauri::command]
 pub async fn set_active_platform(platform_id: String) -> Result<SetActivePlatformResponse, String> {
-    let platform = find_platform(&platform_id)
+    let platform = find_platform(&platform_id)?
         .ok_or_else(|| format!("Unsupported platform: {platform_id}"))?;
     let requires_import = platform.import_status != "imported";
 
@@ -321,7 +43,7 @@ pub async fn set_active_platform(platform_id: String) -> Result<SetActivePlatfor
 }
 
 pub fn get_platform_import_status_sync(platform_id: &str) -> Result<PlatformImportStatus, String> {
-    let platform = find_platform(platform_id)
+    let platform = find_platform(platform_id)?
         .ok_or_else(|| format!("Unsupported platform: {platform_id}"))?;
 
     if let Ok(conn) = Connection::open(crate::database::get_db_path()) {
@@ -337,17 +59,12 @@ pub fn get_platform_import_status_sync(platform_id: &str) -> Result<PlatformImpo
 
         let imported = conn
             .query_row(
-                "SELECT
-                    import_status,
-                    source_mdb_path,
-                    game_count,
-                    last_import_error
-                 FROM PlatformLibraries
-                 WHERE platform_id = ?1",
-                [platform_id],
+                "SELECT import_status, source_mdb_path, game_count, last_import_error
+                 FROM PlatformLibraries WHERE platform_id = ?1",
+                [&platform.id],
                 |row| {
                     Ok(PlatformImportStatus {
-                        platform_id: platform_id.to_string(),
+                        platform_id: platform.id.clone(),
                         import_status: row.get(0)?,
                         source_mdb_path: row.get(1)?,
                         game_count: row.get::<_, i64>(2)? as usize,
@@ -359,15 +76,13 @@ pub fn get_platform_import_status_sync(platform_id: &str) -> Result<PlatformImpo
 
         match imported {
             Ok(Some(status)) => return Ok(status),
-            Ok(None) if has_platform_libraries => {
-                return Ok(PlatformImportStatus {
-                    platform_id: platform.id,
-                    import_status: "notImported".to_string(),
-                    source_mdb_path: None,
-                    game_count: 0,
-                    last_import_error: None,
-                });
-            }
+            Ok(None) if has_platform_libraries => return Ok(PlatformImportStatus {
+                platform_id: platform.id,
+                import_status: "notImported".to_string(),
+                source_mdb_path: None,
+                game_count: 0,
+                last_import_error: None,
+            }),
             Ok(None) => {}
             Err(error) if error.to_string().contains("no such table") => {}
             Err(error) => return Err(error.to_string()),

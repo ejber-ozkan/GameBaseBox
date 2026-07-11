@@ -38,7 +38,11 @@ const supportObjects = [
 
 const requiredPlatformColumns = ["platform_id", "source_game_id"];
 
-const platformImportConfigs = {
+const platformManifest = require("../platform-manifest.json");
+
+// Retained as an explicit migration reference until the next release removes it.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const legacyPlatformImportConfigs = {
   c64: {
     platformId: "c64",
     displayName: "Commodore 64",
@@ -104,6 +108,38 @@ const platformImportConfigs = {
     launchExtensions: [".d64", ".t64", ".tap", ".prg", ".crt", ".a0", ".20", ".40", ".60", ".zip", ".7z"],
   },
 };
+
+const folderKeyByType = {
+  games: "gamesPath",
+  music: "musicPath",
+  photos: "photosPath",
+  screenshots: "screenshotsPath",
+  extras: "extrasPath",
+};
+
+const musicExtensionsByCapability = {
+  sid: [".sid"],
+  sap: [".sap"],
+  ay: [".ay"],
+};
+
+const platformImportConfigs = Object.fromEntries(
+  platformManifest.platforms.map((platform) => [
+    platform.id,
+    {
+      platformId: platform.id,
+      displayName: platform.displayName,
+      status: platform.status,
+      defaultImported: platform.defaultImported,
+      sourceMdbName: platform.sourceMdbName,
+      ...(platform.referenceMdbPath ? { referenceMdbPath: platform.referenceMdbPath } : {}),
+      aliases: platform.aliases,
+      requiredFolders: platform.requiredFolderTypes.map((folderType) => folderKeyByType[folderType]),
+      musicExtensions: musicExtensionsByCapability[platform.mediaCapabilities.music] ?? [],
+      launchExtensions: platform.launchExtensions,
+    },
+  ]),
+);
 
 function normalizePlatformConfigKey(platformId = "c64") {
   return String(platformId)

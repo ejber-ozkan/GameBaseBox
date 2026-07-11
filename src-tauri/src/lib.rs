@@ -1,6 +1,7 @@
 pub mod commands;
 pub mod database;
 pub mod models;
+pub mod platform_manifest;
 pub mod security;
 
 /// Shared test utilities - only compiled with `cfg(test)`.

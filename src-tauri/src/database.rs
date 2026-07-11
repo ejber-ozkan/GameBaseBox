@@ -286,23 +286,8 @@ pub fn get_db_path() -> String {
 
 pub fn normalize_platform_id(platform_id: Option<&str>) -> Result<String, String> {
     let platform_id = platform_id.unwrap_or("c64").trim();
-    let key = platform_id
-        .chars()
-        .filter(|value| value.is_ascii_alphanumeric())
-        .flat_map(char::to_lowercase)
-        .collect::<String>();
-
-    match key.as_str() {
-        "c64" | "commodore64" => Ok("c64".to_string()),
-        "atari800" => Ok("atari800".to_string()),
-        "atari2600" => Ok("atari2600".to_string()),
-        "zxspectrum" | "sinclairzxspectrum" => Ok("zxspectrum".to_string()),
-        "bbcmicro" | "acornbbcmicro" => Ok("bbcmicro".to_string()),
-        "amiga" | "commodoreamiga" => Ok("amiga".to_string()),
-        "atarist" => Ok("atarist".to_string()),
-        "vic20" | "commodorevic20" => Ok("vic20".to_string()),
-        _ => Err(format!("Unsupported platform: {platform_id}")),
-    }
+    crate::platform_manifest::normalize_platform_id(platform_id)
+        .ok_or_else(|| format!("Unsupported platform: {platform_id}"))
 }
 
 pub fn get_platform_db_scope(platform_id: Option<&str>) -> Result<String, String> {
