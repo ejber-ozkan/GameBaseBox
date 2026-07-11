@@ -61,7 +61,7 @@ describe('SettingsContext', () => {
     expect(screen.getByTestId('sound-path').textContent).toBe('/media/sounds/commando.sid');
   });
 
-  test('successfully merges settings upon calling updateSettings update', () => {
+  test('uses scoped folders after startup instead of later flat path updates', () => {
     render(
       <SettingsProvider>
         <SettingsTestComponent />
@@ -74,8 +74,8 @@ describe('SettingsContext', () => {
     // Perform Update
     fireEvent.click(screen.getByTestId('update-btn'));
 
-    // Re-verify merged path hook reaction
-    expect(screen.getByTestId('screenshot-path').textContent).toBe('D:/C64/Screens/commando_1.png');
+    // Legacy flat updates are intentionally ignored after the one-way startup migration.
+    expect(screen.getByTestId('screenshot-path').textContent).toBe('/media/screenshots/commando_1.png');
     
     // Ensure others were preserved (not overwritten by the partial update)
     expect(screen.getByTestId('sound-path').textContent).toBe('/media/sounds/commando.sid');
@@ -123,6 +123,9 @@ describe('SettingsContext', () => {
     expect(screen.getByTestId('c64-selected-game').textContent).toBe('1234');
     expect(screen.getByTestId('active-platform').textContent).toBe('c64');
     expect(screen.getByTestId('atari800-import-status').textContent).toBe('notImported');
+    const persistedSettings = JSON.parse(window.localStorage.getItem('gb64_settings') ?? '{}');
+    expect(persistedSettings.romsPath).toBeUndefined();
+    expect(persistedSettings.platformSettings.c64.folders.gamesPath).toBe('D:/Games/C64');
   });
 
   test('sets the active platform while preserving platform import state', async () => {

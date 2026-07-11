@@ -8,7 +8,6 @@ import {
   SUPPORTED_PLATFORMS,
 } from '../lib/platform-capabilities';
 import type {
-  PlatformFolderSettings,
   PlatformId,
   PlatformImportStatus,
   PlatformSettings,
@@ -66,6 +65,16 @@ interface SettingsContextType {
   markAsPlayed: (gameId: string) => void;
 }
 
+const defaultPlatformSettings = createDefaultPlatformSettingsMap();
+defaultPlatformSettings.c64.folders = {
+  ...defaultPlatformSettings.c64.folders,
+  gamesPath: '',
+  musicPath: '/media/sounds',
+  photosPath: '/media/musicians',
+  screenshotsPath: '/media/screenshots',
+  extrasPath: '/media/extras',
+};
+
 const defaultSettings: Settings = {
   screenshotsPath: '/media/screenshots',
   soundsPath: '/media/sounds',
@@ -106,12 +115,19 @@ const defaultSettings: Settings = {
   lastBigBoxGameId: null,
   activePlatformId: 'c64',
   lastUsedPlatformId: 'c64',
-  platformSettings: createDefaultPlatformSettingsMap(),
+  platformSettings: defaultPlatformSettings,
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 const SECURE_FIELDS = ['emuMoviesPassword', 'screenScraperPassword', 'screenScraperDevPassword', 'theGamesDbApiKey'] as const;
+const LEGACY_PATH_FIELDS = [
+  'romsPath',
+  'soundsPath',
+  'musicianPhotosPath',
+  'screenshotsPath',
+  'extrasPath',
+] as const;
 
 function migratePlatformSettings(
   values: Partial<Settings>,
@@ -194,18 +210,6 @@ function migratePlatformSettings(
   }
 
   return platformSettings;
-}
-
-function platformFoldersToFlatSettings(
-  folders: PlatformFolderSettings,
-): Pick<Settings, 'romsPath' | 'soundsPath' | 'musicianPhotosPath' | 'screenshotsPath' | 'extrasPath'> {
-  return {
-    romsPath: folders.gamesPath,
-    soundsPath: folders.musicPath,
-    musicianPhotosPath: folders.photosPath,
-    screenshotsPath: folders.screenshotsPath,
-    extrasPath: folders.extrasPath,
-  };
 }
 
 type PlatformImportStatusSnapshot = {
@@ -306,13 +310,18 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           needsSanitization = true;
         }
       });
-      if (needsSanitization) {
-        localStorage.setItem('gb64_settings', JSON.stringify(sanitizedLocal));
-      }
-
+      const legacyPathValues: Partial<Settings> = {};
+      LEGACY_PATH_FIELDS.forEach((field) => {
+        if (sanitizedLocal[field] !== undefined) {
+          legacyPathValues[field] = sanitizedLocal[field];
+          delete sanitizedLocal[field];
+          needsSanitization = true;
+        }
+      });
       const combinedSettings = {
         ...defaultSettings,
         ...sanitizedLocal,
+        ...legacyPathValues,
         ...secureValues
       };
       const activePlatformId = isPlatformId(combinedSettings.activePlatformId)
@@ -336,11 +345,22 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         };
       });
 
+      if (needsSanitization) {
+        const normalizedLocal = {
+          ...combinedSettings,
+          activePlatformId: startupPlatformId,
+          lastUsedPlatformId: startupPlatformId,
+          platformSettings,
+        };
+        SECURE_FIELDS.forEach((field) => delete normalizedLocal[field]);
+        LEGACY_PATH_FIELDS.forEach((field) => delete normalizedLocal[field]);
+        localStorage.setItem('gb64_settings', JSON.stringify(normalizedLocal));
+      }
+
       // 5. Set final combined state
       const startupNav = platformSettings[startupPlatformId].navigation;
       setSettings({
         ...combinedSettings,
-        ...platformFoldersToFlatSettings(platformSettings[startupPlatformId].folders),
         activePlatformId: startupPlatformId,
         lastUsedPlatformId: startupPlatformId,
         lastSelectedGameId: startupNav.lastSelectedGameId,
@@ -382,11 +402,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   const updateSettings = useCallback((newSettings: Partial<Settings>) => {
     setSettings((prev) => {
+      // Flat media paths are consumed only by migratePlatformSettings for pre-scoped installs.
+      const scopedNewSettings = { ...newSettings };
+      LEGACY_PATH_FIELDS.forEach((field) => delete scopedNewSettings[field]);
+
       // Check if anything actually changed to avoid unnecessary state updates
-      const hasChange = Object.entries(newSettings).some(([k, v]) => prev[k as keyof Settings] !== v);
+      const hasChange = Object.entries(scopedNewSettings).some(([k, v]) => prev[k as keyof Settings] !== v);
       if (!hasChange) return prev;
 
-      const updated = { ...prev, ...newSettings };
+      const updated = { ...prev, ...scopedNewSettings };
       
       // Sync flat navigation properties into platform-scoped settings
       const activePlatformId = updated.activePlatformId;
@@ -421,8 +445,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       
       // 1. Persist sensitive fields to Secure storage (Rust/SQLite)
       SECURE_FIELDS.forEach(field => {
-        if (newSettings[field] !== undefined) {
-          saveSecureSetting(field, newSettings[field] as string);
+        if (scopedNewSettings[field] !== undefined) {
+          saveSecureSetting(field, scopedNewSettings[field] as string);
         }
       });
 
@@ -432,6 +456,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           const toSave = { ...updated };
           // Remove secure fields from localStorage object
           SECURE_FIELDS.forEach(field => delete toSave[field as keyof Settings]);
+          LEGACY_PATH_FIELDS.forEach(field => delete toSave[field]);
           localStorage.setItem('gb64_settings', JSON.stringify(toSave));
         } catch (e) {
           console.error('Failed to save settings to localStorage', e);
@@ -442,11 +467,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setActivePlatform = useCallback((platformId: PlatformId) => {
-    const targetFolders = settings.platformSettings[platformId].folders;
     const targetNav = settings.platformSettings[platformId].navigation;
 
     updateSettings({
-      ...platformFoldersToFlatSettings(targetFolders),
       activePlatformId: platformId,
       lastUsedPlatformId: platformId,
       lastSelectedGameId: targetNav.lastSelectedGameId,
@@ -478,19 +501,19 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     const basePath = (() => {
       switch (type) {
         case 'screenshot':
-          return folders?.screenshotsPath || settings.screenshotsPath;
+          return folders?.screenshotsPath ?? '';
         case 'sound':
-          return folders?.musicPath || settings.soundsPath;
+          return folders?.musicPath ?? '';
         case 'musician':
-          return folders?.photosPath || settings.musicianPhotosPath;
+          return folders?.photosPath ?? '';
         case 'extras':
-          return folders?.extrasPath || settings.extrasPath;
+          return folders?.extrasPath ?? '';
         default:
           return '';
       }
     })();
     return basePath ? `${basePath}/${filename}` : filename;
-  }, [settings.platformSettings, settings.activePlatformId, settings.screenshotsPath, settings.soundsPath, settings.musicianPhotosPath, settings.extrasPath]);
+  }, [settings.platformSettings, settings.activePlatformId]);
 
   const findAllVariants = useCallback(async (type: 'screenshot' | 'sound' | 'musician' | 'extras', filename: string): Promise<string[]> => {
     if (typeof window === 'undefined') return [];
@@ -501,13 +524,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       const baseDir = (() => {
         switch (type) {
           case 'screenshot':
-            return folders?.screenshotsPath || settings.screenshotsPath;
+            return folders?.screenshotsPath ?? '';
           case 'sound':
-            return folders?.musicPath || settings.soundsPath;
+            return folders?.musicPath ?? '';
           case 'musician':
-            return folders?.photosPath || settings.musicianPhotosPath;
+            return folders?.photosPath ?? '';
           case 'extras':
-            return folders?.extrasPath || settings.extrasPath;
+            return folders?.extrasPath ?? '';
           default:
             return '';
         }
@@ -522,7 +545,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     } catch {
       return [resolveMediaPath(type, filename)];
     }
-  }, [settings.platformSettings, settings.activePlatformId, settings.screenshotsPath, settings.soundsPath, settings.musicianPhotosPath, settings.extrasPath, resolveMediaPath]);
+  }, [settings.platformSettings, settings.activePlatformId, resolveMediaPath]);
   
   const markAsPlayed = useCallback((gameId: string) => {
     setSettings(prev => {

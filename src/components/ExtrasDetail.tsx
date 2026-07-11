@@ -128,7 +128,7 @@ export function ExtrasDetail({
           <div className="min-h-0">
             <VisualExtrasBrowser
               extras={galleryExtras}
-              extrasPath={settings.platformSettings[settings.activePlatformId].folders.extrasPath || settings.extrasPath}
+              extrasPath={settings.platformSettings[settings.activePlatformId].folders.extrasPath}
               previewHeight={layoutSpec.extrasPreviewHeight}
               thumbColumns={layoutSpec.extrasThumbColumns}
               thumbnailLimit={layoutSpec.extrasThumbColumns}
@@ -217,7 +217,7 @@ export function ExtrasDetail({
             enableBigscreenGalleryUX ? (
               <VisualExtrasBrowser
                 extras={galleryExtras}
-                extrasPath={settings.platformSettings[settings.activePlatformId].folders.extrasPath || settings.extrasPath}
+                extrasPath={settings.platformSettings[settings.activePlatformId].folders.extrasPath}
                 onRegisterNavigation={(navigation) => {
                   visualNavigationRef.current = navigation;
                 }}
@@ -228,7 +228,7 @@ export function ExtrasDetail({
                   <VisualExtraCard
                     key={item.id}
                     extra={item}
-                    extrasPath={settings.platformSettings[settings.activePlatformId].folders.extrasPath || settings.extrasPath}
+                    extrasPath={settings.platformSettings[settings.activePlatformId].folders.extrasPath}
                     extraIndex={index}
                     enableCarousel={false}
                     visualExtras={group.items}

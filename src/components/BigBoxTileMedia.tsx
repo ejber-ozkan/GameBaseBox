@@ -56,6 +56,7 @@ function getCoverUrl(extrasPath: string, coverPath: string) {
 
 export function BigBoxTileMedia({ enabled = true, game, className = '' }: BigBoxTileMediaProps) {
   const { settings, findAllVariants } = useSettings();
+  const activePlatformFolders = settings.platformSettings[settings.activePlatformId].folders;
   const [slides, setSlides] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -71,11 +72,11 @@ export function BigBoxTileMedia({ enabled = true, game, className = '' }: BigBox
       setIsLoading(true);
 
       const [coverUrl, screenshotUrls] = await Promise.all([
-        settings.extrasPath.trim() && game.coverPath
-          ? getCoverUrl(settings.extrasPath, game.coverPath)
+        activePlatformFolders.extrasPath.trim() && game.coverPath
+          ? getCoverUrl(activePlatformFolders.extrasPath, game.coverPath)
           : Promise.resolve<string | null>(null),
         game.screenshotFilename
-          ? getScreenshotUrls(settings.screenshotsPath, game.screenshotFilename, findAllVariants)
+          ? getScreenshotUrls(activePlatformFolders.screenshotsPath, game.screenshotFilename, findAllVariants)
           : Promise.resolve<string[]>([]),
       ]);
 
@@ -99,8 +100,8 @@ export function BigBoxTileMedia({ enabled = true, game, className = '' }: BigBox
     findAllVariants,
     game.coverPath,
     game.screenshotFilename,
-    settings.extrasPath,
-    settings.screenshotsPath,
+    activePlatformFolders.extrasPath,
+    activePlatformFolders.screenshotsPath,
   ]);
 
   useEffect(() => {

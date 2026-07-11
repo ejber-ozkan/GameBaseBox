@@ -14,12 +14,13 @@ interface MusicianPhotoProps {
 
 export function MusicianPhoto({ photoFilename, musicianName, className = "", style }: MusicianPhotoProps) {
   const { settings } = useSettings();
+  const photosPath = settings.platformSettings[settings.activePlatformId].folders.photosPath;
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     async function loadPhoto() {
-      if (!settings.musicianPhotosPath) {
+      if (!photosPath) {
         setPhotoUrl(null);
         return;
       }
@@ -30,7 +31,7 @@ export function MusicianPhoto({ photoFilename, musicianName, className = "", sty
       const actualPhotoFilename = photoFilename || nameBasedFilename;
 
       try {
-        const resolved = await resolveMediaPath(settings.musicianPhotosPath, actualPhotoFilename);
+        const resolved = await resolveMediaPath(photosPath, actualPhotoFilename);
         if (resolved.exists) {
           const url = await getMediaUrl(resolved.absolute_path);
           setPhotoUrl(url);
@@ -45,7 +46,7 @@ export function MusicianPhoto({ photoFilename, musicianName, className = "", sty
     }
 
     loadPhoto();
-  }, [photoFilename, musicianName, settings.musicianPhotosPath]);
+  }, [photoFilename, musicianName, photosPath]);
 
   if (!photoUrl || error) {
     return (

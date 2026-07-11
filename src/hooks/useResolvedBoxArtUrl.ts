@@ -41,8 +41,8 @@ type ResolvedBoxArtGame = Pick<Game, 'boxFrontFilename' | 'coverPath'>;
 export function useResolvedBoxArtUrl(game: ResolvedBoxArtGame, fallbackUrl = '') {
   const { settings } = useSettings();
   const activePlatformFolders = settings.platformSettings[settings.activePlatformId]?.folders;
-  const activePlatformExtrasPath = activePlatformFolders?.extrasPath || settings.extrasPath || '';
-  const activePlatformScreenshotsPath = activePlatformFolders?.screenshotsPath || settings.screenshotsPath || '';
+  const activePlatformExtrasPath = activePlatformFolders?.extrasPath ?? '';
+  const activePlatformScreenshotsPath = activePlatformFolders?.screenshotsPath ?? '';
 
   const [artUrl, setArtUrl] = useState<string | null>(null);
 

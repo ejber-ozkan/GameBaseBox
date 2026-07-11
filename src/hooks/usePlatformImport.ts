@@ -4,7 +4,7 @@ import { importPlatformDatabaseFromMdb, type PlatformDatabaseImportResult } from
 import type { PlatformId, PlatformSettings } from '../types/platform';
 
 export type PlatformImportJobState =
-  | { status: 'idle'; error: null; result: null }
+  | { status: 'idle'; error: null; result: string | null }
   | { status: 'running'; error: null; result: null }
   | { status: 'failed'; error: string; result: null }
   | { status: 'completed'; error: null; result: string };
@@ -38,14 +38,25 @@ export function buildImportedPlatformSettings(
   }, {} as Record<PlatformId, PlatformSettings>);
 }
 
+export function getMissingRequiredFolderKey(
+  platformSettings: PlatformSettings,
+  requiredFolderKeys: (keyof PlatformSettings['folders'])[],
+): keyof PlatformSettings['folders'] | undefined {
+  return requiredFolderKeys.find((folderKey) => !platformSettings.folders[folderKey]?.trim());
+}
+
 export function usePlatformImport({
+  platformName,
   platformId,
   platformSettings,
+  requiredFolderKeys = [],
   updateSettings,
   setPlatformSettings,
 }: {
+  platformName: string;
   platformId: PlatformId;
   platformSettings: Record<PlatformId, PlatformSettings>;
+  requiredFolderKeys?: (keyof PlatformSettings['folders'])[];
   updateSettings: (settings: Partial<Settings>) => void;
   setPlatformSettings?: (settings: Record<PlatformId, PlatformSettings>) => void;
 }) {
@@ -64,9 +75,9 @@ export function usePlatformImport({
         library: { ...platformSettings[platformId].library, sourceMdbPath: mdbPath },
       },
     };
-    setJob({ status: 'idle', error: null, result: `Selected MDB for ${platformId}.` });
+    setJob({ status: 'idle', error: null, result: `Selected MDB for ${platformName}.` });
     updatePlatformSettings(next);
-  }, [platformId, platformSettings, updatePlatformSettings]);
+  }, [platformId, platformName, platformSettings, updatePlatformSettings]);
 
   const setFolder = useCallback((folderKey: keyof PlatformSettings['folders'], value: string) => {
     const next = {
@@ -79,10 +90,24 @@ export function usePlatformImport({
     updatePlatformSettings(next);
   }, [platformId, platformSettings, updatePlatformSettings]);
 
+  const reset = useCallback(() => {
+    setJob({ status: 'idle', error: null, result: null });
+  }, []);
+
   const importPlatform = useCallback(async () => {
     const current = platformSettings[platformId];
     if (!current.library.sourceMdbPath) {
-      setJob({ status: 'failed', error: 'Select an MDB file first.', result: null });
+      setJob({ status: 'failed', error: `Select the ${platformName} MDB file first.`, result: null });
+      return null;
+    }
+
+    const missingFolder = getMissingRequiredFolderKey(current, requiredFolderKeys);
+    if (missingFolder) {
+      setJob({
+        status: 'failed',
+        error: `Select the ${String(missingFolder).replace('Path', '')} folder first.`,
+        result: null,
+      });
       return null;
     }
 
@@ -102,7 +127,11 @@ export function usePlatformImport({
       const next = buildImportedPlatformSettings(platformSettings, platformId, result, new Date().toISOString());
       updateSettings({ activePlatformId: platformId, lastUsedPlatformId: platformId, platformSettings: next });
       setPlatformSettings?.(next);
-      setJob({ status: 'completed', error: null, result: `Prepared ${result.importedTables} tables at ${result.dbPath}.` });
+      setJob({
+        status: 'completed',
+        error: null,
+        result: `Imported ${platformName} and prepared ${result.importedTables} tables at ${result.dbPath}.`,
+      });
       return result;
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Platform import failed.';
@@ -117,7 +146,15 @@ export function usePlatformImport({
       setJob({ status: 'failed', error: message, result: null });
       return null;
     }
-  }, [platformId, platformSettings, setPlatformSettings, updatePlatformSettings, updateSettings]);
+  }, [
+    platformId,
+    platformName,
+    platformSettings,
+    requiredFolderKeys,
+    setPlatformSettings,
+    updatePlatformSettings,
+    updateSettings,
+  ]);
 
-  return { importPlatform, job, setFolder, setMdbPath };
+  return { importPlatform, job, reset, setFolder, setMdbPath };
 }

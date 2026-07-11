@@ -26,8 +26,8 @@ export function buildPlatformAssetPath(
   const platformSettings = settings.platformSettings[settings.activePlatformId];
   const platformBasePath =
     source === 'extras'
-      ? platformSettings?.folders.extrasPath || settings.extrasPath
-      : platformSettings?.folders.gamesPath || settings.romsPath;
+      ? platformSettings?.folders.extrasPath
+      : platformSettings?.folders.gamesPath;
 
   return [platformBasePath, relativePath]
     .map(normalizePathSegment)

@@ -102,13 +102,6 @@ export function PathsSettingsTab({
       },
     });
 
-    if (platformId === draft.activePlatformId) {
-      setField('romsPath', folders.gamesPath);
-      setField('soundsPath', folders.musicPath);
-      setField('musicianPhotosPath', folders.photosPath);
-      setField('screenshotsPath', folders.screenshotsPath);
-      setField('extrasPath', folders.extrasPath);
-    }
   };
 
   const setPlatformFolder = (field: keyof PlatformFolderSettings, value: string) => {

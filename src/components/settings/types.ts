@@ -75,15 +75,10 @@ export function getSettingsItemCount(tabId: SettingsTabId): number {
 
 export type EditableSettings = Pick<
   Settings,
-  | 'screenshotsPath'
-  | 'soundsPath'
-  | 'musicianPhotosPath'
-  | 'romsPath'
   | 'emulatorPath'
   | 'emuMoviesUsername'
   | 'emuMoviesPassword'
   | 'scrapedMediaPath'
-  | 'extrasPath'
   | 'hideAdultContent'
   | 'activeScraper'
   | 'screenScraperUsername'
@@ -109,15 +104,10 @@ export type EditableSettings = Pick<
 
 export function getEditableSettings(settings: Settings): EditableSettings {
   return {
-    screenshotsPath: settings.screenshotsPath,
-    soundsPath: settings.soundsPath,
-    musicianPhotosPath: settings.musicianPhotosPath,
-    romsPath: settings.romsPath,
     emulatorPath: settings.emulatorPath,
     emuMoviesUsername: settings.emuMoviesUsername,
     emuMoviesPassword: settings.emuMoviesPassword,
     scrapedMediaPath: settings.scrapedMediaPath,
-    extrasPath: settings.extrasPath,
     hideAdultContent: settings.hideAdultContent,
     activeScraper: settings.activeScraper,
     screenScraperUsername: settings.screenScraperUsername,
