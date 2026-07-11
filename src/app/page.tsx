@@ -29,6 +29,7 @@ import { WindowGameListSection } from '@/components/library/WindowGameListSectio
 import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
 import { useWindowLibraryShelves } from '@/hooks/useWindowLibraryShelves';
+import { buildImportedPlatformSettings } from '@/hooks/usePlatformImport';
 import { PLATFORM_PROFILES, SUPPORTED_PLATFORMS } from '@/lib/platform-capabilities';
 import {
   getPlatformAliases,
@@ -251,26 +252,12 @@ function LibraryApp() {
         },
       });
       updateSettings({
-        romsPath: activePlatformSettings.folders.gamesPath,
-        soundsPath: activePlatformSettings.folders.musicPath,
-        musicianPhotosPath: activePlatformSettings.folders.photosPath,
-        screenshotsPath: activePlatformSettings.folders.screenshotsPath,
-        extrasPath: activePlatformSettings.folders.extrasPath,
-        platformSettings: {
-          ...settings.platformSettings,
-          [settings.activePlatformId]: {
-            ...activePlatformSettings,
-            library: {
-              ...activePlatformSettings.library,
-              importStatus: 'imported',
-              sourceMdbPath: activePlatformSettings.library.sourceMdbPath,
-              sqliteScope: result.platformId,
-              lastImportedAt: new Date().toISOString(),
-              lastImportError: null,
-              gameCount: result.gameCount,
-            },
-          },
-        },
+        platformSettings: buildImportedPlatformSettings(
+          settings.platformSettings,
+          settings.activePlatformId,
+          result,
+          new Date().toISOString(),
+        ),
       });
       setPlatformSetupResult(
         `Imported ${activePlatform.displayName} and prepared ${result.importedTables} tables at ${result.dbPath}.`,
@@ -654,41 +641,16 @@ export default function Home() {
           extrasPath: activeSetupPlatformSettings.folders.extrasPath,
         },
       });
-      const importedSettings = {
-        ...activeSetupPlatformSettings,
-        library: {
-          ...activeSetupPlatformSettings.library,
-          active: true,
-          importStatus: 'imported' as const,
-          sourceMdbPath: activeSetupPlatformSettings.library.sourceMdbPath,
-          sqliteScope: result.platformId,
-          lastImportedAt: new Date().toISOString(),
-          lastImportError: null,
-          gameCount: result.gameCount,
-        },
-      };
-      const nextPlatformSettings = (Object.keys(setupPlatformSettings) as PlatformId[]).reduce(
-        (next, platformId) => ({
-          ...next,
-          [platformId]: {
-            ...(platformId === setupPlatformId ? importedSettings : setupPlatformSettings[platformId]),
-            library: {
-              ...(platformId === setupPlatformId ? importedSettings : setupPlatformSettings[platformId]).library,
-              active: platformId === setupPlatformId,
-            },
-          },
-        }),
-        {} as Record<PlatformId, PlatformSettings>,
+      const nextPlatformSettings = buildImportedPlatformSettings(
+        setupPlatformSettings,
+        setupPlatformId,
+        result,
+        new Date().toISOString(),
       );
       setSetupPlatformSettings(nextPlatformSettings);
       updateSettings({
         activePlatformId: setupPlatformId,
         lastUsedPlatformId: setupPlatformId,
-        romsPath: activeSetupPlatformSettings.folders.gamesPath,
-        soundsPath: activeSetupPlatformSettings.folders.musicPath,
-        musicianPhotosPath: activeSetupPlatformSettings.folders.photosPath,
-        screenshotsPath: activeSetupPlatformSettings.folders.screenshotsPath,
-        extrasPath: activeSetupPlatformSettings.folders.extrasPath,
         platformSettings: nextPlatformSettings,
       });
       setSetupSuccess(
