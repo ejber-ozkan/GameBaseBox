@@ -217,6 +217,7 @@ export function useLibraryShellInput({
 
     const handleWheel = (event: WheelEvent) => {
       if (!settings.scrollNavigation || selectedGame || viewMode === 'settings') return;
+      if (event.target instanceof Element && event.target.closest('[data-library-scroll-container]')) return;
 
       const columns = getLibraryColumnCount(viewMode);
       const recentCount = settings.recentlyPlayedIds.length;

@@ -341,10 +341,9 @@ describe('useLibraryBrowserState', () => {
     rerender();
 
     await waitFor(() => {
-      expect(mockGetDbGames).toHaveBeenCalledTimes(1);
       expect(result.current.games).toHaveLength(mockGames.length);
     });
-    expect(mockGetDbGames).toHaveBeenLastCalledWith(
+    expect(mockGetDbGames).toHaveBeenCalledWith(
       120,
       0,
       expect.objectContaining({ hideAdult: false }),

@@ -337,7 +337,7 @@ function LibraryApp() {
           viewMode={viewMode}
         />
 
-        <div className="no-scrollbar relative z-10 flex-1 overflow-auto pl-8 pr-4">
+        <div data-library-scroll-container className="no-scrollbar relative z-10 flex-1 overflow-auto pl-8 pr-4">
           <AlphabetJumpBar 
             activeLetter={filters.letter} 
             onLetterSelect={(l) => {
