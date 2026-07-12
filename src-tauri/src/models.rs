@@ -143,6 +143,7 @@ pub struct DatabaseImportResult {
 #[serde(rename_all = "camelCase")]
 pub struct ImportPlatformDatabaseRequest {
     pub platform_id: String,
+    pub job_id: Option<String>,
     pub mdb_path: String,
     pub folder_settings: PlatformFolderSettings,
 }

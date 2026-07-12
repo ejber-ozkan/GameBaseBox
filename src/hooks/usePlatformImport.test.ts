@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
-import { buildImportedPlatformSettings, getMissingRequiredFolderKey } from './usePlatformImport';
+import { buildImportedPlatformSettings, createPlatformImportJobId, getMissingRequiredFolderKey } from './usePlatformImport';
 
 describe('buildImportedPlatformSettings', () => {
   test('marks only the imported platform active and retains platform-scoped folders', () => {
@@ -40,5 +40,15 @@ describe('getMissingRequiredFolderKey', () => {
       platformSettings.atari800,
       ['gamesPath'],
     )).toBeUndefined();
+  });
+});
+
+describe('createPlatformImportJobId', () => {
+  test('creates a distinct, platform-scoped durable job identifier', () => {
+    const first = createPlatformImportJobId('atari800');
+    const second = createPlatformImportJobId('atari800');
+
+    expect(first).toMatch(/^platform-import:atari800:/);
+    expect(second).not.toBe(first);
   });
 });

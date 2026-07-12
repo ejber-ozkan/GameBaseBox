@@ -10,6 +10,7 @@ type RequiredPlatformFolderKey = keyof Pick<
 interface DatabaseSetupViewProps {
   dbPath: string;
   error: string | null;
+  importProgress?: { percent: number; stage: string } | null;
   importResult: string | null;
   isImporting: boolean;
   mdbPath: string;
@@ -24,6 +25,7 @@ interface DatabaseSetupViewProps {
   folderSettings?: PlatformFolderSettings;
   requiredFolderKeys?: RequiredPlatformFolderKey[];
   onBrowse: () => void;
+  onCancelImport?: () => void;
   onPlatformSelect?: (platformId: string) => void;
   onBrowseFolder?: (folderKey: RequiredPlatformFolderKey) => void;
   onFolderChange?: (folderKey: RequiredPlatformFolderKey, value: string) => void;
@@ -41,6 +43,7 @@ const folderLabels = {
 export function DatabaseSetupView({
   dbPath,
   error,
+  importProgress,
   importResult,
   isImporting,
   mdbPath,
@@ -51,6 +54,7 @@ export function DatabaseSetupView({
   folderSettings,
   requiredFolderKeys = [],
   onBrowse,
+  onCancelImport,
   onPlatformSelect,
   onBrowseFolder,
   onFolderChange,
@@ -131,7 +135,29 @@ export function DatabaseSetupView({
                 >
                   {isImporting ? 'Importing…' : 'Build Database'}
                 </button>
+                {isImporting && onCancelImport ? (
+                  <button
+                    type="button"
+                    onClick={onCancelImport}
+                    className="rounded-full border border-red-300/25 bg-red-400/10 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-red-100 transition-all hover:border-red-200/45 hover:bg-red-400/18"
+                  >
+                    Cancel Import
+                  </button>
+                ) : null}
               </div>
+
+              {isImporting && importProgress ? (
+                <div className="mt-5 rounded-[22px] border border-cyan-300/20 bg-cyan-400/10 p-4 text-sm text-cyan-50">
+                  <div className="flex items-center justify-between gap-4 font-bold">
+                    <span>{importProgress.stage}</span>
+                    <span>{importProgress.percent}%</span>
+                  </div>
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-black/25">
+                    <div className="h-full rounded-full bg-cyan-300 transition-all" style={{ width: `${importProgress.percent}%` }} />
+                  </div>
+                  <p className="mt-3 leading-6 text-cyan-100/75">Cancellation is applied safely before the database merge.</p>
+                </div>
+              ) : null}
 
               {hasRequiredFolders ? (
                 <div className="mt-7 space-y-4">

@@ -1,13 +1,21 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import type { Settings } from '../contexts/SettingsContext';
-import { importPlatformDatabaseFromMdb, type PlatformDatabaseImportResult } from '../lib/tauri-bridge';
+import { cancelPlatformImport, importPlatformDatabaseFromMdb, type PlatformDatabaseImportResult } from '../lib/tauri-bridge';
 import type { PlatformId, PlatformSettings } from '../types/platform';
 
 export type PlatformImportJobState =
   | { status: 'idle'; error: null; result: string | null }
-  | { status: 'running'; error: null; result: null }
+  | { status: 'running'; error: null; result: null; id: string; progress: { percent: number; stage: string } }
   | { status: 'failed'; error: string; result: null }
+  | { status: 'cancelled'; error: null; result: string }
   | { status: 'completed'; error: null; result: string };
+
+export function createPlatformImportJobId(platformId: PlatformId): string {
+  const randomId = typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return `platform-import:${platformId}:${randomId}`;
+}
 
 export function buildImportedPlatformSettings(
   platformSettings: Record<PlatformId, PlatformSettings>,
@@ -61,6 +69,7 @@ export function usePlatformImport({
   setPlatformSettings?: (settings: Record<PlatformId, PlatformSettings>) => void;
 }) {
   const [job, setJob] = useState<PlatformImportJobState>({ status: 'idle', error: null, result: null });
+  const activeJobIdRef = useRef<string | null>(null);
 
   const updatePlatformSettings = useCallback((next: Record<PlatformId, PlatformSettings>) => {
     setPlatformSettings?.(next);
@@ -91,8 +100,23 @@ export function usePlatformImport({
   }, [platformId, platformSettings, updatePlatformSettings]);
 
   const reset = useCallback(() => {
+    activeJobIdRef.current = null;
     setJob({ status: 'idle', error: null, result: null });
   }, []);
+
+  const cancelImport = useCallback(async () => {
+    if (!activeJobIdRef.current || job.status !== 'running') {
+      return;
+    }
+
+    const jobId = activeJobIdRef.current;
+    setJob({ status: 'running', error: null, result: null, id: jobId, progress: { percent: job.progress.percent, stage: 'Cancelling import safely…' } });
+    try {
+      await cancelPlatformImport(jobId);
+    } catch (error) {
+      setJob({ status: 'failed', error: error instanceof Error ? error.message : 'Unable to cancel platform import.', result: null });
+    }
+  }, [job]);
 
   const importPlatform = useCallback(async () => {
     const current = platformSettings[platformId];
@@ -111,10 +135,28 @@ export function usePlatformImport({
       return null;
     }
 
-    setJob({ status: 'running', error: null, result: null });
+    const jobId = createPlatformImportJobId(platformId);
+    const startedAt = new Date().toISOString();
+    activeJobIdRef.current = jobId;
+    const nextRunning = {
+      ...platformSettings,
+      [platformId]: {
+        ...current,
+        library: {
+          ...current.library,
+          importStatus: 'importing' as const,
+          lastImportError: null,
+          lastImportJob: { id: jobId, status: 'running' as const, stage: 'Exporting MDB tables', percent: 15, startedAt, finishedAt: null },
+        },
+      },
+    };
+    updatePlatformSettings(nextRunning);
+    setJob({ status: 'running', error: null, result: null, id: jobId, progress: { percent: 15, stage: 'Exporting MDB tables' } });
     try {
+      setJob({ status: 'running', error: null, result: null, id: jobId, progress: { percent: 55, stage: 'Importing database tables' } });
       const result = await importPlatformDatabaseFromMdb({
         platformId,
+        jobId,
         mdbPath: current.library.sourceMdbPath,
         folderSettings: {
           gamesPath: current.folders.gamesPath,
@@ -125,6 +167,7 @@ export function usePlatformImport({
         },
       });
       const next = buildImportedPlatformSettings(platformSettings, platformId, result, new Date().toISOString());
+      next[platformId].library.lastImportJob = { id: jobId, status: 'completed', stage: 'Import complete', percent: 100, startedAt, finishedAt: new Date().toISOString() };
       updateSettings({ activePlatformId: platformId, lastUsedPlatformId: platformId, platformSettings: next });
       setPlatformSettings?.(next);
       setJob({
@@ -135,16 +178,33 @@ export function usePlatformImport({
       return result;
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Platform import failed.';
+      const cancelled = message === 'Platform import cancelled.';
       const next = {
         ...platformSettings,
         [platformId]: {
           ...platformSettings[platformId],
-          library: { ...platformSettings[platformId].library, importStatus: 'failed', lastImportError: message },
+          library: {
+            ...platformSettings[platformId].library,
+            importStatus: cancelled ? current.library.importStatus : 'failed',
+            lastImportError: cancelled ? null : message,
+            lastImportJob: {
+              id: jobId,
+              status: cancelled ? 'cancelled' : 'failed',
+              stage: cancelled ? 'Cancelled before database merge' : 'Import failed',
+              percent: cancelled ? 0 : 55,
+              startedAt,
+              finishedAt: new Date().toISOString(),
+            },
+          },
         },
       };
       updatePlatformSettings(next);
-      setJob({ status: 'failed', error: message, result: null });
+      setJob(cancelled
+        ? { status: 'cancelled', error: null, result: 'Import cancelled before the database merge.' }
+        : { status: 'failed', error: message, result: null });
       return null;
+    } finally {
+      activeJobIdRef.current = null;
     }
   }, [
     platformId,
@@ -156,5 +216,5 @@ export function usePlatformImport({
     updateSettings,
   ]);
 
-  return { importPlatform, job, reset, setFolder, setMdbPath };
+  return { cancelImport, importPlatform, job, reset, setFolder, setMdbPath };
 }

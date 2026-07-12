@@ -1299,7 +1299,22 @@ fn merge_imported_database(
     merge_result
 }
 
-fn import_csv_directory_to_sqlite(export_dir: &Path, platform_id: &str) -> Result<usize, String> {
+#[cfg(test)]
+fn import_csv_directory_to_sqlite(
+    export_dir: &Path,
+    platform_id: &str,
+) -> Result<usize, String> {
+    import_csv_directory_to_sqlite_with_cancellation(export_dir, platform_id, &mut || Ok(()))
+}
+
+fn import_csv_directory_to_sqlite_with_cancellation<F>(
+    export_dir: &Path,
+    platform_id: &str,
+    check_cancelled: &mut F,
+) -> Result<usize, String>
+where
+    F: FnMut() -> Result<(), String>,
+{
     let platform_id = normalize_platform_id(Some(platform_id))?;
     let live_db_path = PathBuf::from(get_db_path());
     let temp_db_path = create_import_temp_db_path(&live_db_path)?;
@@ -1317,6 +1332,7 @@ fn import_csv_directory_to_sqlite(export_dir: &Path, platform_id: &str) -> Resul
 
         let mut imported_tables = 0usize;
         for csv_file in csv_files {
+            check_cancelled()?;
             if import_single_csv_table(&mut conn, &csv_file)? {
                 imported_tables += 1;
             }
@@ -1341,6 +1357,7 @@ fn import_csv_directory_to_sqlite(export_dir: &Path, platform_id: &str) -> Resul
         }
     };
 
+    check_cancelled()?;
     merge_imported_database(&temp_db_path, &live_db_path, &platform_id)?;
     remove_sqlite_artifacts(&temp_db_path)?;
 
@@ -1359,6 +1376,17 @@ pub fn import_mdb_to_sqlite_for_platform(
     mdb_path: &str,
     platform_id: &str,
 ) -> Result<DatabaseImportResult, String> {
+    import_mdb_to_sqlite_for_platform_with_cancellation(mdb_path, platform_id, || Ok(()))
+}
+
+pub fn import_mdb_to_sqlite_for_platform_with_cancellation<F>(
+    mdb_path: &str,
+    platform_id: &str,
+    mut check_cancelled: F,
+) -> Result<DatabaseImportResult, String>
+where
+    F: FnMut() -> Result<(), String>,
+{
     let platform_id = normalize_platform_id(Some(platform_id))?;
     let mdb_path = PathBuf::from(mdb_path);
     if !mdb_path.exists() {
@@ -1374,10 +1402,12 @@ pub fn import_mdb_to_sqlite_for_platform(
         return Err("Selected file must be a .mdb database.".to_string());
     }
 
+    check_cancelled()?;
     let export_dir = create_export_directory()?;
     let export_result = export_mdb_to_csv(&mdb_path, &export_dir);
     let import_result = export_result.and_then(|exported_tables| {
-        import_csv_directory_to_sqlite(&export_dir, &platform_id)
+        check_cancelled()?;
+        import_csv_directory_to_sqlite_with_cancellation(&export_dir, &platform_id, &mut check_cancelled)
             .map(|imported_tables| (exported_tables, imported_tables))
     });
     cleanup_export_directory(&export_dir);

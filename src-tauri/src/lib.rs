@@ -84,6 +84,7 @@ pub fn run() {
             commands::setup::import_database_from_mdb,
             commands::setup::get_platform_import_status,
             commands::setup::import_platform_database_from_mdb,
+            commands::setup::cancel_platform_import,
             commands::platforms::get_supported_platforms,
             commands::platforms::get_active_platform,
             commands::platforms::set_active_platform,

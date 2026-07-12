@@ -158,7 +158,8 @@ describe('Home first-run setup', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Build Database' }));
 
     await waitFor(() => {
-      expect(mockImportPlatformDatabaseFromMdb).toHaveBeenCalledWith({
+      expect(mockImportPlatformDatabaseFromMdb).toHaveBeenCalledWith(expect.objectContaining({
+        jobId: expect.stringMatching(/^platform-import:atari800:/),
         platformId: 'atari800',
         mdbPath: 'E:/Atari/Atari 800 v12.mdb',
         folderSettings: {
@@ -168,7 +169,7 @@ describe('Home first-run setup', () => {
           screenshotsPath: 'E:/Atari/Screenshots',
           extrasPath: 'E:/Atari/Extras',
         },
-      });
+      }));
     });
   });
 

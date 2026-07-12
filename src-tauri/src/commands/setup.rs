@@ -1,5 +1,5 @@
 use crate::database::{
-    configure_runtime_db_path, get_db_path, import_mdb_to_sqlite, import_mdb_to_sqlite_for_platform,
+    configure_runtime_db_path, get_db_path, import_mdb_to_sqlite, import_mdb_to_sqlite_for_platform_with_cancellation,
     is_database_ready, normalize_platform_id,
 };
 use crate::models::{
@@ -7,7 +7,40 @@ use crate::models::{
     PlatformDatabaseImportResult, PlatformImportStatus,
 };
 use std::path::Path;
+use std::collections::HashSet;
+use std::sync::{LazyLock, Mutex};
 use tauri_plugin_dialog::DialogExt;
+
+static CANCELLED_PLATFORM_IMPORTS: LazyLock<Mutex<HashSet<String>>> =
+    LazyLock::new(|| Mutex::new(HashSet::new()));
+
+pub(super) fn request_platform_import_cancellation(job_id: &str) -> Result<(), String> {
+    CANCELLED_PLATFORM_IMPORTS
+        .lock()
+        .map_err(|_| "Platform import cancellation state is unavailable.".to_string())?
+        .insert(job_id.to_string());
+    Ok(())
+}
+
+pub(super) fn is_platform_import_cancelled(job_id: &str) -> Result<bool, String> {
+    Ok(CANCELLED_PLATFORM_IMPORTS
+        .lock()
+        .map_err(|_| "Platform import cancellation state is unavailable.".to_string())?
+        .contains(job_id))
+}
+
+pub(super) fn clear_platform_import_cancellation(job_id: &str) -> Result<(), String> {
+    CANCELLED_PLATFORM_IMPORTS
+        .lock()
+        .map_err(|_| "Platform import cancellation state is unavailable.".to_string())?
+        .remove(job_id);
+    Ok(())
+}
+
+#[tauri::command]
+pub fn cancel_platform_import(job_id: String) -> Result<(), String> {
+    request_platform_import_cancellation(&job_id)
+}
 
 #[tauri::command]
 pub async fn open_mdb_file_dialog(app: tauri::AppHandle) -> Option<String> {
@@ -72,7 +105,21 @@ pub fn import_platform_database_from_mdb(
         return Err(err);
     }
     let _ = configure_runtime_db_path(&app)?;
-    match import_mdb_to_sqlite_for_platform(&request.mdb_path, &platform_id) {
+    let job_id = request.job_id.as_deref().unwrap_or_default();
+    let result = import_mdb_to_sqlite_for_platform_with_cancellation(
+        &request.mdb_path,
+        &platform_id,
+        || {
+            if !job_id.is_empty() && is_platform_import_cancelled(job_id)? {
+                return Err("Platform import cancelled.".to_string());
+            }
+            Ok(())
+        },
+    );
+    if !job_id.is_empty() {
+        clear_platform_import_cancellation(job_id)?;
+    }
+    match result {
         Ok(result) => {
             let import_status = crate::commands::platforms::get_platform_import_status_sync(&platform_id)?;
             Ok(PlatformDatabaseImportResult {

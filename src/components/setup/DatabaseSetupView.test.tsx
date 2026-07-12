@@ -81,6 +81,34 @@ const vic20Folders: PlatformFolderSettings = {
 };
 
 describe('DatabaseSetupView', () => {
+  it('shows progress and allows a running import to be cancelled', () => {
+    const onCancelImport = vi.fn();
+
+    render(
+      <DatabaseSetupView
+        dbPath="atari800"
+        error={null}
+        folderSettings={atariFolders}
+        importProgress={{ percent: 48, stage: 'Importing tables' }}
+        importResult={null}
+        isImporting
+        mdbPath="E:/Atari/Atari 800 v12.mdb"
+        onBrowse={vi.fn()}
+        onBrowseFolder={vi.fn()}
+        onCancelImport={onCancelImport}
+        onFolderChange={vi.fn()}
+        onImport={vi.fn()}
+        platformName="Atari 800"
+        requiredFolderKeys={['gamesPath', 'musicPath', 'photosPath', 'screenshotsPath', 'extrasPath']}
+      />,
+    );
+
+    expect(screen.getByText('Importing tables')).toBeTruthy();
+    expect(screen.getByText('48%')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel Import' }));
+    expect(onCancelImport).toHaveBeenCalledOnce();
+  });
+
   it('renders and edits an Atari 800 extras folder field', () => {
     const onFolderChange = vi.fn();
     const onBrowseFolder = vi.fn();

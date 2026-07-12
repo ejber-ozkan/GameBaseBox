@@ -100,6 +100,7 @@ export interface PlatformFolderImportSettings {
 
 export interface PlatformImportRequest {
   platformId: string;
+  jobId?: string;
   mdbPath: string;
   folderSettings: PlatformFolderImportSettings;
 }
@@ -412,6 +413,13 @@ export async function importPlatformDatabaseFromMdb(
     throw new Error('Platform database import is only available in the desktop app');
   }
   return invoke<PlatformDatabaseImportResult>('import_platform_database_from_mdb', { request });
+}
+
+export async function cancelPlatformImport(jobId: string): Promise<void> {
+  if (!isTauri()) {
+    return;
+  }
+  await invoke('cancel_platform_import', { jobId });
 }
 
 export async function getSupportedPlatforms(): Promise<SupportedPlatformProfile[]> {

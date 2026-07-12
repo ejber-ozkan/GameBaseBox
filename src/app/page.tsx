@@ -202,6 +202,7 @@ function LibraryApp() {
           dbPath={activePlatformSettings.library.sqliteScope}
           error={platformImport.job.error ?? `${activePlatform.displayName} has not been imported yet.`}
           folderSettings={activePlatformSettings.folders}
+          importProgress={platformImport.job.status === 'running' ? platformImport.job.progress : null}
           importResult={platformImport.job.result}
           isImporting={platformImport.job.status === 'running'}
           mdbPath={activePlatformSettings.library.sourceMdbPath ?? ''}
@@ -216,6 +217,7 @@ function LibraryApp() {
           selectedPlatformId={settings.activePlatformId}
           onBrowse={handleBrowsePlatformMdb}
           onBrowseFolder={handleBrowsePlatformFolder}
+          onCancelImport={() => void platformImport.cancelImport()}
           onFolderChange={handlePlatformFolderChange}
           onPlatformSelect={(platformId) => {
             if (platformId in PLATFORM_PROFILES) {
@@ -528,6 +530,7 @@ export default function Home() {
       <DatabaseSetupView
         dbPath={bootstrapStatus.dbPath}
         error={setupError ?? setupPlatformImport.job.error ?? bootstrapStatus.reason}
+        importProgress={setupPlatformImport.job.status === 'running' ? setupPlatformImport.job.progress : null}
         importResult={setupPlatformImport.job.result}
         isImporting={setupPlatformImport.job.status === 'running'}
         mdbPath={activeSetupPlatformSettings.library.sourceMdbPath ?? ''}
@@ -543,6 +546,7 @@ export default function Home() {
         selectedPlatformId={setupPlatformId}
         onBrowse={handleBrowseSetupMdb}
         onBrowseFolder={handleBrowseSetupFolder}
+        onCancelImport={() => void setupPlatformImport.cancelImport()}
         onFolderChange={handleSetupFolderChange}
         onPlatformSelect={(platformId) => {
           if (platformId in PLATFORM_PROFILES) {

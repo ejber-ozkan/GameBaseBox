@@ -1,4 +1,4 @@
-use super::validate_platform_import_request;
+use super::{clear_platform_import_cancellation, is_platform_import_cancelled, request_platform_import_cancellation, validate_platform_import_request};
 use crate::models::{ImportPlatformDatabaseRequest, PlatformFolderSettings};
 use std::fs;
 use tempfile::tempdir;
@@ -10,6 +10,7 @@ fn request_with_paths(
 ) -> ImportPlatformDatabaseRequest {
     ImportPlatformDatabaseRequest {
         platform_id: platform_id.to_string(),
+        job_id: None,
         mdb_path,
         folder_settings,
     }
@@ -248,6 +249,18 @@ fn validates_amiga_import_request_with_required_folders() {
     );
 
     assert!(validate_platform_import_request(&request).is_ok());
+}
+
+#[test]
+fn platform_import_cancellation_is_scoped_to_its_job() {
+    let job_id = "test-platform-import-job";
+    request_platform_import_cancellation(job_id).unwrap();
+
+    assert!(is_platform_import_cancelled(job_id).unwrap());
+    assert!(!is_platform_import_cancelled("another-platform-import-job").unwrap());
+
+    clear_platform_import_cancellation(job_id).unwrap();
+    assert!(!is_platform_import_cancelled(job_id).unwrap());
 }
 
 #[test]

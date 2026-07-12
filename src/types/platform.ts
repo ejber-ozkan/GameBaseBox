@@ -61,6 +61,14 @@ export interface PlatformLibraryStatus {
   lastImportError: string | null;
   gameCount: number;
   active: boolean;
+  lastImportJob?: {
+    id: string;
+    status: 'running' | 'cancelled' | 'completed' | 'failed';
+    stage: string;
+    percent: number;
+    startedAt: string;
+    finishedAt: string | null;
+  };
 }
 
 export interface PlatformFolderSettings {
