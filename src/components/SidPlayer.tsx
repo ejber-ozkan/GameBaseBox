@@ -47,21 +47,27 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
   // Check if SID exists on mount or if we just downloaded it
   useEffect(() => {
     async function checkLocalScrape() {
-      if (!filename || localUrl || !settings.scrapedMediaPath) return;
+      if (!filename || localUrl) return;
       try {
         const safeName = filename.replace(/\\/g, '/');
-        const res = await resolveMediaPath(settings.scrapedMediaPath, safeName);
-        if (res.exists) {
+        const roots = [
+          settings.platformSettings?.[platformId]?.folders.musicPath,
+          settings.scrapedMediaPath,
+        ].filter((value): value is string => Boolean(value));
+        for (const root of roots) {
+          const res = await resolveMediaPath(root, safeName);
+          if (!res.exists) continue;
            // Provide a direct file:// mapping for Tauri frontend once we implement asset serving.
            // For MVP, we pass the absolute path down (or use the web fallback)
            setLocalUrl(`file://${res.absolute_path}`);
+           return;
         }
       } catch {
         // Ignored
       }
     }
     checkLocalScrape();
-  }, [filename, localUrl, settings.scrapedMediaPath]);
+  }, [filename, localUrl, platformId, settings.platformSettings, settings.scrapedMediaPath]);
 
   // Play/Pause effect using jsSID
   useEffect(() => {

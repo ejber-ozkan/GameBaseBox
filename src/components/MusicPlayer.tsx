@@ -18,8 +18,7 @@ export function MusicPlayer({ platformId, filename, audioUrl, compact = false }:
   const musicCapability = PLATFORM_PROFILES[platformId].mediaCapabilities.music;
 
   if (musicCapability === 'sid') {
-    const resolvedAudioUrl = audioUrl ?? (filename ? resolveMediaPath('sound', filename) : undefined);
-    return <SidPlayer key={`${filename ?? 'none'}:${resolvedAudioUrl ?? 'none'}`} filename={filename} audioUrl={resolvedAudioUrl} compact={compact} />;
+    return <SidPlayer key={`${filename ?? 'none'}:${audioUrl ?? 'none'}`} filename={filename} audioUrl={audioUrl} compact={compact} />;
   }
 
   if (musicCapability === 'sap') {
