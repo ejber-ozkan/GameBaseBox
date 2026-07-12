@@ -41,6 +41,7 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
         >
           <div className="aspect-[1.6] bg-gray-950 mb-2 flex overflow-hidden rounded border border-white/5">
             <ImageSlider 
+              defer
               type="screenshot"
               filename={game.screenshotFilename} 
               alt={`${game.name} cover graphic`}

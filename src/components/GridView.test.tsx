@@ -4,7 +4,7 @@ import { mockGames } from '../data/mockGames';
 import { GridView } from './GridView';
 
 vi.mock('./ImageSlider', () => ({
-  ImageSlider: ({ alt }: { alt: string }) => <div data-testid="image-slider">{alt}</div>,
+  ImageSlider: ({ alt, defer }: { alt: string; defer?: boolean }) => <div data-defer={String(defer)} data-testid="image-slider">{alt}</div>,
 }));
 
 vi.mock('../hooks/useFavorites', () => ({
@@ -33,5 +33,11 @@ describe('GridView', () => {
       expect.stringContaining('Encountered two children with the same key'),
       expect.anything(),
     );
+  });
+
+  it('defers card media loading until the card approaches the viewport', () => {
+    const { getByTestId } = render(<GridView games={[mockGames[0]]} onSelectGame={vi.fn()} />);
+
+    expect(getByTestId('image-slider').getAttribute('data-defer')).toBe('true');
   });
 });

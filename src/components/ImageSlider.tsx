@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
 
 interface ImageSliderProps {
@@ -11,6 +11,7 @@ interface ImageSliderProps {
   containerClassName?: string;
   imageClassName?: string;
   fallbackText?: string;
+  defer?: boolean;
 }
 
 export function ImageSlider({
@@ -21,16 +22,36 @@ export function ImageSlider({
   containerClassName,
   imageClassName,
   fallbackText = 'No Image',
+  defer = false,
 }: ImageSliderProps) {
   const { settings, findAllVariants } = useSettings();
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
+  const [isVisible, setIsVisible] = useState(!defer);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canObserveVisibility = defer && typeof IntersectionObserver !== 'undefined';
+  const shouldLoadVariants = isVisible || !defer || !canObserveVisibility;
   const resolvedContainerClassName = containerClassName ?? className;
   const resolvedImageClassName = imageClassName ?? className;
 
   useEffect(() => {
+    if (!canObserveVisibility) {
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: '320px' });
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [canObserveVisibility]);
+
+  useEffect(() => {
     async function loadVariants() {
+      if (!shouldLoadVariants) return;
       if (!filename) {
         setImages([]);
         return;
@@ -45,7 +66,7 @@ export function ImageSlider({
       setHasError(false);
     }
     loadVariants();
-  }, [filename, type, findAllVariants]);
+  }, [filename, type, findAllVariants, shouldLoadVariants]);
 
   // Support cycling through images
   useEffect(() => {
@@ -58,7 +79,7 @@ export function ImageSlider({
 
   if (!filename || images.length === 0 || hasError) {
     return (
-      <div 
+      <div ref={containerRef}
         className={`flex items-center justify-center bg-gray-800 text-gray-500 rounded border border-gray-700 ${resolvedContainerClassName}`}
         data-testid="image-fallback"
       >
@@ -71,7 +92,7 @@ export function ImageSlider({
   const activeImage = images[currentIndex] ?? null;
 
   return (
-    <div className={`relative overflow-hidden ${resolvedContainerClassName}`}>
+    <div ref={containerRef} className={`relative overflow-hidden ${resolvedContainerClassName}`}>
         <div 
             className={`flex w-full h-full transition-all duration-700 ease-in-out ${settings.bigBoxAnimateVertical ? 'flex-col' : ''} ${!isSlide ? 'transition-none' : ''}`}
             style={{ 

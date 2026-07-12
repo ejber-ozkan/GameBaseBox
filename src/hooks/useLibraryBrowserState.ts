@@ -98,6 +98,8 @@ export function useLibraryBrowserState() {
     }
 
     void fetchGames();
+  // Focus changes are intentionally local: they must not re-run the 500-row database query.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     effectiveFilters,
     isRestored,
