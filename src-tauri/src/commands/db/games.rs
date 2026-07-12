@@ -256,6 +256,12 @@ pub async fn get_game_detail(
     game_id: String,
     platform_id: Option<String>,
 ) -> Result<Option<GameDetailRow>, String> {
+    tauri::async_runtime::spawn_blocking(move || get_game_detail_blocking(game_id, platform_id))
+        .await
+        .map_err(|error| format!("Game detail worker failed: {error}"))?
+}
+
+fn get_game_detail_blocking(game_id: String, platform_id: Option<String>) -> Result<Option<GameDetailRow>, String> {
     let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
     let conn = open_db_connection("Database error")?;
     let include_cover_index = sqlite_table_exists(&conn, "GameCoverIndex")?;
@@ -277,6 +283,12 @@ pub async fn get_db_game_count(
     filters: Option<GameFilters>,
     platform_id: Option<String>,
 ) -> Result<usize, String> {
+    tauri::async_runtime::spawn_blocking(move || get_db_game_count_blocking(filters, platform_id))
+        .await
+        .map_err(|error| format!("Game count worker failed: {error}"))?
+}
+
+fn get_db_game_count_blocking(filters: Option<GameFilters>, platform_id: Option<String>) -> Result<usize, String> {
     let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
     let conn = open_db_connection("Database error")?;
     load_game_count_with_fallback(&conn, &platform_id, filters)
@@ -286,6 +298,12 @@ pub async fn get_game_extras(
     game_id: String,
     platform_id: Option<String>,
 ) -> Result<Vec<ExtraRow>, String> {
+    tauri::async_runtime::spawn_blocking(move || get_game_extras_blocking(game_id, platform_id))
+        .await
+        .map_err(|error| format!("Game extras worker failed: {error}"))?
+}
+
+fn get_game_extras_blocking(game_id: String, platform_id: Option<String>) -> Result<Vec<ExtraRow>, String> {
     let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
     let conn = open_db_connection("DB error")?;
     let mut stmt = conn

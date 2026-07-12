@@ -21,6 +21,7 @@ import { getVisibleSubGenres } from '../lib/subgenre-display';
 import { useFullscreenLayoutMetrics } from '../hooks/useFullscreenLayoutMetrics';
 import { SUPPORTED_PLATFORMS } from '../lib/platform-capabilities';
 import type { PlatformId } from '../types/platform';
+import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '../lib/library-backgrounds';
 
 interface BigBoxViewProps {
   settings: Settings;
@@ -70,6 +71,7 @@ export function BigBoxView({
   const [hasRestoredPosition, setHasRestoredPosition] = useState(Boolean(sessionState));
   const classicTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const layout = useFullscreenLayoutMetrics();
+  const bigBoxBackground = resolveLibraryBackground(settings.activePlatformId, 'grid', 0);
 
   const { genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
     activeRailIndex,
@@ -355,6 +357,11 @@ export function BigBoxView({
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat saturate-[0.9] contrast-[1.05]"
+        style={{ backgroundImage: `url('${bigBoxBackground}')`, opacity: Math.min(LIBRARY_BACKGROUND_OPACITY + 0.15, 1) }}
+      />
       {/* Cinematic Background Blur */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
          <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-blue-900/10 blur-[100px] animate-pulse"></div>
