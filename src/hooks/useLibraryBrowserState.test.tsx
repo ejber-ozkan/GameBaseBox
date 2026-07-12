@@ -257,6 +257,28 @@ describe('useLibraryBrowserState', () => {
     expect(mockGetDbGames).not.toHaveBeenCalled();
   });
 
+  it('does not reload the first page after persisting a focused game', async () => {
+    mockUpdateSettings.mockImplementation((updates: Partial<typeof baseSettings>) => {
+      currentSettings = { ...currentSettings, ...updates };
+    });
+    const { result, rerender } = renderHook(() => useLibraryBrowserState());
+
+    await waitFor(() => expect(result.current.games).toHaveLength(mockGames.length));
+    mockGetDbGames.mockClear();
+    mockUpdateSettings.mockClear();
+
+    act(() => {
+      result.current.setFocusedIndex(1);
+    });
+
+    await waitFor(() => expect(mockUpdateSettings).toHaveBeenCalledWith({ lastFocusedIndex: 1 }));
+    rerender();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(mockGetDbGames).not.toHaveBeenCalled();
+    expect(result.current.games).toEqual(mockGames);
+  });
+
   it('loads a bounded first page instead of a fixed 500-row result', async () => {
     renderHook(() => useLibraryBrowserState());
 

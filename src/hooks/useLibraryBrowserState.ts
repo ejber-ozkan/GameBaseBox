@@ -103,7 +103,8 @@ export function useLibraryBrowserState() {
     }
 
     void fetchGames();
-  // Focus changes are intentionally local: they must not re-run the 500-row database query.
+  // Persisted focus and selection are read during the initial restore only; changing them locally
+  // must not re-run the paged library query or reset the user back to the first page.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     effectiveFilters,
@@ -111,8 +112,6 @@ export function useLibraryBrowserState() {
     selectedGame,
     settings.activePlatformId,
     libraryRefreshToken,
-    settings.lastFocusedIndex,
-    settings.lastSelectedGameId,
   ]);
 
   const loadNextPage = useCallback(async () => {
