@@ -27,6 +27,19 @@ pub async fn open_file_dialog(app: tauri::AppHandle) -> Option<String> {
 }
 
 #[tauri::command]
+pub fn allow_asset_path(app: tauri::AppHandle, path: String) -> Result<(), String> {
+    let asset_path = std::path::Path::new(&path);
+    let parent = asset_path
+        .parent()
+        .filter(|directory| directory.is_dir())
+        .ok_or_else(|| format!("Asset parent directory does not exist: {path}"))?;
+
+    app.asset_protocol_scope()
+        .allow_directory(parent, true)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
 pub fn exit_app(app: tauri::AppHandle) {
     app.exit(0);
 }

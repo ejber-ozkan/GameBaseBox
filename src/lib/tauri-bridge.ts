@@ -296,6 +296,7 @@ export async function getAssetUrl(absolutePath: string): Promise<string> {
   if (!isTauri()) {
     return absolutePath;
   }
+  await invoke<void>('allow_asset_path', { path: absolutePath });
   const { convertFileSrc } = await import('@tauri-apps/api/core');
   // Normalize windows paths to use forward slashes for the internal URL conversion
   const normalized = absolutePath.replace(/\\/g, '/');
