@@ -1,5 +1,5 @@
 use crate::database::init_secure_table;
-use crate::security::{decrypt_value, encrypt_value};
+use crate::security::{decrypt_value, encrypt_value, uses_current_encryption_format};
 use rusqlite::{params, OptionalExtension};
 
 use super::querying::open_db_connection;
@@ -23,12 +23,22 @@ pub async fn get_secure_setting(key: String) -> Result<Option<String>, String> {
         .prepare("SELECT value FROM SecureSettings WHERE key = ?1")
         .map_err(|e: rusqlite::Error| e.to_string())?;
     let encrypted: Option<String> = stmt
-        .query_row([key], |row| row.get(0))
+        .query_row([&key], |row| row.get(0))
         .optional()
         .map_err(|e: rusqlite::Error| e.to_string())?;
 
     match encrypted {
-        Some(enc) => Ok(Some(decrypt_value(&enc)?)),
+        Some(enc) => {
+            let value = decrypt_value(&enc)?;
+            if !uses_current_encryption_format(&enc) {
+                let upgraded = encrypt_value(&value)?;
+                conn.execute(
+                    "UPDATE SecureSettings SET value = ?1 WHERE key = ?2",
+                    params![upgraded, key],
+                ).map_err(|error| error.to_string())?;
+            }
+            Ok(Some(value))
+        }
         None => Ok(None),
     }
 }

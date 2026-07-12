@@ -6,9 +6,14 @@ use base64::{engine::general_purpose, Engine as _};
 use sha2::{Digest, Sha256};
 
 const ENCRYPTION_FORMAT_V2_PREFIX: &str = "v2:";
+const ENCRYPTION_FORMAT_V3_PREFIX: &str = "v3:";
 const GCM_NONCE_LENGTH: usize = 12;
+#[cfg(not(test))]
+const KEYCHAIN_SERVICE: &str = "com.gamebasebox.desktop";
+#[cfg(not(test))]
+const KEYCHAIN_ACCOUNT: &str = "settings-encryption-key";
 
-pub fn get_encryption_key() -> [u8; 32] {
+fn get_legacy_encryption_key() -> [u8; 32] {
     let uid = machine_uid::get().unwrap_or_else(|_| "fixed-fallback-uid".to_string());
     let mut hasher = Sha256::new();
     hasher.update(uid.as_bytes());
@@ -20,8 +25,35 @@ pub fn get_encryption_key() -> [u8; 32] {
     key
 }
 
+#[cfg(not(test))]
+fn get_encryption_key() -> Result<[u8; 32], String> {
+    let entry = keyring::Entry::new(KEYCHAIN_SERVICE, KEYCHAIN_ACCOUNT)
+        .map_err(|error| format!("Unable to access the OS credential store: {error}"))?;
+    let encoded = match entry.get_password() {
+        Ok(value) => value,
+        Err(keyring::Error::NoEntry) => {
+            let mut key = [0u8; 32];
+            OsRng.fill_bytes(&mut key);
+            let value = general_purpose::STANDARD.encode(key);
+            entry.set_password(&value)
+                .map_err(|error| format!("Unable to save the installation key in the OS credential store: {error}"))?;
+            value
+        }
+        Err(error) => return Err(format!("Unable to read the installation key from the OS credential store: {error}")),
+    };
+    let decoded = general_purpose::STANDARD
+        .decode(encoded)
+        .map_err(|error| format!("The OS credential store returned an invalid installation key: {error}"))?;
+    decoded.try_into().map_err(|_| "The OS credential store returned an installation key with an invalid length.".to_string())
+}
+
+#[cfg(test)]
+fn get_encryption_key() -> Result<[u8; 32], String> {
+    Ok(get_legacy_encryption_key())
+}
+
 pub fn encrypt_value(value: &str) -> Result<String, String> {
-    let key = get_encryption_key();
+    let key = get_encryption_key()?;
     let cipher = Aes256Gcm::new_from_slice(&key).map_err(|e| e.to_string())?;
 
     let mut nonce = [0u8; GCM_NONCE_LENGTH];
@@ -37,13 +69,13 @@ pub fn encrypt_value(value: &str) -> Result<String, String> {
     payload.extend_from_slice(&ciphertext);
 
     Ok(format!(
-        "{ENCRYPTION_FORMAT_V2_PREFIX}{}",
+        "{ENCRYPTION_FORMAT_V3_PREFIX}{}",
         general_purpose::STANDARD.encode(payload)
     ))
 }
 
 fn decrypt_legacy_value(encrypted_base64: &str) -> Result<String, String> {
-    let key = get_encryption_key();
+    let key = get_legacy_encryption_key();
     let cipher = Aes256Gcm::new_from_slice(&key).map_err(|e| e.to_string())?;
 
     let ciphertext = general_purpose::STANDARD
@@ -61,11 +93,11 @@ fn decrypt_legacy_value(encrypted_base64: &str) -> Result<String, String> {
 }
 
 pub fn decrypt_value(encrypted_value: &str) -> Result<String, String> {
-    if let Some(v2_payload) = encrypted_value.strip_prefix(ENCRYPTION_FORMAT_V2_PREFIX) {
-        let key = get_encryption_key();
+    if let Some(v3_payload) = encrypted_value.strip_prefix(ENCRYPTION_FORMAT_V3_PREFIX) {
+        let key = get_encryption_key()?;
         let cipher = Aes256Gcm::new_from_slice(&key).map_err(|e| e.to_string())?;
         let payload = general_purpose::STANDARD
-            .decode(v2_payload)
+            .decode(v3_payload)
             .map_err(|e| e.to_string())?;
 
         if payload.len() < GCM_NONCE_LENGTH {
@@ -80,7 +112,21 @@ pub fn decrypt_value(encrypted_value: &str) -> Result<String, String> {
         return String::from_utf8(plaintext).map_err(|e| e.to_string());
     }
 
+    if let Some(v2_payload) = encrypted_value.strip_prefix(ENCRYPTION_FORMAT_V2_PREFIX) {
+        let key = get_legacy_encryption_key();
+        let cipher = Aes256Gcm::new_from_slice(&key).map_err(|e| e.to_string())?;
+        let payload = general_purpose::STANDARD.decode(v2_payload).map_err(|e| e.to_string())?;
+        if payload.len() < GCM_NONCE_LENGTH { return Err("Encrypted payload is missing nonce bytes.".to_string()); }
+        let (nonce, ciphertext) = payload.split_at(GCM_NONCE_LENGTH);
+        let plaintext = cipher.decrypt(AesIv::from_slice(nonce), ciphertext).map_err(|e| e.to_string())?;
+        return String::from_utf8(plaintext).map_err(|e| e.to_string());
+    }
+
     decrypt_legacy_value(encrypted_value)
+}
+
+pub fn uses_current_encryption_format(value: &str) -> bool {
+    value.starts_with(ENCRYPTION_FORMAT_V3_PREFIX)
 }
 
 #[cfg(test)]
@@ -90,7 +136,7 @@ mod tests {
     use base64::engine::general_purpose;
 
     fn encrypt_value_with_legacy_fixed_iv(value: &str) -> String {
-        let key = get_encryption_key();
+        let key = get_legacy_encryption_key();
         let cipher = Aes256Gcm::new_from_slice(&key).unwrap();
         let iv = AesIv::from_slice(&key[0..GCM_NONCE_LENGTH]);
         let ciphertext = cipher.encrypt(iv, value.as_bytes()).unwrap();
@@ -101,6 +147,7 @@ mod tests {
     fn test_encryption_roundtrip() {
         let original = "secret-key-123";
         let encrypted = encrypt_value(original).expect("Encryption failed");
+        assert!(encrypted.starts_with("v3:"));
         let decrypted = decrypt_value(&encrypted).expect("Decryption failed");
         assert_eq!(original, decrypted);
     }
