@@ -29,44 +29,39 @@ export function useWindowLibraryShelves({
     async function loadShelves() {
       const searchQuery = searchInput.trim() || undefined;
 
-      if (recentlyPlayedIds.length > 0) {
-        const recentResults = await getDbGames(24, 0, {
+      const recentQuery = recentlyPlayedIds.length > 0
+        ? getDbGames(24, 0, {
           ...filters,
           favoriteIds: recentlyPlayedIds,
           searchQuery,
-        }, activePlatformId);
-
-        if (!isCancelled) {
-          const byId = new Map(recentResults.map((game) => [game.id.toString(), game]));
-          setRecentGames(
-            recentlyPlayedIds
-              .map((id) => byId.get(id))
-              .filter((game): game is Game => Boolean(game)),
-          );
-        }
-      } else if (!isCancelled) {
-        setRecentGames([]);
-      }
-
-      if (favoriteIds.length > 0) {
-        const favorites = await getDbGames(24, 0, {
+        }, activePlatformId)
+        : Promise.resolve<Game[]>([]);
+      const favoritesQuery = favoriteIds.length > 0
+        ? getDbGames(24, 0, {
           ...filters,
           favoriteIds,
           searchQuery,
-        }, activePlatformId);
-        if (!isCancelled) {
-          setFavoriteGames(favorites);
-        }
-      } else if (!isCancelled) {
-        setFavoriteGames([]);
-      }
-
-      const classics = await getDbGames(24, 0, {
+        }, activePlatformId)
+        : Promise.resolve<Game[]>([]);
+      const classicsQuery = getDbGames(24, 0, {
         ...filters,
         isClassic: true,
         searchQuery,
       }, activePlatformId);
+
+      const [recentResults, favorites, classics] = await Promise.all([
+        recentQuery,
+        favoritesQuery,
+        classicsQuery,
+      ]);
       if (!isCancelled) {
+        const byId = new Map(recentResults.map((game) => [game.id.toString(), game]));
+        setRecentGames(
+          recentlyPlayedIds
+            .map((id) => byId.get(id))
+            .filter((game): game is Game => Boolean(game)),
+        );
+        setFavoriteGames(favorites);
         setClassicGames(classics);
       }
     }
