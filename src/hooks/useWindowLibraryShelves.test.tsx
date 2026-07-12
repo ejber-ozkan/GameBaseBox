@@ -1,10 +1,11 @@
-import { renderHook, waitFor } from '@testing-library/react';
+﻿import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
 const mockGetDbGames = vi.hoisted(() => vi.fn());
 
 vi.mock('../lib/tauri-bridge', () => ({
   getDbGames: (...args: unknown[]) => mockGetDbGames(...args),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 import { useWindowLibraryShelves } from './useWindowLibraryShelves';

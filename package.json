@@ -17,6 +17,7 @@
     "sounds:convert": "node scripts/convert_ui_sounds_to_mp3.js",
     "tauri": "tauri",
     "tauri:dev": "tauri-dev.bat",
+    "tauri:dev:debug": "tauri-dev-debug.bat",
     "tauri:build": "tauri-build.bat",
     "test": "npm run test:frontend"
   },

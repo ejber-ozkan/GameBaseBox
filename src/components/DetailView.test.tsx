@@ -42,6 +42,7 @@ const mockGetDbGameDetail = vi.hoisted(() => vi.fn());
 vi.mock('../lib/tauri-bridge', () => ({
   getDbGameDetail: (...args: unknown[]) => mockGetDbGameDetail(...args),
   getGameExtras: vi.fn().mockImplementation(() => Promise.resolve([])),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 let mockActivePlatformId = 'c64';

@@ -3,6 +3,11 @@ use tauri_plugin_dialog::DialogExt;
 use std::process::Command;
 
 #[tauri::command]
+pub fn is_debug_mode_command() -> bool {
+    crate::is_debug_mode()
+}
+
+#[tauri::command]
 pub async fn open_directory_dialog(app: tauri::AppHandle) -> Option<String> {
     app.dialog()
         .file()

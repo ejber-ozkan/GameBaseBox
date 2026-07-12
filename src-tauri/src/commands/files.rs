@@ -181,51 +181,209 @@ pub async fn read_file_bytes(path: String) -> Result<Vec<u8>, String> {
     std::fs::read(p).map_err(|e| format!("Failed to read file: {}", e))
 }
 
+fn find_case_insensitive_file(dir: &Path, filename: &str) -> Option<PathBuf> {
+    if !dir.is_dir() {
+        return None;
+    }
+    let target = filename.to_lowercase();
+    if let Ok(entries) = std::fs::read_dir(dir) {
+        for entry in entries.flatten() {
+            if let Some(name) = entry.file_name().to_str() {
+                if name.to_lowercase() == target {
+                    return Some(entry.path());
+                }
+            }
+        }
+    }
+    None
+}
+
+fn resolve_path_case_insensitive(base: &Path, relative: &Path) -> Option<PathBuf> {
+    let mut current = base.to_path_buf();
+    for component in relative.components() {
+        let comp_str = component.as_os_str().to_str()?;
+        if let Some(matched) = find_case_insensitive_file(&current, comp_str) {
+            current = matched;
+        } else {
+            return None;
+        }
+    }
+    Some(current)
+}
+
+fn get_candidate_paths(base_dir: &Path, filename: &str) -> Vec<PathBuf> {
+    let mut candidates = Vec::new();
+
+    // Sanitize filename to block traversal attempts (e.g. "../escape.png")
+    let Some(sanitized) = sanitize_relative_media_path(filename) else {
+        return candidates;
+    };
+    let sanitized_str = sanitized.to_string_lossy();
+
+    // 1. Direct path
+    candidates.push(base_dir.join(&sanitized));
+
+    // 2. Partitioned path based on first character of the filename component
+    let first_char = sanitized_str.chars().next().unwrap_or('\0');
+    if first_char.is_ascii_alphabetic() {
+        let letter = first_char.to_ascii_uppercase().to_string();
+        candidates.push(base_dir.join(&letter).join(&sanitized));
+        let letter_lower = first_char.to_ascii_lowercase().to_string();
+        candidates.push(base_dir.join(&letter_lower).join(&sanitized));
+    } else if first_char.is_ascii_digit() {
+        candidates.push(base_dir.join("0").join(&sanitized));
+        candidates.push(base_dir.join(first_char.to_string()).join(&sanitized));
+    }
+
+    candidates
+}
+
 #[tauri::command]
 pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedPath {
-    let Some(full) = resolve_media_child_path(Path::new(&base_dir), &filename) else {
-        return ResolvedPath {
-            exists: false,
-            absolute_path: String::new(),
-        };
-    };
+    let base = Path::new(&base_dir);
+    let candidates = get_candidate_paths(base, &filename);
+
+    // Fast-path: Check if any candidate path exists directly on disk
+    for candidate in &candidates {
+        if candidate.exists() && candidate.is_file() {
+            // Canonicalize to obtain the actual on-disk path with real casing
+            let resolved = candidate.canonicalize().unwrap_or_else(|_| candidate.clone());
+            if crate::is_debug_mode() {
+                println!(
+                    "[DEBUG] Media resolved via fast-path: {:?} -> {:?}",
+                    filename,
+                    resolved.display()
+                );
+            }
+            return ResolvedPath {
+                exists: true,
+                absolute_path: resolved.to_string_lossy().to_string(),
+            };
+        }
+    }
+
+    // Slow-path: Fallback to case-insensitive matching
+    for candidate in &candidates {
+        if let Ok(rel) = candidate.strip_prefix(base) {
+            if let Some(resolved) = resolve_path_case_insensitive(base, rel) {
+                if crate::is_debug_mode() {
+                    println!(
+                        "[DEBUG] Media resolved via case-insensitive slow-path: {:?} -> {:?}",
+                        filename,
+                        resolved.display()
+                    );
+                }
+                return ResolvedPath {
+                    exists: true,
+                    absolute_path: resolved.to_string_lossy().to_string(),
+                };
+            }
+        }
+    }
+
+    if crate::is_debug_mode() {
+        eprintln!(
+            "[DEBUG WARNING] Failed to resolve media file {:?} under base directory {:?}. Tried candidates: {:?}",
+            filename,
+            base_dir,
+            candidates.iter().map(|c| c.display().to_string()).collect::<Vec<_>>()
+        );
+    }
 
     ResolvedPath {
-        exists: full.exists(),
-        absolute_path: full.to_string_lossy().to_string(),
+        exists: false,
+        absolute_path: String::new(),
     }
 }
 
 #[tauri::command]
 pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<String> {
     let mut results = Vec::new();
-    let Some(relative_path) = sanitize_relative_media_path(&filename) else {
+    let base = Path::new(&base_dir);
+    
+    let path = Path::new(&filename);
+    let Some(stem) = path.file_stem().and_then(|s| s.to_str()) else {
         return results;
     };
+    let ext_str = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+    let (variant_base, detected_suffix) = split_variant_stem(stem);
 
-    let full = PathBuf::from(&base_dir).join(&relative_path);
+    let candidates = get_candidate_paths(base, &filename);
+    let mut checked_dirs = Vec::new();
 
-    if full.exists() {
-        results.push(full.to_string_lossy().to_string());
-    }
+    for candidate in candidates {
+        let Some(parent) = candidate.parent() else {
+            continue;
+        };
 
-    let path = relative_path.as_path();
-    if let (Some(stem), Some(ext), Some(parent)) =
-        (path.file_stem(), path.extension(), path.parent())
-    {
-        let stem_str = stem.to_string_lossy();
-        let (variant_base, detected_suffix) = split_variant_stem(&stem_str);
-        let ext_str = ext.to_string_lossy();
-        let variants_dir = PathBuf::from(&base_dir).join(parent);
+        // Fast-path: Check if the parent folder exists directly
+        let resolved_parent = if parent.is_dir() {
+            // Canonicalize to resolve any case differences on case-insensitive filesystems
+            parent.canonicalize().ok().or_else(|| Some(parent.to_path_buf()))
+        } else {
+            // Slow-path: Try resolving the parent folder case-insensitively
+            parent.strip_prefix(base)
+                .ok()
+                .and_then(|rel| resolve_path_case_insensitive(base, rel))
+                .and_then(|p| p.canonicalize().ok().or(Some(p)))
+        };
 
+        let Some(resolved_parent) = resolved_parent else {
+            continue;
+        };
+
+        // De-duplicate parent directories to avoid double scans on case-insensitive filesystems
+        // (e.g. base/A and base/a both resolve to the same physical directory on Windows)
+        if checked_dirs.contains(&resolved_parent) {
+            continue;
+        }
+        checked_dirs.push(resolved_parent.clone());
+
+        // 1. Check for the base file
+        let base_name = path.file_name().and_then(|f| f.to_str()).unwrap_or("");
+        // Fast-path direct check
+        let base_direct = resolved_parent.join(base_name);
+        if base_direct.exists() && base_direct.is_file() {
+            let path_str = base_direct.to_string_lossy().to_string();
+            if !results.contains(&path_str) {
+                results.push(path_str);
+            }
+        } else {
+            // Case-insensitive fallback
+            if let Some(matched_base) = find_case_insensitive_file(&resolved_parent, base_name) {
+                let path_str = matched_base.to_string_lossy().to_string();
+                if !results.contains(&path_str) {
+                    results.push(path_str);
+                }
+            }
+        }
+
+        // Helper closures to check variants using fast-path first, then case-insensitive fallback
+        let check_variant = |res_list: &mut Vec<String>, var_name: &str| {
+            let direct = resolved_parent.join(var_name);
+            if direct.exists() && direct.is_file() {
+                res_list.push(direct.to_string_lossy().to_string());
+                true
+            } else if let Some(matched) = find_case_insensitive_file(&resolved_parent, var_name) {
+                res_list.push(matched.to_string_lossy().to_string());
+                true
+            } else {
+                false
+            }
+        };
+
+        // 2. Numbered variants _1 to _9
         let mut numbered_results = Vec::new();
         let mut numbered_gap_seen = false;
         for i in 1..=9 {
-            let variant_name = format!("{}_{}.{}", variant_base, i, ext_str);
-            let variant_full = variants_dir.join(&variant_name);
-            if variant_full.exists() {
-                numbered_results.push(variant_full.to_string_lossy().to_string());
-            } else if detected_suffix.is_none() || !numbered_results.is_empty() {
+            let variant_name = if ext_str.is_empty() {
+                format!("{}_{}", variant_base, i)
+            } else {
+                format!("{}_{}.{}", variant_base, i, ext_str)
+            };
+
+            let found = check_variant(&mut numbered_results, &variant_name);
+            if !found && (detected_suffix.is_none() || !numbered_results.is_empty()) {
                 numbered_gap_seen = true;
             }
 
@@ -234,14 +392,18 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
             }
         }
 
+        // 3. Alpha variants _a to _i
         let mut alpha_results = Vec::new();
         let mut alpha_gap_seen = false;
         for alpha_char in 'a'..='i' {
-            let variant_name = format!("{}_{}.{}", variant_base, alpha_char, ext_str);
-            let variant_full_alpha = variants_dir.join(&variant_name);
-            if variant_full_alpha.exists() {
-                alpha_results.push(variant_full_alpha.to_string_lossy().to_string());
-            } else if detected_suffix.is_none() || !alpha_results.is_empty() {
+            let variant_name = if ext_str.is_empty() {
+                format!("{}_{}", variant_base, alpha_char)
+            } else {
+                format!("{}_{}.{}", variant_base, alpha_char, ext_str)
+            };
+
+            let found = check_variant(&mut alpha_results, &variant_name);
+            if !found && (detected_suffix.is_none() || !alpha_results.is_empty()) {
                 alpha_gap_seen = true;
             }
 
@@ -251,9 +413,26 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
         }
 
         for variant in numbered_results.into_iter().chain(alpha_results) {
-            if !results.iter().any(|existing| existing == &variant) {
+            if !results.contains(&variant) {
                 results.push(variant);
             }
+        }
+    }
+
+    if crate::is_debug_mode() {
+        if results.is_empty() {
+            eprintln!(
+                "[DEBUG WARNING] No media variants found for {:?} under base directory {:?}",
+                filename,
+                base_dir
+            );
+        } else {
+            println!(
+                "[DEBUG] Found {} media variants for {:?}: {:?}",
+                results.len(),
+                filename,
+                results
+            );
         }
     }
 
@@ -456,5 +635,41 @@ mod tests {
         assert!(validate_media_download_url("http://cdn.example.com/art.png").is_err());
         assert!(validate_media_download_url("file:///C:/Windows/win.ini").is_err());
         assert!(validate_media_download_url("https://").is_err());
+    }
+
+    #[tokio::test]
+    async fn test_resolve_media_path_partitioned_and_case_insensitive() {
+        let dir = tempdir().unwrap();
+        let base = dir.path().to_string_lossy().to_string();
+
+        // Create partitioned directories: 'A' and '0'
+        let dir_a = dir.path().join("A");
+        std::fs::create_dir(&dir_a).unwrap();
+        let dir_0 = dir.path().join("0");
+        std::fs::create_dir(&dir_0).unwrap();
+
+        // Create target files with mixed casing
+        let file_a = dir_a.join("akualabeth_1.PNG");
+        std::fs::write(&file_a, b"test image contents").unwrap();
+
+        let file_0 = dir_0.join("1942_title.png");
+        std::fs::write(&file_0, b"test numeric contents").unwrap();
+
+        // Test 1: Resolving a filename starting with 'A' that exists in 'A/' subdirectory with mixed casing
+        // Use case-insensitive check because on case-insensitive filesystems (Windows), canonicalize
+        // returns the actual on-disk casing but the path may also have a UNC prefix.
+        let res_a = resolve_media_path(base.clone(), "Akualabeth_1.png".to_string()).await;
+        assert!(res_a.exists);
+        assert!(res_a.absolute_path.to_lowercase().contains("akualabeth_1.png"));
+
+        // Test 2: Resolving a filename starting with a number that exists in '0/' subdirectory
+        let res_0 = resolve_media_path(base.clone(), "1942_title.png".to_string()).await;
+        assert!(res_0.exists);
+        assert!(res_0.absolute_path.to_lowercase().contains("1942_title.png"));
+
+        // Test 3: find_all_media_variants should find them in partitioned directories
+        let variants = find_all_media_variants(base.clone(), "Akualabeth_1.png".to_string()).await;
+        assert_eq!(variants.len(), 1);
+        assert!(variants[0].to_lowercase().contains("akualabeth_1.png"));
     }
 }

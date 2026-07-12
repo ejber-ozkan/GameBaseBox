@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Phase 3 Integration Tests: ROM Scanner & CRC Matching
  *
  * Tests the core Phase 3 requirement:
@@ -20,6 +20,7 @@ vi.mock('../lib/tauri-bridge', () => ({
   scanRomDirectory: vi.fn(),
   launchEmulator:   vi.fn(),
   resolveMediaPath: vi.fn(),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 // Mock EmuMovies so tests don't hit the real API

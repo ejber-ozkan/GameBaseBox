@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+﻿import { render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import { VisualExtrasBrowser } from './VisualExtrasBrowser';
 import type { Extra } from '../../types/game';
@@ -23,6 +23,7 @@ vi.mock('../../hooks/usePopupOpenSound', () => ({
 
 vi.mock('../../lib/tauri-bridge', () => ({
   getAssetUrl: vi.fn().mockImplementation((path) => Promise.resolve(`resolved-url:${path}`)),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 const mockExtras: Extra[] = [

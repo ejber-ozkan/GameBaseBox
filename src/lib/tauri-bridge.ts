@@ -31,6 +31,17 @@ export const isTauri = (): boolean =>
     (window as TauriAwareWindow).__TAURI__ !== undefined
   );
 
+export async function isDebugMode(): Promise<boolean> {
+  if (!isTauri()) {
+    return false;
+  }
+  try {
+    return await invoke<boolean>('is_debug_mode_command');
+  } catch {
+    return false;
+  }
+}
+
 async function invoke<T>(command: string, payload?: Record<string, unknown>): Promise<T> {
   if (!isTauri()) {
     throw new Error(`[tauri-bridge] Not running in Tauri. Command "${command}" is unavailable.`);

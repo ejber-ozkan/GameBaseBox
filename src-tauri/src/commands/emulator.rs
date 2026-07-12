@@ -743,7 +743,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         }
     }
 
-    if std::env::var("VIC40_DEBUG_LAUNCH").is_ok() {
+    if std::env::var("VIC40_DEBUG_LAUNCH").is_ok() || crate::is_debug_mode() {
         println!("[DEBUG LAUNCH] Emulator: {}", emulator.to_string_lossy());
         println!("[DEBUG LAUNCH] Switches: {:?}", args);
     }

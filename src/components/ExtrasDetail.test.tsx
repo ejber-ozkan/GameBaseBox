@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+﻿import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ExtrasDetail, type ExtrasBigscreenNavigation } from './ExtrasDetail';
 import { mockGames } from '../data/mockGames';
@@ -55,6 +55,7 @@ vi.mock('../lib/tauri-bridge', () => ({
   getAssetUrl: (...args: unknown[]) => mockGetAssetUrl(...args),
   launchEmulator: (...args: unknown[]) => mockLaunchEmulator(...args),
   openFile: (...args: unknown[]) => mockOpenFile(...args),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 const visualExtras: Extra[] = [

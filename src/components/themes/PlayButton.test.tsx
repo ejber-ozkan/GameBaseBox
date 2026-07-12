@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+﻿import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultPlatformSettingsMap } from '../../lib/platform-capabilities';
 import type { Settings } from '../../contexts/SettingsContext';
@@ -43,6 +43,7 @@ vi.mock('../../contexts/SettingsContext', () => ({
 
 vi.mock('../../lib/tauri-bridge', () => ({
   launchEmulator: (...args: unknown[]) => mockLaunchEmulator(...args),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 vi.mock('../WasmPlayer', () => ({

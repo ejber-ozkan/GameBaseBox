@@ -18,7 +18,8 @@ vi.mock('../contexts/SettingsContext', () => ({
 vi.mock('../lib/tauri-bridge', () => ({
   downloadMediaAsset: vi.fn(),
   resolveMediaPath: vi.fn(),
-  getMediaUrl: vi.fn().mockImplementation((path) => Promise.resolve(`blob:${path}`))
+  getMediaUrl: vi.fn().mockImplementation((path) => Promise.resolve(`blob:${path}`)),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 describe('SidPlayer Component', () => {

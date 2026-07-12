@@ -44,6 +44,24 @@ pub mod test_helpers {
     }
 }
 
+use std::sync::OnceLock;
+
+static DEBUG_MODE: OnceLock<bool> = OnceLock::new();
+
+pub fn init_debug_mode() {
+    let debug = std::env::args().any(|arg| {
+        arg == "--debug" || arg == "-d" || arg == "--verbose" || arg == "-v"
+    });
+    let _ = DEBUG_MODE.set(debug);
+    if debug {
+        println!("[DEBUG] Debug logging enabled via CLI flag.");
+    }
+}
+
+pub fn is_debug_mode() -> bool {
+    *DEBUG_MODE.get().unwrap_or(&false)
+}
+
 use tauri::Manager;
 
 // ---------------------------------------------------------------------------
@@ -52,6 +70,7 @@ use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    init_debug_mode();
     tauri::Builder::default()
         .plugin(tauri_plugin_log::Builder::new().build())
         .plugin(tauri_plugin_fs::init())
@@ -90,9 +109,13 @@ pub fn run() {
             commands::platforms::get_supported_platforms,
             commands::platforms::get_active_platform,
             commands::platforms::set_active_platform,
+            commands::system::is_debug_mode_command,
         ])
         .setup(|app| {
-            let _ = database::configure_runtime_db_path(app.handle());
+            let db_path = database::configure_runtime_db_path(app.handle());
+            if is_debug_mode() {
+                println!("[DEBUG] Database path configured: {:?}", db_path);
+            }
             let _ = database::init_database();
             if let Some(window) = app.get_webview_window("main") {
                 if let Some(icon) = app.default_window_icon().cloned() {

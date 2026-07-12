@@ -1,4 +1,4 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+﻿import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
 import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
@@ -65,6 +65,7 @@ vi.mock('./useFavorites', () => ({
 
 vi.mock('../lib/tauri-bridge', () => ({
   getDbGames: (...args: unknown[]) => mockGetDbGames(...args),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 import { getLibraryRefreshToken, useLibraryBrowserState } from './useLibraryBrowserState';

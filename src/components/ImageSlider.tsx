@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
+import { isDebugMode } from '../lib/tauri-bridge';
 
 interface ImageSliderProps {
   filename: string | null;
@@ -61,13 +62,17 @@ export function ImageSlider({
         setImages(urls);
       } else {
         setImages([]);
+        isDebugMode().then(debug => {
+          if (debug) {
+            console.warn(`[DEBUG WARNING] No images found for game: "${alt}", type: "${type}", filename: "${filename}"`);
+          }
+        });
       }
       setCurrentIndex(0);
       setHasError(false);
     }
     loadVariants();
   }, [filename, type, findAllVariants, shouldLoadVariants]);
-
   // Support cycling through images
   useEffect(() => {
     if (!settings.imageCycling || images.length <= 1) return;

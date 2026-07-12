@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+﻿import { render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import { MusicPlayer } from './MusicPlayer';
 
@@ -16,6 +16,7 @@ vi.mock('../lib/tauri-bridge', () => ({
   downloadMediaAsset: vi.fn(),
   getMediaUrl: vi.fn().mockImplementation((path) => Promise.resolve(`blob:${path}`)),
   resolveMediaPath: vi.fn(),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 describe('MusicPlayer', () => {

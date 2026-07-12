@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+﻿import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
 import type { BigBoxRailCategory } from './useBigBoxLibraryData';
@@ -8,6 +8,7 @@ const gamepadRegistrations: Array<{ onButtonDown: (button: string) => void }> = 
 
 vi.mock('../lib/tauri-bridge', () => ({
   exitApp: () => mockExitApp(),
+  isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
 vi.mock('./useGamepad', () => ({
