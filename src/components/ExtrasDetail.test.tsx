@@ -137,6 +137,16 @@ describe('ExtrasDetail', () => {
     });
   });
 
+  it('opens website extras without prefixing the local extras folder', async () => {
+    const openWindow = vi.spyOn(window, 'open').mockImplementation(() => null);
+    render(<ExtrasDetail game={mockGames[0]} extras={[{ id: 'web', name: 'Website', path: 'https://example.com/game', type: 'doc' }]} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /website/i }));
+
+    expect(openWindow).toHaveBeenCalledWith('https://example.com/game', '_blank', 'noopener,noreferrer');
+    expect(mockOpenFile).not.toHaveBeenCalled();
+  });
+
   it('registers and unregisters bigscreen navigation when enabled', async () => {
     const onRegisterBigscreenNavigation = vi.fn<(navigation: ExtrasBigscreenNavigation | null) => void>();
 

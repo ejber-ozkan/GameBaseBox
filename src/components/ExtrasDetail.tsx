@@ -79,6 +79,10 @@ export function ExtrasDetail({
   };
 
   const handleOpenDoc = async (extra: Extra) => {
+    if (/^https?:\/\//i.test(extra.path.trim())) {
+      window.open(extra.path, '_blank', 'noopener,noreferrer');
+      return;
+    }
     const fullPath = buildPlatformAssetPath(settings, 'extras', extra.path);
     await openFile(fullPath);
   };
