@@ -100,7 +100,6 @@ export function useLibraryBrowserState() {
     void fetchGames();
   }, [
     effectiveFilters,
-    focusedIndex,
     isRestored,
     selectedGame,
     settings.activePlatformId,

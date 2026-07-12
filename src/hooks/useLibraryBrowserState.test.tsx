@@ -243,6 +243,20 @@ describe('useLibraryBrowserState', () => {
     });
   });
 
+  it('does not re-query the database when only grid focus changes', async () => {
+    const { result } = renderHook(() => useLibraryBrowserState());
+
+    await waitFor(() => expect(result.current.games).toHaveLength(mockGames.length));
+    mockGetDbGames.mockClear();
+
+    act(() => {
+      result.current.setFocusedIndex(1);
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(mockGetDbGames).not.toHaveBeenCalled();
+  });
+
   it('reloads games when the active platform import status changes to imported', async () => {
     const platformSettings = createDefaultPlatformSettingsMap();
     platformSettings.atari800.library.importStatus = 'notImported';
