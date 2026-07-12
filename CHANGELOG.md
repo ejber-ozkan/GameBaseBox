@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-12
+
+### Added
+- Added a canonical platform manifest and shared import workflow across setup surfaces.
+- Added platform-scoped persisted media access, tighter Tauri capabilities/CSP, OS-keychain encryption, and mandatory PR/release quality gates.
+
+### Changed
+- Dramatically improved library responsiveness with 120-item append paging, deferred off-screen media work, concurrent shelf loading, and background SQLite workers.
+
+### Fixed
+- Fixed long windowed library browsing, platform backgrounds, SID media lookup, Extras website links, and asset access for configured media folders.
+
 ## [0.4.1] - 2026-07-03
 
 ### Fixed

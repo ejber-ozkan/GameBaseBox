@@ -97,3 +97,6 @@ graphify-out/manifest.json
 graphify-out/.graphify_python
 graphify-out/.graphify_root
 
+# Internal technical review working document
+/docs/technical-review-and-ios-feasibility-2026-07-10.md
+
