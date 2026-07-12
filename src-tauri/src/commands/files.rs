@@ -1,6 +1,16 @@
 use crate::models::{ResolvedPath, ScannedRom};
 use std::path::{Component, Path, PathBuf};
 
+const MAX_MEDIA_DOWNLOAD_BYTES: u64 = 100 * 1024 * 1024;
+
+fn validate_media_download_url(value: &str) -> Result<reqwest::Url, String> {
+    let url = reqwest::Url::parse(value).map_err(|error| format!("Invalid media URL: {error}"))?;
+    if url.scheme() != "https" || url.host_str().is_none() || !url.username().is_empty() || url.password().is_some() {
+        return Err("Media downloads must use an HTTPS URL with a host and no embedded credentials.".to_string());
+    }
+    Ok(url)
+}
+
 fn sanitize_relative_media_path(path: &str) -> Option<PathBuf> {
     let mut sanitized = PathBuf::new();
 
@@ -110,6 +120,7 @@ pub async fn download_media_asset(
     dest_dir: String,
     filename: String,
 ) -> Result<ResolvedPath, String> {
+    let url = validate_media_download_url(&url)?;
     let dest = PathBuf::from(&dest_dir);
     if !dest.exists() {
         std::fs::create_dir_all(&dest).map_err(|e| format!("Could not create directory: {}", e))?;
@@ -125,7 +136,7 @@ pub async fn download_media_asset(
         }
     }
 
-    let response = reqwest::get(&url)
+    let response = reqwest::get(url.clone())
         .await
         .map_err(|e| format!("Failed to download {}: {}", url, e))?;
 
@@ -136,7 +147,14 @@ pub async fn download_media_asset(
         ));
     }
 
+    if response.content_length().is_some_and(|length| length > MAX_MEDIA_DOWNLOAD_BYTES) {
+        return Err(format!("Media download exceeds the {} MiB limit.", MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024));
+    }
+
     let bytes = response.bytes().await.map_err(|e| e.to_string())?;
+    if bytes.len() as u64 > MAX_MEDIA_DOWNLOAD_BYTES {
+        return Err(format!("Media download exceeds the {} MiB limit.", MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024));
+    }
     std::fs::write(&full_path, bytes)
         .map_err(|e| format!("Failed to write file {}: {}", full_path.display(), e))?;
 
@@ -430,5 +448,13 @@ mod tests {
 
         assert!(res.is_err());
         assert!(res.unwrap_err().contains("Invalid media path"));
+    }
+
+    #[test]
+    fn media_download_urls_require_https_hosts() {
+        assert!(validate_media_download_url("https://cdn.example.com/art.png").is_ok());
+        assert!(validate_media_download_url("http://cdn.example.com/art.png").is_err());
+        assert!(validate_media_download_url("file:///C:/Windows/win.ini").is_err());
+        assert!(validate_media_download_url("https://").is_err());
     }
 }
