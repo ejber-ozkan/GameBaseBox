@@ -11,10 +11,10 @@ test.describe('Platform import routing', () => {
 
     await expect(page.getByRole('heading', { name: /Build Your Atari 800 Database/i })).toBeVisible();
     await expect(page.getByText('Atari 800 has not been imported yet.')).toBeVisible();
-    await expect(page.getByText('Games')).toBeVisible();
-    await expect(page.getByText('Music')).toBeVisible();
-    await expect(page.getByText('Photos')).toBeVisible();
-    await expect(page.getByText('Screenshots')).toBeVisible();
+    await expect(page.getByText('Games', { exact: true })).toBeVisible();
+    await expect(page.getByText('Music', { exact: true })).toBeVisible();
+    await expect(page.getByText('Musician Photos', { exact: true })).toBeVisible();
+    await expect(page.getByText('Screenshots', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: /Build Database/i })).toBeDisabled();
   });
 });
