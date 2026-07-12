@@ -4,7 +4,7 @@ export type LibraryViewMode = 'grid' | 'list';
 
 const BACKGROUND_BASE_PATH = '/docs/images/backgrounds';
 
-export const LIBRARY_BACKGROUND_OPACITY = 0.156;
+export const LIBRARY_BACKGROUND_OPACITY = 0.306;
 
 const PLATFORM_BACKGROUND_POOLS: Partial<Record<PlatformId, readonly string[]>> = {
   c64: [

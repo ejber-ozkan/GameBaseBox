@@ -353,14 +353,14 @@ export function BigBoxView({
 
   return (
     <div 
-      className="fixed inset-0 bg-[#0a0a0f] text-white flex flex-col overflow-hidden select-none"
+      className="fixed inset-0 bg-[#0a0a0f]/80 text-white flex flex-col overflow-hidden select-none"
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat saturate-[0.9] contrast-[1.05]"
-        style={{ backgroundImage: `url('${bigBoxBackground}')`, opacity: Math.min(LIBRARY_BACKGROUND_OPACITY + 0.15, 1) }}
+        style={{ backgroundImage: `url('${bigBoxBackground}')`, opacity: LIBRARY_BACKGROUND_OPACITY }}
       />
       {/* Cinematic Background Blur */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
