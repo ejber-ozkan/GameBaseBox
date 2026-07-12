@@ -8,10 +8,12 @@ interface ListViewProps {
   focusedIndex?: number;
   onFocusChange?: (index: number) => void;
   isFavorite?: (gameId: string) => boolean;
+  onEndReached?: () => void | Promise<void>;
 }
 
-export function ListView({ games, onSelectGame, onSort, focusedIndex = -1, onFocusChange, isFavorite }: ListViewProps) {
+export function ListView({ games, onSelectGame, onSort, focusedIndex = -1, onFocusChange, isFavorite, onEndReached }: ListViewProps) {
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
+  const endSentinelRef = useRef<HTMLTableRowElement>(null);
 
   useEffect(() => {
     if (focusedIndex >= 0 && tbodyRef.current) {
@@ -21,6 +23,21 @@ export function ListView({ games, onSelectGame, onSort, focusedIndex = -1, onFoc
       }
     }
   }, [focusedIndex]);
+
+  useEffect(() => {
+    if (!onEndReached || !endSentinelRef.current || !('IntersectionObserver' in window)) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        void onEndReached();
+      }
+    }, { rootMargin: '400px 0px' });
+    observer.observe(endSentinelRef.current);
+
+    return () => observer.disconnect();
+  }, [onEndReached]);
   return (
     <div className="overflow-x-auto p-4">
       <table className="min-w-full text-left text-sm text-gray-300">
@@ -58,6 +75,11 @@ export function ListView({ games, onSelectGame, onSort, focusedIndex = -1, onFoc
             </tr>
             );
           })}
+          {onEndReached ? (
+            <tr ref={endSentinelRef} aria-hidden="true">
+              <td colSpan={4} className="h-px p-0" />
+            </tr>
+          ) : null}
         </tbody>
       </table>
     </div>

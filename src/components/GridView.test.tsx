@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
 import { GridView } from './GridView';
@@ -17,6 +17,7 @@ vi.mock('../hooks/useFavorites', () => ({
 describe('GridView', () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   it('renders duplicate game records without duplicate React key warnings', () => {
@@ -45,5 +46,26 @@ describe('GridView', () => {
     const { getByText } = render(<GridView games={[mockGames[0]]} onSelectGame={vi.fn()} />);
 
     expect(getByText(mockGames[0].name).closest('[style]')?.getAttribute('style')).toContain('content-visibility: auto');
+  });
+
+  it('requests another page when its end sentinel reaches the scroll viewport', () => {
+    const onEndReached = vi.fn();
+    let callback: IntersectionObserverCallback | undefined;
+    vi.stubGlobal('IntersectionObserver', class {
+      constructor(nextCallback: IntersectionObserverCallback) {
+        callback = nextCallback;
+      }
+
+      disconnect = vi.fn();
+      observe = vi.fn();
+    });
+
+    render(<GridView games={[mockGames[0]]} onSelectGame={vi.fn()} onEndReached={onEndReached} />);
+
+    act(() => {
+      callback?.([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver);
+    });
+
+    expect(onEndReached).toHaveBeenCalledOnce();
   });
 });

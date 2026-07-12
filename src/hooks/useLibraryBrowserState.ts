@@ -115,27 +115,33 @@ export function useLibraryBrowserState() {
     settings.lastSelectedGameId,
   ]);
 
-  useEffect(() => {
-    if (
-      focusedIndex < games.length - PAGE_PREFETCH_THRESHOLD
-      || !hasMorePagesRef.current
-      || isLoadingNextPageRef.current
-    ) {
+  const loadNextPage = useCallback(async () => {
+    if (!hasMorePagesRef.current || isLoadingNextPageRef.current) {
       return;
     }
 
     isLoadingNextPageRef.current = true;
-    void getDbGames(LIBRARY_PAGE_SIZE, games.length, effectiveFilters, settings.activePlatformId)
-      .then((nextPage) => {
-        hasMorePagesRef.current = nextPage.length === LIBRARY_PAGE_SIZE;
-        if (nextPage.length > 0) {
-          setGames((current) => [...current, ...nextPage]);
-        }
-      })
-      .finally(() => {
-        isLoadingNextPageRef.current = false;
-      });
-  }, [effectiveFilters, focusedIndex, games.length, settings.activePlatformId]);
+    try {
+      const nextPage = await getDbGames(
+        LIBRARY_PAGE_SIZE,
+        games.length,
+        effectiveFilters,
+        settings.activePlatformId,
+      );
+      hasMorePagesRef.current = nextPage.length === LIBRARY_PAGE_SIZE;
+      if (nextPage.length > 0) {
+        setGames((current) => [...current, ...nextPage]);
+      }
+    } finally {
+      isLoadingNextPageRef.current = false;
+    }
+  }, [effectiveFilters, games.length, settings.activePlatformId]);
+
+  useEffect(() => {
+    if (focusedIndex >= games.length - PAGE_PREFETCH_THRESHOLD) {
+      void loadNextPage();
+    }
+  }, [focusedIndex, games.length, loadNextPage]);
 
   useEffect(() => {
     if (isRestored) {
@@ -258,6 +264,7 @@ export function useLibraryBrowserState() {
     games,
     handleGameSelect,
     handleSort,
+    loadNextPage,
     mounted,
     openTigerHeliFromSettings,
     persistWindowSize,

@@ -8,12 +8,13 @@ interface GridViewProps {
   onSelectGame: (game: Game) => void;
   focusedIndex?: number;
   onFocusChange?: (index: number) => void;
+  onEndReached?: () => void | Promise<void>;
 }
 
-export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange }: GridViewProps) {
+export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange, onEndReached }: GridViewProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
-  
   const containerRef = useRef<HTMLDivElement>(null);
+  const endSentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (focusedIndex >= 0 && containerRef.current) {
@@ -23,6 +24,21 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
       }
     }
   }, [focusedIndex]);
+
+  useEffect(() => {
+    if (!onEndReached || !endSentinelRef.current || !('IntersectionObserver' in window)) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        void onEndReached();
+      }
+    }, { rootMargin: '400px 0px' });
+    observer.observe(endSentinelRef.current);
+
+    return () => observer.disconnect();
+  }, [onEndReached]);
 
   return (
     <div ref={containerRef} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
@@ -69,6 +85,7 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
          </div>
          );
       })}
+      {onEndReached ? <div ref={endSentinelRef} aria-hidden="true" className="col-span-full h-px" /> : null}
     </div>
   );
 }

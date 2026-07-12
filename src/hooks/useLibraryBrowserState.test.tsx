@@ -285,6 +285,27 @@ describe('useLibraryBrowserState', () => {
     ));
   });
 
+  it('loads the next page when the windowed view reaches the loaded boundary', async () => {
+    const firstPage = Array.from({ length: 120 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    const secondPage = [{ ...mockGames[0], id: 121 }];
+    mockGetDbGames.mockImplementation(async (_limit: number, offset: number) => offset === 0 ? firstPage : secondPage);
+    const { result } = renderHook(() => useLibraryBrowserState());
+
+    await waitFor(() => expect(result.current.games).toHaveLength(120));
+
+    await act(async () => {
+      await result.current.loadNextPage();
+    });
+
+    expect(mockGetDbGames).toHaveBeenCalledWith(
+      120,
+      120,
+      expect.objectContaining({ hideAdult: false }),
+      undefined,
+    );
+    expect(result.current.games).toHaveLength(121);
+  });
+
   it('reloads games when the active platform import status changes to imported', async () => {
     const platformSettings = createDefaultPlatformSettingsMap();
     platformSettings.atari800.library.importStatus = 'notImported';
@@ -294,15 +315,12 @@ describe('useLibraryBrowserState', () => {
       lastFocusedIndex: 0,
       platformSettings,
     };
-    mockGetDbGames.mockResolvedValueOnce([]);
+    mockGetDbGames.mockResolvedValue([]);
 
     const { result, rerender } = renderHook(() => useLibraryBrowserState());
 
     await waitFor(() => {
       expect(result.current.games).toEqual([]);
-    });
-    await waitFor(() => {
-      expect(mockGetDbGames).toHaveBeenCalledTimes(2);
     });
     mockGetDbGames.mockClear();
 

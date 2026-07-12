@@ -62,6 +62,7 @@ function LibraryApp() {
     games,
     handleGameSelect,
     handleSort,
+    loadNextPage,
     mounted,
     openTigerHeliFromSettings,
     persistWindowSize,
@@ -385,6 +386,7 @@ function LibraryApp() {
                 onSelectGame={handleGameSelect} 
                 focusedIndex={focusedIndex >= 0 ? focusedIndex : -1} 
                 onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
+                onEndReached={loadNextPage}
               />
             </>
           ) : (
@@ -416,6 +418,7 @@ function LibraryApp() {
                 focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
                 onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
                 isFavorite={isFavorite}
+                onEndReached={loadNextPage}
               />
             </>
           )}
