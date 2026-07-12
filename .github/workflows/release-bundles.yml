@@ -57,7 +57,7 @@ jobs:
           npm run test:backend
           npm audit --omit=dev
           npm run build
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium webkit
           npm run test:e2e
 
   build-windows:
