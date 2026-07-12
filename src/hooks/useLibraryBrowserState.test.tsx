@@ -342,8 +342,14 @@ describe('useLibraryBrowserState', () => {
     const { result, rerender } = renderHook(() => useLibraryBrowserState());
 
     await waitFor(() => {
-      expect(result.current.games).toEqual([]);
+      expect(mockGetDbGames).toHaveBeenCalledWith(
+        120,
+        0,
+        expect.objectContaining({ hideAdult: false }),
+        'atari800',
+      );
     });
+    expect(result.current.games).toEqual([]);
     mockGetDbGames.mockClear();
 
     const importedPlatformSettings = createDefaultPlatformSettingsMap();
@@ -358,7 +364,10 @@ describe('useLibraryBrowserState', () => {
       lastFocusedIndex: 0,
       platformSettings: importedPlatformSettings,
     };
-    mockGetDbGames.mockResolvedValueOnce(mockGames);
+    // The initial restore can schedule a follow-up query. Keep the imported
+    // response stable so the assertion tests the platform-refresh behavior,
+    // rather than depending on which queued query consumes a one-shot mock.
+    mockGetDbGames.mockResolvedValue(mockGames);
 
     rerender();
 
