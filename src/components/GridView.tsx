@@ -38,6 +38,7 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
           }`}
           onClick={() => onSelectGame(game)}
           onMouseEnter={() => onFocusChange?.(index)}
+          style={{ contentVisibility: 'auto', containIntrinsicSize: '0 230px' }}
         >
           <div className="aspect-[1.6] bg-gray-950 mb-2 flex overflow-hidden rounded border border-white/5">
             <ImageSlider 

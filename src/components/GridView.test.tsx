@@ -40,4 +40,10 @@ describe('GridView', () => {
 
     expect(getByTestId('image-slider').getAttribute('data-defer')).toBe('true');
   });
+
+  it('uses content visibility to avoid painting off-screen cards', () => {
+    const { getByText } = render(<GridView games={[mockGames[0]]} onSelectGame={vi.fn()} />);
+
+    expect(getByText(mockGames[0].name).closest('[style]')?.getAttribute('style')).toContain('content-visibility: auto');
+  });
 });

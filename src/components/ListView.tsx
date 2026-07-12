@@ -41,6 +41,7 @@ export function ListView({ games, onSelectGame, onSort, focusedIndex = -1, onFoc
               key={`${game.id}-${index}`}
               onClick={() => onSelectGame(game)}
               onMouseEnter={() => onFocusChange?.(index)}
+              style={{ contentVisibility: 'auto', containIntrinsicSize: '0 42px' }}
               className={`border-b border-gray-700 cursor-pointer transition-colors ${
                 isFocused ? 'bg-blue-900/50 outline outline-2 outline-blue-500' : 'hover:bg-gray-600'
               }`}
