@@ -311,7 +311,7 @@ describe('useLibraryBrowserState', () => {
       expect(result.current.games).toHaveLength(mockGames.length);
     });
     expect(mockGetDbGames).toHaveBeenLastCalledWith(
-      500,
+      120,
       0,
       expect.objectContaining({ hideAdult: false }),
       'atari800',
