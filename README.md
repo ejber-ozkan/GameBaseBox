@@ -208,6 +208,73 @@ npm install
 npm run tauri dev
 ```
 
+## Debug Mode
+
+GBBox includes a built-in debug logging mode that prints warnings to the console when images or media files cannot be resolved. This is useful for diagnosing "No Image" issues caused by mismatched folder structures or filename casing.
+
+### Launching the installed app with debug output
+
+Open a terminal, navigate to where GBBox is installed, and add the `--debug` flag:
+
+**Windows (PowerShell or Command Prompt)**
+
+```powershell
+# Typical install location
+& "C:\Program Files\GBBox\GBBox.exe" --debug
+
+# Or from the install folder directly
+.\GBBox.exe --debug
+```
+
+**macOS (Terminal)**
+
+```bash
+# From the app bundle
+/Applications/GBBox.app/Contents/MacOS/GBBox --debug
+
+# Or using open with args
+open -a GBBox --args --debug
+```
+
+**Linux**
+
+```bash
+# AppImage
+./GBBox.AppImage --debug
+```
+
+> **Tip**: The short form `-d` also works on all platforms.
+
+### What debug output looks like
+
+When an image cannot be found you will see lines like:
+
+```
+[DEBUG] Debug logging enabled via CLI flag.
+[DEBUG WARNING] Failed to resolve media file "game_screenshot.png" under base directory "E:/Screenshots". Tried candidates: [...]
+[DEBUG WARNING] No media variants found for "game_cover.png" under base directory "E:/BoxArt"
+```
+
+These messages show exactly which filename GBBox looked for and which directories it searched, making it straightforward to spot folder path mismatches or missing files.
+
+### Alternative: environment variable
+
+If you prefer not to type the flag every time, set `GAMEBASEBOX_DEBUG=1` in your environment before launching normally (via shortcut, Finder, or file manager):
+
+**Windows (PowerShell, current session only)**
+
+```powershell
+$env:GAMEBASEBOX_DEBUG = "1"
+# Then launch via shortcut or Start menu - debug mode will be active
+```
+
+**macOS / Linux**
+
+```bash
+export GAMEBASEBOX_DEBUG=1
+# Then launch normally
+```
+
 ## Production Build
 
 ```bash
