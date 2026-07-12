@@ -7,7 +7,13 @@ pub async fn open_directory_dialog(app: tauri::AppHandle) -> Option<String> {
     app.dialog()
         .file()
         .blocking_pick_folder()
-        .map(|p| p.to_string())
+        .and_then(|file_path| {
+            let path = file_path.into_path().ok()?;
+            app.asset_protocol_scope()
+                .allow_directory(&path, true)
+                .ok()
+                .map(|_| path.to_string_lossy().to_string())
+        })
 }
 
 #[tauri::command]

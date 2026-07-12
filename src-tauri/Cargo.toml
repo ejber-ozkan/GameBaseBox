@@ -25,6 +25,7 @@ tauri-plugin-log = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
+tauri-plugin-persisted-scope = { version = "2", features = ["protocol-asset"] }
 walkdir = "2"
 crc32fast = "1"
 rusqlite = { version = "0.31", features = ["bundled"] }

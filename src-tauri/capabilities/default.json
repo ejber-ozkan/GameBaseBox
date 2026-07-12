@@ -1,15 +1,12 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "enables the default permissions",
+  "description": "minimal IPC permissions for the trusted main window",
   "windows": [
     "main"
   ],
   "permissions": [
     "core:default",
-    "shell:default",
-    "dialog:default",
-    "log:default",
-    "fs:default"
+    "log:default"
   ]
 }
