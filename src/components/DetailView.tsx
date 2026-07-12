@@ -50,6 +50,27 @@ const DETAIL_CONFIG: NavigationConfig = {
   'screenshot':        { left: 'media-boxfront', down: 'sid' },
 };
 
+const detailCache = new Map<string, Promise<GameDetail | null>>();
+
+export function clearDetailCache() {
+  detailCache.clear();
+}
+
+function getCachedGameDetail(gameId: string, platformId: string) {
+  const cacheKey = `${platformId}:${gameId}`;
+  const cached = detailCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  const request = getDbGameDetail(gameId, platformId).catch((error) => {
+    detailCache.delete(cacheKey);
+    throw error;
+  });
+  detailCache.set(cacheKey, request);
+  return request;
+}
+
 export function DetailView({ game, onBack }: DetailViewProps) {
   const { settings } = useSettings();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -98,7 +119,7 @@ export function DetailView({ game, onBack }: DetailViewProps) {
 
   useEffect(() => {
     let cancelled = false;
-    getDbGameDetail(game.id.toString(), settings.activePlatformId).then(detail => {
+    getCachedGameDetail(game.id.toString(), settings.activePlatformId).then(detail => {
       if (!cancelled && detail) setDetailedGame(detail);
     });
     return () => { cancelled = true; };
