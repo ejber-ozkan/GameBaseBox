@@ -64,7 +64,7 @@ export function useLibraryBrowserState() {
 
   useEffect(() => {
     async function fetchGames() {
-      const dbGames = await getDbGames(500, 0, effectiveFilters, settings.activePlatformId);
+      const dbGames = await getDbGames(120, 0, effectiveFilters, settings.activePlatformId);
       setGames(dbGames);
 
       if (!isRestored) {

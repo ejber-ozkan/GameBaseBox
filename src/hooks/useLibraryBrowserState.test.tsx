@@ -257,6 +257,18 @@ describe('useLibraryBrowserState', () => {
     expect(mockGetDbGames).not.toHaveBeenCalled();
   });
 
+  it('loads a bounded first page instead of a fixed 500-row result', async () => {
+    renderHook(() => useLibraryBrowserState());
+
+    await waitFor(() => expect(mockGetDbGames).toHaveBeenCalled());
+    expect(mockGetDbGames.mock.calls[0]).toEqual([
+      120,
+      0,
+      expect.objectContaining({ hideAdult: false }),
+      undefined,
+    ]);
+  });
+
   it('reloads games when the active platform import status changes to imported', async () => {
     const platformSettings = createDefaultPlatformSettingsMap();
     platformSettings.atari800.library.importStatus = 'notImported';
