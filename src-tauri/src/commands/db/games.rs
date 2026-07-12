@@ -209,6 +209,17 @@ pub async fn get_db_games(
     filters: Option<GameFilters>,
     platform_id: Option<String>,
 ) -> Result<Vec<GameRow>, String> {
+    tauri::async_runtime::spawn_blocking(move || get_db_games_blocking(limit, offset, filters, platform_id))
+        .await
+        .map_err(|error| format!("Game query worker failed: {error}"))?
+}
+
+fn get_db_games_blocking(
+    limit: Option<usize>,
+    offset: Option<usize>,
+    filters: Option<GameFilters>,
+    platform_id: Option<String>,
+) -> Result<Vec<GameRow>, String> {
     let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
     let conn = open_db_connection("Database error")?;
     let ordered_ids = load_ordered_game_ids_with_fallback(
