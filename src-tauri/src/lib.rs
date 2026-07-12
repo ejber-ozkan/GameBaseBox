@@ -49,12 +49,20 @@ use std::sync::OnceLock;
 static DEBUG_MODE: OnceLock<bool> = OnceLock::new();
 
 pub fn init_debug_mode() {
-    let debug = std::env::args().any(|arg| {
+    // Check CLI args for --debug / -d / --verbose / -v
+    let from_args = std::env::args().any(|arg| {
         arg == "--debug" || arg == "-d" || arg == "--verbose" || arg == "-v"
     });
+    // Also honour the GAMEBASEBOX_DEBUG environment variable (set by the debug launch scripts).
+    // This is simpler than fighting tauri-dev's argument-forwarding quirks.
+    let from_env = std::env::var("GAMEBASEBOX_DEBUG")
+        .map(|v| matches!(v.as_str(), "1" | "true" | "yes"))
+        .unwrap_or(false);
+    let debug = from_args || from_env;
     let _ = DEBUG_MODE.set(debug);
     if debug {
-        println!("[DEBUG] Debug logging enabled via CLI flag.");
+        let source = if from_env { "GAMEBASEBOX_DEBUG env var" } else { "CLI flag" };
+        println!("[DEBUG] Debug logging enabled via {}.", source);
     }
 }
 

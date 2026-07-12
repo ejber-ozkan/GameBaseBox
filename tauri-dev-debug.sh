@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Enable launch logging to console during development
-export VIC40_DEBUG_LAUNCH=1
+# Enable GBBox debug logging in the backend (checked by init_debug_mode in lib.rs)
+export GAMEBASEBOX_DEBUG=1
 
 # Ensure Cargo/Rust binaries added by Rustup are available in this shell session
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -23,7 +23,7 @@ if ! lsof -i :3000 -t >/dev/null 2>&1; then
     echo "[GBBox] Launching 'npm run dev' in the background..."
     npm run dev &
     FRONTEND_PID=$!
-    
+
     echo "[GBBox] Waiting 5 seconds for server to initialize..."
     sleep 5
 else
@@ -31,8 +31,8 @@ else
     FRONTEND_PID=""
 fi
 
-echo "[GBBox] Starting Tauri in debug mode (connecting to http://localhost:3000)..."
-npx tauri dev --no-dev-server-wait --config tauri.dev-override.json -- --debug
+echo "[GBBox] Starting Tauri in debug mode (GAMEBASEBOX_DEBUG=1)..."
+npx tauri dev --no-dev-server-wait --config tauri.dev-override.json
 
 # If we started the frontend in this script, clean it up when we exit
 if [ -n "$FRONTEND_PID" ]; then

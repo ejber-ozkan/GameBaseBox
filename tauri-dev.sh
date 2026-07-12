@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Enable launch logging to console during development
-export VIC40_DEBUG_LAUNCH=1
-
 # Ensure Cargo/Rust binaries added by Rustup are available in this shell session
 export PATH="$HOME/.cargo/bin:$PATH"
 

@@ -1,8 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Enable launch logging to console during development
-set VIC40_DEBUG_LAUNCH=1
+:: Enable GBBox debug logging in the backend (checked by init_debug_mode in lib.rs)
+set GAMEBASEBOX_DEBUG=1
 
 :: Ensure Cargo/Rust binaries added by Rustup are available in this shell session
 set PATH=%USERPROFILE%\.cargo\bin;%PATH%
@@ -15,7 +15,7 @@ if not exist "node_modules\" (
     exit /b 1
 )
 
-echo [GBBox] Using Rust: 
+echo [GBBox] Using Rust:
 rustc --version
 cargo --version
 
@@ -25,12 +25,12 @@ if errorlevel 1 (
     echo [GBBox] Frontend port 3000 not detected.
     echo [GBBox] Launching 'npm run dev' in a separate window...
     start "GBBox-Frontend" cmd /c "npm run dev"
-    
+
     echo [GBBox] Waiting 5 seconds for server to initialize...
     timeout /t 5 /nobreak > nul
 ) else (
     echo [GBBox] Frontend already running on port 3000.
 )
 
-echo [GBBox] Starting Tauri in debug mode (connecting to http://localhost:3000)...
-npx tauri dev --no-dev-server-wait --config tauri.dev-override.json -- --debug
+echo [GBBox] Starting Tauri in debug mode (GAMEBASEBOX_DEBUG=1)...
+npx tauri dev --no-dev-server-wait --config tauri.dev-override.json
