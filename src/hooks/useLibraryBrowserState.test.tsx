@@ -269,6 +269,22 @@ describe('useLibraryBrowserState', () => {
     ]);
   });
 
+  it('appends the next page when focus approaches the loaded boundary', async () => {
+    const firstPage = Array.from({ length: 120 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    mockGetDbGames.mockImplementation(async (_limit: number, offset: number) => offset === 0 ? firstPage : []);
+    const { result } = renderHook(() => useLibraryBrowserState());
+
+    await waitFor(() => expect(result.current.games).toHaveLength(120));
+    act(() => result.current.setFocusedIndex(110));
+
+    await waitFor(() => expect(mockGetDbGames).toHaveBeenCalledWith(
+      120,
+      120,
+      expect.objectContaining({ hideAdult: false }),
+      undefined,
+    ));
+  });
+
   it('reloads games when the active platform import status changes to imported', async () => {
     const platformSettings = createDefaultPlatformSettingsMap();
     platformSettings.atari800.library.importStatus = 'notImported';

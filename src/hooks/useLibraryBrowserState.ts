@@ -8,6 +8,8 @@ import { GameFilters, getDbGames } from '../lib/tauri-bridge';
 import { sortGames } from '../utils/sorting';
 
 export type LibraryViewMode = 'grid' | 'list' | 'settings';
+const LIBRARY_PAGE_SIZE = 120;
+const PAGE_PREFETCH_THRESHOLD = 16;
 
 export function getLibraryRefreshToken(settings: Settings): string {
   const library = settings.platformSettings[settings.activePlatformId]?.library;
@@ -32,6 +34,8 @@ export function useLibraryBrowserState() {
   const [searchInput, setSearchInput] = useState('');
   const [isRestored, setIsRestored] = useState(false);
   const [prevPlatformId, setPrevPlatformId] = useState(settings.activePlatformId);
+  const hasMorePagesRef = useRef(true);
+  const isLoadingNextPageRef = useRef(false);
   const shelfRef = useRef<HTMLDivElement>(null);
   const libraryRefreshToken = getLibraryRefreshToken(settings);
 
@@ -64,8 +68,9 @@ export function useLibraryBrowserState() {
 
   useEffect(() => {
     async function fetchGames() {
-      const dbGames = await getDbGames(120, 0, effectiveFilters, settings.activePlatformId);
+      const dbGames = await getDbGames(LIBRARY_PAGE_SIZE, 0, effectiveFilters, settings.activePlatformId);
       setGames(dbGames);
+      hasMorePagesRef.current = dbGames.length === LIBRARY_PAGE_SIZE;
 
       if (!isRestored) {
         if (settings.lastSelectedGameId) {
@@ -109,6 +114,28 @@ export function useLibraryBrowserState() {
     settings.lastFocusedIndex,
     settings.lastSelectedGameId,
   ]);
+
+  useEffect(() => {
+    if (
+      focusedIndex < games.length - PAGE_PREFETCH_THRESHOLD
+      || !hasMorePagesRef.current
+      || isLoadingNextPageRef.current
+    ) {
+      return;
+    }
+
+    isLoadingNextPageRef.current = true;
+    void getDbGames(LIBRARY_PAGE_SIZE, games.length, effectiveFilters, settings.activePlatformId)
+      .then((nextPage) => {
+        hasMorePagesRef.current = nextPage.length === LIBRARY_PAGE_SIZE;
+        if (nextPage.length > 0) {
+          setGames((current) => [...current, ...nextPage]);
+        }
+      })
+      .finally(() => {
+        isLoadingNextPageRef.current = false;
+      });
+  }, [effectiveFilters, focusedIndex, games.length, settings.activePlatformId]);
 
   useEffect(() => {
     if (isRestored) {
