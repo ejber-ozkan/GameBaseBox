@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-07-13
+
+### Changed
+- Replaced the deprecated Node 20 GitHub release action with the GitHub CLI available on Node 24-hosted runners.
+- Bumped package, Tauri, Cargo, lockfile, and root version metadata to `0.5.2`.
+
+### Fixed
+- Fixed screenshots and other local images appearing blank in Windows production builds by using Tauri asset URLs with the correct asset-protocol CSP origin.
+- Fixed the `ImageSlider` missing React effect dependency warning and kept missing-image diagnostics aligned with the current game title.
+
 ## [0.5.1] - 2026-07-13
 
 ### Added

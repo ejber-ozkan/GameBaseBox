@@ -72,7 +72,7 @@ export function ImageSlider({
       setHasError(false);
     }
     loadVariants();
-  }, [filename, type, findAllVariants, shouldLoadVariants]);
+  }, [alt, filename, type, findAllVariants, shouldLoadVariants]);
   // Support cycling through images
   useEffect(() => {
     if (!settings.imageCycling || images.length <= 1) return;
@@ -115,6 +115,9 @@ export function ImageSlider({
                         alt={`${alt} ${idx + 1}`}
                         className={`w-full h-full ${resolvedImageClassName}`}
                         onError={() => {
+                            isDebugMode().then(debug => {
+                              if (debug) logDebugMessage(`[DEBUG WARNING] ImageSlider img onError (slide): src="${src}" alt="${alt}"`);
+                            });
                             if (images.length === 1) {
                                 setHasError(true);
                             } else {
@@ -134,6 +137,9 @@ export function ImageSlider({
                       alt={`${alt} ${currentIndex + 1}`}
                       className={`w-full h-full ${resolvedImageClassName} animate-in fade-in duration-500`}
                       onError={() => {
+                          isDebugMode().then(debug => {
+                            if (debug) logDebugMessage(`[DEBUG WARNING] ImageSlider img onError (fade): src="${activeImage}" alt="${alt}"`);
+                          });
                           if (images.length === 1) {
                               setHasError(true);
                           } else {

@@ -390,14 +390,24 @@ export async function getAssetUrl(absolutePath: string): Promise<string> {
       const { convertFileSrc } = await import('@tauri-apps/api/core');
       // Normalize windows paths to use forward slashes for the internal URL conversion
       const normalized = absolutePath.replace(/\\/g, '/');
-      return convertFileSrc(normalized);
+      const url = convertFileSrc(normalized);
+      if (await isDebugMode()) {
+        logDebugMessage(`[DEBUG] getAssetUrl resolved URL: "${url}"`);
+      }
+      return url;
     })();
     assetUrlCache.set(absolutePath, p);
-    p.catch(() => assetUrlCache.delete(absolutePath));
+    p.catch((err) => {
+      isDebugMode().then(debug => {
+        if (debug) logDebugMessage(`[DEBUG WARNING] getAssetUrl failed for "${absolutePath}": ${err}`);
+      });
+      assetUrlCache.delete(absolutePath);
+    });
     cached = p;
   } else {
     if (await isDebugMode()) {
-      logDebugMessage(`[DEBUG] [CACHE HIT] getAssetUrl: "${absolutePath}"`);
+      const resolvedUrl = await cached;
+      logDebugMessage(`[DEBUG] [CACHE HIT] getAssetUrl: "${absolutePath}" -> "${resolvedUrl}"`);
     }
   }
   return cached;
@@ -432,10 +442,19 @@ export async function getMediaUrl(absolutePath: string): Promise<string> {
     const p = (async () => {
       const bytes = await readFileBytes(absolutePath);
       const blob = new Blob([bytes as unknown as BlobPart], { type: 'application/octet-stream' });
-      return URL.createObjectURL(blob);
+      const url = URL.createObjectURL(blob);
+      if (await isDebugMode()) {
+        logDebugMessage(`[DEBUG] getMediaUrl blob URL created: "${url}" for "${absolutePath}"`);
+      }
+      return url;
     })();
     mediaUrlCache.set(absolutePath, p);
-    p.catch(() => mediaUrlCache.delete(absolutePath));
+    p.catch((err) => {
+      isDebugMode().then(debug => {
+        if (debug) logDebugMessage(`[DEBUG WARNING] getMediaUrl failed for "${absolutePath}": ${err}`);
+      });
+      mediaUrlCache.delete(absolutePath);
+    });
     cached = p;
   } else {
     if (await isDebugMode()) {

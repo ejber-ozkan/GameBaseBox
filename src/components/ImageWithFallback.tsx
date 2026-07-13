@@ -51,13 +51,16 @@ export function ImageWithFallback({
       if (isAbsolute) {
         try {
           const url = await getAssetUrl(targetPath);
+          if (await isDebugMode()) {
+            logDebugMessage(`[DEBUG] ImageWithFallback setting src: "${url}" (alt: "${alt}")`);
+          }
           setResolvedSrc(url);
           setHasError(false);
         } catch (e) {
           console.error("Failed to get asset URL for absolute path:", targetPath, e);
           isDebugMode().then(debug => {
             if (debug) {
-              logDebugMessage(`[DEBUG WARNING] Failed to get asset URL for absolute path: "${targetPath}"`);
+              logDebugMessage(`[DEBUG WARNING] Failed to get asset URL for absolute path: "${targetPath}": ${e}`);
             }
           });
           setResolvedSrc(src); // fallback to original
@@ -70,7 +73,7 @@ export function ImageWithFallback({
     }
 
     resolveSource();
-  }, [src]);
+  }, [alt, src]);
 
   if (!resolvedSrc || hasError) {
     return (

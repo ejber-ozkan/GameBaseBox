@@ -60,6 +60,19 @@ jobs:
           npx playwright install --with-deps chromium webkit
           npm run test:e2e
 
+      - name: Create GitHub release
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version="$(tr -d '\r\n' < VERSION)"
+          notes="RELEASE_NOTES_${version}.md"
+          if gh release view "${{ github.ref_name }}" >/dev/null 2>&1; then
+            gh release edit "${{ github.ref_name }}" --title "GBBox ${version}" --notes-file "$notes"
+          else
+            gh release create "${{ github.ref_name }}" --verify-tag --title "GBBox ${version}" --notes-file "$notes"
+          fi
+
   build-windows:
     needs: quality
     if: github.event_name == 'push' || github.event.inputs.build_windows == 'true'
@@ -116,11 +129,9 @@ jobs:
 
       - name: Attach Windows bundles to release
         if: github.event_name == 'push'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          body_path: release-assets/RELEASE_NOTES.md
-          files: release-assets/GBBox-Windows-x64-Setup.exe
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.ref_name }}" "release-assets/GBBox-Windows-x64-Setup.exe" --clobber
 
   build-linux:
     needs: quality
@@ -194,11 +205,9 @@ jobs:
 
       - name: Attach Linux bundles to release
         if: github.event_name == 'push'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          body_path: release-assets/RELEASE_NOTES.md
-          files: release-assets/GBBox-Linux.AppImage
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.ref_name }}" "release-assets/GBBox-Linux.AppImage" --clobber
 
   build-macos:
     needs: quality
@@ -258,8 +267,6 @@ jobs:
 
       - name: Attach macOS bundles to release
         if: github.event_name == 'push'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          body_path: release-assets/RELEASE_NOTES.md
-          files: release-assets/GBBox-macOS.dmg
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.ref_name }}" "release-assets/GBBox-macOS.dmg" --clobber

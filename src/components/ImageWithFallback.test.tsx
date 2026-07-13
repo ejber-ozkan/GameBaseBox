@@ -1,8 +1,27 @@
-import { expect, test, describe } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { expect, test, describe, beforeEach, afterEach, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ImageWithFallback } from './ImageWithFallback';
 
+const { getAssetUrl, logDebugMessage } = vi.hoisted(() => ({
+  getAssetUrl: vi.fn().mockResolvedValue('http://asset.localhost/test.jpg'),
+  logDebugMessage: vi.fn(),
+}));
+
+vi.mock('../lib/tauri-bridge', () => ({
+  getAssetUrl,
+  isDebugMode: vi.fn().mockResolvedValue(true),
+  logDebugMessage,
+}));
+
 describe('ImageWithFallback component', () => {
+  beforeEach(() => {
+    getAssetUrl.mockClear();
+    logDebugMessage.mockClear();
+  });
+
+  afterEach(() => {
+    delete (window as Window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__;
+  });
 
   test('renders image element initially passing valid props', () => {
     render(<ImageWithFallback src="/test.jpg" alt="test image" />);
@@ -31,5 +50,17 @@ describe('ImageWithFallback component', () => {
     // Original image DOM should be destroyed, fallback replacing it
     expect(screen.queryByTestId('image-element')).toBeNull();
     expect(screen.getByTestId('image-fallback').textContent).toBe('No Image');
+  });
+
+  test('uses the current alt text when logging a resolved Tauri asset', async () => {
+    (window as Window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__ = {};
+    const { rerender } = render(<ImageWithFallback src="C:\\media\\test.jpg" alt="Old title" />);
+
+    await waitFor(() => expect(logDebugMessage).toHaveBeenCalledWith(expect.stringContaining('Old title')));
+    logDebugMessage.mockClear();
+
+    rerender(<ImageWithFallback src="C:\\media\\test.jpg" alt="New title" />);
+
+    await waitFor(() => expect(logDebugMessage).toHaveBeenCalledWith(expect.stringContaining('New title')));
   });
 });
