@@ -48,6 +48,13 @@ use std::sync::OnceLock;
 
 static DEBUG_MODE: OnceLock<bool> = OnceLock::new();
 
+#[cfg(target_os = "windows")]
+extern "system" {
+    fn AttachConsole(dwProcessId: u32) -> i32;
+    fn FreeConsole() -> i32;
+    fn SetStdHandle(nStdHandle: u32, hHandle: *mut std::ffi::c_void) -> i32;
+}
+
 pub fn init_debug_mode() {
     // Check CLI args for --debug / -d / --verbose / -v
     let from_args = std::env::args().any(|arg| {
@@ -61,6 +68,20 @@ pub fn init_debug_mode() {
     let debug = from_args || from_env;
     let _ = DEBUG_MODE.set(debug);
     if debug {
+        #[cfg(target_os = "windows")]
+        unsafe {
+            let _ = FreeConsole();
+            if AttachConsole(0xffff_ffff) != 0 {
+                use std::fs::OpenOptions;
+                use std::os::windows::io::AsRawHandle;
+                if let Ok(file) = OpenOptions::new().write(true).open("CONOUT$") {
+                    let handle = file.as_raw_handle();
+                    SetStdHandle(0xffff_fff5, handle as *mut std::ffi::c_void); // STD_OUTPUT_HANDLE
+                    SetStdHandle(0xffff_fff4, handle as *mut std::ffi::c_void); // STD_ERROR_HANDLE
+                }
+            }
+        }
+
         let source = if from_env { "GAMEBASEBOX_DEBUG env var" } else { "CLI flag" };
         println!("[DEBUG] Debug logging enabled via {}.", source);
     }
@@ -80,7 +101,17 @@ use tauri::Manager;
 pub fn run() {
     init_debug_mode();
     tauri::Builder::default()
-        .plugin(tauri_plugin_log::Builder::new().build())
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .targets([
+                    tauri_plugin_log::Target::new(tauri_plugin_log::TargetKind::Stdout),
+                    tauri_plugin_log::Target::new(tauri_plugin_log::TargetKind::LogDir {
+                        file_name: Some("main".to_string()),
+                    }),
+                    tauri_plugin_log::Target::new(tauri_plugin_log::TargetKind::Webview),
+                ])
+                .build(),
+        )
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_persisted_scope::init())
         .plugin(tauri_plugin_shell::init())
