@@ -275,6 +275,14 @@ export GAMEBASEBOX_DEBUG=1
 # Then launch normally
 ```
 
+### Persistent log files
+
+All debug output and warnings are also persistently written to log files in the standard application log directories on your system:
+
+* **Windows**: `%APPDATA%\com.gamebasebox.desktop\logs\main.log`
+* **macOS**: `~/Library/Logs/com.gamebasebox.desktop/main.log`
+* **Linux**: `~/.cache/com.gamebasebox.desktop/logs/main.log`
+
 ## Production Build
 
 ```bash
