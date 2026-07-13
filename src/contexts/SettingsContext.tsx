@@ -410,10 +410,30 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       const hasChange = Object.entries(scopedNewSettings).some(([k, v]) => prev[k as keyof Settings] !== v);
       if (!hasChange) return prev;
 
-      // Clear the frontend media path/URL cache when settings change
-      clearMediaCache();
-
       const updated = { ...prev, ...scopedNewSettings };
+
+      // Clear the frontend media path/URL cache ONLY if the active platform or folder paths changed.
+      // This prevents clearing the cache during navigation (lastFocusedIndex, lastSelectedGameId, recentlyPlayedIds, etc.).
+      const platformChanged = prev.activePlatformId !== updated.activePlatformId;
+      const pathsChanged = Object.keys(updated.platformSettings).some(platformId => {
+        const pId = platformId as PlatformId;
+        const prevFolders = prev.platformSettings[pId]?.folders;
+        const newFolders = updated.platformSettings[pId]?.folders;
+        if (!prevFolders || !newFolders) return false;
+        return (
+          prevFolders.screenshotsPath !== newFolders.screenshotsPath ||
+          prevFolders.musicPath !== newFolders.musicPath ||
+          prevFolders.photosPath !== newFolders.photosPath ||
+          prevFolders.extrasPath !== newFolders.extrasPath ||
+          prevFolders.boxArtPath !== newFolders.boxArtPath ||
+          prevFolders.videosPath !== newFolders.videosPath ||
+          prevFolders.gamesPath !== newFolders.gamesPath
+        );
+      });
+
+      if (platformChanged || pathsChanged) {
+        clearMediaCache();
+      }
       
       // Sync flat navigation properties into platform-scoped settings
       const activePlatformId = updated.activePlatformId;
