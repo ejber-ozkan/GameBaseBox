@@ -269,7 +269,7 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
             let path_str = clean_unc_prefix(resolved.to_string_lossy().to_string());
             if crate::is_debug_mode() {
                 println!(
-                    "[DEBUG] Media resolved via fast-path: {:?} -> {:?}",
+                    "[DEBUG] Media resolved via fast-path: \"{}\" -> \"{}\"",
                     filename,
                     path_str
                 );
@@ -288,7 +288,7 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
                 let path_str = clean_unc_prefix(resolved.to_string_lossy().to_string());
                 if crate::is_debug_mode() {
                     println!(
-                        "[DEBUG] Media resolved via case-insensitive slow-path: {:?} -> {:?}",
+                        "[DEBUG] Media resolved via case-insensitive slow-path: \"{}\" -> \"{}\"",
                         filename,
                         path_str
                     );
@@ -302,11 +302,16 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
     }
 
     if crate::is_debug_mode() {
+        let tried_formatted = candidates
+            .iter()
+            .map(|c| format!("\"{}\"", clean_unc_prefix(c.display().to_string())))
+            .collect::<Vec<_>>()
+            .join(", ");
         eprintln!(
-            "[DEBUG WARNING] Failed to resolve media file {:?} under base directory {:?}. Tried candidates: {:?}",
+            "[DEBUG WARNING] Failed to resolve media file \"{}\" under base directory \"{}\". Tried candidates: [{}]",
             filename,
             base_dir,
-            candidates.iter().map(|c| clean_unc_prefix(c.display().to_string())).collect::<Vec<_>>()
+            tried_formatted
         );
     }
 
@@ -442,16 +447,21 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
     if crate::is_debug_mode() {
         if results.is_empty() {
             eprintln!(
-                "[DEBUG WARNING] No media variants found for {:?} under base directory {:?}",
+                "[DEBUG WARNING] No media variants found for \"{}\" under base directory \"{}\"",
                 filename,
                 base_dir
             );
         } else {
+            let formatted_results = results
+                .iter()
+                .map(|r| format!("\"{}\"", r))
+                .collect::<Vec<_>>()
+                .join(", ");
             println!(
-                "[DEBUG] Found {} media variants for {:?}: {:?}",
+                "[DEBUG] Found {} media variants for \"{}\": [{}]",
                 results.len(),
                 filename,
-                results
+                formatted_results
             );
         }
     }
