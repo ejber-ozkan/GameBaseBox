@@ -1,6 +1,6 @@
 [package]
 name = "gamebasebox"
-version = "0.5.0"
+version = "0.5.1"
 description = "GBBox - GameBase Box"
 authors = ["GBBox Contributors"]
 license = "MIT"

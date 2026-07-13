@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-07-13
+
+### Added
+- Added built-in debug logging mode (enabled via `--debug`/`-d` flags or `GAMEBASEBOX_DEBUG=1` environment variable) to diagnose media resolution issues.
+- Added persistent file logging so application logs are saved to a standard rolling `main.log` file in the user's application data/cache directory.
+- Added a fallback silhouette image (`public/images/unknown-musician.png`) on the Game Detail view if a musician's photo is missing on disk or named `(Unknown).jpg`.
+- Added developer launch scripts `tauri-dev-debug.bat` and `tauri-dev-debug.sh` for starting the app in debug mode.
+
+### Changed
+- Bumped package, Tauri, Cargo, lockfile, and root version metadata to `0.5.1`.
+
+### Fixed
+- Fixed frontend media path and ObjectURL resolution caching to prevent redundant backend Tauri IPC calls and disk thrashing during library navigation.
+- Fixed log output formatting on Windows by automatically stripping the UNC prefix (`\\?\`) from canonicalized disk paths for easy copying to Windows Explorer.
+
 ## [0.5.0] - 2026-07-12
 
 ### Added
