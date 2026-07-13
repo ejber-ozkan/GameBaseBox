@@ -49,11 +49,27 @@ pub fn allow_asset_path(app: tauri::AppHandle, path: String) -> Result<(), Strin
     let parent = asset_path
         .parent()
         .filter(|directory| directory.is_dir())
-        .ok_or_else(|| format!("Asset parent directory does not exist: {path}"))?;
+        .ok_or_else(|| {
+            let msg = format!("Asset parent directory does not exist: {path}");
+            if crate::is_debug_mode() {
+                log::warn!("[DEBUG] allow_asset_path failed: {}", msg);
+            }
+            msg
+        })?;
+
+    if crate::is_debug_mode() {
+        log::info!("[DEBUG] allow_asset_path: granting scope for \"{}\"", parent.display());
+    }
 
     app.asset_protocol_scope()
         .allow_directory(parent, true)
-        .map_err(|error| error.to_string())
+        .map_err(|error| {
+            let msg = error.to_string();
+            if crate::is_debug_mode() {
+                log::warn!("[DEBUG] allow_asset_path: scope grant failed for \"{}\": {}", parent.display(), msg);
+            }
+            msg
+        })
 }
 
 #[tauri::command]

@@ -8,6 +8,12 @@ use tempfile::NamedTempFile;
 
 #[tokio::test(flavor = "current_thread")]
 async fn test_get_supported_platforms_includes_atari800_capabilities() {
+    // Use a fresh temp DB and hold the mutex to avoid racing with tests that
+    // insert atari800 as "imported" into the shared DB env.
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
     let platforms = get_supported_platforms().await.unwrap();
     let atari800 = platforms
         .iter()
