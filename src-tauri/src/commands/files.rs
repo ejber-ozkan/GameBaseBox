@@ -1,6 +1,24 @@
 use crate::models::{ResolvedPath, ScannedRom};
 use std::path::{Component, Path, PathBuf};
 
+fn clean_unc_prefix(path_str: String) -> String {
+    #[cfg(windows)]
+    {
+        if path_str.starts_with(r"\\?\UNC\") {
+            format!(r"\\{}", &path_str[8..])
+        } else if path_str.starts_with(r"\\?\") {
+            path_str[4..].to_string()
+        } else {
+            path_str
+        }
+    }
+    #[cfg(not(windows))]
+    {
+        path_str
+    }
+}
+
+
 const MAX_MEDIA_DOWNLOAD_BYTES: u64 = 100 * 1024 * 1024;
 
 fn validate_media_download_url(value: &str) -> Result<reqwest::Url, String> {
@@ -248,16 +266,17 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
         if candidate.exists() && candidate.is_file() {
             // Canonicalize to obtain the actual on-disk path with real casing
             let resolved = candidate.canonicalize().unwrap_or_else(|_| candidate.clone());
+            let path_str = clean_unc_prefix(resolved.to_string_lossy().to_string());
             if crate::is_debug_mode() {
                 println!(
                     "[DEBUG] Media resolved via fast-path: {:?} -> {:?}",
                     filename,
-                    resolved.display()
+                    path_str
                 );
             }
             return ResolvedPath {
                 exists: true,
-                absolute_path: resolved.to_string_lossy().to_string(),
+                absolute_path: path_str,
             };
         }
     }
@@ -266,16 +285,17 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
     for candidate in &candidates {
         if let Ok(rel) = candidate.strip_prefix(base) {
             if let Some(resolved) = resolve_path_case_insensitive(base, rel) {
+                let path_str = clean_unc_prefix(resolved.to_string_lossy().to_string());
                 if crate::is_debug_mode() {
                     println!(
                         "[DEBUG] Media resolved via case-insensitive slow-path: {:?} -> {:?}",
                         filename,
-                        resolved.display()
+                        path_str
                     );
                 }
                 return ResolvedPath {
                     exists: true,
-                    absolute_path: resolved.to_string_lossy().to_string(),
+                    absolute_path: path_str,
                 };
             }
         }
@@ -286,7 +306,7 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
             "[DEBUG WARNING] Failed to resolve media file {:?} under base directory {:?}. Tried candidates: {:?}",
             filename,
             base_dir,
-            candidates.iter().map(|c| c.display().to_string()).collect::<Vec<_>>()
+            candidates.iter().map(|c| clean_unc_prefix(c.display().to_string())).collect::<Vec<_>>()
         );
     }
 
@@ -344,14 +364,14 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
         // Fast-path direct check
         let base_direct = resolved_parent.join(base_name);
         if base_direct.exists() && base_direct.is_file() {
-            let path_str = base_direct.to_string_lossy().to_string();
+            let path_str = clean_unc_prefix(base_direct.to_string_lossy().to_string());
             if !results.contains(&path_str) {
                 results.push(path_str);
             }
         } else {
             // Case-insensitive fallback
             if let Some(matched_base) = find_case_insensitive_file(&resolved_parent, base_name) {
-                let path_str = matched_base.to_string_lossy().to_string();
+                let path_str = clean_unc_prefix(matched_base.to_string_lossy().to_string());
                 if !results.contains(&path_str) {
                     results.push(path_str);
                 }
@@ -362,10 +382,10 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
         let check_variant = |res_list: &mut Vec<String>, var_name: &str| {
             let direct = resolved_parent.join(var_name);
             if direct.exists() && direct.is_file() {
-                res_list.push(direct.to_string_lossy().to_string());
+                res_list.push(clean_unc_prefix(direct.to_string_lossy().to_string()));
                 true
             } else if let Some(matched) = find_case_insensitive_file(&resolved_parent, var_name) {
-                res_list.push(matched.to_string_lossy().to_string());
+                res_list.push(clean_unc_prefix(matched.to_string_lossy().to_string()));
                 true
             } else {
                 false
