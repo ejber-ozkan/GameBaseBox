@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { getMediaUrl, isDebugMode, logDebugMessage } from '../lib/tauri-bridge';
+import { getAssetUrl, isDebugMode, logDebugMessage } from '../lib/tauri-bridge';
 
 interface ImageWithFallbackProps {
   src: string;
@@ -50,14 +50,14 @@ export function ImageWithFallback({
 
       if (isAbsolute) {
         try {
-          const url = await getMediaUrl(targetPath);
+          const url = await getAssetUrl(targetPath);
           setResolvedSrc(url);
           setHasError(false);
         } catch (e) {
-          console.error("Failed to get media URL for absolute path:", targetPath, e);
+          console.error("Failed to get asset URL for absolute path:", targetPath, e);
           isDebugMode().then(debug => {
             if (debug) {
-              logDebugMessage(`[DEBUG WARNING] Failed to get media URL for absolute path: "${targetPath}"`);
+              logDebugMessage(`[DEBUG WARNING] Failed to get asset URL for absolute path: "${targetPath}"`);
             }
           });
           setResolvedSrc(src); // fallback to original

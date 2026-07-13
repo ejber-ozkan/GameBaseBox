@@ -3,7 +3,7 @@
 import type { CSSProperties } from 'react';
 import { useEffect, useState } from "react";
 import { useSettings } from "../contexts/SettingsContext";
-import { getMediaUrl, resolveMediaPath } from "../lib/tauri-bridge";
+import { getAssetUrl, resolveMediaPath } from "../lib/tauri-bridge";
 
 interface MusicianPhotoProps {
   photoFilename: string | null;
@@ -33,7 +33,7 @@ export function MusicianPhoto({ photoFilename, musicianName, className = "", sty
       try {
         const resolved = await resolveMediaPath(photosPath, actualPhotoFilename);
         if (resolved.exists) {
-          const url = await getMediaUrl(resolved.absolute_path);
+          const url = await getAssetUrl(resolved.absolute_path);
           setPhotoUrl(url);
           setError(false);
         } else {

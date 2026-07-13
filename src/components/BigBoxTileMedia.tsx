@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
-import { getMediaUrl, resolveMediaPath as resolveNativeMediaPath } from '../lib/tauri-bridge';
+import { getAssetUrl, resolveMediaPath as resolveNativeMediaPath } from '../lib/tauri-bridge';
 import { Game } from '../types/game';
 
 interface BigBoxTileMediaProps {
@@ -44,7 +44,7 @@ function getCoverUrl(extrasPath: string, coverPath: string) {
     try {
       const resolved = await resolveNativeMediaPath(cleanExtrasPath, cleanCoverPath);
       if (!resolved.exists) return null;
-      return await getMediaUrl(resolved.absolute_path);
+      return await getAssetUrl(resolved.absolute_path);
     } catch {
       return `${cleanExtrasPath}/${cleanCoverPath}`;
     }

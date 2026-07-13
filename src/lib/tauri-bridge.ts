@@ -287,6 +287,7 @@ export async function testEmulatorProfile(request: EmulatorProfileTestRequest): 
 const resolveMediaPathCache = new Map<string, Promise<ResolvedPath>>();
 const findAllMediaVariantsCache = new Map<string, Promise<string[]>>();
 const mediaUrlCache = new Map<string, Promise<string>>();
+const assetUrlCache = new Map<string, Promise<string>>();
 
 export function clearMediaCache(): void {
   // Revoke all ObjectURLs in the cache to avoid memory leaks
@@ -300,6 +301,7 @@ export function clearMediaCache(): void {
   resolveMediaPathCache.clear();
   findAllMediaVariantsCache.clear();
   mediaUrlCache.clear();
+  assetUrlCache.clear();
 }
 
 export async function resolveMediaPath(
@@ -375,14 +377,30 @@ export async function downloadMediaAsset(url: string, destDir: string, filename:
  * Falls back to returning the path directly in web contexts.
  */
 export async function getAssetUrl(absolutePath: string): Promise<string> {
-  if (!isTauri()) {
-    return absolutePath;
+  let cached = assetUrlCache.get(absolutePath);
+  if (!cached) {
+    if (await isDebugMode()) {
+      logDebugMessage(`[DEBUG] [CACHE MISS] getAssetUrl: "${absolutePath}" - resolving asset src`);
+    }
+    const p = (async () => {
+      if (!isTauri()) {
+        return absolutePath;
+      }
+      await invoke<void>('allow_asset_path', { path: absolutePath });
+      const { convertFileSrc } = await import('@tauri-apps/api/core');
+      // Normalize windows paths to use forward slashes for the internal URL conversion
+      const normalized = absolutePath.replace(/\\/g, '/');
+      return convertFileSrc(normalized);
+    })();
+    assetUrlCache.set(absolutePath, p);
+    p.catch(() => assetUrlCache.delete(absolutePath));
+    cached = p;
+  } else {
+    if (await isDebugMode()) {
+      logDebugMessage(`[DEBUG] [CACHE HIT] getAssetUrl: "${absolutePath}"`);
+    }
   }
-  await invoke<void>('allow_asset_path', { path: absolutePath });
-  const { convertFileSrc } = await import('@tauri-apps/api/core');
-  // Normalize windows paths to use forward slashes for the internal URL conversion
-  const normalized = absolutePath.replace(/\\/g, '/');
-  return convertFileSrc(normalized);
+  return cached;
 }
 
 /**

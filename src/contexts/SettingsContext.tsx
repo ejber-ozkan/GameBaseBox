@@ -542,7 +542,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return [];
     
     try {
-      const { findAllMediaVariants, getMediaUrl } = await import('../lib/tauri-bridge');
+      const { findAllMediaVariants, getMediaUrl, getAssetUrl } = await import('../lib/tauri-bridge');
       const folders = settings.platformSettings[settings.activePlatformId]?.folders;
       const baseDir = (() => {
         switch (type) {
@@ -563,7 +563,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
       const variants = await findAllMediaVariants(baseDir, filename);
       
-      const urls = await Promise.all(variants.map(v => getMediaUrl(v)));
+      const urls = await Promise.all(
+        variants.map(v => {
+          if (type === 'screenshot' || type === 'musician' || type === 'extras') {
+            return getAssetUrl(v);
+          } else {
+            return getMediaUrl(v);
+          }
+        })
+      );
       return urls;
     } catch {
       return [resolveMediaPath(type, filename)];
@@ -573,7 +581,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const markAsPlayed = useCallback((gameId: string) => {
     setSettings(prev => {
       const newList = [gameId, ...prev.recentlyPlayedIds.filter(id => id !== gameId)].slice(0, 10);
-      // Only update if the list actually changed (different head or different content)
       if (prev.recentlyPlayedIds[0] === gameId && prev.recentlyPlayedIds.length === newList.length) {
          return prev;
       }
