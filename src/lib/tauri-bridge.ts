@@ -48,6 +48,19 @@ export async function isDebugMode(): Promise<boolean> {
   }
 }
 
+export async function logDebugMessage(message: string): Promise<void> {
+  if (!isTauri()) {
+    console.log(message);
+    return;
+  }
+  try {
+    await invoke('log_debug_message_command', { message });
+  } catch {
+    console.log(message);
+  }
+}
+
+
 async function invoke<T>(command: string, payload?: Record<string, unknown>): Promise<T> {
   if (!isTauri()) {
     throw new Error(`[tauri-bridge] Not running in Tauri. Command "${command}" is unavailable.`);
@@ -297,7 +310,7 @@ export async function resolveMediaPath(
   let cached = resolveMediaPathCache.get(cacheKey);
   if (!cached) {
     if (await isDebugMode()) {
-      console.log(`[DEBUG] [CACHE MISS] resolveMediaPath: "${filename}" under "${baseDir}" - requesting from backend`);
+      logDebugMessage(`[DEBUG] [CACHE MISS] resolveMediaPath: "${filename}" under "${baseDir}" - requesting from backend`);
     }
     const p = (async () => {
       if (!isTauri()) {
@@ -310,7 +323,7 @@ export async function resolveMediaPath(
     cached = p;
   } else {
     if (await isDebugMode()) {
-      console.log(`[DEBUG] [CACHE HIT] resolveMediaPath: "${filename}" under "${baseDir}"`);
+      logDebugMessage(`[DEBUG] [CACHE HIT] resolveMediaPath: "${filename}" under "${baseDir}"`);
     }
   }
   return cached;
@@ -327,7 +340,7 @@ export async function findAllMediaVariants(
   let cached = findAllMediaVariantsCache.get(cacheKey);
   if (!cached) {
     if (await isDebugMode()) {
-      console.log(`[DEBUG] [CACHE MISS] findAllMediaVariants: "${filename}" under "${baseDir}" - requesting from backend`);
+      logDebugMessage(`[DEBUG] [CACHE MISS] findAllMediaVariants: "${filename}" under "${baseDir}" - requesting from backend`);
     }
     const p = (async () => {
       if (!isTauri()) {
@@ -340,7 +353,7 @@ export async function findAllMediaVariants(
     cached = p;
   } else {
     if (await isDebugMode()) {
-      console.log(`[DEBUG] [CACHE HIT] findAllMediaVariants: "${filename}" under "${baseDir}"`);
+      logDebugMessage(`[DEBUG] [CACHE HIT] findAllMediaVariants: "${filename}" under "${baseDir}"`);
     }
   }
   return cached;
@@ -396,7 +409,7 @@ export async function getMediaUrl(absolutePath: string): Promise<string> {
   let cached = mediaUrlCache.get(absolutePath);
   if (!cached) {
     if (await isDebugMode()) {
-      console.log(`[DEBUG] [CACHE MISS] getMediaUrl: "${absolutePath}" - loading bytes from disk`);
+      logDebugMessage(`[DEBUG] [CACHE MISS] getMediaUrl: "${absolutePath}" - loading bytes from disk`);
     }
     const p = (async () => {
       const bytes = await readFileBytes(absolutePath);
@@ -408,7 +421,7 @@ export async function getMediaUrl(absolutePath: string): Promise<string> {
     cached = p;
   } else {
     if (await isDebugMode()) {
-      console.log(`[DEBUG] [CACHE HIT] getMediaUrl: "${absolutePath}"`);
+      logDebugMessage(`[DEBUG] [CACHE HIT] getMediaUrl: "${absolutePath}"`);
     }
   }
   return cached;

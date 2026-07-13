@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
-import { isDebugMode } from '../lib/tauri-bridge';
+import { isDebugMode, logDebugMessage } from '../lib/tauri-bridge';
 
 interface ImageSliderProps {
   filename: string | null;
@@ -64,7 +64,7 @@ export function ImageSlider({
         setImages([]);
         isDebugMode().then(debug => {
           if (debug) {
-            console.warn(`[DEBUG WARNING] No images found for game: "${alt}", type: "${type}", filename: "${filename}"`);
+            logDebugMessage(`[DEBUG WARNING] No images found for game: "${alt}", type: "${type}", filename: "${filename}"`);
           }
         });
       }

@@ -8,6 +8,14 @@ pub fn is_debug_mode_command() -> bool {
 }
 
 #[tauri::command]
+pub fn log_debug_message_command(message: String) {
+    if crate::is_debug_mode() {
+        println!("{}", message);
+    }
+}
+
+
+#[tauri::command]
 pub async fn open_directory_dialog(app: tauri::AppHandle) -> Option<String> {
     app.dialog()
         .file()

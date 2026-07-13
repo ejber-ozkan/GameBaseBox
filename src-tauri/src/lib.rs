@@ -118,6 +118,7 @@ pub fn run() {
             commands::platforms::get_active_platform,
             commands::platforms::set_active_platform,
             commands::system::is_debug_mode_command,
+            commands::system::log_debug_message_command,
         ])
         .setup(|app| {
             let db_path = database::configure_runtime_db_path(app.handle());
