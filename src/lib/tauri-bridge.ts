@@ -31,12 +31,18 @@ export const isTauri = (): boolean =>
     (window as TauriAwareWindow).__TAURI__ !== undefined
   );
 
+let cachedDebugMode: boolean | null = null;
+
 export async function isDebugMode(): Promise<boolean> {
   if (!isTauri()) {
     return false;
   }
+  if (cachedDebugMode !== null) {
+    return cachedDebugMode;
+  }
   try {
-    return await invoke<boolean>('is_debug_mode_command');
+    cachedDebugMode = await invoke<boolean>('is_debug_mode_command');
+    return cachedDebugMode;
   } catch {
     return false;
   }
@@ -290,6 +296,9 @@ export async function resolveMediaPath(
   const cacheKey = `${baseDir}::${filename}`;
   let cached = resolveMediaPathCache.get(cacheKey);
   if (!cached) {
+    if (await isDebugMode()) {
+      console.log(`[DEBUG] [CACHE MISS] resolveMediaPath: "${filename}" under "${baseDir}" - requesting from backend`);
+    }
     const p = (async () => {
       if (!isTauri()) {
         return { exists: false, absolute_path: `${baseDir}/${filename}` };
@@ -299,6 +308,10 @@ export async function resolveMediaPath(
     resolveMediaPathCache.set(cacheKey, p);
     p.catch(() => resolveMediaPathCache.delete(cacheKey));
     cached = p;
+  } else {
+    if (await isDebugMode()) {
+      console.log(`[DEBUG] [CACHE HIT] resolveMediaPath: "${filename}" under "${baseDir}"`);
+    }
   }
   return cached;
 }
@@ -313,6 +326,9 @@ export async function findAllMediaVariants(
   const cacheKey = `${baseDir}::${filename}`;
   let cached = findAllMediaVariantsCache.get(cacheKey);
   if (!cached) {
+    if (await isDebugMode()) {
+      console.log(`[DEBUG] [CACHE MISS] findAllMediaVariants: "${filename}" under "${baseDir}" - requesting from backend`);
+    }
     const p = (async () => {
       if (!isTauri()) {
         return [`${baseDir}/${filename}`];
@@ -322,6 +338,10 @@ export async function findAllMediaVariants(
     findAllMediaVariantsCache.set(cacheKey, p);
     p.catch(() => findAllMediaVariantsCache.delete(cacheKey));
     cached = p;
+  } else {
+    if (await isDebugMode()) {
+      console.log(`[DEBUG] [CACHE HIT] findAllMediaVariants: "${filename}" under "${baseDir}"`);
+    }
   }
   return cached;
 }
@@ -375,6 +395,9 @@ export async function readFileBytes(absolutePath: string): Promise<Uint8Array> {
 export async function getMediaUrl(absolutePath: string): Promise<string> {
   let cached = mediaUrlCache.get(absolutePath);
   if (!cached) {
+    if (await isDebugMode()) {
+      console.log(`[DEBUG] [CACHE MISS] getMediaUrl: "${absolutePath}" - loading bytes from disk`);
+    }
     const p = (async () => {
       const bytes = await readFileBytes(absolutePath);
       const blob = new Blob([bytes as unknown as BlobPart], { type: 'application/octet-stream' });
@@ -383,6 +406,10 @@ export async function getMediaUrl(absolutePath: string): Promise<string> {
     mediaUrlCache.set(absolutePath, p);
     p.catch(() => mediaUrlCache.delete(absolutePath));
     cached = p;
+  } else {
+    if (await isDebugMode()) {
+      console.log(`[DEBUG] [CACHE HIT] getMediaUrl: "${absolutePath}"`);
+    }
   }
   return cached;
 }
