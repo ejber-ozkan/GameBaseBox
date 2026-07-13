@@ -37,11 +37,13 @@ export function MusicianPhoto({ photoFilename, musicianName, className = "", sty
           setPhotoUrl(url);
           setError(false);
         } else {
-          setPhotoUrl(null);
+          setPhotoUrl("/images/unknown-musician.png");
+          setError(false);
         }
       } catch (err) {
         console.error("Failed to load musician photo:", err);
-        setPhotoUrl(null);
+        setPhotoUrl("/images/unknown-musician.png");
+        setError(false);
       }
     }
 
@@ -61,7 +63,7 @@ export function MusicianPhoto({ photoFilename, musicianName, className = "", sty
 
   return (
     <>
-      {/* eslint-disable-next-line @next/next/no-img-element -- musician photos can come from local runtime-resolved asset URLs */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- musician photos can come from local runtime-resolved asset URLs or bundled public assets */}
       <img
         src={photoUrl}
         alt={musicianName}
