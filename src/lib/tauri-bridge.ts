@@ -265,14 +265,42 @@ export async function testEmulatorProfile(request: EmulatorProfileTestRequest): 
  * Check whether a media asset exists on the local filesystem.
  * Returns the absolute path and an existence flag.
  */
+const resolveMediaPathCache = new Map<string, Promise<ResolvedPath>>();
+const findAllMediaVariantsCache = new Map<string, Promise<string[]>>();
+const mediaUrlCache = new Map<string, Promise<string>>();
+
+export function clearMediaCache(): void {
+  // Revoke all ObjectURLs in the cache to avoid memory leaks
+  for (const promise of mediaUrlCache.values()) {
+    promise.then(url => {
+      if (url && url.startsWith('blob:')) {
+        URL.revokeObjectURL(url);
+      }
+    }).catch(() => {});
+  }
+  resolveMediaPathCache.clear();
+  findAllMediaVariantsCache.clear();
+  mediaUrlCache.clear();
+}
+
 export async function resolveMediaPath(
   baseDir: string,
   filename: string
 ): Promise<ResolvedPath> {
-  if (!isTauri()) {
-    return { exists: false, absolute_path: `${baseDir}/${filename}` };
+  const cacheKey = `${baseDir}::${filename}`;
+  let cached = resolveMediaPathCache.get(cacheKey);
+  if (!cached) {
+    const p = (async () => {
+      if (!isTauri()) {
+        return { exists: false, absolute_path: `${baseDir}/${filename}` };
+      }
+      return invoke<ResolvedPath>('resolve_media_path', { baseDir, filename });
+    })();
+    resolveMediaPathCache.set(cacheKey, p);
+    p.catch(() => resolveMediaPathCache.delete(cacheKey));
+    cached = p;
   }
-  return invoke<ResolvedPath>('resolve_media_path', { baseDir, filename });
+  return cached;
 }
 
 /**
@@ -282,10 +310,20 @@ export async function findAllMediaVariants(
   baseDir: string,
   filename: string
 ): Promise<string[]> {
-  if (!isTauri()) {
-    return [`${baseDir}/${filename}`];
+  const cacheKey = `${baseDir}::${filename}`;
+  let cached = findAllMediaVariantsCache.get(cacheKey);
+  if (!cached) {
+    const p = (async () => {
+      if (!isTauri()) {
+        return [`${baseDir}/${filename}`];
+      }
+      return invoke<string[]>('find_all_media_variants', { baseDir, filename });
+    })();
+    findAllMediaVariantsCache.set(cacheKey, p);
+    p.catch(() => findAllMediaVariantsCache.delete(cacheKey));
+    cached = p;
   }
-  return invoke<string[]>('find_all_media_variants', { baseDir, filename });
+  return cached;
 }
 
 /**
@@ -335,9 +373,18 @@ export async function readFileBytes(absolutePath: string): Promise<Uint8Array> {
  * Required for jsSID playing because XMLHttpRequest fails on asset:// protocols.
  */
 export async function getMediaUrl(absolutePath: string): Promise<string> {
-  const bytes = await readFileBytes(absolutePath);
-  const blob = new Blob([bytes as unknown as BlobPart], { type: 'application/octet-stream' });
-  return URL.createObjectURL(blob);
+  let cached = mediaUrlCache.get(absolutePath);
+  if (!cached) {
+    const p = (async () => {
+      const bytes = await readFileBytes(absolutePath);
+      const blob = new Blob([bytes as unknown as BlobPart], { type: 'application/octet-stream' });
+      return URL.createObjectURL(blob);
+    })();
+    mediaUrlCache.set(absolutePath, p);
+    p.catch(() => mediaUrlCache.delete(absolutePath));
+    cached = p;
+  }
+  return cached;
 }
 
 /**

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
-import { getPlatformImportStatus, getSecureSetting, saveSecureSetting } from '../lib/tauri-bridge';
+import { getPlatformImportStatus, getSecureSetting, saveSecureSetting, clearMediaCache } from '../lib/tauri-bridge';
 import {
   createDefaultPlatformSettingsMap,
   isPlatformId,
@@ -409,6 +409,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       // Check if anything actually changed to avoid unnecessary state updates
       const hasChange = Object.entries(scopedNewSettings).some(([k, v]) => prev[k as keyof Settings] !== v);
       if (!hasChange) return prev;
+
+      // Clear the frontend media path/URL cache when settings change
+      clearMediaCache();
 
       const updated = { ...prev, ...scopedNewSettings };
       
