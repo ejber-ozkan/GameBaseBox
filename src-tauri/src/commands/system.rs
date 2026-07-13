@@ -10,7 +10,11 @@ pub fn is_debug_mode_command() -> bool {
 #[tauri::command]
 pub fn log_debug_message_command(message: String) {
     if crate::is_debug_mode() {
-        println!("{}", message);
+        if message.starts_with("[DEBUG WARNING]") {
+            log::warn!("{}", message);
+        } else {
+            log::info!("{}", message);
+        }
     }
 }
 

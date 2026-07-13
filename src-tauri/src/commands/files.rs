@@ -268,7 +268,7 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
             let resolved = candidate.canonicalize().unwrap_or_else(|_| candidate.clone());
             let path_str = clean_unc_prefix(resolved.to_string_lossy().to_string());
             if crate::is_debug_mode() {
-                println!(
+                log::info!(
                     "[DEBUG] Media resolved via fast-path: \"{}\" -> \"{}\"",
                     filename,
                     path_str
@@ -287,7 +287,7 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
             if let Some(resolved) = resolve_path_case_insensitive(base, rel) {
                 let path_str = clean_unc_prefix(resolved.to_string_lossy().to_string());
                 if crate::is_debug_mode() {
-                    println!(
+                    log::info!(
                         "[DEBUG] Media resolved via case-insensitive slow-path: \"{}\" -> \"{}\"",
                         filename,
                         path_str
@@ -307,7 +307,7 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
             .map(|c| format!("\"{}\"", clean_unc_prefix(c.display().to_string())))
             .collect::<Vec<_>>()
             .join(", ");
-        eprintln!(
+        log::warn!(
             "[DEBUG WARNING] Failed to resolve media file \"{}\" under base directory \"{}\". Tried candidates: [{}]",
             filename,
             base_dir,
@@ -446,7 +446,7 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
 
     if crate::is_debug_mode() {
         if results.is_empty() {
-            eprintln!(
+            log::warn!(
                 "[DEBUG WARNING] No media variants found for \"{}\" under base directory \"{}\"",
                 filename,
                 base_dir
@@ -457,7 +457,7 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
                 .map(|r| format!("\"{}\"", r))
                 .collect::<Vec<_>>()
                 .join(", ");
-            println!(
+            log::info!(
                 "[DEBUG] Found {} media variants for \"{}\": [{}]",
                 results.len(),
                 filename,
