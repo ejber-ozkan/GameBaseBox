@@ -372,6 +372,56 @@ export async function downloadMediaAsset(url: string, destDir: string, filename:
   return invoke<ResolvedPath>('download_media_asset', { url, destDir, filename });
 }
 
+export interface ExtraVideoResolution {
+  originalPath: string;
+  playbackPath: string | null;
+  originalExists: boolean;
+  compatibleSidecar: boolean;
+  archiveCandidate: boolean;
+}
+
+export interface ExtraVideoActionResult {
+  path: string;
+  message: string;
+  sourceUrl?: string | null;
+  licenseUrl?: string | null;
+}
+
+function joinLocalMediaPath(baseDir: string, relativePath: string): string {
+  return `${baseDir.replace(/[\\/]+$/, '')}/${relativePath.replace(/^[\\/]+/, '')}`.replace(/\\/g, '/');
+}
+
+/** Resolve a database video path, preferring a compatible same-stem sidecar. */
+export async function resolveExtraVideo(baseDir: string, relativePath: string): Promise<ExtraVideoResolution> {
+  if (!isTauri()) {
+    const originalPath = joinLocalMediaPath(baseDir, relativePath);
+    return {
+      originalPath,
+      playbackPath: originalPath,
+      originalExists: true,
+      compatibleSidecar: false,
+      archiveCandidate: /^c64(?:gva|videoarchive|gamevideoarchive)/i.test(relativePath.split(/[\\/]/).pop() ?? ''),
+    };
+  }
+  return invoke<ExtraVideoResolution>('resolve_extra_video', { baseDir, relativePath });
+}
+
+/** Create a non-destructive H.264/AAC MP4 beside an existing legacy video. */
+export async function convertExtraVideo(baseDir: string, relativePath: string): Promise<ExtraVideoActionResult> {
+  if (!isTauri()) {
+    throw new Error('Video conversion is available in the GBBox desktop app.');
+  }
+  return invoke<ExtraVideoActionResult>('convert_extra_video', { baseDir, relativePath });
+}
+
+/** Download a compatible Archive.org MP4 derivative beside a missing database video. */
+export async function downloadArchiveExtraVideo(baseDir: string, relativePath: string): Promise<ExtraVideoActionResult> {
+  if (!isTauri()) {
+    throw new Error('Archive.org video downloads are available in the GBBox desktop app.');
+  }
+  return invoke<ExtraVideoActionResult>('download_archive_extra_video', { baseDir, relativePath });
+}
+
 /**
  * Transforms an absolute filesystem path into a Tauri asset:// URL.
  * Falls back to returning the path directly in web contexts.

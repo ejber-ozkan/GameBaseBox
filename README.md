@@ -125,6 +125,8 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget libssl-dev libg
 2. Prepare your local GameBase64 folders for Games, Screenshots, Photos, Music/SID, Extras, BoxArt, and Video where available.
 3. In GBBox, import the database and configure **C64 Platform Paths** in Settings.
 
+Legacy AVI extras remain usable even when the operating-system WebView cannot decode them. GBBox offers the system video player after an embedded preview failure, automatically prefers a same-stem `.mp4` or `.webm` sidecar, and can create a non-destructive H.264/AAC MP4 copy when `ffmpeg` is available on `PATH`. If a recognised C64 Gamevideoarchive file is missing locally, its video panel can download an available Archive.org MP4 derivative into the expected Extras subfolder; the original database path is not changed.
+
 GBBox remains grateful to the GameBase64 project and GB64 Team for decades of Commodore 64 preservation. Visit [gb64.com](https://gb64.com/) for the original project.
 
 ### Atari 800
