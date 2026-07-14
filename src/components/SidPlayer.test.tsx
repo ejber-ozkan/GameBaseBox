@@ -1,13 +1,21 @@
 import { expect, test, describe, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { SidPlayer } from './SidPlayer';
+import { downloadMediaAsset, resolveMediaPath } from '../lib/tauri-bridge';
 
 // Mock useSettings
 vi.mock('../contexts/SettingsContext', () => ({
   useSettings: () => ({
     settings: {
       scrapedMediaPath: '/media/scraped',
-      activePlatformId: 'c64'
+      activePlatformId: 'c64',
+      platformSettings: {
+        c64: {
+          folders: {
+            musicPath: '/media/local-music',
+          },
+        },
+      },
     },
     markAsPlayed: vi.fn(),
     resolveMediaPath: vi.fn()
@@ -25,6 +33,12 @@ vi.mock('../lib/tauri-bridge', () => ({
 describe('SidPlayer Component', () => {
 
   beforeEach(() => {
+    vi.mocked(resolveMediaPath).mockResolvedValue({ exists: false, absolute_path: '' });
+    vi.mocked(downloadMediaAsset).mockResolvedValue({
+      exists: true,
+      absolute_path: '/media/scraped/MUSICIANS/B/Beben_Wally/Hammerfist.sid',
+    });
+
     function MockSidPlayer(this: { loadstart: ReturnType<typeof vi.fn>; setvolume: ReturnType<typeof vi.fn>; pause: ReturnType<typeof vi.fn> }) {
       this.loadstart = vi.fn();
       this.setvolume = vi.fn();
@@ -100,6 +114,39 @@ describe('SidPlayer Component', () => {
     
     await waitFor(() => {
       expect(slider.value).toBe('0.8');
+    });
+  });
+
+  test('offers HVSC scrape after local and scraped SID paths are both missing', async () => {
+    render(<SidPlayer filename={'MUSICIANS\\B\\Beben_Wally\\Hammerfist.sid'} />);
+
+    await waitFor(() => {
+      expect(resolveMediaPath).toHaveBeenCalledWith(
+        '/media/local-music',
+        'MUSICIANS/B/Beben_Wally/Hammerfist.sid',
+      );
+      expect(resolveMediaPath).toHaveBeenCalledWith(
+        '/media/scraped',
+        'MUSICIANS/B/Beben_Wally/Hammerfist.sid',
+      );
+    });
+
+    expect(screen.getByRole('button', { name: /scrape hvsc/i })).not.toBeNull();
+  });
+
+  test('downloads a missing SID from HVSC and enables playback', async () => {
+    const filename = 'MUSICIANS\\B\\Beben_Wally\\Hammerfist.sid';
+    render(<SidPlayer filename={filename} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /scrape hvsc/i }));
+
+    await waitFor(() => {
+      expect(downloadMediaAsset).toHaveBeenCalledWith(
+        'https://hvsc.c64.org/download/C64Music/MUSICIANS/B/Beben_Wally/Hammerfist.sid',
+        '/media/scraped',
+        filename,
+      );
+      expect(screen.getByTestId('play-button')).not.toBeNull();
     });
   });
 });
