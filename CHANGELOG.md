@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.3] - 2026-07-14
+
+### Changed
+- Refreshed the checked-in Graphify knowledge graph to remove stale nodes from deleted specification and architecture files while preserving current semantic documentation.
+- Documented the Windows Codex sandbox behavior for uv-managed Graphify commands so future tooling checks distinguish sandbox access restrictions from a broken local installation.
+- Bumped package, Tauri, Cargo, lockfile, and root version metadata to `0.5.3`.
+
+### Fixed
+- Fixed SID tunes failing to play in packaged Windows, Linux, and macOS builds by allowing jsSID to load generated `blob:` URLs through the shared Tauri content security policy.
+- Preserved and regression-tested the HVSC scrape fallback when a SID tune is absent from both the configured local music folder and scraped-media folder.
+
 ## [0.5.2] - 2026-07-13
 
 ### Changed
