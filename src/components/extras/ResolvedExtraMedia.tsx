@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { Extra } from '../../types/game';
 import {
   convertExtraVideo,
   downloadArchiveExtraVideo,
   getAssetUrl,
+  listenExtraVideoDownloadProgress,
   openFile,
   resolveExtraVideo,
+  type ExtraVideoDownloadProgress,
   type ExtraVideoResolution,
 } from '../../lib/tauri-bridge';
 import { buildExtraAssetPath } from '../../lib/extras';
@@ -15,6 +17,23 @@ import { ImageWithFallback } from '../ImageWithFallback';
 
 export const VIDEO_EXTENSIONS = new Set(['avi', 'mp4', 'mov', 'mkv', 'webm']);
 export const AUDIO_EXTENSIONS = new Set(['mp3', 'wav', 'ogg', 'flac', 'sid']);
+const VIDEO_SUCCESS_MESSAGE_MS = 4_000;
+
+function formatBytes(bytes: number) {
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function formatTimeRemaining(seconds: number) {
+  if (seconds < 60) return `${seconds}s left`;
+  const minutes = Math.floor(seconds / 60);
+  const remainder = seconds % 60;
+  return `${minutes}m ${remainder}s left`;
+}
+
+function normalizeVideoPath(path: string) {
+  return path.replace(/\\/g, '/').toLowerCase();
+}
 
 export function isVideoExtra(extra: Extra) {
   const extension = extra.path.split('.').pop()?.toLowerCase() ?? '';
@@ -62,6 +81,8 @@ export function ResolvedExtraMedia({
   const [videoResolution, setVideoResolution] = useState<ExtraVideoResolution | null>(null);
   const [videoAction, setVideoAction] = useState<'convert' | 'download' | null>(null);
   const [videoMessage, setVideoMessage] = useState<string | null>(null);
+  const [downloadProgress, setDownloadProgress] = useState<ExtraVideoDownloadProgress | null>(null);
+  const successTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isVideo = isVideoExtra(extra);
   const videoFailed = videoFailedPath === videoResolution?.playbackPath;
 
@@ -89,18 +110,35 @@ export function ResolvedExtraMedia({
     };
   }, [extra.path, extrasPath, isVideo, loadVideo]);
 
+  useEffect(() => () => {
+    if (successTimer.current) clearTimeout(successTimer.current);
+  }, []);
+
   const runVideoAction = async (action: 'convert' | 'download') => {
     setVideoAction(action);
+    setDownloadProgress(null);
     setVideoMessage(action === 'convert' ? 'Creating compatible MP4…' : 'Downloading compatible MP4…');
+    let unlisten: (() => void) | undefined;
     try {
+      if (action === 'download') {
+        unlisten = await listenExtraVideoDownloadProgress((progress) => {
+          if (normalizeVideoPath(progress.relativePath) === normalizeVideoPath(extra.path)) {
+            setDownloadProgress(progress);
+          }
+        });
+      }
       const result = action === 'convert'
         ? await convertExtraVideo(extrasPath, extra.path)
         : await downloadArchiveExtraVideo(extrasPath, extra.path);
       await loadVideo(false);
+      setDownloadProgress(null);
       setVideoMessage(result.message);
+      if (successTimer.current) clearTimeout(successTimer.current);
+      successTimer.current = setTimeout(() => setVideoMessage(null), VIDEO_SUCCESS_MESSAGE_MS);
     } catch (error) {
       setVideoMessage(String(error));
     } finally {
+      unlisten?.();
       setVideoAction(null);
     }
   };
@@ -110,20 +148,34 @@ export function ResolvedExtraMedia({
     const missing = !videoResolution.originalExists;
 
     return (
-      <>
-        <div className="flex flex-wrap justify-center gap-2">
-          {videoResolution.originalExists ? (
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                void openFile(videoResolution.originalPath).catch((error) => setVideoMessage(String(error)));
-              }}
-              className="rounded-lg border border-purple-400/50 bg-purple-500/20 px-3 py-2 text-xs font-semibold text-purple-100 hover:bg-purple-500/30"
-            >
-              Open in video player
-            </button>
-          ) : null}
+      <div data-video-actions className="flex w-full flex-col gap-2">
+        {videoAction === 'download' && downloadProgress ? (
+          <div className="w-full rounded-lg border border-green-400/30 bg-black/80 px-3 py-2 text-left shadow-[0_0_18px_rgba(74,222,128,0.12)]">
+            <div className="mb-1.5 h-1.5 overflow-hidden rounded-full bg-white/10">
+              <div
+                role="progressbar"
+                aria-label="Video download progress"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={downloadProgress.percent ?? undefined}
+                className="h-full rounded-full bg-green-400 transition-[width] duration-300"
+                style={{ width: `${downloadProgress.percent ?? 0}%` }}
+              />
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-wider text-green-100">
+              <span>
+                {formatBytes(downloadProgress.bytesDownloaded)}
+                {downloadProgress.totalBytes ? ` of ${formatBytes(downloadProgress.totalBytes)}` : ''}
+                {downloadProgress.percent !== null ? ` · ${downloadProgress.percent}%` : ''}
+              </span>
+              <span className="text-green-200/70">
+                {formatBytes(downloadProgress.bytesPerSecond)}/s
+                {downloadProgress.secondsRemaining !== null ? ` · ${formatTimeRemaining(downloadProgress.secondsRemaining)}` : ''}
+              </span>
+            </div>
+          </div>
+        ) : null}
+        <div className="flex w-full flex-wrap items-center gap-2">
           {videoResolution.originalExists && !videoResolution.compatibleSidecar ? (
             <button
               type="button"
@@ -137,7 +189,7 @@ export function ResolvedExtraMedia({
               {videoAction === 'convert' ? 'Creating MP4…' : 'Create compatible MP4 copy'}
             </button>
           ) : null}
-          {missing && videoResolution.archiveCandidate ? (
+          {missing && !videoResolution.compatibleSidecar && videoResolution.archiveCandidate ? (
             <button
               type="button"
               disabled={videoAction !== null}
@@ -150,13 +202,25 @@ export function ResolvedExtraMedia({
               {videoAction === 'download' ? 'Downloading MP4…' : 'Download compatible MP4'}
             </button>
           ) : null}
+          {videoResolution.originalExists ? (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                void openFile(videoResolution.originalPath).catch((error) => setVideoMessage(String(error)));
+              }}
+              className="ml-auto rounded-lg border border-purple-400/50 bg-purple-500/20 px-3 py-2 text-xs font-semibold text-purple-100 hover:bg-purple-500/30"
+            >
+              Open in video player
+            </button>
+          ) : null}
         </div>
         {videoMessage ? (
           <p role="status" className="max-w-xl rounded-md bg-black/75 px-2 py-1 text-xs text-amber-200">
             {videoMessage}
           </p>
         ) : null}
-      </>
+      </div>
     );
   };
 
@@ -191,6 +255,20 @@ export function ResolvedExtraMedia({
   }
 
   if (isVideo && url && !videoFailed) {
+    if (mode === 'thumbnail') {
+      return (
+        <video
+          src={url}
+          className={`object-contain object-center ${className}`}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          onError={() => setVideoFailedPath(videoResolution?.playbackPath ?? extra.path)}
+        />
+      );
+    }
     const showControls = mode === 'fullscreen';
     const autoPlay = mode !== 'fullscreen';
 
@@ -207,27 +285,15 @@ export function ResolvedExtraMedia({
           preload="metadata"
           onError={() => setVideoFailedPath(videoResolution?.playbackPath ?? extra.path)}
         />
-        {mode === 'fullscreen' && videoResolution?.originalExists && videoResolution.compatibleSidecar ? (
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              void openFile(videoResolution.originalPath).catch((error) => setVideoMessage(String(error)));
-            }}
-            className="absolute right-3 top-3 rounded-lg border border-white/20 bg-black/70 px-3 py-2 text-xs font-semibold text-white/80 hover:border-purple-400/60 hover:text-purple-200"
-          >
-            Open original externally
-          </button>
-        ) : null}
-        <div className="pointer-events-none absolute left-3 top-3 rounded-full border border-cyan-400/35 bg-black/70 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-cyan-200">
-          {videoResolution?.compatibleSidecar ? 'Compatible MP4 ready' : 'Video'}
-        </div>
         {videoResolution && (
-          (mode !== 'fullscreen' && videoResolution.originalExists)
+          videoResolution.originalExists
           || !videoResolution.compatibleSidecar
           || videoMessage
         ) ? (
-          <div className="absolute inset-x-3 bottom-3 z-20 flex flex-col items-center gap-2" onClick={(event) => event.stopPropagation()}>
+          <div
+            className={`absolute inset-x-3 z-20 flex flex-col items-center gap-2 ${mode === 'fullscreen' ? 'bottom-14' : 'bottom-3'}`}
+            onClick={(event) => event.stopPropagation()}
+          >
             {renderVideoActions()}
           </div>
         ) : null}

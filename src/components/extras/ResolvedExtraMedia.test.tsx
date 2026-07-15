@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act } from 'react';
 import type { Extra } from '../../types/game';
 import { ResolvedExtraMedia } from './ResolvedExtraMedia';
 
@@ -8,6 +9,15 @@ const mockGetAssetUrl = vi.fn();
 const mockOpenFile = vi.fn();
 const mockConvertExtraVideo = vi.fn();
 const mockDownloadArchiveExtraVideo = vi.fn();
+const mockListenExtraVideoDownloadProgress = vi.fn();
+let downloadProgressListener: ((progress: {
+  relativePath: string;
+  bytesDownloaded: number;
+  totalBytes: number | null;
+  percent: number | null;
+  bytesPerSecond: number;
+  secondsRemaining: number | null;
+}) => void) | null = null;
 
 vi.mock('../../lib/tauri-bridge', () => ({
   resolveExtraVideo: (...args: unknown[]) => mockResolveExtraVideo(...args),
@@ -15,6 +25,7 @@ vi.mock('../../lib/tauri-bridge', () => ({
   openFile: (...args: unknown[]) => mockOpenFile(...args),
   convertExtraVideo: (...args: unknown[]) => mockConvertExtraVideo(...args),
   downloadArchiveExtraVideo: (...args: unknown[]) => mockDownloadArchiveExtraVideo(...args),
+  listenExtraVideoDownloadProgress: (...args: unknown[]) => mockListenExtraVideoDownloadProgress(...args),
 }));
 
 const video: Extra = {
@@ -27,6 +38,11 @@ const video: Extra = {
 describe('ResolvedExtraMedia video compatibility', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    downloadProgressListener = null;
+    mockListenExtraVideoDownloadProgress.mockImplementation(async (listener) => {
+      downloadProgressListener = listener;
+      return vi.fn();
+    });
     mockGetAssetUrl.mockImplementation(async (path: string) => `asset://${path}`);
     mockOpenFile.mockResolvedValue(undefined);
     mockConvertExtraVideo.mockResolvedValue({
@@ -56,9 +72,9 @@ describe('ResolvedExtraMedia video compatibility', () => {
         'asset://E:/Extras/Videos/C64GVA319-Rambo.mp4'
       );
     });
-    expect(screen.getByText('Compatible MP4 ready')).not.toBeNull();
+    expect(screen.queryByText('Compatible MP4 ready')).toBeNull();
     expect(mockResolveExtraVideo).toHaveBeenCalledWith('E:/Extras', video.path);
-    fireEvent.click(screen.getByRole('button', { name: /open original externally/i }));
+    fireEvent.click(screen.getByRole('button', { name: /open in video player/i }));
     expect(mockOpenFile).toHaveBeenCalledWith('E:/Extras/Videos/C64GVA319-Rambo.avi');
   });
 
@@ -138,7 +154,7 @@ describe('ResolvedExtraMedia video compatibility', () => {
     expect(screen.getByRole('button', { name: /create compatible MP4 copy/i })).not.toBeNull();
   });
 
-  it('keeps download progress and completion feedback visible', async () => {
+  it('shows byte progress and removes the download action once the sidecar is ready', async () => {
     let finishDownload: ((value: { path: string; message: string }) => void) | undefined;
     mockDownloadArchiveExtraVideo.mockImplementation(() => new Promise((resolve) => {
       finishDownload = resolve;
@@ -164,6 +180,17 @@ describe('ResolvedExtraMedia video compatibility', () => {
     fireEvent.click(await screen.findByRole('button', { name: /download compatible MP4/i }));
     expect((screen.getByRole('button', { name: /downloading MP4/i }) as HTMLButtonElement).disabled).toBe(true);
     expect(screen.getByRole('status').textContent).toContain('Downloading compatible MP4');
+    await waitFor(() => expect(downloadProgressListener).not.toBeNull());
+    act(() => downloadProgressListener?.({
+      relativePath: video.path,
+      bytesDownloaded: 12 * 1024 * 1024,
+      totalBytes: 48 * 1024 * 1024,
+      percent: 25,
+      bytesPerSecond: 3 * 1024 * 1024,
+      secondsRemaining: 12,
+    }));
+    expect(screen.getByText(/12\.0 MB of 48\.0 MB/).textContent).toContain('25%');
+    expect(screen.getByText(/3\.0 MB\/s/).textContent).toContain('12s left');
 
     finishDownload?.({
       path: 'E:/Extras/Videos/C64GVA319-Rambo.mp4',
@@ -171,6 +198,98 @@ describe('ResolvedExtraMedia video compatibility', () => {
     });
 
     expect(await screen.findByText('Compatible Archive.org MP4 downloaded.')).not.toBeNull();
+    expect(screen.queryByRole('button', { name: /download compatible MP4/i })).toBeNull();
+    expect(screen.queryByText('Compatible MP4 ready')).toBeNull();
+  });
+
+  it('never renders video actions in thumbnail mode', async () => {
+    mockResolveExtraVideo.mockResolvedValue({
+      originalPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+      playbackPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+      originalExists: true,
+      compatibleSidecar: false,
+      archiveCandidate: true,
+    });
+
+    const { container } = render(
+      <ResolvedExtraMedia extra={video} extrasPath="E:/Extras" className="media" mode="thumbnail" />
+    );
+
+    await waitFor(() => expect(container.querySelector('video')).not.toBeNull());
+    expect(container.querySelector('button')).toBeNull();
+    expect(screen.queryByText('Compatible MP4 ready')).toBeNull();
+  });
+
+  it('places the system-player action at the bottom-right edge', async () => {
+    mockResolveExtraVideo.mockResolvedValue({
+      originalPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+      playbackPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+      originalExists: true,
+      compatibleSidecar: false,
+      archiveCandidate: true,
+    });
+
+    render(<ResolvedExtraMedia extra={video} extrasPath="E:/Extras" className="media" mode="preview" />);
+
+    const openButton = await screen.findByRole('button', { name: /open in video player/i });
+    expect(openButton.className).toContain('ml-auto');
+  });
+
+  it('keeps GBBox fullscreen actions above the native video controls', async () => {
+    mockResolveExtraVideo.mockResolvedValue({
+      originalPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+      playbackPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+      originalExists: true,
+      compatibleSidecar: false,
+      archiveCandidate: true,
+    });
+
+    const { container } = render(
+      <ResolvedExtraMedia extra={video} extrasPath="E:/Extras" className="media" mode="fullscreen" />
+    );
+
+    await screen.findByRole('button', { name: /open in video player/i });
+    expect(container.querySelector('[data-video-actions]')?.parentElement?.className).toContain('bottom-14');
+  });
+
+  it('dismisses successful conversion feedback after a brief confirmation', async () => {
+    mockResolveExtraVideo
+      .mockResolvedValueOnce({
+        originalPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+        playbackPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+        originalExists: true,
+        compatibleSidecar: false,
+        archiveCandidate: true,
+      })
+      .mockResolvedValueOnce({
+        originalPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+        playbackPath: 'E:/Extras/Videos/C64GVA319-Rambo.mp4',
+        originalExists: true,
+        compatibleSidecar: true,
+        archiveCandidate: true,
+      });
+    render(<ResolvedExtraMedia extra={video} extrasPath="E:/Extras" className="media" mode="preview" />);
+    const convertButton = await screen.findByRole('button', { name: /create compatible MP4 copy/i });
+    let dismissMessage: (() => void) | undefined;
+    const timeoutSpy = vi.spyOn(globalThis, 'setTimeout').mockImplementation((handler) => {
+      dismissMessage = handler as () => void;
+      return 1 as ReturnType<typeof setTimeout>;
+    });
+
+    try {
+      await act(async () => {
+        fireEvent.click(convertButton);
+        await Promise.resolve();
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      expect(screen.getByText('Compatible MP4 created.')).not.toBeNull();
+      expect(dismissMessage).toBeDefined();
+      act(() => dismissMessage?.());
+      expect(screen.queryByText('Compatible MP4 created.')).toBeNull();
+    } finally {
+      timeoutSpy.mockRestore();
+    }
   });
 
   it('does not offer the C64 Archive.org downloader for unrelated missing videos', async () => {

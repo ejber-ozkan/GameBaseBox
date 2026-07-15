@@ -2,9 +2,12 @@ use serde::{Deserialize, Serialize};
 use std::io::Write;
 use std::path::{Component, Path, PathBuf};
 use std::process::Command;
+use std::time::{Duration, Instant};
+use tauri::Emitter;
 
 const ARCHIVE_CREATOR: &str = "The C64-Gamevideoarchive";
 const MAX_ARCHIVE_VIDEO_BYTES: u64 = 2 * 1024 * 1024 * 1024;
+const DOWNLOAD_PROGRESS_EVENT: &str = "extra-video-download-progress";
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -33,6 +36,17 @@ pub struct ExtraVideoActionResult {
     pub license_url: Option<String>,
 }
 
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct ExtraVideoDownloadProgress {
+    pub relative_path: String,
+    pub bytes_downloaded: u64,
+    pub total_bytes: Option<u64>,
+    pub percent: Option<u64>,
+    pub bytes_per_second: u64,
+    pub seconds_remaining: Option<u64>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ConversionPlan {
     output: PathBuf,
@@ -59,6 +73,38 @@ struct ArchiveItem {
 #[derive(Debug, Deserialize)]
 struct ArchiveMetadata {
     files: Vec<ArchiveFile>,
+}
+
+fn download_progress_snapshot(
+    relative_path: &str,
+    bytes_downloaded: u64,
+    total_bytes: Option<u64>,
+    elapsed_seconds: f64,
+) -> ExtraVideoDownloadProgress {
+    let bytes_per_second = if elapsed_seconds > 0.0 {
+        (bytes_downloaded as f64 / elapsed_seconds).round() as u64
+    } else {
+        0
+    };
+    let percent = total_bytes.filter(|total| *total > 0).map(|total| {
+        bytes_downloaded
+            .saturating_mul(100)
+            .saturating_div(total)
+            .min(100)
+    });
+    let seconds_remaining = total_bytes.and_then(|total| {
+        (bytes_per_second > 0 && total > bytes_downloaded)
+            .then(|| (total - bytes_downloaded).div_ceil(bytes_per_second))
+    });
+
+    ExtraVideoDownloadProgress {
+        relative_path: relative_path.to_string(),
+        bytes_downloaded,
+        total_bytes,
+        percent,
+        bytes_per_second,
+        seconds_remaining,
+    }
 }
 
 fn sanitize_relative_video_path(relative_path: &str) -> Result<PathBuf, String> {
@@ -121,10 +167,20 @@ fn resolve_extra_video_paths(
     })
 }
 
-fn select_archive_mp4(files: &[ArchiveFile]) -> Option<&ArchiveFile> {
+fn select_archive_mp4_for_stem<'a>(
+    files: &'a [ArchiveFile],
+    required_stem: Option<&str>,
+) -> Option<&'a ArchiveFile> {
     files
         .iter()
         .filter(|file| file.name.to_lowercase().ends_with(".mp4"))
+        .filter(|file| match required_stem {
+            Some(required) => Path::new(&file.name)
+                .file_stem()
+                .and_then(|value| value.to_str())
+                .is_some_and(|value| value.eq_ignore_ascii_case(required)),
+            None => true,
+        })
         .min_by_key(|file| {
             let source_rank = match file.source.as_deref() {
                 Some("derivative") => 0,
@@ -142,6 +198,12 @@ fn select_archive_mp4(files: &[ArchiveFile]) -> Option<&ArchiveFile> {
             };
             (source_rank, codec_rank)
         })
+}
+
+fn bundled_archive_identifier(stem: &str) -> Option<&'static str> {
+    stem.to_ascii_lowercase()
+        .starts_with("c64gva200-")
+        .then_some("C64Videoarchive200-50longplays_part1")
 }
 
 fn archive_search_token(stem: &str) -> &str {
@@ -304,6 +366,7 @@ pub async fn convert_extra_video(
 
 #[tauri::command]
 pub async fn download_archive_extra_video(
+    app: tauri::AppHandle,
     base_dir: String,
     relative_path: String,
 ) -> Result<ExtraVideoActionResult, String> {
@@ -341,29 +404,37 @@ pub async fn download_archive_extra_video(
         .user_agent("GBBox/0.5.3 (https://github.com/ejber-ozkan/GameBaseBox)")
         .build()
         .map_err(|error| error.to_string())?;
-    let query = format!("creator:\"{ARCHIVE_CREATOR}\" AND identifier:*{search_pattern}*");
-    let search: ArchiveSearchEnvelope = client
-        .get("https://archive.org/advancedsearch.php")
-        .query(&[
-            ("q", query.as_str()),
-            ("fl[]", "identifier,licenseurl"),
-            ("rows", "10"),
-            ("output", "json"),
-        ])
-        .send()
-        .await
-        .map_err(|error| format!("Archive.org search failed: {error}"))?
-        .error_for_status()
-        .map_err(|error| format!("Archive.org search failed: {error}"))?
-        .json()
-        .await
-        .map_err(|error| format!("Archive.org returned invalid search metadata: {error}"))?;
-    let item = search
-        .response
-        .docs
-        .into_iter()
-        .next()
-        .ok_or_else(|| format!("No C64 Gamevideoarchive item was found for {token}."))?;
+    let bundled_identifier = bundled_archive_identifier(stem);
+    let item = if let Some(identifier) = bundled_identifier {
+        ArchiveItem {
+            identifier: identifier.to_string(),
+            licenseurl: None,
+        }
+    } else {
+        let query = format!("creator:\"{ARCHIVE_CREATOR}\" AND identifier:*{search_pattern}*");
+        let search: ArchiveSearchEnvelope = client
+            .get("https://archive.org/advancedsearch.php")
+            .query(&[
+                ("q", query.as_str()),
+                ("fl[]", "identifier,licenseurl"),
+                ("rows", "10"),
+                ("output", "json"),
+            ])
+            .send()
+            .await
+            .map_err(|error| format!("Archive.org search failed: {error}"))?
+            .error_for_status()
+            .map_err(|error| format!("Archive.org search failed: {error}"))?
+            .json()
+            .await
+            .map_err(|error| format!("Archive.org returned invalid search metadata: {error}"))?;
+        search
+            .response
+            .docs
+            .into_iter()
+            .next()
+            .ok_or_else(|| format!("No C64 Gamevideoarchive item was found for {token}."))?
+    };
     let metadata: ArchiveMetadata = client
         .get(format!("https://archive.org/metadata/{}", item.identifier))
         .send()
@@ -374,9 +445,10 @@ pub async fn download_archive_extra_video(
         .json()
         .await
         .map_err(|error| format!("Archive.org returned invalid item metadata: {error}"))?;
-    let archive_file = select_archive_mp4(&metadata.files).ok_or_else(|| {
-        "Archive.org does not provide an MP4 derivative for this video.".to_string()
-    })?;
+    let archive_file =
+        select_archive_mp4_for_stem(&metadata.files, bundled_identifier.map(|_| stem)).ok_or_else(
+            || "Archive.org does not provide an MP4 derivative for this video.".to_string(),
+        )?;
     let expected_size = archive_file
         .size
         .as_deref()
@@ -392,10 +464,8 @@ pub async fn download_archive_extra_video(
         .map_err(|error| format!("Archive.org video download failed: {error}"))?
         .error_for_status()
         .map_err(|error| format!("Archive.org video download failed: {error}"))?;
-    if response
-        .content_length()
-        .is_some_and(|size| size > MAX_ARCHIVE_VIDEO_BYTES)
-    {
+    let response_size = response.content_length();
+    if response_size.is_some_and(|size| size > MAX_ARCHIVE_VIDEO_BYTES) {
         return Err("The Archive.org MP4 exceeds GBBox's 2 GiB safety limit.".to_string());
     }
 
@@ -411,6 +481,13 @@ pub async fn download_archive_extra_video(
     let mut file = std::fs::File::create(&temporary)
         .map_err(|error| format!("Could not create the MP4 download: {error}"))?;
     let mut downloaded = 0u64;
+    let total_bytes = expected_size.or(response_size);
+    let started = Instant::now();
+    let mut last_progress = Instant::now();
+    let _ = app.emit(
+        DOWNLOAD_PROGRESS_EVENT,
+        download_progress_snapshot(&relative_path, 0, total_bytes, 0.0),
+    );
     while let Some(chunk) = response
         .chunk()
         .await
@@ -424,6 +501,20 @@ pub async fn download_archive_extra_video(
         }
         file.write_all(&chunk)
             .map_err(|error| format!("Could not write the Archive.org MP4: {error}"))?;
+        if last_progress.elapsed() >= Duration::from_millis(250)
+            || total_bytes.is_some_and(|total| downloaded >= total)
+        {
+            let _ = app.emit(
+                DOWNLOAD_PROGRESS_EVENT,
+                download_progress_snapshot(
+                    &relative_path,
+                    downloaded,
+                    total_bytes,
+                    started.elapsed().as_secs_f64(),
+                ),
+            );
+            last_progress = Instant::now();
+        }
     }
     drop(file);
     if downloaded == 0 || expected_size.is_some_and(|size| size != downloaded) {
@@ -432,6 +523,15 @@ pub async fn download_archive_extra_video(
     }
     std::fs::rename(&temporary, &output)
         .map_err(|error| format!("Could not finalize the Archive.org MP4: {error}"))?;
+    let _ = app.emit(
+        DOWNLOAD_PROGRESS_EVENT,
+        download_progress_snapshot(
+            &relative_path,
+            downloaded,
+            total_bytes,
+            started.elapsed().as_secs_f64(),
+        ),
+    );
 
     Ok(ExtraVideoActionResult {
         path: output.to_string_lossy().to_string(),
@@ -514,7 +614,7 @@ mod tests {
             },
         ];
 
-        let selected = select_archive_mp4(&files).unwrap();
+        let selected = select_archive_mp4_for_stem(&files, None).unwrap();
 
         assert_eq!(selected.name, "C64GVA319-Rambo.mp4");
     }
@@ -536,7 +636,10 @@ mod tests {
             },
         ];
 
-        assert_eq!(select_archive_mp4(&files).unwrap().name, "Rambo_h264.mp4");
+        assert_eq!(
+            select_archive_mp4_for_stem(&files, None).unwrap().name,
+            "Rambo_h264.mp4"
+        );
     }
 
     #[test]
@@ -589,6 +692,55 @@ mod tests {
         assert_eq!(
             url.as_str(),
             "https://archive.org/download/C64%20Example/Video%20File_512kb.mp4"
+        );
+    }
+
+    #[test]
+    fn download_progress_reports_percentage_speed_and_eta() {
+        let progress = download_progress_snapshot(
+            "Videos/C64GVA108-SpaceTaxi.avi",
+            12 * 1024 * 1024,
+            Some(48 * 1024 * 1024),
+            4.0,
+        );
+
+        assert_eq!(progress.percent, Some(25));
+        assert_eq!(progress.bytes_per_second, 3 * 1024 * 1024);
+        assert_eq!(progress.seconds_remaining, Some(12));
+        assert_eq!(progress.relative_path, "Videos/C64GVA108-SpaceTaxi.avi");
+    }
+
+    #[test]
+    fn resolves_the_c64gva_200_batch_to_its_bundled_archive_item() {
+        assert_eq!(
+            bundled_archive_identifier("C64GVA200-11-SpaceTaxi"),
+            Some("C64Videoarchive200-50longplays_part1")
+        );
+        assert_eq!(bundled_archive_identifier("C64GVA319-Rambo"), None);
+    }
+
+    #[test]
+    fn selects_the_requested_mp4_from_a_bundled_archive_item() {
+        let files = vec![
+            ArchiveFile {
+                name: "C64GVA200-10-OtherGame.mp4".to_string(),
+                format: Some("h.264".to_string()),
+                source: Some("derivative".to_string()),
+                size: Some("100".to_string()),
+            },
+            ArchiveFile {
+                name: "C64GVA200-11-SpaceTaxi.mp4".to_string(),
+                format: Some("h.264".to_string()),
+                source: Some("derivative".to_string()),
+                size: Some("221719434".to_string()),
+            },
+        ];
+
+        assert_eq!(
+            select_archive_mp4_for_stem(&files, Some("C64GVA200-11-SpaceTaxi"))
+                .unwrap()
+                .name,
+            "C64GVA200-11-SpaceTaxi.mp4"
         );
     }
 }

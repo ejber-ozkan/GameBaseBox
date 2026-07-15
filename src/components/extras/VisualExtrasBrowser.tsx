@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Extra } from '../../types/game';
 import { ExtrasBigscreenNavigation } from '../ExtrasDetail';
 import { ResolvedExtraMedia, VisualExtraThumb } from './ResolvedExtraMedia';
@@ -127,6 +128,9 @@ export function VisualExtrasBrowser({
       return undefined;
     }
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'ArrowLeft') {
         event.preventDefault();
@@ -147,7 +151,10 @@ export function VisualExtrasBrowser({
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [cycleFullscreen, isFullscreen]);
 
   if (!selectedExtra) {
@@ -231,16 +238,18 @@ export function VisualExtrasBrowser({
         ))}
       </div>
 
-      {isFullscreen && fullscreenExtra ? (
+      {isFullscreen && fullscreenExtra && typeof document !== 'undefined' ? createPortal((
         <div
           data-detail-modal="open"
-          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/98 p-8 backdrop-blur-xl animate-in fade-in zoom-in duration-300 pointer-events-auto"
+          className="fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#010409]/[0.99] p-3 backdrop-blur-xl pointer-events-auto"
           onClick={() => setFullscreenIndex(null)}
         >
-          <div className="relative flex max-h-full w-full max-w-5xl flex-col items-center gap-4" onClick={(event) => event.stopPropagation()}>
+          <div className="relative flex h-full min-h-0 w-full flex-col items-center gap-3" onClick={(event) => event.stopPropagation()}>
             {visibleExtras.length > 1 ? (
               <button
-                className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/15 bg-black/60 px-4 py-5 text-3xl text-white transition-colors hover:border-blue-400/60 hover:text-blue-300"
+                type="button"
+                aria-label="Previous fullscreen extra"
+                className="absolute left-4 top-1/2 z-30 -translate-y-1/2 rounded-full border border-white/15 bg-black/75 px-4 py-5 text-3xl text-white transition-colors hover:border-cyan-400/60 hover:text-cyan-300"
                 onClick={() => cycleFullscreen(-1)}
               >
                 ‹
@@ -251,32 +260,36 @@ export function VisualExtrasBrowser({
               extrasPath={extrasPath}
               fit="contain"
               mode="fullscreen"
-              className="max-h-[85vh] max-w-full rounded-lg shadow-2xl"
+              className="min-h-0 w-full flex-1 overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_0_50px_rgba(34,211,238,0.08)]"
             />
             {visibleExtras.length > 1 ? (
               <button
-                className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/15 bg-black/60 px-4 py-5 text-3xl text-white transition-colors hover:border-blue-400/60 hover:text-blue-300"
+                type="button"
+                aria-label="Next fullscreen extra"
+                className="absolute right-4 top-1/2 z-30 -translate-y-1/2 rounded-full border border-white/15 bg-black/75 px-4 py-5 text-3xl text-white transition-colors hover:border-cyan-400/60 hover:text-cyan-300"
                 onClick={() => cycleFullscreen(1)}
               >
                 ›
               </button>
             ) : null}
-            <div className="text-center">
-              <h2 className="text-xl font-bold text-white">{fullscreenExtra.name}</h2>
-              <p className="text-sm uppercase tracking-widest text-gray-400">{fullscreenExtra.path}</p>
+            <div className="shrink-0 text-center">
+              <h2 className="text-base font-bold text-white">{fullscreenExtra.name}</h2>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-gray-400">{fullscreenExtra.path}</p>
               {visibleExtras.length > 1 ? (
-                <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-white/50">Left / Right to browse • B / Esc to close</p>
+                <p className="mt-1 text-[9px] uppercase tracking-[0.2em] text-white/45">Left / Right to browse • B / Esc to close</p>
               ) : null}
             </div>
             <button
-              className="absolute top-0 right-0 p-4 text-4xl leading-none text-white hover:text-red-400"
+              type="button"
+              aria-label="Close fullscreen extra"
+              className="absolute right-4 top-4 z-30 rounded-full border border-white/15 bg-black/75 px-3 py-2 text-2xl leading-none text-white hover:border-red-400/60 hover:text-red-300"
               onClick={() => setFullscreenIndex(null)}
             >
               ×
             </button>
           </div>
         </div>
-      ) : null}
+      ), document.body) : null}
     </div>
   );
 }

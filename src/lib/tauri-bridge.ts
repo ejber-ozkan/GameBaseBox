@@ -387,6 +387,15 @@ export interface ExtraVideoActionResult {
   licenseUrl?: string | null;
 }
 
+export interface ExtraVideoDownloadProgress {
+  relativePath: string;
+  bytesDownloaded: number;
+  totalBytes: number | null;
+  percent: number | null;
+  bytesPerSecond: number;
+  secondsRemaining: number | null;
+}
+
 function joinLocalMediaPath(baseDir: string, relativePath: string): string {
   return `${baseDir.replace(/[\\/]+$/, '')}/${relativePath.replace(/^[\\/]+/, '')}`.replace(/\\/g, '/');
 }
@@ -420,6 +429,17 @@ export async function downloadArchiveExtraVideo(baseDir: string, relativePath: s
     throw new Error('Archive.org video downloads are available in the GBBox desktop app.');
   }
   return invoke<ExtraVideoActionResult>('download_archive_extra_video', { baseDir, relativePath });
+}
+
+/** Subscribe to byte-level progress for Archive.org Extras video downloads. */
+export async function listenExtraVideoDownloadProgress(
+  listener: (progress: ExtraVideoDownloadProgress) => void,
+): Promise<() => void> {
+  if (!isTauri()) {
+    return () => undefined;
+  }
+  const { listen } = await import('@tauri-apps/api/event');
+  return listen<ExtraVideoDownloadProgress>('extra-video-download-progress', (event) => listener(event.payload));
 }
 
 /**
