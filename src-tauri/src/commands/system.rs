@@ -1,6 +1,6 @@
 use tauri::Manager;
 use tauri_plugin_dialog::DialogExt;
-use std::process::Command;
+use tauri_plugin_shell::ShellExt;
 
 #[tauri::command]
 pub fn is_debug_mode_command() -> bool {
@@ -165,41 +165,30 @@ fn validate_open_path(path: &str) -> Result<(), String> {
     Ok(())
 }
 
+fn open_validated_path<F>(path: &str, opener: F) -> Result<(), String>
+where
+    F: FnOnce(&str) -> Result<(), String>,
+{
+    validate_open_path(path)?;
+    opener(path)
+}
+
 #[tauri::command]
-pub async fn open_path_with_system_default(path: String) -> Result<(), String> {
+pub async fn open_path_with_system_default(
+    app: tauri::AppHandle,
+    path: String,
+) -> Result<(), String> {
     // open_path_with_system_default is used by ExtrasDetail and useSteamDetailViewModel
     // to open a local extras file (PDF, image, video, audio) with the OS default app.
     // The path is always constructed from settings.extrasPath + extra.path from the DB.
     // We validate before spawning so that a crafted MDB import cannot inject a URL
-    // that xdg-open / cmd-start would silently hand to the browser.
-    validate_open_path(&path)?;
-
-    #[cfg(target_os = "windows")]
-    {
-        Command::new("cmd")
-            .args(["/C", "start", "", &path])
-            .spawn()
-            .map_err(|e| e.to_string())?;
-        return Ok(());
-    }
-
-    #[cfg(target_os = "macos")]
-    {
-        Command::new("open")
-            .arg(&path)
-            .spawn()
-            .map_err(|e| e.to_string())?;
-        return Ok(());
-    }
-
-    #[cfg(all(unix, not(target_os = "macos")))]
-    {
-        Command::new("xdg-open")
-            .arg(&path)
-            .spawn()
-            .map_err(|e| e.to_string())?;
-        return Ok(());
-    }
+    // that the OS default handler would silently hand to the browser.
+    open_validated_path(&path, |validated_path| {
+        #[allow(deprecated)]
+        app.shell()
+            .open(validated_path, None)
+            .map_err(|error| error.to_string())
+    })
 }
 
 #[cfg(test)]
@@ -281,5 +270,35 @@ mod tests {
 
         let res_mixed = validate_open_path("Https://example.com");
         assert!(res_mixed.is_err(), "mixed-case Https:// must be rejected");
+    }
+
+    #[test]
+    fn test_open_validated_path_passes_existing_file_to_system_opener() {
+        let dir = tempdir().unwrap();
+        let file_path = dir.path().join("C64-Longplay052-ZakMcKracken.avi");
+        File::create(&file_path).unwrap();
+        let expected = file_path.to_string_lossy().to_string();
+        let mut opened = None;
+
+        let result = open_validated_path(&expected, |path| {
+            opened = Some(path.to_owned());
+            Ok(())
+        });
+
+        assert!(result.is_ok());
+        assert_eq!(opened.as_deref(), Some(expected.as_str()));
+    }
+
+    #[test]
+    fn test_open_validated_path_does_not_invoke_opener_for_missing_file() {
+        let mut opener_called = false;
+
+        let result = open_validated_path("C:\\missing\\video.avi", |_| {
+            opener_called = true;
+            Ok(())
+        });
+
+        assert!(result.is_err());
+        assert!(!opener_called);
     }
 }
