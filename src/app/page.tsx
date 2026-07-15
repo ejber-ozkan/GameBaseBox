@@ -520,7 +520,7 @@ export default function Home() {
           <div className="flex flex-col items-center gap-5">
             <div className="h-14 w-14 rounded-full border-4 border-cyan-400/15 border-t-cyan-300 animate-spin" />
             <div className="text-sm font-black uppercase tracking-[0.24em] text-cyan-200/75">
-              Checking GB64 Database
+              Checking GameBaseBox Database
             </div>
           </div>
         </div>

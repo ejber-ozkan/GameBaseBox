@@ -65,7 +65,7 @@ pub fn get_database_bootstrap_status(
         reason: if ready {
             None
         } else {
-            Some("GB64 database is missing or has not been imported yet.".to_string())
+            Some("GameBaseBox database is missing or has not been imported yet.".to_string())
         },
     })
 }
