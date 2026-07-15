@@ -65,8 +65,8 @@ export function ResolvedExtraMedia({
   const isVideo = isVideoExtra(extra);
   const videoFailed = videoFailedPath === videoResolution?.playbackPath;
 
-  const loadVideo = useCallback(async () => {
-    setVideoMessage(null);
+  const loadVideo = useCallback(async (clearMessage = true) => {
+    if (clearMessage) setVideoMessage(null);
     setVideoFailedPath(null);
     const resolution = await resolveExtraVideo(extrasPath, extra.path);
     setVideoResolution(resolution);
@@ -96,13 +96,68 @@ export function ResolvedExtraMedia({
       const result = action === 'convert'
         ? await convertExtraVideo(extrasPath, extra.path)
         : await downloadArchiveExtraVideo(extrasPath, extra.path);
+      await loadVideo(false);
       setVideoMessage(result.message);
-      await loadVideo();
     } catch (error) {
       setVideoMessage(String(error));
     } finally {
       setVideoAction(null);
     }
+  };
+
+  const renderVideoActions = () => {
+    if (!videoResolution) return null;
+    const missing = !videoResolution.originalExists;
+
+    return (
+      <>
+        <div className="flex flex-wrap justify-center gap-2">
+          {videoResolution.originalExists ? (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                void openFile(videoResolution.originalPath).catch((error) => setVideoMessage(String(error)));
+              }}
+              className="rounded-lg border border-purple-400/50 bg-purple-500/20 px-3 py-2 text-xs font-semibold text-purple-100 hover:bg-purple-500/30"
+            >
+              Open in video player
+            </button>
+          ) : null}
+          {videoResolution.originalExists && !videoResolution.compatibleSidecar ? (
+            <button
+              type="button"
+              disabled={videoAction !== null}
+              onClick={(event) => {
+                event.stopPropagation();
+                void runVideoAction('convert');
+              }}
+              className="rounded-lg border border-cyan-400/50 bg-cyan-500/20 px-3 py-2 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/30 disabled:opacity-60"
+            >
+              {videoAction === 'convert' ? 'Creating MP4…' : 'Create compatible MP4 copy'}
+            </button>
+          ) : null}
+          {missing && videoResolution.archiveCandidate ? (
+            <button
+              type="button"
+              disabled={videoAction !== null}
+              onClick={(event) => {
+                event.stopPropagation();
+                void runVideoAction('download');
+              }}
+              className="rounded-lg border border-green-400/50 bg-green-500/20 px-3 py-2 text-xs font-semibold text-green-100 hover:bg-green-500/30 disabled:opacity-60"
+            >
+              {videoAction === 'download' ? 'Downloading MP4…' : 'Download compatible MP4'}
+            </button>
+          ) : null}
+        </div>
+        {videoMessage ? (
+          <p role="status" className="max-w-xl rounded-md bg-black/75 px-2 py-1 text-xs text-amber-200">
+            {videoMessage}
+          </p>
+        ) : null}
+      </>
+    );
   };
 
   if (isVideo && videoResolution && (!videoResolution.playbackPath || videoFailed)) {
@@ -130,47 +185,7 @@ export function ResolvedExtraMedia({
               : 'Keep the original and open it externally, or create a compatible MP4 copy.'}
           </p>
         </div>
-        <div className="flex flex-wrap justify-center gap-2">
-          {videoResolution.originalExists ? (
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                void openFile(videoResolution.originalPath).catch((error) => setVideoMessage(String(error)));
-              }}
-              className="rounded-lg border border-purple-400/50 bg-purple-500/15 px-3 py-2 text-xs font-semibold text-purple-100 hover:bg-purple-500/25"
-            >
-              Open in video player
-            </button>
-          ) : null}
-          {videoResolution.originalExists && !videoResolution.compatibleSidecar ? (
-            <button
-              type="button"
-              disabled={videoAction !== null}
-              onClick={(event) => {
-                event.stopPropagation();
-                void runVideoAction('convert');
-              }}
-              className="rounded-lg border border-cyan-400/50 bg-cyan-500/15 px-3 py-2 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/25 disabled:opacity-50"
-            >
-              Create compatible MP4 copy
-            </button>
-          ) : null}
-          {missing && videoResolution.archiveCandidate ? (
-            <button
-              type="button"
-              disabled={videoAction !== null}
-              onClick={(event) => {
-                event.stopPropagation();
-                void runVideoAction('download');
-              }}
-              className="rounded-lg border border-green-400/50 bg-green-500/15 px-3 py-2 text-xs font-semibold text-green-100 hover:bg-green-500/25 disabled:opacity-50"
-            >
-              Download compatible MP4
-            </button>
-          ) : null}
-        </div>
-        {videoMessage ? <p role="status" className="max-w-xl text-xs text-amber-200">{videoMessage}</p> : null}
+        {renderVideoActions()}
       </div>
     );
   }
@@ -192,7 +207,7 @@ export function ResolvedExtraMedia({
           preload="metadata"
           onError={() => setVideoFailedPath(videoResolution?.playbackPath ?? extra.path)}
         />
-        {mode === 'fullscreen' && videoResolution?.originalExists ? (
+        {mode === 'fullscreen' && videoResolution?.originalExists && videoResolution.compatibleSidecar ? (
           <button
             type="button"
             onClick={(event) => {
@@ -204,9 +219,16 @@ export function ResolvedExtraMedia({
             Open original externally
           </button>
         ) : null}
-        {mode !== 'fullscreen' ? (
-          <div className="pointer-events-none absolute left-3 top-3 rounded-full border border-cyan-400/35 bg-black/60 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-cyan-200">
-            Video
+        <div className="pointer-events-none absolute left-3 top-3 rounded-full border border-cyan-400/35 bg-black/70 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-cyan-200">
+          {videoResolution?.compatibleSidecar ? 'Compatible MP4 ready' : 'Video'}
+        </div>
+        {videoResolution && (
+          (mode !== 'fullscreen' && videoResolution.originalExists)
+          || !videoResolution.compatibleSidecar
+          || videoMessage
+        ) ? (
+          <div className="absolute inset-x-3 bottom-3 z-20 flex flex-col items-center gap-2" onClick={(event) => event.stopPropagation()}>
+            {renderVideoActions()}
           </div>
         ) : null}
       </div>

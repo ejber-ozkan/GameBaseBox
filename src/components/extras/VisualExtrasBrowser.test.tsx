@@ -24,6 +24,16 @@ vi.mock('../../hooks/usePopupOpenSound', () => ({
 vi.mock('../../lib/tauri-bridge', () => ({
   getAssetUrl: vi.fn().mockImplementation((path) => Promise.resolve(`resolved-url:${path}`)),
   isDebugMode: vi.fn().mockResolvedValue(false),
+  resolveExtraVideo: vi.fn().mockResolvedValue({
+    originalPath: 'D:/custom-platform-extras/Videos/C64GVA319-Rambo.avi',
+    playbackPath: null,
+    originalExists: false,
+    compatibleSidecar: false,
+    archiveCandidate: true,
+  }),
+  openFile: vi.fn().mockResolvedValue(undefined),
+  convertExtraVideo: vi.fn(),
+  downloadArchiveExtraVideo: vi.fn(),
 }));
 
 const mockExtras: Extra[] = [
@@ -45,5 +55,22 @@ describe('VisualExtrasBrowser', () => {
     );
 
     expect(screen.getAllByText('Extra Image 1').length).toBeGreaterThan(0);
+  });
+
+  test('does not nest video action buttons inside the preview activator', async () => {
+    const { container } = render(
+      <VisualExtrasBrowser
+        extras={[{
+          id: 'video-1',
+          name: 'Rambo video',
+          path: 'Videos\\C64GVA319-Rambo.avi',
+          type: 'video',
+        }]}
+        extrasPath="D:/custom-platform-extras"
+      />
+    );
+
+    await screen.findByRole('button', { name: /download compatible mp4/i });
+    expect(container.querySelector('button button')).toBeNull();
   });
 });

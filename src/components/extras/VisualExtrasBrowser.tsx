@@ -183,8 +183,7 @@ export function VisualExtrasBrowser({
             </button>
           </div>
         </div>
-        <button
-          type="button"
+        <div
           onClick={() => setFullscreenIndex(safeSelectedIndex)}
           className="group relative block w-full overflow-hidden rounded-xl border border-gray-800 bg-gray-950 text-left transition-colors hover:border-blue-500/50"
           style={previewHeight ? { height: `${previewHeight}px` } : undefined}
@@ -200,7 +199,18 @@ export function VisualExtrasBrowser({
             <p className="truncate text-xs font-bold text-white">{selectedExtra.name}</p>
             <p className="text-[9px] uppercase tracking-widest text-gray-400">Press Enter for fullscreen</p>
           </div>
-        </button>
+          <button
+            type="button"
+            aria-label={`Open ${selectedExtra.name} fullscreen`}
+            onClick={(event) => {
+              event.stopPropagation();
+              setFullscreenIndex(safeSelectedIndex);
+            }}
+            className="absolute right-3 top-3 z-30 rounded-lg border border-white/20 bg-black/70 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white/75 hover:border-blue-400/60 hover:text-blue-200"
+          >
+            Fullscreen
+          </button>
+        </div>
       </div>
 
       <div className="grid min-w-0 gap-2.5" style={{ gridTemplateColumns: `repeat(${thumbColumns}, minmax(0,1fr))` }}>

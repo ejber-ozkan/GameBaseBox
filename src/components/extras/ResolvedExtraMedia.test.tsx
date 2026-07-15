@@ -56,6 +56,7 @@ describe('ResolvedExtraMedia video compatibility', () => {
         'asset://E:/Extras/Videos/C64GVA319-Rambo.mp4'
       );
     });
+    expect(screen.getByText('Compatible MP4 ready')).not.toBeNull();
     expect(mockResolveExtraVideo).toHaveBeenCalledWith('E:/Extras', video.path);
     fireEvent.click(screen.getByRole('button', { name: /open original externally/i }));
     expect(mockOpenFile).toHaveBeenCalledWith('E:/Extras/Videos/C64GVA319-Rambo.avi');
@@ -121,6 +122,55 @@ describe('ResolvedExtraMedia video compatibility', () => {
       expect(mockDownloadArchiveExtraVideo).toHaveBeenCalledWith('E:/Extras', video.path);
       expect(mockResolveExtraVideo).toHaveBeenCalledTimes(2);
     });
+  });
+
+  it('shows system-player and conversion actions before an existing AVI preview fails', async () => {
+    mockResolveExtraVideo.mockResolvedValue({
+      originalPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+      playbackPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+      originalExists: true,
+      compatibleSidecar: false,
+    });
+
+    render(<ResolvedExtraMedia extra={video} extrasPath="E:/Extras" className="media" mode="preview" />);
+
+    expect(await screen.findByRole('button', { name: /open in video player/i })).not.toBeNull();
+    expect(screen.getByRole('button', { name: /create compatible MP4 copy/i })).not.toBeNull();
+  });
+
+  it('keeps download progress and completion feedback visible', async () => {
+    let finishDownload: ((value: { path: string; message: string }) => void) | undefined;
+    mockDownloadArchiveExtraVideo.mockImplementation(() => new Promise((resolve) => {
+      finishDownload = resolve;
+    }));
+    mockResolveExtraVideo
+      .mockResolvedValueOnce({
+        originalPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+        playbackPath: null,
+        originalExists: false,
+        compatibleSidecar: false,
+        archiveCandidate: true,
+      })
+      .mockResolvedValueOnce({
+        originalPath: 'E:/Extras/Videos/C64GVA319-Rambo.avi',
+        playbackPath: 'E:/Extras/Videos/C64GVA319-Rambo.mp4',
+        originalExists: false,
+        compatibleSidecar: true,
+        archiveCandidate: true,
+      });
+
+    render(<ResolvedExtraMedia extra={video} extrasPath="E:/Extras" className="media" mode="preview" />);
+
+    fireEvent.click(await screen.findByRole('button', { name: /download compatible MP4/i }));
+    expect((screen.getByRole('button', { name: /downloading MP4/i }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getByRole('status').textContent).toContain('Downloading compatible MP4');
+
+    finishDownload?.({
+      path: 'E:/Extras/Videos/C64GVA319-Rambo.mp4',
+      message: 'Compatible Archive.org MP4 downloaded.',
+    });
+
+    expect(await screen.findByText('Compatible Archive.org MP4 downloaded.')).not.toBeNull();
   });
 
   it('does not offer the C64 Archive.org downloader for unrelated missing videos', async () => {
