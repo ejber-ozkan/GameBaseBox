@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.4] - 2026-07-15
+
+### Added
+- Added resilient Extras video handling for legacy AVI collections: keep the original file, open it in the registered system player, or create a browser-compatible MP4 sidecar when FFmpeg is available.
+- Added targeted Archive.org retrieval for matching C64 Gamevideoarchive videos, including live download percentage, transfer speed, and remaining-time feedback.
+
+### Changed
+- Improved the Extras video gallery so completed downloads and conversions refresh immediately, compatible videos autoplay, transient completion messaging clears quickly, and the external-player action remains available at the lower-right of the preview.
+- Reworked Extras fullscreen playback to use the actual media container with functional native video controls.
+- Bumped package, Tauri, Cargo, lockfile, and root version metadata to `0.5.4`.
+
+### Fixed
+- Removed nested interactive buttons from Extras video previews and thumbnails, preventing React hydration errors when AVI actions are displayed.
+- Fixed stale download actions remaining visible after an Archive.org video had finished downloading.
+- Fixed Windows external video launching failing with `The request is not supported. (os error 50)` by using the native cross-platform system handler instead of `cmd start`.
+
 ## [0.5.3] - 2026-07-14
 
 ### Changed
