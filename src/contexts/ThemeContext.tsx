@@ -6,7 +6,7 @@ import { Theme, BUILT_IN_THEMES, applyTheme, arcadeVoidTheme } from '@/themes';
 
 interface ThemeContextType {
   theme: Theme;
-  setTheme: (themeId: string) => void;
+  setTheme: (themeId: string, persist?: boolean) => void;
   availableThemes: Theme[];
 }
 
@@ -14,20 +14,33 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const { settings, updateSettings } = useSettings();
-  const [activeTheme, setActiveTheme] = useState<Theme>(arcadeVoidTheme);
+  const currentThemeId = settings.themeId || 'arcade-void';
+  const [prevThemeId, setPrevThemeId] = useState<string>(currentThemeId);
+  const [activeTheme, setActiveTheme] = useState<Theme>(() => {
+    return BUILT_IN_THEMES.find(t => t.id === currentThemeId) || arcadeVoidTheme;
+  });
 
-  // Synchronize activeTheme state whenever settings.themeId changes
-  useEffect(() => {
-    const selectedThemeId = settings.themeId || 'arcade-void';
-    const foundTheme = BUILT_IN_THEMES.find(t => t.id === selectedThemeId) || arcadeVoidTheme;
+  // Synchronize state during render when settings.themeId changes
+  if (currentThemeId !== prevThemeId) {
+    setPrevThemeId(currentThemeId);
+    const foundTheme = BUILT_IN_THEMES.find(t => t.id === currentThemeId) || arcadeVoidTheme;
     setActiveTheme(foundTheme);
-    applyTheme(foundTheme);
-  }, [settings.themeId]);
+  }
 
-  const setTheme = (themeId: string) => {
+  // Apply theme styles and data attributes to the document whenever activeTheme changes
+  useEffect(() => {
+    applyTheme(activeTheme);
+  }, [activeTheme]);
+
+  const setTheme = (themeId: string, persist = true) => {
     const foundTheme = BUILT_IN_THEMES.find(t => t.id === themeId);
     if (foundTheme) {
-      updateSettings({ themeId });
+      if (persist) {
+        updateSettings({ themeId });
+      } else {
+        setActiveTheme(foundTheme);
+        applyTheme(foundTheme);
+      }
     }
   };
 

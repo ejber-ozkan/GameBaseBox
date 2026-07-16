@@ -19,6 +19,7 @@ import { DetailTitleBanner } from './DetailTitleBanner';
 import type { DetailFullscreenRequest, DetailLayoutProps } from '../DetailView';
 import { useResolvedBoxArtUrl } from '../../hooks/useResolvedBoxArtUrl';
 import { useTheme } from '../../contexts/ThemeContext';
+import type { DetailZone } from '../../hooks/useDetailNavigation';
 
 type UnifiedDetailTab = 'game' | 'extras';
 
@@ -470,7 +471,7 @@ export function UnifiedDetailLayout({
   const compactLowerPanelGap = Math.max(8, panelInnerGap - 6);
   const compactLowerPanelPadding = Math.max(10, panelPadding - 4);
   const compactInnerCardPadding = Math.max(8, panelPadding - 6);
-  const alternativeButtonSize = detailLayout?.alternativeButtonSize ?? 46;
+  const alternativeButtonSize = detailLayout?.alternativeIconButtonSize ?? 46;
   const alternativeGlyphSize = detailLayout?.alternativeIconGlyphSize ?? 28;
   const largePanelFocusCls = nav.isFocused('media-extras')
     ? 'relative z-30 ring-2 ring-inset ring-theme-primary brightness-110 shadow-[0_0_18px_var(--theme-primary)]'
@@ -853,7 +854,7 @@ export function UnifiedDetailLayout({
                                 <SectionHeading title="Media Gallery" />
                                 <div className="flex gap-1.5 flex-wrap">
                                   {availableMedia.map((mediaItem) => {
-                                    const zone = 'media-' + mediaItem.id;
+                                    const zone = ('media-' + mediaItem.id) as DetailZone;
                                     const isActive = activeMedia === mediaItem.id;
                                     return (
                                       <button
@@ -879,8 +880,8 @@ export function UnifiedDetailLayout({
                                 <button
                                   type="button"
                                   onClick={handleFullscreenMedia}
-                                  onMouseEnter={() => nav.hoverZone('media-' + activeMedia)}
-                                  className={`group w-full h-full overflow-hidden flex items-center justify-center rounded-theme-md transition-colors ${nav.focusCls('media-' + activeMedia)}`}
+                                  onMouseEnter={() => nav.hoverZone(('media-' + activeMedia) as DetailZone)}
+                                  className={`group w-full h-full overflow-hidden flex items-center justify-center rounded-theme-md transition-colors ${nav.focusCls(('media-' + activeMedia) as DetailZone)}`}
                                 >
                                   <div className="w-full h-full rounded-theme-md overflow-hidden bg-black/45 flex items-center justify-center">
                                     {activeMedia === 'videosna' && game.videoSnapFilename ? (

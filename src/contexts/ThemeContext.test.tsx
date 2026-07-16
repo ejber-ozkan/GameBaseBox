@@ -23,6 +23,16 @@ function ThemeTestComponent() {
           Set {t.displayName}
         </button>
       ))}
+
+      {availableThemes.map((t) => (
+        <button
+          key={t.id}
+          data-testid={`set-theme-temp-${t.id}`}
+          onClick={() => setTheme(t.id, false)}
+        >
+          Set Temp {t.displayName}
+        </button>
+      ))}
     </div>
   );
 }
@@ -119,5 +129,29 @@ describe('ThemeContext', () => {
     const styleEl = document.getElementById('active-theme-styles');
     expect(styleEl?.textContent).toContain('--theme-primary: #c0c1ff');
     expect(document.documentElement.getAttribute('data-theme')).toBe('c64-edition');
+  });
+
+  test('switches theme temporarily without persisting to settings', async () => {
+    render(
+      <SettingsProvider>
+        <ThemeProvider>
+          <ThemeTestComponent />
+        </ThemeProvider>
+      </SettingsProvider>
+    );
+
+    // Switch temporarily to C64 Edition
+    fireEvent.click(screen.getByTestId('set-theme-temp-c64-edition'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('current-theme-id').textContent).toBe('c64-edition');
+    });
+
+    expect(screen.getByTestId('current-theme-name').textContent).toBe('C64 Edition');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('c64-edition');
+
+    // Verify localStorage has NOT been updated with the themeId
+    const savedSettings = JSON.parse(window.localStorage.getItem('gb64_settings') || '{}');
+    expect(savedSettings.themeId).not.toBe('c64-edition');
   });
 });

@@ -2,6 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { PlatformFolderSettings } from '@/types/platform';
 import { DatabaseSetupView } from './DatabaseSetupView';
+import { SettingsProvider } from '@/contexts/SettingsContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const atariFolders: PlatformFolderSettings = {
   platformId: 'atari800',
@@ -80,11 +82,21 @@ const vic20Folders: PlatformFolderSettings = {
   videosPath: '',
 };
 
+function renderWithProviders(ui: React.ReactElement) {
+  return render(
+    <SettingsProvider>
+      <ThemeProvider>
+        {ui}
+      </ThemeProvider>
+    </SettingsProvider>
+  );
+}
+
 describe('DatabaseSetupView', () => {
   it('shows progress and allows a running import to be cancelled', () => {
     const onCancelImport = vi.fn();
 
-    render(
+    renderWithProviders(
       <DatabaseSetupView
         dbPath="atari800"
         error={null}
@@ -113,7 +125,7 @@ describe('DatabaseSetupView', () => {
     const onFolderChange = vi.fn();
     const onBrowseFolder = vi.fn();
 
-    render(
+    renderWithProviders(
       <DatabaseSetupView
         dbPath="atari800"
         error={null}
@@ -141,7 +153,7 @@ describe('DatabaseSetupView', () => {
   });
 
   it('renders Atari 2600 import folders without music or photos fields', () => {
-    render(
+    renderWithProviders(
       <DatabaseSetupView
         dbPath="atari2600"
         error={null}
@@ -166,7 +178,7 @@ describe('DatabaseSetupView', () => {
   });
 
   it('mentions GameBaseZX and SpeccyMania while rendering ZX Spectrum import folders', () => {
-    render(
+    renderWithProviders(
       <DatabaseSetupView
         dbPath="zxspectrum"
         error={null}
@@ -194,7 +206,7 @@ describe('DatabaseSetupView', () => {
   });
 
   it('renders BBC Micro import folders without photos', () => {
-    render(
+    renderWithProviders(
       <DatabaseSetupView
         dbPath="bbcmicro"
         error={null}
@@ -220,7 +232,7 @@ describe('DatabaseSetupView', () => {
   });
 
   it('renders Amiga import folders without photos', () => {
-    render(
+    renderWithProviders(
       <DatabaseSetupView
         dbPath="amiga"
         error={null}
@@ -246,7 +258,7 @@ describe('DatabaseSetupView', () => {
   });
 
   it('renders Atari ST import folders without photos', () => {
-    render(
+    renderWithProviders(
       <DatabaseSetupView
         dbPath="atarist"
         error={null}
@@ -272,7 +284,7 @@ describe('DatabaseSetupView', () => {
   });
 
   it('renders VIC-20 import folders without photos', () => {
-    render(
+    renderWithProviders(
       <DatabaseSetupView
         dbPath="vic20"
         error={null}

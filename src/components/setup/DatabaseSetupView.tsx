@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from 'react';
+import { useSettings } from '@/contexts/SettingsContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import type { PlatformFolderSettings } from '@/types/platform';
 
 type RequiredPlatformFolderKey = keyof Pick<
@@ -40,6 +43,24 @@ const folderLabels = {
   extrasPath: 'Extras',
 } as const;
 
+function getThemeIdForPlatform(platformId?: string): string {
+  if (!platformId) return 'arcade-void';
+  switch (platformId) {
+    case 'c64':
+    case 'vic20':
+      return 'c64-edition';
+    case 'atari800':
+    case 'atari2600':
+    case 'atarist':
+      return 'cyberpunk-crt';
+    case 'zxspectrum':
+    case 'bbcmicro':
+    case 'amiga':
+    default:
+      return 'arcade-void';
+  }
+}
+
 export function DatabaseSetupView({
   dbPath,
   error,
@@ -60,22 +81,59 @@ export function DatabaseSetupView({
   onFolderChange,
   onImport,
 }: DatabaseSetupViewProps) {
+  const { settings } = useSettings();
+  const { theme, setTheme } = useTheme();
+
+  // Temporarily apply the selected platform's theme on mount/dropdown change, and restore on unmount.
+  useEffect(() => {
+    const setupThemeId = getThemeIdForPlatform(selectedPlatformId);
+    setTheme(setupThemeId, false);
+
+    return () => {
+      const globalThemeId = settings.themeId || 'arcade-void';
+      setTheme(globalThemeId, false);
+    };
+  }, [selectedPlatformId, setTheme, settings.themeId]);
+
   const hasRequiredFolders = requiredFolderKeys.length > 0 && folderSettings;
   const showPlatformPicker = platformOptions.length > 1 && selectedPlatformId && onPlatformSelect;
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,#162033_0%,#0b1020_42%,#06080f_100%)] px-6 py-10 text-white">
-      <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl items-center justify-center">
-        <div className="w-full max-w-4xl rounded-[36px] border border-cyan-400/15 bg-[#0b1322]/90 p-8 shadow-[0_35px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl md:p-12">
+    <main className="min-h-screen bg-theme-background px-6 py-10 text-theme-text font-sans transition-colors duration-250 flex items-center justify-center">
+      <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl w-full items-center justify-center">
+        <div 
+          className={`w-full max-w-4xl p-8 md:p-12 transition-all duration-250 ${
+            theme.effects.steppedBorders ? 'border-4 border-theme-outline rounded-theme-xl' :
+            theme.id === 'cyberpunk-crt' ? 'border-2 border-theme-primary rounded-theme-xl' :
+            'theme-panel rounded-theme-xl shadow-[0_35px_120px_rgba(0,0,0,0.5)]'
+          }`}
+          style={{
+            backgroundColor: theme.id === 'c64-edition' ? theme.colors.primaryContainer : undefined,
+            boxShadow: theme.id === 'cyberpunk-crt' ? `0 0 30px ${theme.colors.primary}33, inset 0 0 15px ${theme.colors.primary}15` : undefined
+          }}
+        >
+          {theme.id === 'c64-edition' && (
+            <div className="mb-6 font-mono text-xs text-theme-primary text-center uppercase leading-5 border-b border-theme-outline pb-6">
+              <div>**** COMMODORE 64 BASIC V2 ****</div>
+              <div>64K RAM SYSTEM  38911 BASIC BYTES FREE</div>
+              <div className="mt-2 theme-cursor-blink text-theme-secondary">READY.</div>
+            </div>
+          )}
+
           <div className="mb-10">
-            <div className="mb-4 text-[12px] font-black uppercase tracking-[0.34em] text-cyan-300/70">
+            <div className="mb-4 text-[12px] font-black uppercase tracking-[0.34em] text-theme-primary">
               First Run Setup
             </div>
-            <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">
+            <h1 
+              className="text-4xl font-black tracking-tight text-theme-text md:text-5xl"
+              style={{
+                textShadow: theme.id === 'cyberpunk-crt' ? `0 0 8px ${theme.colors.primary}cc` : undefined
+              }}
+            >
               Build Your {platformName} Database
             </h1>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-white/68">
-              GBBox needs the original <span className="font-bold text-white">{platformName}</span>{' '}
+            <p className="mt-4 max-w-3xl text-base leading-8 text-theme-text-muted">
+              GBBox needs the original <span className="font-bold text-theme-primary">{platformName}</span>{' '}
               MDB file to build the local SQLite database for search, filters, favorites, and BigBox browsing.
               {platformAliases.length > 0 ? (
                 <>
@@ -86,17 +144,21 @@ export function DatabaseSetupView({
             </p>
             {showPlatformPicker ? (
               <label className="mt-6 block max-w-sm">
-                <span className="text-[11px] font-black uppercase tracking-[0.24em] text-cyan-300/80">
+                <span className="text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
                   GameBase
                 </span>
                 <select
                   value={selectedPlatformId}
                   onChange={(event) => onPlatformSelect(event.target.value)}
                   disabled={isImporting}
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm font-bold text-white outline-none transition-all focus:border-cyan-300/45 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="mt-2 w-full bg-theme-surface/50 border border-theme-outline/30 px-4 py-3 text-sm font-bold text-theme-text outline-none transition-all focus:border-theme-primary rounded-theme-md disabled:cursor-not-allowed disabled:opacity-45"
+                  style={{
+                    backgroundColor: theme.id === 'c64-edition' ? theme.colors.primaryContainer : undefined,
+                    borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
+                  }}
                 >
                   {platformOptions.map((platform) => (
-                    <option key={platform.id} value={platform.id} className="bg-slate-950 text-white">
+                    <option key={platform.id} value={platform.id} className="bg-theme-surface text-theme-text">
                       {platform.displayName}
                       {platform.importStatus === 'imported' ? ' (imported)' : ''}
                     </option>
@@ -107,13 +169,18 @@ export function DatabaseSetupView({
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[1.25fr_0.9fr]">
-            <section className="rounded-[28px] border border-white/8 bg-white/[0.035] p-6">
-              <div className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] text-cyan-300/80">
+            <section 
+              className="p-6 border border-theme-outline/20 bg-theme-surface/10 rounded-theme-lg"
+              style={{
+                borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
+              }}
+            >
+              <div className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
                 Source File
               </div>
-              <div className="rounded-[22px] border border-white/10 bg-black/20 p-4">
-                <div className="text-xs font-black uppercase tracking-[0.18em] text-white/38">Selected MDB</div>
-                <div className="mt-2 break-all text-sm leading-7 text-white/80">
+              <div className="border border-theme-outline/20 bg-theme-surface/30 p-4 rounded-theme-md">
+                <div className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">Selected MDB</div>
+                <div className="mt-2 break-all text-sm leading-7 text-theme-text font-bold">
                   {mdbPath || 'No MDB selected yet'}
                 </div>
               </div>
@@ -123,7 +190,10 @@ export function DatabaseSetupView({
                   type="button"
                   onClick={onBrowse}
                   disabled={isImporting}
-                  className="rounded-full border border-cyan-300/25 bg-cyan-400/10 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-cyan-100 transition-all hover:border-cyan-200/45 hover:bg-cyan-400/18 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="rounded-theme-md border border-theme-primary bg-theme-primary/10 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-theme-primary transition-all hover:bg-theme-primary/20 disabled:cursor-not-allowed disabled:opacity-45"
+                  style={{
+                    borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
+                  }}
                 >
                   Choose MDB
                 </button>
@@ -131,7 +201,11 @@ export function DatabaseSetupView({
                   type="button"
                   onClick={onImport}
                   disabled={isImporting || !mdbPath}
-                  className="rounded-full border border-emerald-300/25 bg-emerald-400/15 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-emerald-100 transition-all hover:border-emerald-200/45 hover:bg-emerald-400/22 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="rounded-theme-md border border-theme-secondary bg-theme-secondary/20 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-theme-text transition-all hover:bg-theme-secondary/30 disabled:cursor-not-allowed disabled:opacity-45"
+                  style={{
+                    borderWidth: theme.effects.steppedBorders ? '2px' : '1px',
+                    borderColor: theme.colors.secondary
+                  }}
                 >
                   {isImporting ? 'Importing…' : 'Build Database'}
                 </button>
@@ -139,7 +213,11 @@ export function DatabaseSetupView({
                   <button
                     type="button"
                     onClick={onCancelImport}
-                    className="rounded-full border border-red-300/25 bg-red-400/10 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-red-100 transition-all hover:border-red-200/45 hover:bg-red-400/18"
+                    className="rounded-theme-md border border-theme-tertiary bg-theme-tertiary/10 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-theme-tertiary transition-all hover:bg-theme-tertiary/20"
+                    style={{
+                      borderWidth: theme.effects.steppedBorders ? '2px' : '1px',
+                      borderColor: theme.colors.tertiary
+                    }}
                   >
                     Cancel Import
                   </button>
@@ -147,26 +225,34 @@ export function DatabaseSetupView({
               </div>
 
               {isImporting && importProgress ? (
-                <div className="mt-5 rounded-[22px] border border-cyan-300/20 bg-cyan-400/10 p-4 text-sm text-cyan-50">
+                <div className="mt-5 rounded-theme-md border border-theme-primary/20 bg-theme-primary/10 p-4 text-sm text-theme-text">
                   <div className="flex items-center justify-between gap-4 font-bold">
-                    <span>{importProgress.stage}</span>
+                    <span className={theme.effects.blinkingCursor ? 'theme-cursor-blink' : ''}>
+                      {importProgress.stage}
+                    </span>
                     <span>{importProgress.percent}%</span>
                   </div>
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-black/25">
-                    <div className="h-full rounded-full bg-cyan-300 transition-all" style={{ width: `${importProgress.percent}%` }} />
+                  <div className="mt-3 h-3 overflow-hidden rounded-theme-sm bg-black/40 border border-theme-outline/20">
+                    <div 
+                      className="h-full bg-theme-primary transition-all duration-300" 
+                      style={{ 
+                        width: `${importProgress.percent}%`,
+                        boxShadow: theme.id === 'cyberpunk-crt' ? `0 0 10px ${theme.colors.primary}` : undefined
+                      }} 
+                    />
                   </div>
-                  <p className="mt-3 leading-6 text-cyan-100/75">Cancellation is applied safely before the database merge.</p>
+                  <p className="mt-3 text-xs leading-6 text-theme-text-muted">Cancellation is applied safely before the database merge.</p>
                 </div>
               ) : null}
 
               {hasRequiredFolders ? (
                 <div className="mt-7 space-y-4">
-                  <div className="text-[11px] font-black uppercase tracking-[0.24em] text-cyan-300/80">
+                  <div className="text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
                     Platform Folders
                   </div>
                   {requiredFolderKeys.map((folderKey) => (
                     <label key={folderKey} className="block">
-                      <span className="text-xs font-black uppercase tracking-[0.18em] text-white/38">
+                      <span className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">
                         {folderLabels[folderKey]}
                       </span>
                       <div className="mt-2 flex gap-3">
@@ -175,14 +261,20 @@ export function DatabaseSetupView({
                           value={folderSettings[folderKey]}
                           onChange={(event) => onFolderChange?.(folderKey, event.target.value)}
                           disabled={isImporting}
-                          className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/82 outline-none transition-all placeholder:text-white/25 focus:border-cyan-300/35 disabled:cursor-not-allowed disabled:opacity-45"
+                          className="min-w-0 flex-1 rounded-theme-md border border-theme-outline/20 bg-theme-surface/30 px-4 py-3 text-sm text-theme-text outline-none transition-all placeholder:text-theme-text-muted/40 focus:border-theme-primary disabled:cursor-not-allowed disabled:opacity-45"
                           placeholder={`Select ${folderLabels[folderKey]} folder`}
+                          style={{
+                            borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
+                          }}
                         />
                         <button
                           type="button"
                           onClick={() => onBrowseFolder?.(folderKey)}
                           disabled={isImporting || !onBrowseFolder}
-                          className="rounded-full border border-white/12 bg-white/[0.06] px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-white/80 transition-all hover:border-cyan-200/35 hover:bg-cyan-400/12 disabled:cursor-not-allowed disabled:opacity-45"
+                          className="rounded-theme-md border border-theme-outline/30 bg-theme-surface/50 px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-theme-text transition-all hover:bg-theme-primary/10 disabled:cursor-not-allowed disabled:opacity-45"
+                          style={{
+                            borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
+                          }}
                         >
                           Browse
                         </button>
@@ -193,35 +285,42 @@ export function DatabaseSetupView({
               ) : null}
 
               {error ? (
-                <div className="mt-5 rounded-[22px] border border-red-400/25 bg-red-500/10 p-4 text-sm leading-7 text-red-100/90">
+                <div className="mt-5 rounded-theme-md border border-theme-tertiary/30 bg-theme-tertiary/10 p-4 text-sm leading-7 text-theme-tertiary">
                   {error}
                 </div>
               ) : null}
 
               {importResult ? (
-                <div className="mt-5 rounded-[22px] border border-emerald-300/25 bg-emerald-400/10 p-4 text-sm leading-7 text-emerald-100/90">
+                <div className="mt-5 rounded-theme-md border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm leading-7 text-emerald-400">
                   {importResult}
                 </div>
               ) : null}
             </section>
 
-            <section className="rounded-[28px] border border-white/8 bg-white/[0.035] p-6">
-              <div className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] text-cyan-300/80">
-                What Happens
+            <section 
+              className="p-6 border border-theme-outline/20 bg-theme-surface/10 rounded-theme-lg flex flex-col justify-between"
+              style={{
+                borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
+              }}
+            >
+              <div>
+                <div className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
+                  What Happens
+                </div>
+                <ol className="space-y-4 text-sm leading-7 text-theme-text-muted">
+                  <li>1. GBBox exports the MDB tables to CSV on this machine.</li>
+                  <li>2. The app imports those CSVs into a local optimized SQLite database.</li>
+                  <li>3. Search indexes, cover lookup, and support tables are created automatically.</li>
+                  <li>4. The normal library UI starts once the database is ready.</li>
+                </ol>
               </div>
-              <ol className="space-y-4 text-sm leading-7 text-white/72">
-                <li>1. GBBox exports the MDB tables to CSV on this machine.</li>
-                <li>2. The app imports those CSVs into a local optimized SQLite database.</li>
-                <li>3. Search indexes, cover lookup, and support tables are created automatically.</li>
-                <li>4. The normal library UI starts once the database is ready.</li>
-              </ol>
 
-              <div className="mt-6 rounded-[22px] border border-white/10 bg-black/20 p-4">
-                <div className="text-xs font-black uppercase tracking-[0.18em] text-white/38">Target SQLite Path</div>
-                <div className="mt-2 break-all text-sm leading-7 text-white/76">{dbPath}</div>
+              <div className="mt-6 border border-theme-outline/20 bg-theme-surface/30 p-4 rounded-theme-md">
+                <div className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">Target SQLite Path</div>
+                <div className="mt-2 break-all text-sm leading-7 text-theme-text font-bold">{dbPath}</div>
               </div>
 
-              <p className="mt-6 text-sm leading-7 text-white/55">
+              <p className="mt-6 text-sm leading-7 text-theme-text-muted/60">
                 If export fails, install the Microsoft Access Database Engine and try again.
               </p>
             </section>
