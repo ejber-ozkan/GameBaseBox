@@ -54,6 +54,7 @@ export interface Settings {
   activePlatformId: PlatformId;
   lastUsedPlatformId: PlatformId | null;
   platformSettings: Record<PlatformId, PlatformSettings>;
+  themeId: string;
 }
 
 interface SettingsContextType {
@@ -116,6 +117,7 @@ const defaultSettings: Settings = {
   activePlatformId: 'c64',
   lastUsedPlatformId: 'c64',
   platformSettings: defaultPlatformSettings,
+  themeId: 'arcade-void',
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
