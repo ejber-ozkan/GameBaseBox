@@ -41,4 +41,44 @@ describe('ImageSlider', () => {
 
     await waitFor(() => expect(logDebugMessage).toHaveBeenCalledWith(expect.stringContaining('New title')));
   });
+
+  it('defers screenshot variant loading until the slider enters the preload margin', async () => {
+    let onIntersect: ((entries: Array<{ isIntersecting: boolean }>) => void) | undefined;
+    const globalWithObserver = globalThis as typeof globalThis & { IntersectionObserver?: unknown };
+    const originalObserver = globalWithObserver.IntersectionObserver;
+
+    class MockIntersectionObserver {
+      constructor(callback: (entries: Array<{ isIntersecting: boolean }>) => void) {
+        onIntersect = callback;
+      }
+
+      disconnect() {}
+      observe() {}
+    }
+
+    Object.defineProperty(globalWithObserver, 'IntersectionObserver', {
+      configurable: true,
+      value: MockIntersectionObserver,
+    });
+
+    try {
+      render(<ImageSlider defer filename="deferred.png" type="screenshot" alt="Deferred title" />);
+
+      expect(findAllVariants).not.toHaveBeenCalled();
+      onIntersect?.([{ isIntersecting: true }]);
+
+      await waitFor(() => {
+        expect(findAllVariants).toHaveBeenCalledWith('screenshot', 'deferred.png');
+      });
+    } finally {
+      if (originalObserver) {
+        Object.defineProperty(globalWithObserver, 'IntersectionObserver', {
+          configurable: true,
+          value: originalObserver,
+        });
+      } else {
+        delete globalWithObserver.IntersectionObserver;
+      }
+    }
+  });
 });

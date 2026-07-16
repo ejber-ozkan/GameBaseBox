@@ -123,7 +123,7 @@ function resolveDensityMode(
   return 'comfortable';
 }
 
-function buildFullscreenLayoutMetrics(
+export function buildFullscreenLayoutMetrics(
   preferredMode: 'auto' | 'compact' | 'standard' | 'comfortable',
   viewport: ViewportSnapshot,
 ): FullscreenLayoutMetrics {
