@@ -46,6 +46,7 @@ describe('WindowGameListSection', () => {
     expect(header.getAttribute('data-section')).toBe(section);
     expect(header.getAttribute('data-hierarchy')).toBe(hierarchy);
     expect(header.getAttribute('data-density')).toBe('compact');
+    expect(screen.getByRole('heading', { name: 'Section title' }).getAttribute('style')).toContain('font-size: 12px');
     expect(screen.queryByTestId('window-list-divider')).toBeNull();
   });
 });

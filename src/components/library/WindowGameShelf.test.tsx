@@ -53,7 +53,8 @@ describe('WindowGameShelf', () => {
     expect(header.getAttribute('data-section')).toBe(section);
     expect(header.getAttribute('data-hierarchy')).toBe(hierarchy);
     expect(header.getAttribute('data-density')).toBe('compact');
-    expect(screen.getByText('Supporting copy').className).toContain('sr-only');
+    expect(screen.queryByText('Supporting copy')).toBeNull();
+    expect(screen.getByRole('heading', { name: 'Section title' }).getAttribute('style')).toContain('font-size: 12px');
     expect(container.querySelector('[data-section-divider]')).toBeNull();
   });
 });

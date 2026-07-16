@@ -26,29 +26,31 @@ export function WindowGameListSection({
   const headerStyles = {
     recent: {
       hierarchy: 'compact',
-      title: 'text-xs tracking-[0.12em]',
     },
     favorites: {
       hierarchy: 'supporting',
-      title: 'text-xs tracking-[0.12em]',
     },
     legendary: {
       hierarchy: 'featured',
-      title: 'text-xs tracking-[0.08em]',
     },
   } as const;
   const header = headerStyles[section];
 
   return (
-    <section className="mb-5 px-4">
+    <section className="px-4" style={{ marginBottom: '0.5rem' }}>
       <div
-        className="mb-1 flex items-center"
+        className="flex items-center"
         data-density="compact"
         data-hierarchy={header.hierarchy}
         data-section={section}
         data-testid="window-list-header"
       >
-        <h2 className={`font-black uppercase text-[var(--theme-primary)] ${header.title}`}>{title}</h2>
+        <h2
+          className="font-black uppercase text-[var(--theme-primary)]"
+          style={{ fontSize: '12px', letterSpacing: '0.08em', lineHeight: 1, margin: 0 }}
+        >
+          {title}
+        </h2>
       </div>
 
       <div className="overflow-hidden rounded-[var(--theme-radius-lg)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)]">
