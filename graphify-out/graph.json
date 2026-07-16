@@ -6902,7 +6902,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_page",
-      "community": 104,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -6912,7 +6912,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "app_page_setupfolderkey",
-      "community": 104,
+      "community": 2,
       "norm_label": "setupfolderkey"
     },
     {
@@ -6922,7 +6922,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "app_page_getrequiredplatformfolderkeys",
-      "community": 104,
+      "community": 2,
       "norm_label": "getrequiredplatformfolderkeys()"
     },
     {
@@ -6932,7 +6932,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "app_page_libraryapp",
-      "community": 104,
+      "community": 2,
       "norm_label": "libraryapp()"
     },
     {
@@ -6942,7 +6942,7 @@
       "source_location": "L438",
       "_origin": "ast",
       "id": "app_page_home",
-      "community": 104,
+      "community": 2,
       "norm_label": "home()"
     },
     {
@@ -6952,7 +6952,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_alphabetjumpbar",
-      "community": 104,
+      "community": 2,
       "norm_label": "alphabetjumpbar.tsx"
     },
     {
@@ -6962,7 +6962,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "components_alphabetjumpbar_alphabetjumpbarprops",
-      "community": 104,
+      "community": 2,
       "norm_label": "alphabetjumpbarprops"
     },
     {
@@ -6972,7 +6972,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_alphabetjumpbar_letters",
-      "community": 104,
+      "community": 2,
       "norm_label": "letters"
     },
     {
@@ -6982,7 +6982,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "components_alphabetjumpbar_alphabetjumpbar",
-      "community": 104,
+      "community": 2,
       "norm_label": "alphabetjumpbar()"
     },
     {
@@ -6992,7 +6992,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_applaunchsplash",
-      "community": 104,
+      "community": 2,
       "norm_label": "applaunchsplash.tsx"
     },
     {
@@ -7002,7 +7002,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "components_applaunchsplash_applaunchsplash",
-      "community": 104,
+      "community": 2,
       "norm_label": "applaunchsplash()"
     },
     {
@@ -7012,7 +7012,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_bigboxtilemedia",
-      "community": 66,
+      "community": 104,
       "norm_label": "bigboxtilemedia.tsx"
     },
     {
@@ -7022,7 +7022,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_bigboxtilemediaprops",
-      "community": 66,
+      "community": 104,
       "norm_label": "bigboxtilemediaprops"
     },
     {
@@ -7032,7 +7032,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_screenshot_cache",
-      "community": 66,
+      "community": 104,
       "norm_label": "screenshot_cache"
     },
     {
@@ -7042,7 +7042,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_cover_cache",
-      "community": 66,
+      "community": 104,
       "norm_label": "cover_cache"
     },
     {
@@ -7052,7 +7052,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_normalizepath",
-      "community": 66,
+      "community": 104,
       "norm_label": "normalizepath()"
     },
     {
@@ -7062,7 +7062,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_getscreenshoturls",
-      "community": 66,
+      "community": 104,
       "norm_label": "getscreenshoturls()"
     },
     {
@@ -7072,7 +7072,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_getcoverurl",
-      "community": 66,
+      "community": 96,
       "norm_label": "getcoverurl()"
     },
     {
@@ -7082,7 +7082,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_bigboxtilemedia",
-      "community": 66,
+      "community": 9,
       "norm_label": "bigboxtilemedia()"
     },
     {
@@ -7222,7 +7222,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "components_detailview_detaillayoutprops",
-      "community": 38,
+      "community": 75,
       "norm_label": "detaillayoutprops"
     },
     {
@@ -7282,7 +7282,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "components_detailview_getcachedgamedetail",
-      "community": 104,
+      "community": 38,
       "norm_label": "getcachedgamedetail()"
     },
     {
@@ -7322,7 +7322,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasbigscreennavigation",
-      "community": 72,
+      "community": 0,
       "norm_label": "extrasbigscreennavigation"
     },
     {
@@ -7332,7 +7332,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasdetail",
-      "community": 75,
+      "community": 22,
       "norm_label": "extrasdetail()"
     },
     {
@@ -7442,7 +7442,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_imagewithfallback",
-      "community": 66,
+      "community": 23,
       "norm_label": "imagewithfallback.tsx"
     },
     {
@@ -7452,7 +7452,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_imagewithfallback_imagewithfallbackprops",
-      "community": 66,
+      "community": 23,
       "norm_label": "imagewithfallbackprops"
     },
     {
@@ -7462,7 +7462,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_imagewithfallback_imagewithfallback",
-      "community": 38,
+      "community": 23,
       "norm_label": "imagewithfallback()"
     },
     {
@@ -7512,7 +7512,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_musicplayer_musicplayerprops",
-      "community": 93,
+      "community": 75,
       "norm_label": "musicplayerprops"
     },
     {
@@ -7592,7 +7592,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_sapplayer",
-      "community": 66,
+      "community": 75,
       "norm_label": "sapplayer.tsx"
     },
     {
@@ -7602,7 +7602,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_sapplayer_sapplayerruntime",
-      "community": 66,
+      "community": 75,
       "norm_label": "sapplayerruntime"
     },
     {
@@ -7612,7 +7612,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_sapplayer_sapruntimeconstructor",
-      "community": 66,
+      "community": 75,
       "norm_label": "sapruntimeconstructor"
     },
     {
@@ -7622,7 +7622,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "components_sapplayer_window",
-      "community": 66,
+      "community": 75,
       "norm_label": "window"
     },
     {
@@ -7632,7 +7632,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "components_sapplayer_sapplayerprops",
-      "community": 66,
+      "community": 75,
       "norm_label": "sapplayerprops"
     },
     {
@@ -7642,7 +7642,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_sapplayer_isnativepath",
-      "community": 66,
+      "community": 75,
       "norm_label": "isnativepath()"
     },
     {
@@ -7652,7 +7652,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "components_sapplayer_resolveplayablesapurl",
-      "community": 66,
+      "community": 75,
       "norm_label": "resolveplayablesapurl()"
     },
     {
@@ -7662,7 +7662,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "components_sapplayer_sapplayer",
-      "community": 66,
+      "community": 75,
       "norm_label": "sapplayer()"
     },
     {
@@ -7802,7 +7802,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_statusrow",
-      "community": 0,
+      "community": 75,
       "norm_label": "statusrow.tsx"
     },
     {
@@ -7812,7 +7812,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "components_statusrow_props",
-      "community": 0,
+      "community": 75,
       "norm_label": "props"
     },
     {
@@ -7822,7 +7822,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_statusrow_statusrow",
-      "community": 0,
+      "community": 75,
       "norm_label": "statusrow()"
     },
     {
@@ -7832,7 +7832,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_subgenrepickermodal",
-      "community": 93,
+      "community": 56,
       "norm_label": "subgenrepickermodal.tsx"
     },
     {
@@ -7842,7 +7842,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodalprops",
-      "community": 93,
+      "community": 56,
       "norm_label": "subgenrepickermodalprops"
     },
     {
@@ -7852,7 +7852,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodal",
-      "community": 93,
+      "community": 56,
       "norm_label": "subgenrepickermodal()"
     },
     {
@@ -7892,7 +7892,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_uisoundruntime",
-      "community": 57,
+      "community": 72,
       "norm_label": "uisoundruntime.tsx"
     },
     {
@@ -7902,7 +7902,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_uisoundruntime_error_sounds",
-      "community": 57,
+      "community": 72,
       "norm_label": "error_sounds"
     },
     {
@@ -7912,7 +7912,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_uisoundruntime_uisoundruntime",
-      "community": 57,
+      "community": 72,
       "norm_label": "uisoundruntime()"
     },
     {
@@ -7922,7 +7922,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_wasmplayer",
-      "community": 38,
+      "community": 22,
       "norm_label": "wasmplayer.tsx"
     },
     {
@@ -7932,7 +7932,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_wasmplayer_wasmplayerprops",
-      "community": 38,
+      "community": 22,
       "norm_label": "wasmplayerprops"
     },
     {
@@ -7942,7 +7942,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_wasmplayer_wasmplayer",
-      "community": 38,
+      "community": 22,
       "norm_label": "wasmplayer()"
     },
     {
@@ -8122,7 +8122,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "detail_detailtitlebanner",
-      "community": 0,
+      "community": 75,
       "norm_label": "detailtitlebanner.tsx"
     },
     {
@@ -8132,7 +8132,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "detail_detailtitlebanner_detailtitlebannerprops",
-      "community": 0,
+      "community": 75,
       "norm_label": "detailtitlebannerprops"
     },
     {
@@ -8142,7 +8142,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "detail_detailtitlebanner_detailtitlebanner",
-      "community": 0,
+      "community": 75,
       "norm_label": "detailtitlebanner()"
     },
     {
@@ -8982,7 +8982,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "setup_databasesetupview_databasesetupview",
-      "community": 104,
+      "community": 57,
       "norm_label": "databasesetupview()"
     },
     {
@@ -8992,7 +8992,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "themes_playbutton",
-      "community": 38,
+      "community": 22,
       "norm_label": "playbutton.tsx"
     },
     {
@@ -9002,7 +9002,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "themes_playbutton_playlaunchtarget",
-      "community": 38,
+      "community": 22,
       "norm_label": "playlaunchtarget"
     },
     {
@@ -9012,7 +9012,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "themes_playbutton_playbuttonprops",
-      "community": 38,
+      "community": 22,
       "norm_label": "playbuttonprops"
     },
     {
@@ -9022,7 +9022,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "themes_playbutton_rocketglyph",
-      "community": 38,
+      "community": 22,
       "norm_label": "rocketglyph()"
     },
     {
@@ -9032,7 +9032,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "themes_playbutton_embeddedglyph",
-      "community": 38,
+      "community": 22,
       "norm_label": "embeddedglyph()"
     },
     {
@@ -9042,7 +9042,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "themes_playbutton_playbutton",
-      "community": 75,
+      "community": 22,
       "norm_label": "playbutton()"
     },
     {
@@ -9092,7 +9092,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "window_windoweddetaillayout_windoweddetaillayoutprops",
-      "community": 38,
+      "community": 75,
       "norm_label": "windoweddetaillayoutprops"
     },
     {
@@ -9152,7 +9152,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "contexts_settingscontext_settings",
-      "community": 60,
+      "community": 93,
       "norm_label": "settings"
     },
     {
@@ -9222,7 +9222,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "contexts_settingscontext_migrateplatformsettings",
-      "community": 13,
+      "community": 60,
       "norm_label": "migrateplatformsettings()"
     },
     {
@@ -9282,7 +9282,7 @@
       "source_location": "L617",
       "_origin": "ast",
       "id": "contexts_settingscontext_usesettings",
-      "community": 75,
+      "community": 38,
       "norm_label": "usesettings()"
     },
     {
@@ -9442,7 +9442,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata",
-      "community": 96,
+      "community": 2,
       "norm_label": "usebigboxlibrarydata.ts"
     },
     {
@@ -9482,7 +9482,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_letter_rail_cache",
-      "community": 96,
+      "community": 2,
       "norm_label": "letter_rail_cache"
     },
     {
@@ -9492,7 +9492,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_getalphabetrailcachekey",
-      "community": 96,
+      "community": 2,
       "norm_label": "getalphabetrailcachekey()"
     },
     {
@@ -9502,7 +9502,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_sortrecentgames",
-      "community": 96,
+      "community": 2,
       "norm_label": "sortrecentgames()"
     },
     {
@@ -9552,7 +9552,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "hooks_usebigboxnavigation_usebigboxnavigationprops",
-      "community": 93,
+      "community": 9,
       "norm_label": "usebigboxnavigationprops"
     },
     {
@@ -9642,7 +9642,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailnavigationhook",
-      "community": 38,
+      "community": 22,
       "norm_label": "detailnavigationhook"
     },
     {
@@ -9672,7 +9672,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usefavorites",
-      "community": 104,
+      "community": 38,
       "norm_label": "usefavorites.ts"
     },
     {
@@ -9682,7 +9682,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "hooks_usefavorites_loadfavorites",
-      "community": 104,
+      "community": 38,
       "norm_label": "loadfavorites()"
     },
     {
@@ -9692,7 +9692,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "hooks_usefavorites_usefavorites",
-      "community": 104,
+      "community": 38,
       "norm_label": "usefavorites()"
     },
     {
@@ -9702,7 +9702,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics",
-      "community": 9,
+      "community": 7,
       "norm_label": "usefullscreenlayoutmetrics.ts"
     },
     {
@@ -9712,7 +9712,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedfullscreendensity",
-      "community": 9,
+      "community": 7,
       "norm_label": "resolvedfullscreendensity"
     },
     {
@@ -9722,7 +9722,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_viewportsnapshot",
-      "community": 9,
+      "community": 7,
       "norm_label": "viewportsnapshot"
     },
     {
@@ -9742,7 +9742,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_default_viewport",
-      "community": 9,
+      "community": 7,
       "norm_label": "default_viewport"
     },
     {
@@ -9752,7 +9752,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_clamp",
-      "community": 9,
+      "community": 7,
       "norm_label": "clamp()"
     },
     {
@@ -9762,7 +9762,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_round",
-      "community": 9,
+      "community": 7,
       "norm_label": "round()"
     },
     {
@@ -9772,7 +9772,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_getviewportsnapshot",
-      "community": 9,
+      "community": 7,
       "norm_label": "getviewportsnapshot()"
     },
     {
@@ -9782,7 +9782,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedensitymode",
-      "community": 9,
+      "community": 7,
       "norm_label": "resolvedensitymode()"
     },
     {
@@ -9792,7 +9792,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_buildfullscreenlayoutmetrics",
-      "community": 9,
+      "community": 7,
       "norm_label": "buildfullscreenlayoutmetrics()"
     },
     {
@@ -9902,7 +9902,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_useinputmode",
-      "community": 38,
+      "community": 22,
       "norm_label": "useinputmode.ts"
     },
     {
@@ -9912,7 +9912,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "hooks_useinputmode_useinputmode",
-      "community": 38,
+      "community": 22,
       "norm_label": "useinputmode()"
     },
     {
@@ -9922,7 +9922,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate",
-      "community": 104,
+      "community": 38,
       "norm_label": "uselibrarybrowserstate.ts"
     },
     {
@@ -9942,7 +9942,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate_getlibraryrefreshtoken",
-      "community": 104,
+      "community": 38,
       "norm_label": "getlibraryrefreshtoken()"
     },
     {
@@ -9952,7 +9952,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate_uselibrarybrowserstate",
-      "community": 104,
+      "community": 38,
       "norm_label": "uselibrarybrowserstate()"
     },
     {
@@ -9992,7 +9992,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "hooks_uselibraryshellinput_uselibraryshellinput",
-      "community": 104,
+      "community": 2,
       "norm_label": "uselibraryshellinput()"
     },
     {
@@ -10052,7 +10052,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "hooks_useplatformimport_useplatformimport",
-      "community": 104,
+      "community": 2,
       "norm_label": "useplatformimport()"
     },
     {
@@ -10122,7 +10122,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_getresolvedcoverarturl",
-      "community": 75,
+      "community": 96,
       "norm_label": "getresolvedcoverarturl()"
     },
     {
@@ -10152,7 +10152,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usewindowlibraryshelves",
-      "community": 104,
+      "community": 2,
       "norm_label": "usewindowlibraryshelves.ts"
     },
     {
@@ -10172,7 +10172,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "hooks_usewindowlibraryshelves_usewindowlibraryshelves",
-      "community": 104,
+      "community": 2,
       "norm_label": "usewindowlibraryshelves()"
     },
     {
@@ -10392,7 +10392,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_extras",
-      "community": 73,
+      "community": 23,
       "norm_label": "extras.ts"
     },
     {
@@ -10412,7 +10412,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "lib_extras_visual_folders",
-      "community": 73,
+      "community": 23,
       "norm_label": "visual_folders"
     },
     {
@@ -10422,7 +10422,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "lib_extras_doc_folders",
-      "community": 73,
+      "community": 23,
       "norm_label": "doc_folders"
     },
     {
@@ -10432,7 +10432,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "lib_extras_media_folders",
-      "community": 73,
+      "community": 23,
       "norm_label": "media_folders"
     },
     {
@@ -10442,7 +10442,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "lib_extras_game_folders",
-      "community": 73,
+      "community": 23,
       "norm_label": "game_folders"
     },
     {
@@ -10452,7 +10452,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "lib_extras_img_ext",
-      "community": 73,
+      "community": 23,
       "norm_label": "img_ext"
     },
     {
@@ -10462,7 +10462,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_extras_game_ext",
-      "community": 73,
+      "community": 23,
       "norm_label": "game_ext"
     },
     {
@@ -10472,7 +10472,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "lib_extras_media_ext",
-      "community": 73,
+      "community": 23,
       "norm_label": "media_ext"
     },
     {
@@ -10482,7 +10482,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "lib_extras_doc_ext",
-      "community": 73,
+      "community": 23,
       "norm_label": "doc_ext"
     },
     {
@@ -10512,7 +10512,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "lib_extras_getextraextension",
-      "community": 73,
+      "community": 23,
       "norm_label": "getextraextension()"
     },
     {
@@ -10522,7 +10522,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "lib_extras_isimageextra",
-      "community": 73,
+      "community": 23,
       "norm_label": "isimageextra()"
     },
     {
@@ -10532,7 +10532,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "lib_extras_isvideoextra",
-      "community": 73,
+      "community": 23,
       "norm_label": "isvideoextra()"
     },
     {
@@ -10542,7 +10542,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "lib_extras_getextrasourcelabel",
-      "community": 73,
+      "community": 23,
       "norm_label": "getextrasourcelabel()"
     },
     {
@@ -10552,7 +10552,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "lib_extras_getextralaunchlabel",
-      "community": 73,
+      "community": 23,
       "norm_label": "getextralaunchlabel()"
     },
     {
@@ -10562,7 +10562,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "lib_extras_islaunchableextra",
-      "community": 73,
+      "community": 23,
       "norm_label": "islaunchableextra()"
     },
     {
@@ -10572,7 +10572,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "lib_extras_isatariadvertextra",
-      "community": 73,
+      "community": 23,
       "norm_label": "isatariadvertextra()"
     },
     {
@@ -10582,7 +10582,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "lib_extras_isataricoverartextra",
-      "community": 73,
+      "community": 23,
       "norm_label": "isataricoverartextra()"
     },
     {
@@ -10842,7 +10842,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_platform_capabilities",
-      "community": 13,
+      "community": 31,
       "norm_label": "platform-capabilities.ts"
     },
     {
@@ -10852,7 +10852,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_platform_capabilities_platform_emulator_profiles",
-      "community": 60,
+      "community": 31,
       "norm_label": "platform_emulator_profiles"
     },
     {
@@ -10862,7 +10862,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "lib_platform_capabilities_platform_profiles",
-      "community": 75,
+      "community": 57,
       "norm_label": "platform_profiles"
     },
     {
@@ -10872,7 +10872,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "lib_platform_capabilities_supported_platforms",
-      "community": 93,
+      "community": 9,
       "norm_label": "supported_platforms"
     },
     {
@@ -10882,7 +10882,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "lib_platform_capabilities_embedded_emulation_platform_ids",
-      "community": 13,
+      "community": 31,
       "norm_label": "embedded_emulation_platform_ids"
     },
     {
@@ -10892,7 +10892,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "lib_platform_capabilities_getplatformprofile",
-      "community": 13,
+      "community": 31,
       "norm_label": "getplatformprofile()"
     },
     {
@@ -10902,7 +10902,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "lib_platform_capabilities_supportsembeddedemulation",
-      "community": 38,
+      "community": 22,
       "norm_label": "supportsembeddedemulation()"
     },
     {
@@ -10912,7 +10912,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "lib_platform_capabilities_isplatformid",
-      "community": 13,
+      "community": 60,
       "norm_label": "isplatformid()"
     },
     {
@@ -10922,7 +10922,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformlibrarystatus",
-      "community": 13,
+      "community": 31,
       "norm_label": "createdefaultplatformlibrarystatus()"
     },
     {
@@ -10932,7 +10932,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformfolders",
-      "community": 13,
+      "community": 31,
       "norm_label": "createdefaultplatformfolders()"
     },
     {
@@ -10942,7 +10942,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformnavigation",
-      "community": 13,
+      "community": 31,
       "norm_label": "createdefaultplatformnavigation()"
     },
     {
@@ -10952,7 +10952,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettings",
-      "community": 13,
+      "community": 31,
       "norm_label": "createdefaultplatformsettings()"
     },
     {
@@ -10962,7 +10962,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettingsmap",
-      "community": 13,
+      "community": 60,
       "norm_label": "createdefaultplatformsettingsmap()"
     },
     {
@@ -10972,7 +10972,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasmusiccapability",
-      "community": 13,
+      "community": 31,
       "norm_label": "hasmusiccapability()"
     },
     {
@@ -10982,7 +10982,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasphotoscapability",
-      "community": 13,
+      "community": 31,
       "norm_label": "hasphotoscapability()"
     },
     {
@@ -10992,7 +10992,7 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasscreenshotscapability",
-      "community": 13,
+      "community": 31,
       "norm_label": "hasscreenshotscapability()"
     },
     {
@@ -11002,7 +11002,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasextrascapability",
-      "community": 13,
+      "community": 31,
       "norm_label": "hasextrascapability()"
     },
     {
@@ -11012,7 +11012,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasvideoscapability",
-      "community": 13,
+      "community": 31,
       "norm_label": "hasvideoscapability()"
     },
     {
@@ -11022,7 +11022,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_platform_launch",
-      "community": 60,
+      "community": 31,
       "norm_label": "platform-launch.ts"
     },
     {
@@ -11032,7 +11032,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "lib_platform_launch_launchsource",
-      "community": 60,
+      "community": 31,
       "norm_label": "launchsource"
     },
     {
@@ -11042,7 +11042,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "lib_platform_launch_platformlaunchsettings",
-      "community": 60,
+      "community": 31,
       "norm_label": "platformlaunchsettings"
     },
     {
@@ -11052,7 +11052,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_platform_launch_normalizepathsegment",
-      "community": 60,
+      "community": 31,
       "norm_label": "normalizepathsegment()"
     },
     {
@@ -11062,7 +11062,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "lib_platform_launch_buildplatformassetpath",
-      "community": 23,
+      "community": 22,
       "norm_label": "buildplatformassetpath()"
     },
     {
@@ -11072,7 +11072,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "lib_platform_launch_getplatformlaunchsettings",
-      "community": 75,
+      "community": 22,
       "norm_label": "getplatformlaunchsettings()"
     },
     {
@@ -11082,7 +11082,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "lib_platform_launch_buildlaunchrequest",
-      "community": 23,
+      "community": 22,
       "norm_label": "buildlaunchrequest()"
     },
     {
@@ -11222,7 +11222,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "lib_platform_manifest_getplatformaliases",
-      "community": 104,
+      "community": 2,
       "norm_label": "getplatformaliases()"
     },
     {
@@ -11342,7 +11342,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_subgenre_display",
-      "community": 93,
+      "community": 56,
       "norm_label": "subgenre-display.ts"
     },
     {
@@ -11352,7 +11352,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_subgenre_display_visiblesubgenresresult",
-      "community": 93,
+      "community": 56,
       "norm_label": "visiblesubgenresresult"
     },
     {
@@ -11362,7 +11362,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "lib_subgenre_display_getvisiblesubgenres",
-      "community": 93,
+      "community": 56,
       "norm_label": "getvisiblesubgenres()"
     },
     {
@@ -11402,7 +11402,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "lib_tauri_bridge_isdebugmode",
-      "community": 66,
+      "community": 96,
       "norm_label": "isdebugmode()"
     },
     {
@@ -11412,7 +11412,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "lib_tauri_bridge_logdebugmessage",
-      "community": 66,
+      "community": 96,
       "norm_label": "logdebugmessage()"
     },
     {
@@ -11442,7 +11442,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "lib_tauri_bridge_launchrequest",
-      "community": 60,
+      "community": 31,
       "norm_label": "launchrequest"
     },
     {
@@ -11692,7 +11692,7 @@
       "source_location": "L307",
       "_origin": "ast",
       "id": "lib_tauri_bridge_resolvemediapath",
-      "community": 75,
+      "community": 96,
       "norm_label": "resolvemediapath()"
     },
     {
@@ -11702,7 +11702,7 @@
       "source_location": "L337",
       "_origin": "ast",
       "id": "lib_tauri_bridge_findallmediavariants",
-      "community": 66,
+      "community": 96,
       "norm_label": "findallmediavariants()"
     },
     {
@@ -11802,7 +11802,7 @@
       "source_location": "L449",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getasseturl",
-      "community": 66,
+      "community": 96,
       "norm_label": "getasseturl()"
     },
     {
@@ -11812,7 +11812,7 @@
       "source_location": "L490",
       "_origin": "ast",
       "id": "lib_tauri_bridge_readfilebytes",
-      "community": 38,
+      "community": 22,
       "norm_label": "readfilebytes()"
     },
     {
@@ -11822,7 +11822,7 @@
       "source_location": "L506",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getmediaurl",
-      "community": 66,
+      "community": 75,
       "norm_label": "getmediaurl()"
     },
     {
@@ -11972,7 +11972,7 @@
       "source_location": "L715",
       "_origin": "ast",
       "id": "lib_tauri_bridge_openfile",
-      "community": 96,
+      "community": 23,
       "norm_label": "openfile()"
     },
     {
@@ -11992,7 +11992,7 @@
       "source_location": "L734",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getgenres",
-      "community": 96,
+      "community": 2,
       "norm_label": "getgenres()"
     },
     {
@@ -12002,7 +12002,7 @@
       "source_location": "L744",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getsubgenres",
-      "community": 96,
+      "community": 2,
       "norm_label": "getsubgenres()"
     },
     {
@@ -12012,7 +12012,7 @@
       "source_location": "L768",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgamecount",
-      "community": 96,
+      "community": 2,
       "norm_label": "getdbgamecount()"
     },
     {
@@ -12032,7 +12032,7 @@
       "source_location": "L811",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgames",
-      "community": 96,
+      "community": 2,
       "norm_label": "getdbgames()"
     },
     {
@@ -12042,7 +12042,7 @@
       "source_location": "L931",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgamedetail",
-      "community": 104,
+      "community": 38,
       "norm_label": "getdbgamedetail()"
     },
     {
@@ -12132,7 +12132,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_ui_sound_effects",
-      "community": 57,
+      "community": 72,
       "norm_label": "ui-sound-effects.ts"
     },
     {
@@ -12142,7 +12142,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_aremenusoundeffectsenabled",
-      "community": 57,
+      "community": 72,
       "norm_label": "aremenusoundeffectsenabled()"
     },
     {
@@ -12152,7 +12152,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_getuisoundeffecturl",
-      "community": 57,
+      "community": 72,
       "norm_label": "getuisoundeffecturl()"
     },
     {
@@ -12162,7 +12162,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_canplayuisoundeffects",
-      "community": 57,
+      "community": 72,
       "norm_label": "canplayuisoundeffects()"
     },
     {
@@ -12172,7 +12172,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_audiocache",
-      "community": 57,
+      "community": 72,
       "norm_label": "audiocache"
     },
     {
@@ -12182,7 +12182,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_getaudioelement",
-      "community": 57,
+      "community": 72,
       "norm_label": "getaudioelement()"
     },
     {
@@ -12192,7 +12192,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_playuisoundeffect",
-      "community": 57,
+      "community": 72,
       "norm_label": "playuisoundeffect()"
     },
     {
@@ -12202,7 +12202,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_playuisoundeffectandwait",
-      "community": 57,
+      "community": 72,
       "norm_label": "playuisoundeffectandwait()"
     },
     {
@@ -12212,7 +12212,7 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_getnextrotatinguisoundeffect",
-      "community": 57,
+      "community": 72,
       "norm_label": "getnextrotatinguisoundeffect()"
     },
     {
@@ -12222,7 +12222,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_playrotatinguisoundeffect",
-      "community": 57,
+      "community": 72,
       "norm_label": "playrotatinguisoundeffect()"
     },
     {
@@ -12232,7 +12232,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_playrotatinguisoundeffectandwait",
-      "community": 57,
+      "community": 72,
       "norm_label": "playrotatinguisoundeffectandwait()"
     },
     {
@@ -12242,7 +12242,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_clearuisoundeffectcache",
-      "community": 57,
+      "community": 72,
       "norm_label": "clearuisoundeffectcache()"
     },
     {
@@ -12252,7 +12252,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "lib_ui_sound_effects_resetrotationstate",
-      "community": 57,
+      "community": 72,
       "norm_label": "resetrotationstate()"
     },
     {
@@ -12672,7 +12672,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils_sorting",
-      "community": 104,
+      "community": 38,
       "norm_label": "sorting.ts"
     },
     {
@@ -12682,7 +12682,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "utils_sorting_sortdirection",
-      "community": 104,
+      "community": 38,
       "norm_label": "sortdirection"
     },
     {
@@ -12692,7 +12692,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "utils_sorting_sortgames",
-      "community": 104,
+      "community": 38,
       "norm_label": "sortgames()"
     },
     {
@@ -15112,6 +15112,20 @@
       "norm_label": "path"
     },
     {
+      "label": "frontend_ready()",
+      "file_type": "code",
+      "source_file": "tauri-dev-debug.sh",
+      "source_location": "L20",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast",
+      "id": "tauri_dev_debug_frontend_ready",
+      "community": 59,
+      "norm_label": "frontend_ready()"
+    },
+    {
       "label": "tauri-dev.sh",
       "file_type": "code",
       "source_file": "tauri-dev.sh",
@@ -15152,6 +15166,20 @@
       "id": "tauri_dev_path",
       "community": 64,
       "norm_label": "path"
+    },
+    {
+      "label": "frontend_ready()",
+      "file_type": "code",
+      "source_file": "tauri-dev.sh",
+      "source_location": "L17",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast",
+      "id": "tauri_dev_frontend_ready",
+      "community": 64,
+      "norm_label": "frontend_ready()"
     },
     {
       "label": "tauri.dev-override.json",
@@ -41459,9 +41487,9 @@
       "source_file": "src/components/library/WindowGameListSection.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_windowgamelistsection",
-      "target": "library_windowgamelistsection_windowlibrarysection",
-      "confidence_score": 1.0
+      "target": "library_windowgamelistsection_windowlibrarysection"
     },
     {
       "relation": "imports_from",
@@ -41522,9 +41550,9 @@
       "source_file": "src/components/library/WindowGameShelf.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_windowgameshelf",
-      "target": "library_windowgameshelf_windowlibrarysection",
-      "confidence_score": 1.0
+      "target": "library_windowgameshelf_windowlibrarysection"
     },
     {
       "relation": "imports_from",
@@ -52414,6 +52442,16 @@
       "relation": "defines",
       "confidence": "EXTRACTED",
       "source_file": "tauri-dev-debug.sh",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "tauri_dev_debug",
+      "target": "tauri_dev_debug_frontend_ready",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "tauri-dev-debug.sh",
       "source_location": "L4",
       "weight": 1,
       "confidence_score": 1,
@@ -52431,6 +52469,17 @@
       "target": "tauri_dev_debug_path"
     },
     {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "tauri-dev-debug.sh",
+      "source_location": "L25",
+      "weight": 1.0,
+      "context": "call",
+      "source": "d_mysource_gamebasebox_tauri_dev_debug_sh__entry",
+      "target": "tauri_dev_debug_frontend_ready",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tauri-dev.sh",
@@ -52444,11 +52493,32 @@
       "relation": "defines",
       "confidence": "EXTRACTED",
       "source_file": "tauri-dev.sh",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "tauri_dev",
+      "target": "tauri_dev_frontend_ready",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "tauri-dev.sh",
       "source_location": "L4",
       "weight": 1,
       "confidence_score": 1,
       "source": "tauri_dev",
       "target": "tauri_dev_path"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "tauri-dev.sh",
+      "source_location": "L22",
+      "weight": 1.0,
+      "context": "call",
+      "source": "d_mysource_gamebasebox_tauri_dev_sh__entry",
+      "target": "tauri_dev_frontend_ready",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -54016,5 +54086,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "0bc2f14247a46704f386560c0f1bd0d8e6ea2b65"
+  "built_at_commit": "1d4dc1cef3d8509016af56c968c53ab6e1c36c45"
 }

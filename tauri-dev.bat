@@ -19,7 +19,7 @@ echo [GBBox] Using Rust:
 rustc --version
 cargo --version
 
-call :frontend_ready
+powershell.exe -NoProfile -NonInteractive -Command "$ErrorActionPreference = 'Stop'; $response = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:3000/' -TimeoutSec 2; if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 400) { exit 0 } else { exit 1 }" > nul 2>&1
 if errorlevel 1 (
     netstat -ano | find "LISTENING" | find ":3000" > nul
     if not errorlevel 1 (
@@ -33,23 +33,12 @@ if errorlevel 1 (
     start "GBBox-Frontend" cmd /c "npm run dev"
 )
 
-call :wait_for_frontend
-if errorlevel 1 exit /b 1
+powershell.exe -NoProfile -NonInteractive -Command "$ErrorActionPreference = 'Stop'; for ($attempt = 1; $attempt -le 30; $attempt++) { try { $response = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:3000/' -TimeoutSec 2; if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 400) { exit 0 } } catch {}; Start-Sleep -Seconds 1 }; exit 1" > nul 2>&1
+if errorlevel 1 (
+    echo [GBBox] ERROR: Frontend did not become ready at http://127.0.0.1:3000 within 30 seconds.
+    exit /b 1
+)
 
 echo [GBBox] Starting Tauri (connecting to http://localhost:3000)...
 npx tauri dev --no-dev-server-wait --config tauri.dev-override.json
 exit /b %errorlevel%
-
-:frontend_ready
-powershell.exe -NoProfile -NonInteractive -Command "$ErrorActionPreference = 'Stop'; $response = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:3000/' -TimeoutSec 2; if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 400) { exit 0 } else { exit 1 }" > nul 2>&1
-exit /b %errorlevel%
-
-:wait_for_frontend
-for /l %%i in (1,1,30) do (
-    call :frontend_ready
-    if not errorlevel 1 exit /b 0
-    timeout /t 1 /nobreak > nul
-)
-
-echo [GBBox] ERROR: Frontend did not become ready at http://127.0.0.1:3000 within 30 seconds.
-exit /b 1
