@@ -59,7 +59,7 @@ export function getSettingsItemCount(tabId: SettingsTabId): number {
 
   switch (tabId) {
     case 'appearance':
-      return 17;
+      return 20;
     case 'content':
       return 1;
     case 'scrapers':

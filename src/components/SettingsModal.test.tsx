@@ -5,6 +5,7 @@ import type { Settings } from '../contexts/SettingsContext';
 import { SettingsView } from './SettingsModal';
 
 const updateSettings = vi.fn();
+const setTheme = vi.fn();
 
 const mockTheme = {
   id: 'arcade-void',
@@ -75,13 +76,19 @@ const c64Theme = {
   },
 };
 
+const cyberpunkTheme = {
+  ...mockTheme,
+  id: 'cyberpunk-crt',
+  displayName: 'Cyberpunk CRT',
+};
+
 let currentTheme = mockTheme;
 
 vi.mock('../contexts/ThemeContext', () => ({
   useTheme: () => ({
     theme: currentTheme,
-    setTheme: vi.fn(),
-    availableThemes: [mockTheme, c64Theme],
+    setTheme,
+    availableThemes: [mockTheme, cyberpunkTheme, c64Theme],
   }),
 }));
 
@@ -209,7 +216,17 @@ function openSettingsTab(label: string) {
 describe('SettingsView platform emulator settings', () => {
   beforeEach(() => {
     updateSettings.mockClear();
+    setTheme.mockClear();
     currentTheme = mockTheme;
+  });
+
+  test('selects and persists a built-in theme from Appearance settings', () => {
+    renderSettings();
+
+    const cyberpunkThemeButton = screen.getByRole('button', { name: 'Cyberpunk CRT' });
+    fireEvent.click(cyberpunkThemeButton);
+
+    expect(setTheme).toHaveBeenCalledWith('cyberpunk-crt');
   });
 
   test('shows one platform paths tab for each imported platform', () => {

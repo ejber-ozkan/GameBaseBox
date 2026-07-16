@@ -1,4 +1,5 @@
 import type { EditableSettings, ContentNavProps } from './types';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface AppearanceSettingsTabProps extends ContentNavProps {
   draft: EditableSettings;
@@ -12,8 +13,43 @@ export function AppearanceSettingsTab({
   onMouseFocus,
   isFocused,
 }: AppearanceSettingsTabProps) {
+  const { theme, setTheme, availableThemes } = useTheme();
+
   return (
     <>
+      <div className="rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-5">
+        <div className="text-xs font-bold uppercase tracking-[0.22em] text-theme-primary">Application Theme</div>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-theme-text-muted">
+          Choose the visual treatment used throughout GameBase Box. Your selection is saved immediately.
+        </p>
+        <div className="mt-4 grid gap-2 sm:grid-cols-3">
+          {availableThemes.map((availableTheme, index) => {
+            const isActive = theme.id === availableTheme.id;
+
+            return (
+              <button
+                key={availableTheme.id}
+                type="button"
+                aria-label={availableTheme.displayName}
+                aria-pressed={isActive}
+                onClick={() => setTheme(availableTheme.id)}
+                onMouseEnter={() => isMouseMode && onMouseFocus(index)}
+                className={`focus-idx-${index} border px-4 py-3 text-left transition-all ${
+                  isActive || isFocused(index)
+                    ? 'border-theme-primary bg-theme-primary-container text-theme-text shadow-lg shadow-theme-primary/10'
+                    : 'border-theme-outline-variant bg-theme-background/60 text-theme-text-muted hover:border-theme-primary/50 hover:text-theme-text'
+                } ${theme.effects.steppedBorders ? '' : 'rounded-theme-lg'}`}
+              >
+                <span className="block text-sm font-bold">{availableTheme.displayName}</span>
+                <span className="mt-1 block text-[10px] font-mono uppercase tracking-widest">
+                  {isActive ? 'Selected' : 'Select theme'}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="rounded-theme-xl border border-theme-primary/30 bg-theme-primary/5 p-5">
         <div className="text-xs font-bold uppercase tracking-[0.22em] text-theme-primary">Detail View</div>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-theme-text-muted">
@@ -36,9 +72,9 @@ export function AppearanceSettingsTab({
             </div>
             <button
               onClick={() => setField('imageCycling', !draft.imageCycling)}
-              onMouseEnter={() => isMouseMode && onMouseFocus(0)}
-              className={`focus-idx-0 relative ml-6 h-6 w-12 shrink-0 rounded-full transition-all ${
-                (draft.imageCycling && !isFocused(0)) || isFocused(0)
+              onMouseEnter={() => isMouseMode && onMouseFocus(3)}
+              className={`focus-idx-3 relative ml-6 h-6 w-12 shrink-0 rounded-full transition-all ${
+                (draft.imageCycling && !isFocused(3)) || isFocused(3)
                   ? 'bg-theme-primary ring-2 ring-theme-primary/50'
                   : 'bg-theme-outline-variant'
               }`}
@@ -60,9 +96,9 @@ export function AppearanceSettingsTab({
                 <button
                   key={anim}
                   onClick={() => setField('imageAnimation', anim)}
-                  onMouseEnter={() => isMouseMode && onMouseFocus(idx + 1)}
-                  className={`focus-idx-${idx + 1} rounded-theme px-6 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all ${
-                    (draft.imageAnimation === anim && ![1, 2].some(isFocused)) || isFocused(idx + 1)
+                onMouseEnter={() => isMouseMode && onMouseFocus(idx + 4)}
+                className={`focus-idx-${idx + 4} rounded-theme px-6 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all ${
+                    (draft.imageAnimation === anim && ![4, 5].some(isFocused)) || isFocused(idx + 4)
                       ? 'bg-theme-primary text-theme-surface shadow-lg'
                       : 'text-theme-text-muted hover:text-theme-text'
                   }`}
@@ -87,9 +123,9 @@ export function AppearanceSettingsTab({
             </div>
             <button
               onClick={() => setField('isFullscreen', !draft.isFullscreen)}
-              onMouseEnter={() => isMouseMode && onMouseFocus(3)}
-              className={`focus-idx-3 relative ml-6 h-6 w-12 shrink-0 rounded-full transition-all ${
-                (draft.isFullscreen && !isFocused(3)) || isFocused(3)
+              onMouseEnter={() => isMouseMode && onMouseFocus(6)}
+              className={`focus-idx-6 relative ml-6 h-6 w-12 shrink-0 rounded-full transition-all ${
+                (draft.isFullscreen && !isFocused(6)) || isFocused(6)
                   ? 'bg-theme-primary ring-2 ring-theme-primary/50'
                   : 'bg-theme-outline-variant'
               }`}
@@ -117,9 +153,9 @@ export function AppearanceSettingsTab({
                 <button
                   key={resolution.value}
                   onClick={() => setField('displayResolution', resolution.value)}
-                  onMouseEnter={() => isMouseMode && onMouseFocus(idx + 4)}
-                  className={`focus-idx-${idx + 4} rounded-theme px-4 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all ${
-                    (draft.displayResolution === resolution.value && ![4, 5, 6, 7, 8].some(isFocused)) || isFocused(idx + 4)
+                  onMouseEnter={() => isMouseMode && onMouseFocus(idx + 7)}
+                  className={`focus-idx-${idx + 7} rounded-theme px-4 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all ${
+                    (draft.displayResolution === resolution.value && ![7, 8, 9, 10, 11].some(isFocused)) || isFocused(idx + 7)
                       ? 'bg-theme-primary text-theme-surface shadow-lg'
                       : 'text-theme-text-muted hover:text-theme-text'
                   }`}
@@ -147,9 +183,9 @@ export function AppearanceSettingsTab({
                 <button
                   key={density.value}
                   onClick={() => setField('fullscreenDensity', density.value)}
-                  onMouseEnter={() => isMouseMode && onMouseFocus(idx + 9)}
-                  className={`focus-idx-${idx + 9} rounded-theme px-4 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all ${
-                    (draft.fullscreenDensity === density.value && ![9, 10, 11, 12].some(isFocused)) || isFocused(idx + 9)
+                onMouseEnter={() => isMouseMode && onMouseFocus(idx + 12)}
+                className={`focus-idx-${idx + 12} rounded-theme px-4 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all ${
+                    (draft.fullscreenDensity === density.value && ![12, 13, 14, 15].some(isFocused)) || isFocused(idx + 12)
                       ? 'bg-theme-primary text-theme-surface shadow-lg'
                       : 'text-theme-text-muted hover:text-theme-text'
                   }`}
@@ -171,26 +207,26 @@ export function AppearanceSettingsTab({
           {[
             {
               key: 'mouseHoverSelection' as const,
-              index: 13,
+              index: 16,
               title: '🖱️ Mouse Hover Selection',
               description:
                 'Automatically focus items when the mouse pointer moves over them. Turn off if your mouse is too sensitive.',
             },
             {
               key: 'scrollNavigation' as const,
-              index: 14,
+              index: 17,
               title: '💎 Scroll Wheel Navigation',
               description: 'Use the mouse scroll button (wheel) to move up and down through menu items.',
             },
             {
               key: 'menuSoundEffects' as const,
-              index: 15,
+              index: 18,
               title: '🔊 Menu Sound Effects',
               description: 'Play UI and menu navigation sounds while moving around the frontend.',
             },
             {
               key: 'bigBoxAnimateVertical' as const,
-              index: 16,
+              index: 19,
               title: '↕️ BigBox Vertical Animation',
               description: 'Enable smooth sliding animations when swapping between game rails in BigBox mode.',
               withBorder: true,
