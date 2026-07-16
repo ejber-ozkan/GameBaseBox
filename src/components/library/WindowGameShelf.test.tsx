@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../../data/mockGames';
 import { WindowGameShelf } from './WindowGameShelf';
@@ -21,6 +21,7 @@ describe('WindowGameShelf', () => {
         isFavorite={() => false}
         isMouseMode={false}
         onSelectGame={vi.fn()}
+        section="favorites"
         title="Your Favorites"
       />,
     );
@@ -29,5 +30,26 @@ describe('WindowGameShelf', () => {
       expect.stringContaining('Encountered two children with the same key'),
       expect.anything(),
     );
+  });
+
+  it.each([
+    ['recent', 'compact'],
+    ['favorites', 'supporting'],
+    ['legendary', 'featured'],
+  ] as const)('uses the %s hierarchy for a %s shelf header', (section, hierarchy) => {
+    render(
+      <WindowGameShelf
+        games={[mockGames[0]]}
+        isFavorite={() => false}
+        isMouseMode={false}
+        onSelectGame={vi.fn()}
+        section={section}
+        title="Section title"
+      />,
+    );
+
+    const header = screen.getByTestId('window-shelf-header');
+    expect(header.getAttribute('data-section')).toBe(section);
+    expect(header.getAttribute('data-hierarchy')).toBe(hierarchy);
   });
 });

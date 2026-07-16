@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../../data/mockGames';
 import { WindowGameListSection } from './WindowGameListSection';
@@ -16,6 +16,7 @@ describe('WindowGameListSection', () => {
         games={[mockGames[0], mockGames[0]]}
         isFavorite={() => false}
         onSelectGame={vi.fn()}
+        section="recent"
         title="Recent Games"
       />,
     );
@@ -24,5 +25,25 @@ describe('WindowGameListSection', () => {
       expect.stringContaining('Encountered two children with the same key'),
       expect.anything(),
     );
+  });
+
+  it.each([
+    ['recent', 'compact'],
+    ['favorites', 'supporting'],
+    ['legendary', 'featured'],
+  ] as const)('uses the %s hierarchy for a %s list header', (section, hierarchy) => {
+    render(
+      <WindowGameListSection
+        games={[mockGames[0]]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        section={section}
+        title="Section title"
+      />,
+    );
+
+    const header = screen.getByTestId('window-list-header');
+    expect(header.getAttribute('data-section')).toBe(section);
+    expect(header.getAttribute('data-hierarchy')).toBe(hierarchy);
   });
 });

@@ -356,6 +356,7 @@ function LibraryApp() {
                   isMouseMode={isMouseMode}
                   onFocusChange={() => {}}
                   onSelectGame={handleGameSelect}
+                  section="recent"
                   subtitle="Your latest launches, kept near the top for quick return trips."
                   shelfRef={shelfRef}
                   title="Recent Games"
@@ -368,6 +369,7 @@ function LibraryApp() {
                 isMouseMode={isMouseMode}
                 onFocusChange={() => {}}
                 onSelectGame={handleGameSelect}
+                section="favorites"
                 subtitle="Pinned titles from your personal shortlist."
                 title="Your Favorites"
               />
@@ -378,6 +380,7 @@ function LibraryApp() {
                 isMouseMode={isMouseMode}
                 onFocusChange={() => {}}
                 onSelectGame={handleGameSelect}
+                section="legendary"
                 subtitle="Essential GB64 staples surfaced in the windowed library too."
                 title="🏆 Legendary Classics 🏆"
               />
@@ -397,6 +400,7 @@ function LibraryApp() {
                   games={recentGames}
                   isFavorite={isFavorite}
                   onSelectGame={handleGameSelect}
+                  section="recent"
                   title="Recent Games"
                 />
               )}
@@ -404,12 +408,14 @@ function LibraryApp() {
                 games={favoriteGames}
                 isFavorite={isFavorite}
                 onSelectGame={handleGameSelect}
+                section="favorites"
                 title="Your Favorites"
               />
               <WindowGameListSection
                 games={classicGames}
                 isFavorite={isFavorite}
                 onSelectGame={handleGameSelect}
+                section="legendary"
                 title="🏆 Legendary Classics 🏆"
               />
               <ListView 
