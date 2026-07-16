@@ -6939,7 +6939,7 @@
       "label": "Home()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L431",
+      "source_location": "L432",
       "_origin": "ast",
       "id": "app_page_home",
       "community": 34,
@@ -9309,7 +9309,7 @@
       "label": "useTheme()",
       "file_type": "code",
       "source_file": "src/contexts/ThemeContext.tsx",
-      "source_location": "L60",
+      "source_location": "L74",
       "_origin": "ast",
       "id": "contexts_themecontext_usetheme",
       "community": 57,
@@ -40289,9 +40289,9 @@
       "source_file": "src/components/detail/UnifiedDetailLayout.tsx",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "detail_unifieddetaillayout",
-      "target": "hooks_usedetailnavigation",
-      "confidence_score": 1.0
+      "target": "hooks_usedetailnavigation"
     },
     {
       "relation": "imports",
@@ -40300,9 +40300,9 @@
       "source_file": "src/components/detail/UnifiedDetailLayout.tsx",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "detail_unifieddetaillayout",
-      "target": "hooks_usedetailnavigation_detailzone",
-      "confidence_score": 1.0
+      "target": "hooks_usedetailnavigation_detailzone"
     },
     {
       "relation": "imports_from",
@@ -53943,5 +53943,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "e83d09a7705332fb849ceb8ca72004e06d9c11b6"
+  "built_at_commit": "b07ddab1fd827f9f89030a26e2fb07cab6984001"
 }

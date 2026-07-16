@@ -48,6 +48,16 @@ describe('GridView', () => {
     expect(getByText(mockGames[0].name).closest('[style]')?.getAttribute('style')).toContain('content-visibility: auto');
   });
 
+  it('uses theme surface, text, and radius variables for game cards', () => {
+    const { getByText } = render(<GridView games={[mockGames[0]]} onSelectGame={vi.fn()} />);
+
+    const card = getByText(mockGames[0].name).closest('div[class*="cursor-pointer"]');
+
+    expect(card?.classList).toContain('bg-[var(--theme-surface)]');
+    expect(card?.classList).toContain('rounded-[var(--theme-radius-lg)]');
+    expect(getByText(mockGames[0].name).classList).toContain('text-[var(--theme-text)]');
+  });
+
   it('requests another page when its end sentinel reaches the scroll viewport', () => {
     const onEndReached = vi.fn();
     let callback: IntersectionObserverCallback | undefined;

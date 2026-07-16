@@ -259,7 +259,7 @@ function LibraryApp() {
     return (
       <>
         {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <main className="min-h-screen bg-gray-900 text-white font-sans selection:bg-blue-600/50">
+        <main className="min-h-screen bg-[var(--theme-background)] text-[var(--theme-text)] font-sans selection:bg-[var(--theme-primary-container)]">
           <DetailView game={selectedGame} onBack={handleBackFromDetail} />
         </main>
       </>
@@ -307,7 +307,7 @@ function LibraryApp() {
   return (
     <>
       {showLaunchSplash ? <AppLaunchSplash /> : null}
-      <main className={`h-screen overflow-hidden bg-gray-900 text-white flex flex-col font-sans transition-all ${
+      <main className={`h-screen overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] flex flex-col font-sans transition-all ${
         settings.isFullscreen && !showMouse ? 'cursor-none' : ''
       }`}>
         <div
@@ -320,7 +320,8 @@ function LibraryApp() {
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.58),rgba(17,24,39,0.84)_52%,rgba(17,24,39,0.94))]"
+          className="pointer-events-none fixed inset-0 z-0"
+          style={{ background: 'linear-gradient(180deg, color-mix(in srgb, var(--theme-background) 58%, transparent), var(--theme-background))' }}
         />
         <LibraryHeader
           filters={filters}

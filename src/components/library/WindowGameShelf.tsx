@@ -111,13 +111,13 @@ export function WindowGameShelf({
   return (
     <section className="mb-12 px-4">
       <div className="mb-4 flex items-end gap-4">
-        <h2 className="text-[2rem] font-black uppercase tracking-tighter text-blue-300">
+        <h2 className="text-[2rem] font-black uppercase tracking-tighter text-[var(--theme-primary)]">
           {title}
         </h2>
-        <div className="mb-2 h-px flex-1 bg-gradient-to-r from-sky-400/60 via-cyan-300/20 to-transparent" />
+        <div className="mb-2 h-px flex-1 bg-[var(--theme-primary)] opacity-60" />
       </div>
       {subtitle ? (
-        <p className="mb-5 max-w-3xl text-sm font-medium text-white/45">{subtitle}</p>
+        <p className="mb-5 max-w-3xl text-sm font-medium text-[var(--theme-text-muted)]">{subtitle}</p>
       ) : null}
 
       <div className="relative">
@@ -126,7 +126,7 @@ export function WindowGameShelf({
             type="button"
             onClick={() => scrollShelf('left')}
             disabled={isCoolingDown}
-            className="absolute left-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-slate-900/55 text-2xl text-white/80 shadow-[0_12px_36px_rgba(2,6,23,0.4)] backdrop-blur-md transition-all hover:bg-slate-800/75 hover:text-white disabled:cursor-default disabled:opacity-40"
+            className="absolute left-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] text-2xl text-[var(--theme-text)] shadow-lg backdrop-blur-md transition-all hover:bg-[var(--theme-primary-container)] disabled:cursor-default disabled:opacity-40"
             aria-label={`Scroll ${title} left`}
           >
             ‹
@@ -138,7 +138,7 @@ export function WindowGameShelf({
             type="button"
             onClick={() => scrollShelf('right')}
             disabled={isCoolingDown}
-            className="absolute right-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-slate-900/55 text-2xl text-white/80 shadow-[0_12px_36px_rgba(2,6,23,0.4)] backdrop-blur-md transition-all hover:bg-slate-800/75 hover:text-white disabled:cursor-default disabled:opacity-40"
+            className="absolute right-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] text-2xl text-[var(--theme-text)] shadow-lg backdrop-blur-md transition-all hover:bg-[var(--theme-primary-container)] disabled:cursor-default disabled:opacity-40"
             aria-label={`Scroll ${title} right`}
           >
             ›
@@ -158,10 +158,10 @@ export function WindowGameShelf({
                   onFocusChange?.(index);
                 }
               }}
-              className="group relative aspect-[1.9] w-[320px] shrink-0 snap-start cursor-pointer overflow-hidden rounded-[24px] border border-white/10 bg-[#09111b] shadow-[0_18px_60px_rgba(2,6,23,0.45)] transition-all duration-300 hover:-translate-y-1 hover:border-white/20"
+              className="group relative aspect-[1.9] w-[320px] shrink-0 snap-start cursor-pointer overflow-hidden rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-[var(--theme-outline)]"
             >
               {isFavorite(game.id.toString()) && (
-                <div className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-pink-300/60 bg-black/60 text-lg text-pink-300 shadow-lg backdrop-blur-md">
+                <div className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--theme-tertiary)] bg-[var(--theme-background)] text-lg text-[var(--theme-tertiary)] shadow-lg backdrop-blur-md">
                   ♥
                 </div>
               )}
@@ -173,14 +173,14 @@ export function WindowGameShelf({
                 className="h-full w-full object-cover"
               />
 
-              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 border-t border-white/10 bg-[linear-gradient(180deg,rgba(2,6,23,0.08),rgba(2,6,23,0.92))] p-5">
-                <div className="text-[11px] font-black uppercase tracking-[0.24em] text-cyan-200/80">
+              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 border-t border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] p-5">
+                <div className="text-[11px] font-black uppercase tracking-[0.24em] text-[var(--theme-primary)]">
                   {game.year || 'Classic'} {game.parentGenre ? `• ${game.parentGenre}` : ''}
                 </div>
-                <div className="text-2xl font-black leading-tight text-white line-clamp-2">
+                <div className="text-2xl font-black leading-tight text-[var(--theme-text)] line-clamp-2">
                   {game.name}
                 </div>
-                <div className="truncate text-xs font-medium text-white/60">
+                <div className="truncate text-xs font-medium text-[var(--theme-text-muted)]">
                   {game.publisher?.name && game.publisher.name !== '(Not Published)'
                     ? game.publisher.name
                     : game.developer?.name && game.developer.name !== '(Unknown)'

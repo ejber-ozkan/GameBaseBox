@@ -16,6 +16,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const { settings, updateSettings } = useSettings();
   const currentThemeId = settings.themeId || 'arcade-void';
   const [prevThemeId, setPrevThemeId] = useState<string>(currentThemeId);
+  const [requestedThemeId, setRequestedThemeId] = useState<string | null>(null);
   const [activeTheme, setActiveTheme] = useState<Theme>(() => {
     return BUILT_IN_THEMES.find(t => t.id === currentThemeId) || arcadeVoidTheme;
   });
@@ -23,9 +24,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Synchronize state during render when settings.themeId changes
   if (currentThemeId !== prevThemeId) {
     setPrevThemeId(currentThemeId);
-    const foundTheme = BUILT_IN_THEMES.find(t => t.id === currentThemeId) || arcadeVoidTheme;
+    const resolvedThemeId = requestedThemeId && requestedThemeId !== currentThemeId
+      ? requestedThemeId
+      : currentThemeId;
+    const foundTheme = BUILT_IN_THEMES.find(t => t.id === resolvedThemeId) || arcadeVoidTheme;
     setActiveTheme(foundTheme);
   }
+
+  useEffect(() => {
+    if (requestedThemeId && requestedThemeId !== currentThemeId) {
+      updateSettings({ themeId: requestedThemeId });
+      return;
+    }
+  }, [currentThemeId, requestedThemeId, updateSettings]);
 
   // Apply theme styles and data attributes to the document whenever activeTheme changes
   useEffect(() => {
@@ -35,11 +46,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const setTheme = (themeId: string, persist = true) => {
     const foundTheme = BUILT_IN_THEMES.find(t => t.id === themeId);
     if (foundTheme) {
+      setActiveTheme(foundTheme);
+      applyTheme(foundTheme);
+
       if (persist) {
+        setRequestedThemeId(themeId);
         updateSettings({ themeId });
-      } else {
-        setActiveTheme(foundTheme);
-        applyTheme(foundTheme);
       }
     }
   };

@@ -39,14 +39,14 @@ export function ListView({ games, onSelectGame, onSort, focusedIndex = -1, onFoc
     return () => observer.disconnect();
   }, [onEndReached]);
   return (
-    <div className="overflow-x-auto p-4">
-      <table className="min-w-full text-left text-sm text-gray-300">
-        <thead className="text-xs text-gray-400 uppercase bg-gray-700/50">
+    <div className="overflow-x-auto rounded-[var(--theme-radius-xl)] bg-[var(--theme-background)] p-4">
+      <table className="min-w-full text-left text-sm text-[var(--theme-text-muted)]">
+        <thead className="bg-[var(--theme-surface)] text-xs uppercase text-[var(--theme-text-muted)]">
           <tr>
-            <th className="px-4 py-2 cursor-pointer hover:text-white" onClick={() => onSort('name')}>Title</th>
-            <th className="px-4 py-2 cursor-pointer hover:text-white" onClick={() => onSort('year')}>Year</th>
-            <th className="px-4 py-2 cursor-pointer hover:text-white" onClick={() => onSort('publisher')}>Publisher</th>
-            <th className="px-4 py-2 cursor-pointer hover:text-white" onClick={() => onSort('parentGenre')}>Genre</th>
+            <th className="cursor-pointer px-4 py-2 hover:text-[var(--theme-text)]" onClick={() => onSort('name')}>Title</th>
+            <th className="cursor-pointer px-4 py-2 hover:text-[var(--theme-text)]" onClick={() => onSort('year')}>Year</th>
+            <th className="cursor-pointer px-4 py-2 hover:text-[var(--theme-text)]" onClick={() => onSort('publisher')}>Publisher</th>
+            <th className="cursor-pointer px-4 py-2 hover:text-[var(--theme-text)]" onClick={() => onSort('parentGenre')}>Genre</th>
           </tr>
         </thead>
         <tbody ref={tbodyRef}>
@@ -59,13 +59,13 @@ export function ListView({ games, onSelectGame, onSort, focusedIndex = -1, onFoc
               onClick={() => onSelectGame(game)}
               onMouseEnter={() => onFocusChange?.(index)}
               style={{ contentVisibility: 'auto', containIntrinsicSize: '0 42px' }}
-              className={`border-b border-gray-700 cursor-pointer transition-colors ${
-                isFocused ? 'bg-blue-900/50 outline outline-2 outline-blue-500' : 'hover:bg-gray-600'
+              className={`cursor-pointer border-b border-[var(--theme-outline-variant)] transition-colors ${
+                isFocused ? 'bg-[var(--theme-primary-container)] outline outline-2 outline-[var(--theme-primary)]' : 'hover:bg-[var(--theme-surface)]'
               }`}
             >
-              <td className="px-4 py-2 font-medium text-white">
+              <td className="px-4 py-2 font-medium text-[var(--theme-text)]">
                 <div className="flex items-center gap-2">
-                  <span className={`text-sm ${favorited ? 'text-pink-400' : 'text-gray-600'}`}>{favorited ? '♥' : '♡'}</span>
+                  <span className={`text-sm ${favorited ? 'text-[var(--theme-tertiary)]' : 'text-[var(--theme-text-muted)]'}`}>{favorited ? '♥' : '♡'}</span>
                   <span>{game.name}</span>
                 </div>
               </td>

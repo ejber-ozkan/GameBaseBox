@@ -46,4 +46,14 @@ describe('ListView', () => {
 
     expect(onEndReached).toHaveBeenCalledOnce();
   });
+
+  it('uses theme variables for the table surface, text, and focused rows', () => {
+    const { container, getByText } = render(
+      <ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} focusedIndex={0} />,
+    );
+
+    expect(container.firstElementChild?.classList).toContain('bg-[var(--theme-background)]');
+    expect(getByText(mockGames[0].name).closest('tr')?.classList).toContain('bg-[var(--theme-primary-container)]');
+    expect(getByText(mockGames[0].name).closest('td')?.classList).toContain('text-[var(--theme-text)]');
+  });
 });

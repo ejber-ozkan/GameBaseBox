@@ -353,7 +353,7 @@ export function BigBoxView({
 
   return (
     <div 
-      className="fixed inset-0 bg-[#0a0a0f]/80 text-white flex flex-col overflow-hidden select-none"
+      className="fixed inset-0 flex flex-col overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] select-none"
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
@@ -364,8 +364,8 @@ export function BigBoxView({
       />
       {/* Cinematic Background Blur */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-         <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-blue-900/10 blur-[100px] animate-pulse"></div>
-         <div className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] bg-purple-900/10 blur-[100px]"></div>
+         <div className="absolute left-[-10%] top-[-10%] h-[120%] w-[120%] bg-[var(--theme-primary)] opacity-10 blur-[100px] animate-pulse"></div>
+         <div className="absolute bottom-[-20%] right-[-10%] h-[80%] w-[80%] bg-[var(--theme-secondary)] opacity-10 blur-[100px]"></div>
       </div>
 
       {/* Top Bar - Fixed */}
@@ -451,8 +451,8 @@ export function BigBoxView({
         >
           {loading ? (
             <div className="h-[60vh] flex flex-col items-center justify-center gap-4">
-               <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
-               <div className="text-blue-400 font-bold uppercase tracking-widest animate-pulse">Scanning Library...</div>
+               <div className="h-12 w-12 rounded-full border-4 border-[var(--theme-outline-variant)] border-t-[var(--theme-primary)] animate-spin"></div>
+               <div className="font-bold uppercase tracking-widest text-[var(--theme-primary)] animate-pulse">Scanning Library...</div>
             </div>
           ) : (
             rails.map((rail, idx) => {
