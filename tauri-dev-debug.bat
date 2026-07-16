@@ -19,18 +19,37 @@ echo [GBBox] Using Rust:
 rustc --version
 cargo --version
 
-:: Check if port 3000 is listening
-netstat -ano | find "LISTENING" | find ":3000" > nul
+call :frontend_ready
 if errorlevel 1 (
-    echo [GBBox] Frontend port 3000 not detected.
+    netstat -ano | find "LISTENING" | find ":3000" > nul
+    if not errorlevel 1 (
+        echo [GBBox] ERROR: A process is listening on port 3000 but is not serving the frontend.
+        echo [GBBox] Close the stale frontend process, then run this launcher again.
+        exit /b 1
+    )
+
+    echo [GBBox] Frontend is not running.
     echo [GBBox] Launching 'npm run dev' in a separate window...
     start "GBBox-Frontend" cmd /c "npm run dev"
-
-    echo [GBBox] Waiting 5 seconds for server to initialize...
-    timeout /t 5 /nobreak > nul
-) else (
-    echo [GBBox] Frontend already running on port 3000.
 )
+
+call :wait_for_frontend
+if errorlevel 1 exit /b 1
 
 echo [GBBox] Starting Tauri in debug mode (GAMEBASEBOX_DEBUG=1)...
 npx tauri dev --no-dev-server-wait --config tauri.dev-override.json
+exit /b %errorlevel%
+
+:frontend_ready
+powershell.exe -NoProfile -NonInteractive -Command "$ErrorActionPreference = 'Stop'; $response = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:3000/' -TimeoutSec 2; if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 400) { exit 0 } else { exit 1 }" > nul 2>&1
+exit /b %errorlevel%
+
+:wait_for_frontend
+for /l %%i in (1,1,30) do (
+    call :frontend_ready
+    if not errorlevel 1 exit /b 0
+    timeout /t 1 /nobreak > nul
+)
+
+echo [GBBox] ERROR: Frontend did not become ready at http://127.0.0.1:3000 within 30 seconds.
+exit /b 1
