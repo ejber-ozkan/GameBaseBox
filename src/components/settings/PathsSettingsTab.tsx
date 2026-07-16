@@ -1,6 +1,7 @@
 import type { EditableSettings, ContentNavProps } from './types';
 import { PLATFORM_EMULATOR_PROFILES, PLATFORM_PROFILES } from '../../lib/platform-capabilities';
 import type { PlatformFolderSettings, PlatformFolderType, PlatformId } from '../../types/platform';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface PathsSettingsTabProps extends ContentNavProps {
   draft: EditableSettings;
@@ -32,14 +33,18 @@ function PathRow({
   onMouseFocus,
   isFocused,
 }: PathRowProps) {
+  const { theme } = useTheme();
+
   return (
     <div>
-      <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-gray-400">{label}</label>
+      <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-theme-text-muted">{label}</label>
       <div className="flex gap-2">
         <input
           type="text"
-          className={`focus-idx-${inputIndex} flex-1 rounded border bg-gray-950 px-3 py-2 font-mono text-xs text-white transition-colors focus:outline-none ${
-            isFocused(inputIndex) ? 'border-blue-500 ring-1 ring-blue-500/50' : 'border-gray-700'
+          className={`focus-idx-${inputIndex} flex-1 bg-theme-background px-3 py-2 font-mono text-xs text-theme-text transition-colors focus:outline-none ${
+            theme.effects.steppedBorders ? 'border-2' : 'rounded-theme border'
+          } ${
+            isFocused(inputIndex) ? 'border-theme-primary ring-1 ring-theme-primary/50' : 'border-theme-outline-variant'
           }`}
           value={value}
           onChange={(event) => onChange(event.target.value)}
@@ -50,11 +55,11 @@ function PathRow({
           <button
             onClick={onBrowse}
             onMouseEnter={() => isMouseMode && onMouseFocus(browseIndex)}
-            className={`focus-idx-${browseIndex} shrink-0 rounded border px-3 py-2 text-xs transition ${
+            className={`focus-idx-${browseIndex} shrink-0 px-3 py-2 text-xs transition ${
               isFocused(browseIndex)
-                ? 'border-blue-400 bg-blue-600 text-white'
-                : 'border-gray-700 bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
+                ? 'bg-theme-primary text-theme-surface border border-theme-primary'
+                : 'border border-theme-outline-variant bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
+            } ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme'}`}
             title="Browse (Desktop mode only)"
           >
             Browse…
@@ -92,6 +97,8 @@ export function PathsSettingsTab({
     platformEmulatorSettings.preferredEmulatorProfileId || platformProfile.defaultEmulatorProfileId;
   const preferredC64Emulator = preferredEmulatorProfileId === 'retroarch-c64' ? 'retroarch' : 'vice';
   const hasFolderType = (folderType: PlatformFolderType) => platformProfile.folderTypes.includes(folderType);
+
+  const { theme } = useTheme();
 
   const setPlatformFolders = (folders: PlatformFolderSettings) => {
     setField('platformSettings', {
@@ -203,22 +210,22 @@ export function PathsSettingsTab({
     }
 
     return (
-      <div className="mb-4 flex items-center justify-between border-b border-gray-700 pb-4">
+      <div className="mb-4 flex items-center justify-between border-b border-theme-outline-variant pb-4">
         <div>
-          <span className="block text-sm font-bold uppercase tracking-wider text-white">Default Desktop Emulator</span>
-          <span className="mt-1 block text-[10px] text-gray-500">Which engine to use when clicking &quot;Desktop&quot;</span>
+          <span className="block text-sm font-bold uppercase tracking-wider text-theme-text">Default Desktop Emulator</span>
+          <span className="mt-1 block text-[10px] text-theme-text-muted">Which engine to use when clicking &quot;Desktop&quot;</span>
         </div>
-        <div className="flex rounded-lg border border-gray-700 bg-gray-950 p-1">
+        <div className="flex rounded-theme-lg border border-theme-outline-variant bg-theme-background/60 p-1">
           {supportedEmulatorProfileIds.map((profileId, idx) => (
             <button
               key={profileId}
               onClick={() => setPreferredPlatformEmulator(profileId)}
               onMouseEnter={() => isMouseMode && onMouseFocus(idx + startIndex)}
-              className={`focus-idx-${idx + startIndex} rounded-md px-4 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all ${
+              className={`focus-idx-${idx + startIndex} rounded-theme px-4 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all ${
                 (preferredEmulatorProfileId === profileId && ![startIndex, startIndex + 1].some(isFocused)) ||
                 isFocused(idx + startIndex)
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'text-gray-500 hover:text-gray-300'
+                  ? 'bg-theme-primary text-theme-surface shadow-lg'
+                  : 'text-theme-text-muted hover:text-theme-text'
               }`}
             >
               {getEmulatorButtonLabel(profileId)}
@@ -232,7 +239,7 @@ export function PathsSettingsTab({
   return (
     <>
       <div className="flex flex-col gap-4">
-        <div className="mt-2 border-b border-[#2a475e] pb-1.5 text-xs font-bold uppercase tracking-widest text-[#66c0f4]">
+        <div className="mt-2 border-b border-theme-outline-variant pb-1.5 text-xs font-bold uppercase tracking-widest text-theme-primary font-mono">
           -------- {platformProfile.displayName} Folders --------
         </div>
         {hasFolderType('games') && (
@@ -311,12 +318,12 @@ export function PathsSettingsTab({
             isFocused={isFocused}
           />
         )}
-        <div className="mb-2 border-t border-[#2a475e] pt-1.5 text-xs font-bold uppercase tracking-widest text-[#66c0f4]">
+        <div className="mb-2 border-t border-theme-outline-variant pt-1.5 text-xs font-bold uppercase tracking-widest text-theme-primary font-mono">
           -------- Emulator Paths --------
         </div>
 
         {isC64 && (
-          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+          <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
             {renderEmulatorSelector(10)}
 
             <div className={`space-y-3 transition-opacity ${preferredC64Emulator !== 'vice' ? 'opacity-50' : ''}`}>
@@ -336,11 +343,11 @@ export function PathsSettingsTab({
               <button
                 onClick={() => void browsePlatformExecutable('vice-c64')}
                 onMouseEnter={() => isMouseMode && onMouseFocus(13)}
-                className={`focus-idx-13 rounded border px-3 py-2 text-xs transition ${
+                className={`focus-idx-13 px-3 py-2 text-xs transition ${
                   isFocused(13)
-                    ? 'border-blue-400 bg-blue-600 text-white'
-                    : 'border-gray-700 bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
+                    ? 'bg-theme-primary text-theme-surface border border-theme-primary'
+                    : 'border border-theme-outline-variant bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
+                } ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme'}`}
               >
                 Browse for VICE (x64sc)...
               </button>
@@ -363,11 +370,11 @@ export function PathsSettingsTab({
               <button
                 onClick={() => void browsePlatformExecutable('retroarch-c64')}
                 onMouseEnter={() => isMouseMode && onMouseFocus(15)}
-                className={`focus-idx-15 rounded border px-3 py-2 text-xs transition ${
+                className={`focus-idx-15 px-3 py-2 text-xs transition ${
                   isFocused(15)
-                    ? 'border-blue-400 bg-blue-600 text-white'
-                    : 'border-gray-700 bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
+                    ? 'bg-theme-primary text-theme-surface border border-theme-primary'
+                    : 'border border-theme-outline-variant bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
+                } ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme'}`}
               >
                 Browse for RetroArch...
               </button>
@@ -388,11 +395,11 @@ export function PathsSettingsTab({
               <button
                 onClick={() => void browsePlatformCore('retroarch-c64')}
                 onMouseEnter={() => isMouseMode && onMouseFocus(17)}
-                className={`focus-idx-17 rounded border px-3 py-2 text-xs transition ${
+                className={`focus-idx-17 px-3 py-2 text-xs transition ${
                   isFocused(17)
-                    ? 'border-blue-400 bg-blue-600 text-white'
-                    : 'border-gray-700 bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
+                    ? 'bg-theme-primary text-theme-surface border border-theme-primary'
+                    : 'border border-theme-outline-variant bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
+                } ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme'}`}
               >
                 Browse for Core DLL/SO...
               </button>
@@ -401,7 +408,7 @@ export function PathsSettingsTab({
         )}
 
         {isAtari800 && (
-          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+          <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
             {renderEmulatorSelector(10)}
             <div
               className={`space-y-3 transition-opacity ${
@@ -455,7 +462,7 @@ export function PathsSettingsTab({
         )}
 
         {isAtari2600 && (
-          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+          <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
             <div className="space-y-3">
               <PathRow
                 label="RetroArch Executable (retroarch.exe)"
@@ -486,7 +493,7 @@ export function PathsSettingsTab({
         )}
 
         {isZxSpectrum && (
-          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+          <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
             {renderEmulatorSelector(10)}
             <div
               className={`space-y-3 transition-opacity ${
@@ -540,7 +547,7 @@ export function PathsSettingsTab({
         )}
 
         {isBbcMicro && (
-          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+          <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
             {renderEmulatorSelector(10)}
             <div
               className={`space-y-3 transition-opacity ${
@@ -594,7 +601,7 @@ export function PathsSettingsTab({
         )}
 
         {isAmiga && (
-          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+          <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
             {renderEmulatorSelector(10)}
             <div
               className={`space-y-3 transition-opacity ${
@@ -648,7 +655,7 @@ export function PathsSettingsTab({
         )}
 
         {isAtariSt && (
-          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+          <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
             {renderEmulatorSelector(10)}
             <div
               className={`space-y-3 transition-opacity ${
@@ -720,7 +727,7 @@ export function PathsSettingsTab({
         )}
 
         {isVic20 && (
-          <div className="space-y-6 rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+          <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
             {renderEmulatorSelector(10)}
             <div
               className={`space-y-3 transition-opacity ${
@@ -773,7 +780,7 @@ export function PathsSettingsTab({
           </div>
         )}
       </div>
-      <p className="text-[10px] text-emerald-600">✅ &quot;Browse…&quot; opens the native OS folder picker in Tauri desktop mode.</p>
+      <p className="text-[10px] text-theme-primary">✅ &quot;Browse…&quot; opens the native OS folder picker in Tauri desktop mode.</p>
     </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { useGamepad } from '../hooks/useGamepad';
 import { useInputMode } from '../hooks/useInputMode';
 import { openDirectoryDialog, openFileDialog } from '../lib/tauri-bridge';
@@ -30,6 +31,7 @@ type HeaderZone = 'tabs' | 'content' | 'header';
 
 export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
   const { settings, updateSettings } = useSettings();
+  const { theme } = useTheme();
   const { isMouseMode, onGamepadInput } = useInputMode();
   const isFullscreenLayout = settings.isFullscreen;
   const [draft, setDraft] = useState<EditableSettings>(() => getEditableSettings(settings));
@@ -38,6 +40,8 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
   const [focusedIdx, setFocusedIdx] = useState(0);
   const settingsTabs = useMemo(() => getSettingsTabs(settings), [settings]);
   const activePlatformPathsId = getPlatformIdFromSettingsTab(activeTab);
+
+  const isC64Theme = theme.id === 'c64-edition';
 
   useEffect(() => {
     setDraft(getEditableSettings(settings));
@@ -157,6 +161,51 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       onGamepadInput();
+
+      // C64 F-Key Easter Egg
+      if (isC64Theme) {
+        if (event.key === 'F1') {
+          event.preventDefault();
+          const tab = settingsTabs[0];
+          if (tab) {
+            setActiveTab(tab.id);
+            setNavZone('content');
+            setFocusedIdx(0);
+          }
+          return;
+        }
+        if (event.key === 'F3') {
+          event.preventDefault();
+          const tab = settingsTabs[1];
+          if (tab) {
+            setActiveTab(tab.id);
+            setNavZone('content');
+            setFocusedIdx(0);
+          }
+          return;
+        }
+        if (event.key === 'F5') {
+          event.preventDefault();
+          const tab = settingsTabs[2];
+          if (tab) {
+            setActiveTab(tab.id);
+            setNavZone('content');
+            setFocusedIdx(0);
+          }
+          return;
+        }
+        if (event.key === 'F7') {
+          event.preventDefault();
+          const tab = settingsTabs[3];
+          if (tab) {
+            setActiveTab(tab.id);
+            setNavZone('content');
+            setFocusedIdx(0);
+          }
+          return;
+        }
+      }
+
       if (event.key === 'Escape') {
         event.preventDefault();
         handleSave();
@@ -185,7 +234,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave, handleSelect, moveFocus, onGamepadInput]);
+  }, [handleSave, handleSelect, moveFocus, onGamepadInput, isC64Theme, settingsTabs]);
 
   useGamepad({
     onButtonDown: (button) => {
@@ -215,10 +264,21 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
     isFocused: isContentFocused,
   };
 
+  const getC64KeyHint = (idx: number) => {
+    if (!isC64Theme) return '';
+    if (idx === 0) return ' [F1]';
+    if (idx === 1) return ' [F3]';
+    if (idx === 2) return ' [F5]';
+    if (idx === 3) return ' [F7]';
+    return '';
+  };
+
   return (
-    <div className="flex h-full min-h-screen w-full flex-col overflow-hidden bg-gray-950">
+    <div className="flex h-full min-h-screen w-full flex-col overflow-hidden bg-theme-background text-theme-text font-sans">
       <div
-        className={`sticky top-0 z-10 flex items-center justify-between border-b border-gray-800 bg-gray-900 shadow-lg ${
+        className={`sticky top-0 z-10 flex items-center justify-between border-b ${
+          theme.effects.steppedBorders ? 'border-theme-outline border-b-4' : 'border-theme-outline-variant'
+        } bg-theme-surface shadow-lg ${
           isFullscreenLayout ? 'px-8 py-5 xl:px-12' : 'p-4'
         }`}
       >
@@ -226,24 +286,28 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
           <button
             onClick={onBack}
             onMouseEnter={() => isMouseMode && (setNavZone('header'), setFocusedIdx(0))}
-            className={`rounded border px-4 py-2 text-sm font-medium uppercase tracking-wider transition-colors ${
+            className={`px-4 py-2 text-sm font-medium uppercase tracking-wider transition-colors ${
+              theme.effects.steppedBorders ? 'border-2 border-theme-outline' : 'rounded-theme border border-theme-outline-variant'
+            } ${
               navZone === 'header' && focusedIdx === 0
-                ? 'bg-white text-black'
-                : 'border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                ? 'bg-theme-primary text-theme-surface border-theme-primary'
+                : 'bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
             }`}
           >
             ← Back to Library
           </button>
-          <h2 className="ml-4 text-xl font-black uppercase tracking-widest text-white">⚙ Settings</h2>
+          <h2 className="ml-4 text-xl font-black uppercase tracking-widest text-theme-text">⚙ Settings</h2>
         </div>
 
         <button
           onClick={handleSave}
           onMouseEnter={() => isMouseMode && (setNavZone('header'), setFocusedIdx(1))}
-          className={`rounded px-6 py-2 text-sm font-bold uppercase tracking-widest shadow-lg transition ${
+          className={`px-6 py-2 text-sm font-bold uppercase tracking-widest shadow-lg transition ${
+            theme.effects.steppedBorders ? 'border-2 border-theme-outline' : 'rounded-theme'
+          } ${
             navZone === 'header' && focusedIdx === 1
-              ? 'bg-white text-black'
-              : 'bg-blue-600 text-white hover:bg-blue-500'
+              ? 'bg-theme-primary text-theme-surface border-theme-primary'
+              : 'bg-theme-primary-container text-theme-primary border border-theme-primary/30 hover:bg-theme-primary/20'
           }`}
         >
           Save Configuration
@@ -262,7 +326,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
             isFullscreenLayout ? 'w-[320px] shrink-0 pr-4 2xl:w-[360px]' : 'w-64 pr-2'
           }`}
         >
-          <div className="mb-2 px-2 text-xs font-bold uppercase tracking-widest text-gray-500">
+          <div className="mb-2 px-2 text-xs font-bold uppercase tracking-widest text-theme-text-muted">
             Configuration Categories
           </div>
 
@@ -271,23 +335,38 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               onMouseEnter={() => isMouseMode && (setNavZone('tabs'), setFocusedIdx(idx))}
-              className={`flex items-center gap-3 rounded-lg border p-4 text-left transition ${
-                (activeTab === tab.id && navZone !== 'tabs') || (navZone === 'tabs' && focusedIdx === idx)
-                  ? 'border-blue-500 bg-gray-800 text-white shadow-lg shadow-blue-900/20'
-                  : 'border-gray-800 bg-gray-900/50 text-gray-400 hover:bg-gray-800 hover:text-gray-200'
+              className={`flex items-center gap-3 p-4 text-left transition ${
+                theme.effects.steppedBorders
+                  ? `border-2 ${
+                      (activeTab === tab.id && navZone !== 'tabs') || (navZone === 'tabs' && focusedIdx === idx)
+                        ? 'border-theme-outline bg-theme-primary-container text-theme-text'
+                        : 'border-theme-outline-variant bg-theme-surface text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
+                    }`
+                  : `rounded-theme-lg border ${
+                      (activeTab === tab.id && navZone !== 'tabs') || (navZone === 'tabs' && focusedIdx === idx)
+                        ? 'border-theme-primary bg-theme-primary/10 text-theme-text shadow-lg shadow-theme-primary/5'
+                        : 'border-theme-outline-variant bg-theme-surface/30 text-theme-text-muted hover:bg-theme-surface/80 hover:text-theme-text'
+                    }`
               }`}
             >
-              <span className="font-semibold">{tab.label}</span>
+              <span className="font-semibold">
+                {tab.label}
+                {getC64KeyHint(idx)}
+              </span>
             </button>
           ))}
         </div>
 
         <div
-          className={`relative flex flex-1 flex-col overflow-y-auto rounded-xl border border-gray-800 bg-gray-900 shadow-2xl ${
+          className={`relative flex flex-1 flex-col overflow-y-auto shadow-2xl theme-panel ${
+            theme.effects.steppedBorders ? 'stepped-border' : 'rounded-theme-xl border border-theme-outline-variant'
+          } ${
             isFullscreenLayout ? 'min-w-0' : ''
           }`}
         >
-          <div className="absolute inset-x-0 top-0 z-10 h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+          {theme.id === 'arcade-void' && (
+            <div className="absolute inset-x-0 top-0 z-10 h-1 bg-gradient-to-r from-transparent via-theme-primary/50 to-transparent" />
+          )}
 
           <div className={isFullscreenLayout ? 'p-10 xl:p-12 2xl:p-14' : 'p-8'}>
             {activeTab === 'appearance' && (
@@ -319,3 +398,4 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
     </div>
   );
 }
+

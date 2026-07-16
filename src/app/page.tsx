@@ -246,7 +246,7 @@ function LibraryApp() {
     return (
       <>
         {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <main className="min-h-screen bg-gray-950 text-white font-sans selection:bg-blue-600/50 flex flex-col">
+        <main className="min-h-screen bg-theme-background text-theme-text font-sans selection:bg-theme-primary/30 flex flex-col">
           <SettingsView onBack={handleBackFromSettings} onOpenTigerHeli={openTigerHeliFromSettings} />
         </main>
       </>
