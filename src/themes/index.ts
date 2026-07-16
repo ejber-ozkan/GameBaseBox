@@ -51,4 +51,7 @@ export function applyTheme(theme: Theme) {
 
   // Add HTML attribute for theme identification
   document.documentElement.setAttribute('data-theme', theme.id);
+  document.documentElement.setAttribute('data-theme-glass', String(!!theme.effects.glassmorphism));
+  document.documentElement.setAttribute('data-theme-scanlines', String(!!theme.effects.scanlines));
+  document.documentElement.setAttribute('data-theme-glow', String(!!theme.effects.ambientGlow));
 }

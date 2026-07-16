@@ -12,8 +12,24 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Segoe UI", "Trebuchet MS", Arial, Helvetica, sans-serif;
-  --font-mono: "Cascadia Mono", "Consolas", "Liberation Mono", "Courier New", monospace;
+  --font-sans: var(--theme-font-sans, "Segoe UI", "Trebuchet MS", Arial, Helvetica, sans-serif);
+  --font-mono: var(--theme-font-mono, "Cascadia Mono", "Consolas", "Liberation Mono", "Courier New", monospace);
+
+  --color-theme-primary: var(--theme-primary);
+  --color-theme-primary-container: var(--theme-primary-container);
+  --color-theme-secondary: var(--theme-secondary);
+  --color-theme-tertiary: var(--theme-tertiary);
+  --color-theme-surface: var(--theme-surface);
+  --color-theme-background: var(--theme-background);
+  --color-theme-outline: var(--theme-outline);
+  --color-theme-outline-variant: var(--theme-outline-variant);
+  --color-theme-text: var(--theme-text);
+  --color-theme-text-muted: var(--theme-text-muted);
+
+  --radius-theme-sm: var(--theme-radius-sm, 0px);
+  --radius-theme-md: var(--theme-radius-md, 0px);
+  --radius-theme-lg: var(--theme-radius-lg, 0px);
+  --radius-theme-xl: var(--theme-radius-xl, 0px);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,9 +40,61 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--theme-background, var(--background));
+  color: var(--theme-text, var(--foreground));
+  font-family: var(--font-sans);
+}
+
+/* Theme effects helper classes */
+.scanlines-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  background-size: 100% 3px;
+}
+
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.theme-cursor-blink::after {
+  content: "█";
+  margin-left: 0.25em;
+  color: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+  animation: cursor-blink 0.8s infinite step-start;
+}
+
+.stepped-border {
+  border: 4px solid var(--theme-outline, currentColor);
+  border-radius: 0px !important;
+}
+
+/* Glassmorphism panel support with solid fallback */
+.theme-panel {
+  transition: background-color 0.25s ease, border-color 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+html[data-theme-glass="true"] .theme-panel {
+  background-color: rgba(20, 26, 33, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme-glass="false"] .theme-panel,
+html:not([data-theme-glass]) .theme-panel {
+  background-color: var(--theme-surface);
+  border: 1px solid var(--theme-outline-variant);
 }
 
 .custom-scrollbar-hidden, .no-scrollbar {

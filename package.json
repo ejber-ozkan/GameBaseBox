@@ -35,11 +35,12 @@
     "@tauri-apps/plugin-log": "^2.8.0",
     "@tauri-apps/plugin-shell": "^2.3.5",
     "next": "16.2.9",
+    "playwright": "^1.61.1",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4",
     "@tauri-apps/cli": "^2.10.1",
     "@testing-library/dom": "^10.4.1",
