@@ -26,6 +26,7 @@ export function WindowGameShelf({
   onSelectGame,
   section,
   title,
+  subtitle,
   shelfRef,
 }: WindowGameShelfProps) {
   const internalShelfRef = useRef<HTMLDivElement | null>(null);
@@ -125,21 +126,28 @@ export function WindowGameShelf({
   const header = headerStyles[section];
 
   return (
-    <section className="px-4" style={{ marginBottom: '0.5rem' }}>
+    <section className="px-4" style={{ marginBottom: '2.5rem' }}>
       <div
-        className="flex items-center"
-        data-density="compact"
+        className="mb-3 flex items-end gap-4"
+        data-density="prominent"
         data-hierarchy={header.hierarchy}
         data-section={section}
         data-testid="window-shelf-header"
       >
         <h2
           className="font-black uppercase text-[var(--theme-primary)]"
-          style={{ fontSize: '12px', letterSpacing: '0.08em', lineHeight: 1, margin: 0 }}
+          style={{ fontSize: '24px', letterSpacing: '0.02em', lineHeight: 1, margin: 0 }}
         >
           {title}
         </h2>
+        <div
+          className="mb-1 h-px flex-1 bg-[var(--theme-primary)] opacity-60"
+          data-section-divider
+        />
       </div>
+      {subtitle ? (
+        <p className="mb-3 max-w-3xl text-sm font-medium text-[var(--theme-text-muted)]">{subtitle}</p>
+      ) : null}
 
       <div className="relative">
         {canScrollLeft ? (
@@ -194,14 +202,26 @@ export function WindowGameShelf({
                 className="h-full w-full object-cover"
               />
 
-              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 border-t border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] p-5">
-                <div className="text-[11px] font-black uppercase tracking-[0.24em] text-[var(--theme-primary)]">
+              <div
+                className="absolute inset-x-0 bottom-0 flex flex-col gap-0.5 border-t border-[var(--theme-outline-variant)] p-3"
+                data-testid="window-shelf-title-overlay"
+                data-visual-treatment="blurred-compact"
+                style={{
+                  backgroundColor: 'color-mix(in srgb, var(--theme-surface) 78%, transparent)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                <div className="font-black uppercase text-[var(--theme-primary)]" style={{ fontSize: '10px', letterSpacing: '0.18em' }}>
                   {game.year || 'Classic'} {game.parentGenre ? `• ${game.parentGenre}` : ''}
                 </div>
-                <div className="text-2xl font-black leading-tight text-[var(--theme-text)] line-clamp-2">
+                <div
+                  className="truncate font-black text-[var(--theme-text)]"
+                  data-testid="window-shelf-game-title"
+                  style={{ fontSize: '16px', lineHeight: 1.2 }}
+                >
                   {game.name}
                 </div>
-                <div className="truncate text-xs font-medium text-[var(--theme-text-muted)]">
+                <div className="truncate font-medium text-[var(--theme-text-muted)]" style={{ fontSize: '10px' }}>
                   {game.publisher?.name && game.publisher.name !== '(Not Published)'
                     ? game.publisher.name
                     : game.developer?.name && game.developer.name !== '(Unknown)'

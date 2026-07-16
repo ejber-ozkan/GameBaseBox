@@ -37,20 +37,24 @@ export function WindowGameListSection({
   const header = headerStyles[section];
 
   return (
-    <section className="px-4" style={{ marginBottom: '0.5rem' }}>
+    <section className="px-4" style={{ marginBottom: '2rem' }}>
       <div
-        className="flex items-center"
-        data-density="compact"
+        className="mb-3 flex items-center gap-4"
+        data-density="prominent"
         data-hierarchy={header.hierarchy}
         data-section={section}
         data-testid="window-list-header"
       >
         <h2
           className="font-black uppercase text-[var(--theme-primary)]"
-          style={{ fontSize: '12px', letterSpacing: '0.08em', lineHeight: 1, margin: 0 }}
+          style={{ fontSize: '20px', letterSpacing: '0.1em', lineHeight: 1, margin: 0 }}
         >
           {title}
         </h2>
+        <div
+          className="h-px flex-1 bg-[var(--theme-primary)] opacity-60"
+          data-testid="window-list-divider"
+        />
       </div>
 
       <div className="overflow-hidden rounded-[var(--theme-radius-lg)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)]">

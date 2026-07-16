@@ -36,7 +36,7 @@ describe('WindowGameShelf', () => {
     ['recent', 'compact'],
     ['favorites', 'supporting'],
     ['legendary', 'featured'],
-  ] as const)('uses a compact %s shelf header for %s', (section, hierarchy) => {
+  ] as const)('uses a prominent %s shelf header for %s', (section, hierarchy) => {
     const { container } = render(
       <WindowGameShelf
         games={[mockGames[0]]}
@@ -52,9 +52,27 @@ describe('WindowGameShelf', () => {
     const header = screen.getByTestId('window-shelf-header');
     expect(header.getAttribute('data-section')).toBe(section);
     expect(header.getAttribute('data-hierarchy')).toBe(hierarchy);
-    expect(header.getAttribute('data-density')).toBe('compact');
-    expect(screen.queryByText('Supporting copy')).toBeNull();
-    expect(screen.getByRole('heading', { name: 'Section title' }).getAttribute('style')).toContain('font-size: 12px');
-    expect(container.querySelector('[data-section-divider]')).toBeNull();
+    expect(header.getAttribute('data-density')).toBe('prominent');
+    expect(screen.getByText('Supporting copy')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Section title' }).getAttribute('style')).toContain('font-size: 24px');
+    expect(container.querySelector('[data-section-divider]')).toBeTruthy();
+  });
+
+  it('keeps each game name in a shallow blurred card overlay', () => {
+    render(
+      <WindowGameShelf
+        games={[mockGames[0]]}
+        isFavorite={() => false}
+        isMouseMode={false}
+        onSelectGame={vi.fn()}
+        section="recent"
+        title="Recent Games"
+      />,
+    );
+
+    const overlay = screen.getByTestId('window-shelf-title-overlay');
+    expect(overlay.getAttribute('data-visual-treatment')).toBe('blurred-compact');
+    expect(overlay.getAttribute('style')).toContain('backdrop-filter: blur(8px)');
+    expect(screen.getByTestId('window-shelf-game-title').getAttribute('style')).toContain('font-size: 16px');
   });
 });

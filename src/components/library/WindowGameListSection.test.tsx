@@ -31,7 +31,7 @@ describe('WindowGameListSection', () => {
     ['recent', 'compact'],
     ['favorites', 'supporting'],
     ['legendary', 'featured'],
-  ] as const)('uses a compact %s list header for %s', (section, hierarchy) => {
+  ] as const)('uses a prominent %s list header for %s', (section, hierarchy) => {
     render(
       <WindowGameListSection
         games={[mockGames[0]]}
@@ -45,8 +45,8 @@ describe('WindowGameListSection', () => {
     const header = screen.getByTestId('window-list-header');
     expect(header.getAttribute('data-section')).toBe(section);
     expect(header.getAttribute('data-hierarchy')).toBe(hierarchy);
-    expect(header.getAttribute('data-density')).toBe('compact');
-    expect(screen.getByRole('heading', { name: 'Section title' }).getAttribute('style')).toContain('font-size: 12px');
-    expect(screen.queryByTestId('window-list-divider')).toBeNull();
+    expect(header.getAttribute('data-density')).toBe('prominent');
+    expect(screen.getByRole('heading', { name: 'Section title' }).getAttribute('style')).toContain('font-size: 20px');
+    expect(screen.queryByTestId('window-list-divider')).toBeTruthy();
   });
 });
