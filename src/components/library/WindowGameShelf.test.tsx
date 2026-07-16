@@ -36,14 +36,15 @@ describe('WindowGameShelf', () => {
     ['recent', 'compact'],
     ['favorites', 'supporting'],
     ['legendary', 'featured'],
-  ] as const)('uses the %s hierarchy for a %s shelf header', (section, hierarchy) => {
-    render(
+  ] as const)('uses a compact %s shelf header for %s', (section, hierarchy) => {
+    const { container } = render(
       <WindowGameShelf
         games={[mockGames[0]]}
         isFavorite={() => false}
         isMouseMode={false}
         onSelectGame={vi.fn()}
         section={section}
+        subtitle="Supporting copy"
         title="Section title"
       />,
     );
@@ -51,5 +52,8 @@ describe('WindowGameShelf', () => {
     const header = screen.getByTestId('window-shelf-header');
     expect(header.getAttribute('data-section')).toBe(section);
     expect(header.getAttribute('data-hierarchy')).toBe(hierarchy);
+    expect(header.getAttribute('data-density')).toBe('compact');
+    expect(screen.getByText('Supporting copy').className).toContain('sr-only');
+    expect(container.querySelector('[data-section-divider]')).toBeNull();
   });
 });

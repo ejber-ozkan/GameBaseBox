@@ -26,32 +26,29 @@ export function WindowGameListSection({
   const headerStyles = {
     recent: {
       hierarchy: 'compact',
-      title: 'text-base tracking-[0.16em]',
-      divider: 'w-20 bg-gradient-to-r from-[var(--theme-primary)]/60 to-transparent',
+      title: 'text-xs tracking-[0.12em]',
     },
     favorites: {
       hierarchy: 'supporting',
-      title: 'text-lg tracking-[0.1em]',
-      divider: 'w-28 bg-gradient-to-r from-[var(--theme-primary)]/60 to-transparent',
+      title: 'text-xs tracking-[0.12em]',
     },
     legendary: {
       hierarchy: 'featured',
-      title: 'text-xl tracking-tight',
-      divider: 'flex-1 bg-gradient-to-r from-[var(--theme-primary)]/60 to-transparent',
+      title: 'text-xs tracking-[0.08em]',
     },
   } as const;
   const header = headerStyles[section];
 
   return (
-    <section className="mb-7 px-4">
+    <section className="mb-5 px-4">
       <div
-        className="mb-2 flex items-center gap-3"
+        className="mb-1 flex items-center"
+        data-density="compact"
         data-hierarchy={header.hierarchy}
         data-section={section}
         data-testid="window-list-header"
       >
         <h2 className={`font-black uppercase text-[var(--theme-primary)] ${header.title}`}>{title}</h2>
-        <div className={`h-px ${header.divider}`} />
       </div>
 
       <div className="overflow-hidden rounded-[var(--theme-radius-lg)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)]">
