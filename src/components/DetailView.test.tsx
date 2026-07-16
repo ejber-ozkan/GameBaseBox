@@ -37,6 +37,44 @@ vi.mock('../hooks/usePopupOpenSound', () => ({
   usePopupOpenSound: vi.fn(),
 }));
 
+vi.mock('../contexts/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: {
+      id: 'arcade-void',
+      displayName: 'Arcade Void & Neon Acrylic',
+      colors: {
+        primary: '#8aebff',
+        primaryContainer: '#0e3038',
+        secondary: '#a855f7',
+        tertiary: '#eab308',
+        surface: '#141A21',
+        background: '#0a0c10',
+        outline: '#1f2937',
+        outlineVariant: '#374151',
+        text: '#ffffff',
+        textMuted: '#9ca3af',
+      },
+      typography: {
+        sans: '"Manrope", sans-serif',
+        mono: 'monospace',
+      },
+      borderRadius: {
+        sm: '2px',
+        md: '4px',
+        lg: '8px',
+        xl: '12px',
+      },
+      effects: {
+        scanlines: false,
+        outerBorder: false,
+        ambientGlow: true,
+        steppedBorders: false,
+        blinkingCursor: false,
+      },
+    },
+  }),
+}));
+
 const mockGetDbGameDetail = vi.hoisted(() => vi.fn());
 
 vi.mock('../lib/tauri-bridge', () => ({

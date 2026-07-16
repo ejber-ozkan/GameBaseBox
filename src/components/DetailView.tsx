@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Game, GameDetail } from '../types/game';
 import { getDbGameDetail } from '../lib/tauri-bridge';
-import { NeonArchiveDetailLayout } from './themes/neon-archive/NeonArchiveDetailLayout';
+import { UnifiedDetailLayout } from './detail/UnifiedDetailLayout';
 import { PLATFORM_PROFILES } from '../lib/platform-capabilities';
 import { ImageSlider } from './ImageSlider';
 import { ImageWithFallback } from './ImageWithFallback';
@@ -178,7 +178,7 @@ export function DetailView({ game, onBack }: DetailViewProps) {
   const renderTheme = () => {
     const mergedGame = detailedGame ? { ...game, ...detailedGame } : game;
     return (
-      <NeonArchiveDetailLayout
+      <UnifiedDetailLayout
         key={game.id}
         game={mergedGame}
         onBack={onBack}
