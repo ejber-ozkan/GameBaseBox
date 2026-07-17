@@ -96,20 +96,20 @@ export function SapPlayer({ filename, audioUrl, compact = false }: SapPlayerProp
   }
 
   if (!filename) {
-    return <div className={`text-gray-500 ${compact ? 'text-xs' : 'text-sm'}`}>No SAP track available</div>;
+    return <div className={`text-theme-text-muted ${compact ? 'text-xs' : 'text-sm'}`}>No SAP track available</div>;
   }
 
   return (
-    <div className={`flex w-full flex-col rounded-lg border border-gray-700 bg-gray-800 ${compact ? 'gap-2 p-3' : 'gap-3 p-4'}`}>
+    <div data-testid="sap-player" className={`flex w-full flex-col rounded-theme-lg border border-theme-outline bg-theme-surface ${compact ? 'gap-2 p-3' : 'gap-3 p-4'}`}>
       <div className={`flex max-w-full items-center justify-between font-mono ${compact ? 'text-xs' : 'text-sm'}`}>
-        <span className="mr-2 truncate text-amber-300" title={filename}>♪ {filename.split(/[\\/]/).pop()}</span>
-        <span className="shrink-0 text-[10px] text-gray-500">{isPlaying ? 'PLAYING' : 'STOPPED'}</span>
+        <span className="mr-2 truncate text-theme-primary" title={filename}>♪ {filename.split(/[\\/]/).pop()}</span>
+        <span className="shrink-0 text-[10px] text-theme-text-muted">{isPlaying ? 'PLAYING' : 'STOPPED'}</span>
       </div>
 
       <div className={`flex items-center ${compact ? 'gap-3' : 'gap-4'}`}>
         <button
           id="sap-play-btn"
-          className={`flex shrink-0 items-center justify-center rounded-full transition-colors ${compact ? 'h-8 w-8 text-sm' : 'h-10 w-10'} ${isPlaying ? 'bg-amber-600 text-white hover:bg-amber-500' : 'bg-gray-700 text-gray-200 hover:bg-gray-600'}`}
+          className={`flex shrink-0 items-center justify-center rounded-full transition-colors ${compact ? 'h-8 w-8 text-sm' : 'h-10 w-10'} ${isPlaying ? 'bg-theme-primary text-theme-surface hover:brightness-110' : 'bg-theme-primary-container text-theme-primary hover:brightness-110'}`}
           onClick={() => void handleToggle()}
           data-testid="sap-play-button"
           title="Play SAP"
@@ -118,7 +118,7 @@ export function SapPlayer({ filename, audioUrl, compact = false }: SapPlayerProp
         </button>
 
         <div className="flex flex-1 items-center gap-2">
-          <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-gray-500`}>▮</span>
+          <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-theme-text-muted`}>▮</span>
           <input
             type="range"
             min="0"
@@ -126,7 +126,7 @@ export function SapPlayer({ filename, audioUrl, compact = false }: SapPlayerProp
             step="0.05"
             value={volume}
             onChange={(event) => setVolume(parseFloat(event.target.value))}
-            className="w-full accent-amber-500"
+            className="w-full accent-[var(--theme-primary)]"
             data-testid="sap-volume-slider"
           />
         </div>

@@ -1,4 +1,5 @@
 import type { EditableSettings, ContentNavProps } from './types';
+import { ThemedToggle } from './ThemedToggle';
 
 interface ContentSettingsTabProps extends ContentNavProps {
   draft: EditableSettings;
@@ -24,21 +25,7 @@ export function ContentSettingsTab({
               &quot;Sex Games&quot;, &quot;Blue Angel 69&quot;, etc. Recommended to keep ON.
             </div>
           </div>
-          <button
-            onClick={() => setField('hideAdultContent', !draft.hideAdultContent)}
-            onMouseEnter={() => isMouseMode && onMouseFocus(0)}
-            className={`focus-idx-0 relative ml-6 h-7 w-14 shrink-0 rounded-full transition-all ${
-              (draft.hideAdultContent && !isFocused(0)) || isFocused(0)
-                ? 'bg-theme-primary ring-2 ring-theme-primary/50'
-                : 'bg-theme-outline-variant'
-            }`}
-          >
-            <span
-              className={`absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-theme-surface shadow transition-transform ${
-                draft.hideAdultContent ? 'translate-x-7' : 'translate-x-0'
-              }`}
-            />
-          </button>
+          <ThemedToggle label="Hide Adult Content" checked={draft.hideAdultContent} onChange={() => setField('hideAdultContent', !draft.hideAdultContent)} onMouseEnter={() => isMouseMode && onMouseFocus(0)} focusClassName="focus-idx-0" focused={isFocused(0)} large />
         </label>
       </div>
       <p className="text-xs text-theme-text-muted">

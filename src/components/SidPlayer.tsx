@@ -145,21 +145,21 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
   }
 
   if (!filename) {
-    return <div className={`text-gray-500 ${compact ? 'text-xs' : 'text-sm'}`}>No SID track available</div>;
+    return <div className={`text-theme-text-muted ${compact ? 'text-xs' : 'text-sm'}`}>No SID track available</div>;
   }
 
   return (
-    <div className={`w-full rounded-lg border border-gray-700 bg-gray-800 flex flex-col ${compact ? 'gap-2 p-3' : 'gap-3 p-4'}`}>
+    <div data-testid="sid-player" className={`w-full rounded-theme-lg border border-theme-outline bg-theme-surface flex flex-col ${compact ? 'gap-2 p-3' : 'gap-3 p-4'}`}>
       <div className={`flex max-w-full items-center justify-between font-mono ${compact ? 'text-xs' : 'text-sm'}`}>
-         <span className="truncate text-emerald-400 mr-2" title={filename}>🎵 {filename.split(/[\\/]/).pop()}</span>
-         <span className="text-[10px] text-gray-500 shrink-0">{isPlaying ? 'PLAYING' : 'STOPPED'}</span>
+         <span className="truncate text-theme-primary mr-2" title={filename}>🎵 {filename.split(/[\\/]/).pop()}</span>
+         <span className="text-[10px] text-theme-text-muted shrink-0">{isPlaying ? 'PLAYING' : 'STOPPED'}</span>
       </div>
       
       <div className={`flex items-center ${compact ? 'gap-3' : 'gap-4'}`}>
         {localUrl ? (
           <button
             id="sid-play-btn"
-            className={`flex shrink-0 items-center justify-center rounded-full transition-colors ${compact ? 'h-8 w-8 text-sm' : 'h-10 w-10'} ${isPlaying ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-200'}`}
+            className={`flex shrink-0 items-center justify-center rounded-full transition-colors ${compact ? 'h-8 w-8 text-sm' : 'h-10 w-10'} ${isPlaying ? 'bg-theme-primary text-theme-surface hover:brightness-110' : 'bg-theme-primary-container text-theme-primary hover:brightness-110'}`}
             onClick={() => {
               if (!isPlaying) {
                 if (typeof window !== 'undefined') {
@@ -186,7 +186,7 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
         ) : (
           <button
             id="sid-play-btn"
-            className={`flex shrink-0 items-center justify-center rounded-lg transition-colors bg-blue-600 hover:bg-blue-500 text-white font-bold uppercase tracking-wider disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed ${compact ? 'h-8 px-2.5 py-1 text-[10px]' : 'h-10 px-3 py-1 text-xs'}`}
+            className={`flex shrink-0 items-center justify-center rounded-theme transition-colors border border-theme-primary bg-theme-primary-container text-theme-primary font-bold uppercase tracking-wider hover:brightness-110 disabled:bg-theme-surface disabled:text-theme-text-muted disabled:cursor-not-allowed ${compact ? 'h-8 px-2.5 py-1 text-[10px]' : 'h-10 px-3 py-1 text-xs'}`}
             onClick={handleScrape}
             disabled={isDownloading}
             title="Download from the High Voltage SID Collection"
@@ -198,7 +198,7 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
 
         {localUrl && (
           <div className="flex items-center gap-2 flex-1">
-            <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-gray-500`}>🔈</span>
+            <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-theme-text-muted`}>🔈</span>
             <input
               type="range"
               min="0"
@@ -206,7 +206,7 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
               step="0.05"
               value={volume}
               onChange={(e) => setVolume(parseFloat(e.target.value))}
-              className="w-full accent-emerald-500"
+              className="w-full accent-[var(--theme-primary)]"
               data-testid="volume-slider"
             />
           </div>

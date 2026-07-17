@@ -1,5 +1,6 @@
 import type { EditableSettings, ContentNavProps } from './types';
 import { useTheme } from '../../contexts/ThemeContext';
+import { ThemedToggle } from './ThemedToggle';
 
 interface AppearanceSettingsTabProps extends ContentNavProps {
   draft: EditableSettings;
@@ -70,21 +71,7 @@ export function AppearanceSettingsTab({
                 Automatically cycle through gameplay screenshots and variants (every 3.5 seconds).
               </div>
             </div>
-            <button
-              onClick={() => setField('imageCycling', !draft.imageCycling)}
-              onMouseEnter={() => isMouseMode && onMouseFocus(3)}
-              className={`focus-idx-3 relative ml-6 h-6 w-12 shrink-0 rounded-full transition-all ${
-                (draft.imageCycling && !isFocused(3)) || isFocused(3)
-                  ? 'bg-theme-primary ring-2 ring-theme-primary/50'
-                  : 'bg-theme-outline-variant'
-              }`}
-            >
-              <span
-                className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-theme-surface shadow transition-transform ${
-                  draft.imageCycling ? 'translate-x-6' : 'translate-x-0'
-                }`}
-              />
-            </button>
+            <ThemedToggle label="Cycle Multiple Images" checked={draft.imageCycling} onChange={() => setField('imageCycling', !draft.imageCycling)} onMouseEnter={() => isMouseMode && onMouseFocus(3)} focusClassName="focus-idx-3" focused={isFocused(3)} />
           </label>
 
           <div className={`transition-opacity ${!draft.imageCycling ? 'pointer-events-none opacity-40' : ''}`}>
@@ -121,21 +108,7 @@ export function AppearanceSettingsTab({
                 Runs the application in immersive fullscreen mode. Toggle with Alt+Enter.
               </div>
             </div>
-            <button
-              onClick={() => setField('isFullscreen', !draft.isFullscreen)}
-              onMouseEnter={() => isMouseMode && onMouseFocus(6)}
-              className={`focus-idx-6 relative ml-6 h-6 w-12 shrink-0 rounded-full transition-all ${
-                (draft.isFullscreen && !isFocused(6)) || isFocused(6)
-                  ? 'bg-theme-primary ring-2 ring-theme-primary/50'
-                  : 'bg-theme-outline-variant'
-              }`}
-            >
-              <span
-                className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-theme-surface shadow transition-transform ${
-                  draft.isFullscreen ? 'translate-x-6' : 'translate-x-0'
-                }`}
-              />
-            </button>
+            <ThemedToggle label="Fullscreen Mode (BigBox)" checked={draft.isFullscreen} onChange={() => setField('isFullscreen', !draft.isFullscreen)} onMouseEnter={() => isMouseMode && onMouseFocus(6)} focusClassName="focus-idx-6" focused={isFocused(6)} />
           </label>
 
           <div className={`transition-opacity ${draft.isFullscreen ? 'pointer-events-none opacity-40' : ''}`}>
@@ -240,21 +213,7 @@ export function AppearanceSettingsTab({
                 <div className="flex items-center gap-2 text-sm font-semibold text-theme-text">{item.title}</div>
                 <div className="mt-1 max-w-sm text-[10px] text-theme-text-muted">{item.description}</div>
               </div>
-              <button
-                onClick={() => setField(item.key, !draft[item.key])}
-                onMouseEnter={() => isMouseMode && onMouseFocus(item.index)}
-                className={`focus-idx-${item.index} relative ml-6 h-6 w-12 shrink-0 rounded-full transition-all ${
-                  (draft[item.key] && !isFocused(item.index)) || isFocused(item.index)
-                    ? 'bg-theme-primary ring-2 ring-theme-primary/50'
-                    : 'bg-theme-outline-variant'
-                }`}
-              >
-                <span
-                  className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-theme-surface shadow transition-transform ${
-                    draft[item.key] ? 'translate-x-6' : 'translate-x-0'
-                  }`}
-                />
-              </button>
+              <ThemedToggle label={item.title.replace(/^\S+\s/, '')} checked={draft[item.key]} onChange={() => setField(item.key, !draft[item.key])} onMouseEnter={() => isMouseMode && onMouseFocus(item.index)} focusClassName={`focus-idx-${item.index}`} focused={isFocused(item.index)} />
             </label>
           ))}
         </div>
