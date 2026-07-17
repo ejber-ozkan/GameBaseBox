@@ -8,6 +8,7 @@ import { useInputMode } from '../hooks/useInputMode';
 import { GameFilters } from '../lib/tauri-bridge';
 import { BigBoxHeader } from './bigbox/BigBoxHeader';
 import { BigBoxAlphabetRail } from './bigbox/BigBoxAlphabetRail';
+import { getThemeListPresentation } from '../themes/list-presentations';
 import { BigBoxFooter } from './bigbox/BigBoxFooter';
 import { BigBoxExitPrompt } from './bigbox/BigBoxExitPrompt';
 import { HorizontalRail } from './HorizontalRail';
@@ -351,9 +352,15 @@ export function BigBoxView({
     sectionJumpDirection,
   });
 
+  const listPresentation = getThemeListPresentation(
+    typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
+  );
+
   return (
     <div 
-      className="fixed inset-0 flex flex-col overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] select-none"
+      className="bigbox-list-surface fixed inset-0 flex flex-col overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] select-none"
+      data-list-presentation={listPresentation.layout}
+      data-bigbox-rail-style={listPresentation.bigBox.railStyle}
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >

@@ -1,5 +1,6 @@
 import { Game } from '../types/game';
 import { useEffect, useRef } from 'react';
+import { getThemeListPresentation } from '../themes/list-presentations';
 
 interface ListViewProps {
   games: Game[];
@@ -35,9 +36,10 @@ export function ListView({
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
   const endSentinelRef = useRef<HTMLTableRowElement>(null);
   const themeId = providedThemeId ?? (typeof document === 'undefined' ? 'arcade-void' : document.documentElement.dataset.theme || 'arcade-void');
-  const isArcadeVoid = themeId === 'arcade-void';
-  const isC64 = themeId === 'c64-edition';
-  const isCyberpunk = themeId === 'cyberpunk-crt';
+  const presentation = getThemeListPresentation(themeId);
+  const isArcadeVoid = presentation.layout === 'arcade-dashboard';
+  const isC64 = presentation.layout === 'c64-workspace';
+  const isCyberpunk = presentation.layout === 'cyberpunk-terminal';
 
   useEffect(() => {
     if (focusedIndex >= 0 && tbodyRef.current) {
@@ -68,7 +70,12 @@ export function ListView({
       : 'bg-[var(--theme-surface)] text-[var(--theme-text-muted)] border-b border-[var(--theme-outline-variant)]';
 
   return (
-    <section className="space-y-4" data-testid="theme-list-view" data-theme-presenter={themeId}>
+    <section
+      className="space-y-4"
+      data-testid="theme-list-view"
+      data-theme-presenter={presentation.id}
+      data-list-presentation={presentation.layout}
+    >
       {isArcadeVoid && (
         <div className="theme-panel grid gap-4 rounded-[var(--theme-radius-xl)] p-5 md:grid-cols-[1fr_auto]">
           <div>
