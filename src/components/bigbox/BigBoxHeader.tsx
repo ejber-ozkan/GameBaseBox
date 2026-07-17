@@ -14,6 +14,7 @@ interface BigBoxHeaderProps {
   filters: GameFilters;
   genres: string[];
   hasOverflowSubGenres: boolean;
+  isFiltered: boolean;
   layout: FullscreenLayoutMetrics;
   onExit: () => void;
   onFiltersChange: (filters: GameFilters) => void;
@@ -25,6 +26,7 @@ interface BigBoxHeaderProps {
   onSetHeaderFocus: (row: number, index: number) => void;
   onShowSettings: () => void;
   searchInput: string;
+  totalGameCount: number;
   visibleSubGenres: string[];
 }
 
@@ -36,6 +38,7 @@ export function BigBoxHeader({
   filters,
   genres,
   hasOverflowSubGenres,
+  isFiltered,
   layout,
   onExit,
   onFiltersChange,
@@ -47,6 +50,7 @@ export function BigBoxHeader({
   onSetHeaderFocus,
   onShowSettings,
   searchInput,
+  totalGameCount,
   visibleSubGenres,
 }: BigBoxHeaderProps) {
   const hasSubGenres = Boolean(filters.genre && (visibleSubGenres.length > 0 || hasOverflowSubGenres));
@@ -102,29 +106,34 @@ export function BigBoxHeader({
           <div className="mx-1 h-8 w-px bg-[var(--theme-outline-variant)]"></div>
 
           {showPlatformSwitcher ? (
-            <label
-              className={`flex items-center gap-3 rounded-xl border px-4 py-2.5 text-xs font-black uppercase tracking-[0.16em] transition-all ${
-                platformFocused
-                  ? headerPillFocusClass
-                  : 'border-[var(--theme-primary)] bg-[var(--theme-primary-container)] text-[var(--theme-primary)]'
-              }`}
-              onMouseEnter={() => onSetHeaderFocus(0, 1)}
-            >
-              <span className="text-[var(--theme-primary)]">Platform</span>
-              <select
-                aria-label="Active platform"
-                className="min-w-36 cursor-pointer rounded-[var(--theme-radius-sm)] border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-2 py-1 text-sm font-black normal-case tracking-normal text-[var(--theme-text)] outline-none transition-colors hover:border-[var(--theme-primary)] focus:border-[var(--theme-primary)]"
-                value={activePlatformId}
-                onChange={(event) => onPlatformSelect(event.target.value as PlatformId)}
-                onFocus={() => onSetHeaderFocus(0, 1)}
+            <div className="flex items-center gap-2">
+              <label
+                className={`flex items-center gap-3 rounded-xl border px-4 py-2.5 text-xs font-black uppercase tracking-[0.16em] transition-all ${
+                  platformFocused
+                    ? headerPillFocusClass
+                    : 'border-[var(--theme-primary)] bg-[var(--theme-primary-container)] text-[var(--theme-primary)]'
+                }`}
+                onMouseEnter={() => onSetHeaderFocus(0, 1)}
               >
-                {SUPPORTED_PLATFORMS.map((platform) => (
-                  <option key={platform.id} value={platform.id} className="bg-[var(--theme-background)] text-[var(--theme-text)]">
-                    {platform.displayName}
-                  </option>
-                ))}
-              </select>
-            </label>
+                <span className="text-[var(--theme-primary)]">Platform</span>
+                <select
+                  aria-label="Active platform"
+                  className="min-w-36 cursor-pointer rounded-[var(--theme-radius-sm)] border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-2 py-1 text-sm font-black normal-case tracking-normal text-[var(--theme-text)] outline-none transition-colors hover:border-[var(--theme-primary)] focus:border-[var(--theme-primary)]"
+                  value={activePlatformId}
+                  onChange={(event) => onPlatformSelect(event.target.value as PlatformId)}
+                  onFocus={() => onSetHeaderFocus(0, 1)}
+                >
+                  {SUPPORTED_PLATFORMS.map((platform) => (
+                    <option key={platform.id} value={platform.id} className="bg-[var(--theme-background)] text-[var(--theme-text)]">
+                      {platform.displayName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="shrink-0 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">
+                {totalGameCount} {isFiltered ? 'GAMES FOUND' : 'GAMES AVAILABLE'}
+              </div>
+            </div>
           ) : null}
 
           <div className={`relative group max-w-full transition-all duration-300 ${searchFocused ? 'scale-105 z-10' : ''}`}>

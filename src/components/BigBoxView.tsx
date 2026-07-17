@@ -379,6 +379,7 @@ export function BigBoxView({
           filters={filters}
           genres={genres}
           hasOverflowSubGenres={hasOverflow}
+          isFiltered={isShowingFilteredCount}
           layout={layout}
           onExit={openExitPrompt}
           onFiltersChange={handleFiltersChange}
@@ -393,6 +394,7 @@ export function BigBoxView({
           onSetHeaderFocus={focusHeader}
           onShowSettings={onShowSettings}
           searchInput={searchInput}
+          totalGameCount={totalGameCount}
           visibleSubGenres={visibleSubGenres}
         />
       </header>
@@ -493,7 +495,7 @@ export function BigBoxView({
                     onFocusChange={(fIdx) => focusRailItem(idx, rail.id, fIdx)}
                     isFavorite={isFavorite}
                     layout={layout}
-                    tileScale={rail.scale}
+                    tileScale={listPresentation.id === 'arcade-void' ? rail.scale : undefined}
                     loop={rail.games.length > 6}
                   />
                 </div>
@@ -504,7 +506,7 @@ export function BigBoxView({
       </div>
 
       {/* Bottom Status Bar */}
-      <BigBoxFooter isFiltered={isShowingFilteredCount} totalGameCount={totalGameCount} />
+      <BigBoxFooter />
     </div>
   );
 }

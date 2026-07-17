@@ -162,8 +162,8 @@ export function useBigBoxLibraryData({
 
     const nextRails: BigBoxRailCategory[] = [];
     if (recentGames.length > 0) nextRails.push({ id: 'recent', title: 'Recent Games', games: recentGames, type: 'recent', scale: 'large' });
-    if (favoriteGames.length > 0) nextRails.push({ id: 'favorites', title: 'Your Favorites', games: favoriteGames, type: 'favorites' });
-    if (classicGames.length > 0) nextRails.push({ id: 'classics', title: '🏆 Legendary Classics 🏆', games: classicGames, type: 'classics' });
+    if (favoriteGames.length > 0) nextRails.push({ id: 'favorites', title: 'Your Favorites', games: favoriteGames, type: 'favorites', scale: 'large' });
+    if (classicGames.length > 0) nextRails.push({ id: 'classics', title: '🏆 Legendary Classics 🏆', games: classicGames, type: 'classics', scale: 'large' });
     nextRails.push(...alphabetRails);
     return nextRails;
   }, [alphabetRails, classicGames, favoriteGames, recentGames, searchInput]);

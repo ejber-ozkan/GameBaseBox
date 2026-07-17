@@ -6,13 +6,30 @@
  * when isolated in its own worker — so we test the deterministic logic here
  * as plain TypeScript instead.
  */
-import { describe, expect, it } from 'vitest';
+import { createElement } from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import {
   getAlphabetRailCacheKey,
   sortRecentGames,
   BIGBOX_LETTERS,
+  useBigBoxLibraryData,
 } from './useBigBoxLibraryData';
 import { mockGames } from '../data/mockGames';
+
+const EMPTY_FILTERS = {};
+const FAVORITE_IDS = [mockGames[0].id.toString()];
+const RECENTLY_PLAYED_IDS = [mockGames[1].id.toString()];
+
+vi.mock('../lib/tauri-bridge', async () => {
+  const { mockGames } = await import('../data/mockGames');
+  return {
+    getDbGameCount: vi.fn().mockResolvedValue(3),
+    getDbGames: vi.fn().mockResolvedValue(mockGames.slice(0, 3)),
+    getGenres: vi.fn().mockResolvedValue([]),
+    getSubGenres: vi.fn().mockResolvedValue([]),
+  };
+});
 
 describe('getAlphabetRailCacheKey', () => {
   it('produces a stable JSON string from letter + filters + searchInput', () => {
@@ -106,5 +123,36 @@ describe('BIGBOX_LETTERS', () => {
 
   it('contains all uppercase A–Z letters plus #', () => {
     expect(BIGBOX_LETTERS).toHaveLength(27); // # + A-Z
+  });
+});
+
+describe('useBigBoxLibraryData primary rails', () => {
+  it('uses large screenshot cards for recent, favourite, and legendary rails only', async () => {
+    function Probe() {
+      const rails = useBigBoxLibraryData({
+        activeRailIndex: -1,
+        activePlatformId: 'c64',
+        favorites: FAVORITE_IDS,
+        filters: EMPTY_FILTERS,
+        recentlyPlayedIds: RECENTLY_PLAYED_IDS,
+        searchInput: '',
+      }).rails;
+      return createElement('output', {
+        'data-testid': 'rail-scales',
+      }, JSON.stringify(rails.map((rail) => ({ type: rail.type, scale: rail.scale }))));
+    }
+
+    render(createElement(Probe));
+
+    await waitFor(() => {
+      const rails = JSON.parse(screen.getByTestId('rail-scales').textContent ?? '[]') as { type: string; scale?: string }[];
+      const primaryRails = rails.filter((rail) => rail.type !== 'alphabet');
+      expect(primaryRails.map((rail) => rail.scale)).toEqual(['large', 'large', 'large']);
+    });
+
+    const rails = JSON.parse(screen.getByTestId('rail-scales').textContent ?? '[]') as { type: string; scale?: string }[];
+    expect(rails.filter((rail) => rail.type === 'alphabet').every(
+      (rail) => rail.scale === undefined,
+    )).toBe(true);
   });
 });
