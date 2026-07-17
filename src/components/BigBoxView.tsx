@@ -10,6 +10,7 @@ import { BigBoxHeader } from './bigbox/BigBoxHeader';
 import { BigBoxAlphabetRail } from './bigbox/BigBoxAlphabetRail';
 import { getThemeListPresentation } from '../themes/list-presentations';
 import { BigBoxFooter } from './bigbox/BigBoxFooter';
+import { C64EditionGrid } from './library/C64EditionGrid';
 import { BigBoxExitPrompt } from './bigbox/BigBoxExitPrompt';
 import { HorizontalRail } from './HorizontalRail';
 import { useBigBoxLibraryData } from '../hooks/useBigBoxLibraryData';
@@ -73,14 +74,18 @@ export function BigBoxView({
   const classicTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const layout = useFullscreenLayoutMetrics();
   const bigBoxBackground = resolveLibraryBackground(settings.activePlatformId, 'grid', 0);
+  const isC64Edition = getThemeListPresentation(
+    typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
+  ).id === 'c64-edition';
 
-  const { genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
+  const { flatGames, genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
     activeRailIndex,
     activePlatformId: settings.activePlatformId,
     favorites,
     filters,
     recentlyPlayedIds: settings.recentlyPlayedIds,
     searchInput,
+    loadFlatLibrary: isC64Edition,
   });
 
   const currentRail = activeRailIndex >= 0 ? rails[activeRailIndex] : null;
@@ -355,12 +360,16 @@ export function BigBoxView({
   const listPresentation = getThemeListPresentation(
     typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
   );
+  const c64RecentGames = rails.find((rail) => rail.id === 'recent')?.games ?? [];
 
   return (
     <div 
-      className="bigbox-list-surface fixed inset-0 flex flex-col overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] select-none"
+      className={`bigbox-list-surface fixed inset-0 flex flex-col overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] select-none ${
+        isC64Edition ? 'border-[24px] border-[var(--theme-secondary)]' : ''
+      }`}
       data-list-presentation={listPresentation.layout}
       data-bigbox-rail-style={listPresentation.bigBox.railStyle}
+      data-c64-presentation={isC64Edition ? 'monitor' : undefined}
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
@@ -457,6 +466,14 @@ export function BigBoxView({
                <div className="h-12 w-12 rounded-full border-4 border-[var(--theme-outline-variant)] border-t-[var(--theme-primary)] animate-spin"></div>
                <div className="font-bold uppercase tracking-widest text-[var(--theme-primary)] animate-pulse">Scanning Library...</div>
             </div>
+          ) : isC64Edition ? (
+            <C64EditionGrid
+              games={flatGames}
+              isFavorite={isFavorite}
+              onSelectGame={handleSelectGame}
+              recentGames={c64RecentGames}
+              toggleFavorite={toggleFavorite}
+            />
           ) : (
             rails.map((rail, idx) => {
               const isActive = idx === activeRailIndex;

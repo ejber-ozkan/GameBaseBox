@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BigBoxView } from './BigBoxView';
 import { mockGames } from '../data/mockGames';
 
@@ -11,6 +11,7 @@ vi.mock('../hooks/useInputMode', () => ({
 }));
 vi.mock('../hooks/useBigBoxLibraryData', () => ({
   useBigBoxLibraryData: () => ({
+    flatGames: [mockGames[0]],
     genres: [],
     loading: false,
     rails: [
@@ -51,6 +52,9 @@ vi.mock('./HorizontalRail', () => ({
 }));
 vi.mock('./ControllerSearchKeyboard', () => ({ ControllerSearchKeyboard: () => null }));
 vi.mock('./SubGenrePickerModal', () => ({ SubGenrePickerModal: () => null }));
+vi.mock('./library/C64EditionGrid', () => ({
+  C64EditionGrid: ({ games }: { games: typeof mockGames }) => <div data-testid="c64-edition-grid">{games[0]?.name}</div>,
+}));
 vi.mock('../lib/ui-sound-effects', () => ({
   playRotatingUiSoundEffect: vi.fn(),
   playUiSoundEffect: vi.fn(),
@@ -58,6 +62,34 @@ vi.mock('../lib/ui-sound-effects', () => ({
 }));
 
 describe('BigBoxView', () => {
+  afterEach(() => {
+    delete document.documentElement.dataset.theme;
+  });
+
+  it('uses the same C64 Edition monitor-grid presentation as the windowed library', () => {
+    document.documentElement.dataset.theme = 'c64-edition';
+
+    render(
+      <BigBoxView
+        filters={{}}
+        onFiltersChange={vi.fn()}
+        onPlatformSelect={vi.fn()}
+        onRequestExit={vi.fn()}
+        onSearchChange={vi.fn()}
+        onSelectGame={vi.fn()}
+        onSessionChange={vi.fn()}
+        onShowSettings={vi.fn()}
+        searchInput=""
+        settings={{
+          activePlatformId: 'c64', confirmFullscreenExit: true, lastBigBoxGameId: null, lastBigBoxRailId: null, recentlyPlayedIds: [],
+        } as never}
+      />,
+    );
+
+    expect(screen.queryByTestId('c64-edition-grid')).toBeTruthy();
+    expect(screen.getByTestId('c64-edition-grid').textContent).toBe(mockGames[0].name);
+  });
+
   it('keeps letter rails after classics without a pulsing decorative overlay', () => {
     const { container } = render(
       <BigBoxView

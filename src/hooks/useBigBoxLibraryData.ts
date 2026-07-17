@@ -23,6 +23,7 @@ interface UseBigBoxLibraryDataProps {
   filters: GameFilters;
   recentlyPlayedIds: Settings['recentlyPlayedIds'];
   searchInput: string;
+  loadFlatLibrary?: boolean;
 }
 
 const LETTER_RAIL_LOAD_DELAY_MS = 450;
@@ -64,12 +65,14 @@ export function useBigBoxLibraryData({
   filters,
   recentlyPlayedIds,
   searchInput,
+  loadFlatLibrary = false,
 }: UseBigBoxLibraryDataProps) {
   const [genres, setGenres] = useState<string[]>([]);
   const [subGenres, setSubGenres] = useState<string[]>([]);
   const [recentGames, setRecentGames] = useState<Game[]>([]);
   const [favoriteGames, setFavoriteGames] = useState<Game[]>([]);
   const [classicGames, setClassicGames] = useState<Game[]>([]);
+  const [flatGames, setFlatGames] = useState<Game[]>([]);
   const [alphabetRails, setAlphabetRails] = useState<BigBoxRailCategory[]>([]);
   const [totalGameCount, setTotalGameCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -103,6 +106,9 @@ export function useBigBoxLibraryData({
         const query = searchInput || undefined;
         const libraryFilters = { ...filters, searchQuery: query };
         const gameCountPromise = getDbGameCount(libraryFilters, activePlatformId);
+        const flatGamesPromise = loadFlatLibrary
+          ? getDbGames(1000, 0, libraryFilters, activePlatformId)
+          : Promise.resolve([] as Game[]);
 
         if (recentlyPlayedIds.length > 0) {
           const recent = await getDbGames(100, 0, { ...libraryFilters, favoriteIds: recentlyPlayedIds }, activePlatformId);
@@ -145,6 +151,7 @@ export function useBigBoxLibraryData({
         }
 
         setTotalGameCount(await gameCountPromise);
+        setFlatGames(await flatGamesPromise);
       } catch (error) {
         console.error('BigBox init error:', error);
       } finally {
@@ -153,7 +160,7 @@ export function useBigBoxLibraryData({
     }
 
     void initData();
-  }, [activePlatformId, favorites, filters, recentlyPlayedIds, searchInput]);
+  }, [activePlatformId, favorites, filters, loadFlatLibrary, recentlyPlayedIds, searchInput]);
 
   const rails = useMemo<BigBoxRailCategory[]>(() => {
     if (searchInput) {
@@ -244,6 +251,7 @@ export function useBigBoxLibraryData({
 
   return {
     genres,
+    flatGames,
     loading,
     rails,
     subGenres,

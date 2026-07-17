@@ -26,6 +26,7 @@ import { useLibraryBrowserState } from '@/hooks/useLibraryBrowserState';
 import { useLibraryShellInput } from '@/hooks/useLibraryShellInput';
 import { LibraryHeader } from '@/components/library/LibraryHeader';
 import { WindowGameShelf } from '@/components/library/WindowGameShelf';
+import { C64EditionGrid } from '@/components/library/C64EditionGrid';
 import { WindowGameListSection } from '@/components/library/WindowGameListSection';
 import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
@@ -56,7 +57,7 @@ function getRequiredPlatformFolderKeys(platformId: keyof typeof PLATFORM_PROFILE
 function LibraryApp() {
   const { settings, updateSettings, setActivePlatform } = useSettings();
   const { theme } = useTheme();
-  const { favorites, isFavorite } = useFavorites();
+  const { favorites, isFavorite, toggleFavorite } = useFavorites();
   const { isMouseMode, onGamepadInput, showMouse } = useInputMode();
   const {
     closeDetail,
@@ -363,6 +364,18 @@ function LibraryApp() {
           />
           
           {viewMode === 'grid' ? (
+            theme.id === 'c64-edition' ? (
+              <C64EditionGrid
+                focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
+                games={games}
+                isFavorite={isFavorite}
+                onEndReached={loadNextPage}
+                onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
+                onSelectGame={handleGameSelect}
+                recentGames={recentGames}
+                toggleFavorite={toggleFavorite}
+              />
+            ) : (
             <>
               {mounted && (
                 <WindowGameShelf
@@ -411,6 +424,7 @@ function LibraryApp() {
                 onEndReached={loadNextPage}
               />
             </>
+            )
           ) : (
             <>
               {mounted && (
