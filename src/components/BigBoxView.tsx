@@ -362,12 +362,6 @@ export function BigBoxView({
         className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat saturate-[0.9] contrast-[1.05]"
         style={{ backgroundImage: `url('${bigBoxBackground}')`, opacity: LIBRARY_BACKGROUND_OPACITY }}
       />
-      {/* Cinematic Background Blur */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-         <div className="absolute left-[-10%] top-[-10%] h-[120%] w-[120%] bg-[var(--theme-primary)] opacity-10 blur-[100px] animate-pulse"></div>
-         <div className="absolute bottom-[-20%] right-[-10%] h-[80%] w-[80%] bg-[var(--theme-secondary)] opacity-10 blur-[100px]"></div>
-      </div>
-
       {/* Top Bar - Fixed */}
       <header ref={headerRef}>
         <BigBoxHeader
