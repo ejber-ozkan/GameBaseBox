@@ -75,4 +75,23 @@ describe('WindowGameShelf', () => {
     expect(overlay.getAttribute('style')).toContain('backdrop-filter: blur(8px)');
     expect(screen.getByTestId('window-shelf-game-title').getAttribute('style')).toContain('font-size: 16px');
   });
+
+  it.each(['recent', 'favorites', 'legendary'] as const)(
+    'uses the larger Arcade Void screenshot-card width for the %s shelf',
+    (section) => {
+      render(
+        <WindowGameShelf
+          games={[mockGames[0]]}
+          isFavorite={() => false}
+          isArcadeVoid
+          isMouseMode={false}
+          onSelectGame={vi.fn()}
+          section={section}
+          title="Section title"
+        />,
+      );
+
+      expect(screen.getByRole('article').classList).toContain('aspect-video');
+    },
+  );
 });

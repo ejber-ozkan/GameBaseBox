@@ -349,6 +349,7 @@ function LibraryApp() {
           onViewModeChange={setViewMode}
           searchInput={searchInput}
           activePlatformId={settings.activePlatformId}
+          totalGameCount={listGameCount}
           viewMode={viewMode}
         />
 
@@ -367,6 +368,7 @@ function LibraryApp() {
                 <WindowGameShelf
                   games={recentGames}
                   isFavorite={isFavorite}
+                  isArcadeVoid={theme.id === 'arcade-void'}
                   isMouseMode={isMouseMode}
                   onFocusChange={() => {}}
                   onSelectGame={handleGameSelect}
@@ -380,6 +382,7 @@ function LibraryApp() {
               <WindowGameShelf
                 games={favoriteGames}
                 isFavorite={isFavorite}
+                isArcadeVoid={theme.id === 'arcade-void'}
                 isMouseMode={isMouseMode}
                 onFocusChange={() => {}}
                 onSelectGame={handleGameSelect}
@@ -391,6 +394,7 @@ function LibraryApp() {
               <WindowGameShelf
                 games={classicGames}
                 isFavorite={isFavorite}
+                isArcadeVoid={theme.id === 'arcade-void'}
                 isMouseMode={isMouseMode}
                 onFocusChange={() => {}}
                 onSelectGame={handleGameSelect}

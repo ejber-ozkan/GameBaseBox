@@ -13,6 +13,7 @@ interface WindowGameShelfProps {
   onFocusChange?: (index: number) => void;
   onSelectGame: (game: Game) => void;
   section: WindowLibrarySection;
+  isArcadeVoid?: boolean;
   title: string;
   subtitle?: string;
   shelfRef?: RefObject<HTMLDivElement | null>;
@@ -25,6 +26,7 @@ export function WindowGameShelf({
   onFocusChange,
   onSelectGame,
   section,
+  isArcadeVoid = false,
   title,
   subtitle,
   shelfRef,
@@ -176,7 +178,7 @@ export function WindowGameShelf({
 
         <div
           ref={setShelfNode}
-          className="no-scrollbar flex snap-x gap-5 overflow-x-auto pb-4 scroll-smooth"
+          className={`no-scrollbar flex snap-x overflow-x-auto pb-4 scroll-smooth ${isArcadeVoid ? 'gap-6' : 'gap-5'}`}
         >
           {games.map((game, index) => (
             <article
@@ -187,7 +189,10 @@ export function WindowGameShelf({
                   onFocusChange?.(index);
                 }
               }}
-              className="group relative aspect-[1.9] w-[320px] shrink-0 snap-start cursor-pointer overflow-hidden rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-[var(--theme-outline)]"
+              className={`group relative shrink-0 snap-start cursor-pointer overflow-hidden rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-[var(--theme-outline)] ${
+                isArcadeVoid ? 'aspect-video' : 'aspect-[1.9] w-[320px]'
+              }`}
+              style={isArcadeVoid ? { width: 'clamp(340px, 28vw, 440px)' } : undefined}
             >
               {isFavorite(game.id.toString()) && (
                 <div className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--theme-tertiary)] bg-[var(--theme-background)] text-lg text-[var(--theme-tertiary)] shadow-lg backdrop-blur-md">
@@ -203,7 +208,7 @@ export function WindowGameShelf({
               />
 
               <div
-                className="absolute inset-x-0 bottom-0 flex flex-col gap-0.5 border-t border-[var(--theme-outline-variant)] p-3"
+                className={`absolute inset-x-0 bottom-0 flex flex-col gap-0.5 border-t border-[var(--theme-outline-variant)] ${isArcadeVoid ? 'p-5' : 'p-3'}`}
                 data-testid="window-shelf-title-overlay"
                 data-visual-treatment="blurred-compact"
                 style={{
@@ -217,7 +222,7 @@ export function WindowGameShelf({
                 <div
                   className="truncate font-black text-[var(--theme-text)]"
                   data-testid="window-shelf-game-title"
-                  style={{ fontSize: '16px', lineHeight: 1.2 }}
+                  style={{ fontSize: isArcadeVoid ? '20px' : '16px', lineHeight: 1.2 }}
                 >
                   {game.name}
                 </div>

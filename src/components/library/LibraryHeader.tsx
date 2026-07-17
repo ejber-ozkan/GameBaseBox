@@ -20,6 +20,7 @@ interface LibraryHeaderProps {
   onViewModeChange: (viewMode: LibraryViewMode) => void;
   searchInput: string;
   activePlatformId: PlatformId;
+  totalGameCount?: number;
   viewMode: LibraryViewMode;
 }
 
@@ -35,6 +36,7 @@ export function LibraryHeader({
   onViewModeChange,
   searchInput,
   activePlatformId,
+  totalGameCount,
   viewMode,
 }: LibraryHeaderProps) {
   const [isSubGenrePickerOpen, setIsSubGenrePickerOpen] = useState(false);
@@ -57,7 +59,14 @@ export function LibraryHeader({
             </div>
           </div>
           <div className="mx-2 h-8 w-px bg-[var(--theme-outline-variant)]" />
-          <PlatformSwitcher activePlatformId={activePlatformId} onPlatformSelect={onPlatformSelect} />
+          <div className="flex items-center gap-3">
+            <PlatformSwitcher activePlatformId={activePlatformId} onPlatformSelect={onPlatformSelect} />
+            {totalGameCount !== undefined ? (
+              <div className="whitespace-nowrap rounded-lg border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-[var(--theme-text-muted)]">
+                {new Intl.NumberFormat('en-GB').format(totalGameCount)} Games
+              </div>
+            ) : null}
+          </div>
         </div>
 
         <div className="flex items-center gap-4">

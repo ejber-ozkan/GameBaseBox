@@ -6939,7 +6939,7 @@
       "label": "Home()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L456",
+      "source_location": "L460",
       "_origin": "ast",
       "id": "app_page_home",
       "community": 2,
@@ -8539,7 +8539,7 @@
       "label": "LibraryHeader()",
       "file_type": "code",
       "source_file": "src/components/library/LibraryHeader.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "library_libraryheader_libraryheader",
       "community": 66,
@@ -8619,7 +8619,7 @@
       "label": "WindowGameShelf()",
       "file_type": "code",
       "source_file": "src/components/library/WindowGameShelf.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "library_windowgameshelf_windowgameshelf",
       "community": 104,
@@ -54411,5 +54411,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "9c686974c515b2cae70fe4875578ae6ba958af8d"
+  "built_at_commit": "757d5feb6592607895a195959921eac06f279841"
 }

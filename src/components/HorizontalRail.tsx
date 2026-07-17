@@ -144,11 +144,14 @@ export function HorizontalRail({
   const computedTileWidth = availableRailWidth && targetVisibleCards
     ? Math.floor((availableRailWidth - railGap * Math.max(targetVisibleCards - 1, 0)) / targetVisibleCards)
     : null;
-  const tileWidth = computedTileWidth
+  const arcadeVoidCinematicWidth = layout && isLarge
+    ? Math.min(440, Math.max(340, Math.round(layout.viewportWidth * 0.28)))
+    : null;
+  const tileWidth = arcadeVoidCinematicWidth ?? (computedTileWidth
     ? Math.max(computedTileWidth, isLarge ? 280 : 210)
     : isLarge
       ? (layout?.horizontalLargeTileWidth ?? 560)
-      : (layout?.horizontalTileWidth ?? 380);
+      : (layout?.horizontalTileWidth ?? 380));
   const focusScale = layout?.tileFocusScale ?? 1.18;
   const railTitleSize = layout?.railTitleSize ?? 32;
   const metaPadding = layout?.tileMetaPadding ?? 24;
@@ -210,7 +213,7 @@ export function HorizontalRail({
                   : 'hover:-translate-y-1 hover:border-[var(--theme-outline)]'
               }`}
               style={{
-                aspectRatio: isLarge ? '1.9' : '1.78',
+                aspectRatio: isLarge ? '16 / 9' : '1.78',
                 transform: isFocused ? `scale(${hasArtwork ? focusScale : 1.08})` : undefined,
                 width: `${tileWidth}px`,
               }}
