@@ -5,12 +5,14 @@ import { flushSync } from 'react-dom';
 import {
   exitApp,
   getDatabaseBootstrapStatus,
+  getDbGameCount,
   getGenres,
   getSubGenres,
   openDirectoryDialog,
   openMdbFileDialog,
 } from '@/lib/tauri-bridge';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { GridView } from '@/components/GridView';
 import { ListView } from '@/components/ListView';
 import { DetailView } from '@/components/DetailView';
@@ -53,6 +55,7 @@ function getRequiredPlatformFolderKeys(platformId: keyof typeof PLATFORM_PROFILE
 
 function LibraryApp() {
   const { settings, updateSettings, setActivePlatform } = useSettings();
+  const { theme } = useTheme();
   const { favorites, isFavorite } = useFavorites();
   const { isMouseMode, onGamepadInput, showMouse } = useInputMode();
   const {
@@ -79,6 +82,7 @@ function LibraryApp() {
   const [genres, setGenres] = useState<string[]>([]);
   const [subGenres, setSubGenres] = useState<string[]>([]);
   const [showLaunchSplash, setShowLaunchSplash] = useState(true);
+  const [listGameCount, setListGameCount] = useState<number | undefined>(undefined);
   const [bigBoxSession, setBigBoxSession] = useState<BigBoxSessionState | null>(null);
   const [libraryBackgroundSeed] = useState(() => Math.floor(Math.random() * 1000));
   const previousFullscreenRef = useRef(settings.isFullscreen);
@@ -108,6 +112,16 @@ function LibraryApp() {
   useEffect(() => {
     void getGenres(settings.activePlatformId).then(setGenres);
   }, [settings.activePlatformId]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void getDbGameCount(filters, settings.activePlatformId).then((count) => {
+      if (!cancelled) setListGameCount(count);
+    });
+
+    return () => { cancelled = true; };
+  }, [filters, settings.activePlatformId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -426,6 +440,10 @@ function LibraryApp() {
                 onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
                 isFavorite={isFavorite}
                 onEndReached={loadNextPage}
+                activePlatformName={activePlatform.displayName}
+                totalGameCount={listGameCount}
+                favoriteCount={favorites.length}
+                themeId={theme.id}
               />
             </>
           )}
