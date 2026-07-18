@@ -361,6 +361,8 @@ export function BigBoxView({
     typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
   );
   const c64RecentGames = rails.find((rail) => rail.id === 'recent')?.games ?? [];
+  const c64FavoriteGames = rails.find((rail) => rail.id === 'favorites')?.games ?? [];
+  const c64ClassicGames = rails.find((rail) => rail.id === 'classics')?.games ?? [];
 
   return (
     <div 
@@ -468,6 +470,10 @@ export function BigBoxView({
             </div>
           ) : isC64Edition ? (
             <C64EditionGrid
+              alphabetLabel={filters.letter}
+              classicGames={c64ClassicGames}
+              favoriteGames={c64FavoriteGames}
+              focusedGameId={currentFocusedGame?.id.toString()}
               games={flatGames}
               isFavorite={isFavorite}
               onSelectGame={handleSelectGame}

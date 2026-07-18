@@ -53,6 +53,7 @@ export function BigBoxHeader({
   totalGameCount,
   visibleSubGenres,
 }: BigBoxHeaderProps) {
+  const isC64Edition = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'c64-edition';
   const hasSubGenres = Boolean(filters.genre && (visibleSubGenres.length > 0 || hasOverflowSubGenres));
   const showPlatformSwitcher = SUPPORTED_PLATFORMS.length > 1;
   const subGenreRowIndex = 2;
@@ -150,11 +151,11 @@ export function BigBoxHeader({
               }`}
               style={{
                 fontSize: `${Math.max(layout.headerTitleSize * 0.48, 16)}px`,
-                padding: `${Math.max(layout.headerPaddingY * 0.55, 10)}px ${Math.max(layout.headerPaddingX, 16)}px`,
+                padding: `${Math.max(layout.headerPaddingY * 0.55, 10)}px ${isC64Edition ? Math.max(layout.headerPaddingX + 24, 40) : Math.max(layout.headerPaddingX, 16)}px ${Math.max(layout.headerPaddingY * 0.55, 10)}px ${Math.max(layout.headerPaddingX, 16)}px`,
                 width: `${layout.searchWidth}px`,
               }}
             />
-            <div className={`absolute right-4 top-1/2 -translate-y-1/2 transition-opacity ${searchFocused ? 'opacity-70' : 'opacity-20 group-hover:opacity-40'}`}>🔍</div>
+            {isC64Edition ? <span aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-6 w-3 -translate-y-1/2 bg-[var(--theme-primary)] animate-[blink_1s_steps(1,end)_infinite]" data-testid="c64-search-cursor" /> : <div className={`absolute right-4 top-1/2 -translate-y-1/2 transition-opacity ${searchFocused ? 'opacity-70' : 'opacity-20 group-hover:opacity-40'}`}>🔍</div>}
           </div>
         </div>
 

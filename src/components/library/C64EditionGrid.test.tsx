@@ -16,25 +16,30 @@ describe('C64EditionGrid', () => {
   const renderGrid = () => render(
     <C64EditionGrid
       games={[mockGames[0], mockGames[1]]}
+      favoriteGames={[mockGames[1]]}
       isFavorite={() => false}
       onSelectGame={vi.fn()}
       recentGames={[mockGames[0]]}
+      classicGames={[mockGames[0]]}
       toggleFavorite={vi.fn()}
     />,
   );
 
-  it('uses the C64 monitor body with separate recent chips and ROM-set sections', () => {
+  it('uses the C64 monitor body with matching Recent, Favourites, and Classics rails', () => {
     renderGrid();
 
     expect(screen.getByTestId('c64-edition-grid').getAttribute('data-c64-presentation')).toBe('monitor');
-    expect(screen.getByRole('heading', { name: 'RECENT_CHIPS' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Recent' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Favourites' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Classics' })).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'LIBRARY_ROMSET' })).toBeTruthy();
+    expect(screen.getAllByTestId('c64-rail-card')).toHaveLength(3);
   });
 
   it('uses 16:9 screenshot cards for recent games and compact 3:4 ROM cards for the library', () => {
     renderGrid();
 
-    expect(screen.getByTestId('c64-recent-media').classList).toContain('aspect-video');
+    expect(screen.getAllByTestId('c64-recent-media')[0].classList).toContain('aspect-video');
     expect(screen.getAllByTestId('c64-rom-media')[0].classList).toContain('aspect-[3/4]');
   });
 
@@ -43,15 +48,37 @@ describe('C64EditionGrid', () => {
       <C64EditionGrid
         focusedIndex={1}
         games={[mockGames[0], mockGames[1]]}
+        favoriteGames={[]}
         isFavorite={() => false}
         onSelectGame={vi.fn()}
         recentGames={[mockGames[0]]}
+        classicGames={[]}
         toggleFavorite={vi.fn()}
       />,
     );
 
     expect(screen.getAllByTestId('c64-rom-card')[1].getAttribute('data-focused')).toBe('true');
     expect(screen.getAllByTestId('c64-rom-media')[1].classList).toContain('aspect-[3/4]');
+    expect(screen.getByTestId('c64-focused-title-strip').classList).toContain('bg-[#ffff66]');
+    expect(screen.getByTestId('c64-focused-title').classList).toContain('text-base');
+    expect(screen.getByTestId('c64-blinking-cursor').classList).toContain('animate-[blink_1s_steps(1,end)_infinite]');
+  });
+
+  it('uses the active alphabet shortcut as the compact-library title', () => {
+    render(
+      <C64EditionGrid
+        alphabetLabel="A"
+        games={[mockGames[0]]}
+        favoriteGames={[]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        recentGames={[]}
+        classicGames={[]}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'A' })).toBeTruthy();
   });
 
   it('requests the next page when its ROM sentinel becomes visible', () => {
@@ -69,10 +96,12 @@ describe('C64EditionGrid', () => {
     render(
       <C64EditionGrid
         games={[mockGames[0]]}
+        favoriteGames={[]}
         isFavorite={() => false}
         onEndReached={onEndReached}
         onSelectGame={vi.fn()}
         recentGames={[mockGames[0]]}
+        classicGames={[]}
         toggleFavorite={vi.fn()}
       />,
     );

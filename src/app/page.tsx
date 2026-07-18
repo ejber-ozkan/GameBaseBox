@@ -366,6 +366,9 @@ function LibraryApp() {
           {viewMode === 'grid' ? (
             theme.id === 'c64-edition' ? (
               <C64EditionGrid
+                alphabetLabel={filters.letter}
+                classicGames={classicGames}
+                favoriteGames={favoriteGames}
                 focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
                 games={games}
                 isFavorite={isFavorite}

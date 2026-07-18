@@ -40,6 +40,7 @@ export function LibraryHeader({
   viewMode,
 }: LibraryHeaderProps) {
   const [isSubGenrePickerOpen, setIsSubGenrePickerOpen] = useState(false);
+  const isC64Edition = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'c64-edition';
   const { hasOverflow, visibleSubGenres } = useMemo(
     () => getVisibleSubGenres(subGenres, filters.subGenre, 11),
     [filters.subGenre, subGenres],
@@ -76,8 +77,9 @@ export function LibraryHeader({
               placeholder="QUICK SEARCH"
               value={searchInput}
               onChange={(event) => onSearchChange(event.target.value)}
-              className="w-80 rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-6 py-3 text-sm font-bold text-[var(--theme-text)] shadow-inner transition-colors placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:bg-[var(--theme-surface)] focus:outline-none"
+              className={`w-80 rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-6 py-3 text-sm font-bold text-[var(--theme-text)] shadow-inner transition-colors placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:bg-[var(--theme-surface)] focus:outline-none ${isC64Edition ? 'pr-12 font-mono uppercase tracking-[0.14em]' : ''}`}
             />
+            {isC64Edition ? <span aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-5 w-2 -translate-y-1/2 bg-[var(--theme-primary)] animate-[blink_1s_steps(1,end)_infinite]" data-testid="c64-search-cursor" /> : null}
           </div>
 
           <div className="ml-4 flex rounded-[var(--theme-radius-lg)] border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] p-1.5">

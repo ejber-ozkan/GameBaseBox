@@ -11,11 +11,13 @@ vi.mock('../hooks/useInputMode', () => ({
 }));
 vi.mock('../hooks/useBigBoxLibraryData', () => ({
   useBigBoxLibraryData: () => ({
-    flatGames: [mockGames[0]],
+    flatGames: [mockGames[0], mockGames[1]],
     genres: [],
     loading: false,
     rails: [
-      { id: 'classics', title: 'Legendary Classics', games: [mockGames[0]], type: 'classics' },
+      { id: 'recent', title: 'Recent', games: [mockGames[0]], type: 'recent' },
+      { id: 'favorites', title: 'Favourites', games: [mockGames[1]], type: 'favorites' },
+      { id: 'classics', title: 'Classics', games: [mockGames[0]], type: 'classics' },
       { id: 'alpha-A', title: 'Letter A', games: [mockGames[1]], type: 'alphabet', letter: 'A' },
     ],
     subGenres: [],
@@ -53,7 +55,7 @@ vi.mock('./HorizontalRail', () => ({
 vi.mock('./ControllerSearchKeyboard', () => ({ ControllerSearchKeyboard: () => null }));
 vi.mock('./SubGenrePickerModal', () => ({ SubGenrePickerModal: () => null }));
 vi.mock('./library/C64EditionGrid', () => ({
-  C64EditionGrid: ({ games }: { games: typeof mockGames }) => <div data-testid="c64-edition-grid">{games[0]?.name}</div>,
+  C64EditionGrid: ({ recentGames, favoriteGames, classicGames }: { recentGames: typeof mockGames; favoriteGames: typeof mockGames; classicGames: typeof mockGames }) => <div data-testid="c64-edition-grid">{[...recentGames, ...favoriteGames, ...classicGames].map((game) => game.name).join('|')}</div>,
 }));
 vi.mock('../lib/ui-sound-effects', () => ({
   playRotatingUiSoundEffect: vi.fn(),
@@ -87,7 +89,7 @@ describe('BigBoxView', () => {
     );
 
     expect(screen.queryByTestId('c64-edition-grid')).toBeTruthy();
-    expect(screen.getByTestId('c64-edition-grid').textContent).toBe(mockGames[0].name);
+    expect(screen.getByTestId('c64-edition-grid').textContent).toBe(`${mockGames[0].name}|${mockGames[1].name}|${mockGames[0].name}`);
   });
 
   it('keeps letter rails after classics without a pulsing decorative overlay', () => {
@@ -113,7 +115,9 @@ describe('BigBoxView', () => {
     );
 
     expect(screen.getAllByRole('heading').map((heading) => heading.textContent)).toEqual([
-      'Legendary Classics',
+      'Recent',
+      'Favourites',
+      'Classics',
       'Letter A',
     ]);
     expect(container.querySelector('.animate-pulse')).toBeNull();
