@@ -136,7 +136,11 @@ export function UnifiedLibraryView({
   const isC64Edition = theme.id === 'c64-edition';
   const isCyberpunkCrt = theme.id === 'cyberpunk-crt';
   const isArcadeVoid = theme.id === 'arcade-void';
-  const cyberpunkGridColumns = layout.viewportWidth >= 1024 ? 6 : layout.viewportWidth >= 768 ? 4 : 2;
+  const cyberpunkGridColumns =
+    layout.viewportWidth >= 2560 ? 8 :
+    layout.viewportWidth >= 1440 ? 7 :
+    layout.viewportWidth >= 1024 ? 6 :
+    layout.viewportWidth >= 768 ? 4 : 2;
 
   // Background Resolver
   const [libraryBackgroundSeed] = useState(() => Math.floor(Math.random() * 1000));
@@ -626,7 +630,7 @@ export function UnifiedLibraryView({
                     focusedIndex={currentFocusedIndex}
                     focusedRailId={currentRail?.id}
                     games={bigboxFlatGames}
-                    gridColumns={layout.gridColumns}
+                    gridColumns={cyberpunkGridColumns}
                     isFavorite={isFavorite}
                     onFocusSectionItem={(railId, index) => focusRailItem(navigationRails.findIndex((r) => r.id === railId), railId, index)}
                     onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((r) => r.id === railId), railId, index)}
@@ -762,7 +766,7 @@ export function UnifiedLibraryView({
                 favoriteGames={favoriteGames}
                 focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
                 games={games}
-                gridColumns={layout.gridColumns}
+                gridColumns={undefined}
                 isFavorite={isFavorite}
                 onEndReached={loadNextPage}
                 onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}

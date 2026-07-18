@@ -1,7 +1,7 @@
 # Graph Report - GameBaseBox  (2026-07-18)
 
 ## Corpus Check
-- 163 files · ~127,137 words
+- 163 files · ~127,167 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b5b21506`
+- Built from commit: `a3ffdbd8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -234,8 +234,8 @@ Cohesion: 0.50
 Nodes (3): GBBox 0.4.1 Release Notes, Highlights, Validation
 
 ### Community 25 - "Community 25"
-Cohesion: 0.11
-Nodes (26): BigBoxAlphabetRail(), BigBoxAlphabetRailProps, BigBoxHeader(), BigBoxHeaderProps, BigBoxViewProps, PlatformSwitcher(), PlatformSwitcherProps, UnifiedLibraryViewProps (+18 more)
+Cohesion: 0.09
+Nodes (30): BigBoxAlphabetRail(), BigBoxAlphabetRailProps, BigBoxHeader(), BigBoxHeaderProps, BigBoxTileMedia(), BigBoxViewProps, getTargetVisibleCards(), HorizontalRail() (+22 more)
 
 ### Community 27 - "Community 27"
 Cohesion: 0.04
@@ -306,8 +306,8 @@ Cohesion: 0.50
 Nodes (3): GBBox 0.5.3 Release Notes, Highlights, Validation
 
 ### Community 56 - "Community 56"
-Cohesion: 0.12
-Nodes (25): BigBoxFooter(), BigBoxTileMedia(), BigBoxView(), getC64NavigationRails(), getTargetVisibleCards(), HorizontalRail(), HorizontalRailProps, formatCount() (+17 more)
+Cohesion: 0.14
+Nodes (21): BigBoxFooter(), BigBoxView(), getC64NavigationRails(), formatCount(), ListView(), ListViewProps, BigBoxSessionState, UnifiedLibraryView() (+13 more)
 
 ### Community 57 - "Community 57"
 Cohesion: 0.06
@@ -445,7 +445,7 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `open_db_connection()` connect `WASM Emulator Core & Localization` to `Database & Performance Paradigms`, `Component 15`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **Why does `useSettings()` connect `Community 2` to `Detail View Layout & Navigation`, `Community 38`, `Component 7`, `Community 104`, `Community 73`, `Community 81`, `Community 22`, `Community 23`, `Community 56`, `Community 57`, `Community 60`, `Community 31`?**
+- **Why does `useSettings()` connect `Community 2` to `Detail View Layout & Navigation`, `Community 38`, `Component 7`, `Community 104`, `Community 73`, `Community 57`, `Community 81`, `Community 22`, `Community 23`, `Community 56`, `Community 25`, `Community 60`, `Community 31`?**
   _High betweenness centrality (0.009) - this node is a cross-community bridge._
 - **What connects `eslintConfig`, `nextConfig`, `name` to the rest of the system?**
   _661 weakly-connected nodes found - possible documentation gaps or missing edges._

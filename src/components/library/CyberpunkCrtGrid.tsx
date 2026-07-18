@@ -69,8 +69,8 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
         <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{title}</h2>
         <div className="h-px flex-1 bg-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)]" />
         <div role="group" aria-label={`${title} rail controls`} className="flex shrink-0 gap-2">
-          <button aria-label={`Previous ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('previous')}>‹</button>
-          <button aria-label={`Next ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('next')}>›</button>
+          <button aria-label={`Previous ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('previous')}>&lt;</button>
+          <button aria-label={`Next ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('next')}>&gt;</button>
         </div>
       </div>
       {games.length > 0 ? (
@@ -165,7 +165,7 @@ export function CyberpunkCrtGrid({
             <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{section.label}</h2>
             <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)]">DATABASE</span>
           </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6" style={gridColumns ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` } : undefined}>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8" style={gridColumns ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` } : undefined}>
             {(activeAlphabetRailId === undefined || activeAlphabetRailId === section.id ? section.games : []).map((game, index) => {
               const focused = focusedRailId
                 ? focusedRailId === section.id && (focusedIndex === index || focusedGameId === game.id.toString())
