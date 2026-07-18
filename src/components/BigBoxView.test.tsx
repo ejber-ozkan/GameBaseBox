@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { BigBoxView } from './BigBoxView';
+import { BigBoxView, getC64NavigationRails } from './BigBoxView';
 import { mockGames } from '../data/mockGames';
 
 vi.mock('../hooks/useFavorites', () => ({
@@ -90,6 +90,18 @@ describe('BigBoxView', () => {
 
     expect(screen.queryByTestId('c64-edition-grid')).toBeTruthy();
     expect(screen.getByTestId('c64-edition-grid').textContent).toBe(`${mockGames[0].name}|${mockGames[1].name}|${mockGames[0].name}`);
+  });
+
+  it('replaces unloaded alphabet rails with the visible C64 ROM library for navigation', () => {
+    const navigationRails = getC64NavigationRails([
+      { id: 'recent', title: 'Recent', games: [mockGames[0]], type: 'recent' },
+      { id: 'favorites', title: 'Favourites', games: [mockGames[1]], type: 'favorites' },
+      { id: 'classics', title: 'Classics', games: [mockGames[0]], type: 'classics' },
+      { id: 'alpha-A', title: 'Letter A', games: [], type: 'alphabet', letter: 'A' },
+    ], [mockGames[0], mockGames[1]]);
+
+    expect(navigationRails.map((rail) => rail.id)).toEqual(['recent', 'favorites', 'classics', 'c64-library']);
+    expect(navigationRails[3]?.games).toEqual([mockGames[0], mockGames[1]]);
   });
 
   it('keeps letter rails after classics without a pulsing decorative overlay', () => {

@@ -36,21 +36,42 @@ function C64FocusTitle({ game }: { game: Game }) {
 }
 
 function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, title }: Pick<C64EditionGridProps, 'onSelectGame'> & { focusedGameId?: string | null; games: Game[]; onFocusGame: (gameId: string | null) => void; title: string }) {
+  const railScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollRail = (direction: 'previous' | 'next') => {
+    const rail = railScrollRef.current;
+    if (!rail) return;
+    rail.scrollBy({ behavior: 'smooth', left: (direction === 'next' ? 1 : -1) * rail.clientWidth * 0.8 });
+  };
+
+  useEffect(() => {
+    if (!focusedGameId) return;
+    const focusedCard = railScrollRef.current?.querySelector(`[data-game-id="${focusedGameId}"]`);
+    if (focusedCard instanceof HTMLElement) {
+      focusedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, [focusedGameId]);
+
   return (
     <section className="c64-game-rail">
       <div className="mb-4 flex items-center gap-3">
         <div className="h-5 w-5 bg-[var(--theme-primary)]" />
         <h2 className="font-mono text-xl font-black tracking-tight text-[var(--theme-primary)] sm:text-2xl">{title}</h2>
         <div className="h-px flex-1 bg-[var(--theme-outline-variant)]" />
+        <div className="flex shrink-0 gap-2">
+          <button aria-label={`Previous ${title} games`} className="flex h-9 w-9 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-xl font-black text-[var(--theme-primary)] transition-colors hover:bg-[#ffff66] hover:text-black" onClick={() => scrollRail('previous')}>‹</button>
+          <button aria-label={`Next ${title} games`} className="flex h-9 w-9 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-xl font-black text-[var(--theme-primary)] transition-colors hover:bg-[#ffff66] hover:text-black" onClick={() => scrollRail('next')}>›</button>
+        </div>
       </div>
       {games.length > 0 ? (
-        <div className="no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto pb-3" data-testid="c64-rail-scroll">
+        <div ref={railScrollRef} className="no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto pb-3" data-testid="c64-rail-scroll">
           {games.map((game) => {
             const focused = focusedGameId === game.id.toString();
             return (
                 <article
                   key={`${title}-${game.id}`}
                   className={`group flex-none snap-start cursor-pointer border-[6px] bg-black p-1 transition-colors ${focused ? 'border-[#ffff66] shadow-[0_0_0_3px_#ffff66]' : 'border-[var(--theme-outline-variant)] hover:border-[#ffff66]'}`}
+                  data-game-id={game.id.toString()}
                   data-testid={focused ? 'c64-focused-rail-card' : 'c64-rail-card'}
                   onClick={() => onSelectGame(game)}
                   onMouseEnter={() => onFocusGame(game.id.toString())}
@@ -114,7 +135,7 @@ export function C64EditionGrid({
       <C64Rail games={favoriteGames} focusedGameId={focusedRailId === 'favorites' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} title="Favourites" />
       <C64Rail games={classicGames} focusedGameId={focusedRailId === 'classics' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} title="Classics" />
 
-      <section className="c64-library-romset">
+      <section className="c64-library-romset" data-rail-id="c64-library">
         <div className="mb-4 flex items-center gap-3">
           <div className="h-5 w-5 bg-[var(--theme-secondary)]" />
           <h2 className="font-mono text-xl font-black tracking-tight text-[var(--theme-secondary)] sm:text-2xl">{alphabetLabel ?? 'LIBRARY_ROMSET'}</h2>
@@ -122,7 +143,7 @@ export function C64EditionGrid({
         </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
           {games.map((game, index) => {
-            const focused = focusedIndex === index || (focusedRailId?.startsWith('alpha-') && focusedGameId === game.id.toString());
+            const focused = focusedIndex === index || ((focusedRailId?.startsWith('alpha-') || focusedRailId === 'c64-library') && focusedGameId === game.id.toString());
             const favorite = isFavorite(game.id.toString());
             return (
               <article

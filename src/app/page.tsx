@@ -172,7 +172,7 @@ function LibraryApp() {
     setViewMode,
     settings: {
       isFullscreen: settings.isFullscreen,
-      recentlyPlayedIds: settings.recentlyPlayedIds,
+      recentlyPlayedIds: theme.id === 'c64-edition' ? [] : settings.recentlyPlayedIds,
       scrollNavigation: settings.scrollNavigation,
     },
     toggleFocusedFavorite,

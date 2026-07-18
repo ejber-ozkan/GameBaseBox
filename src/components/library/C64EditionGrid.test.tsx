@@ -45,6 +45,15 @@ describe('C64EditionGrid', () => {
     expect(screen.getAllByTestId('c64-rom-media')[0].classList).toContain('aspect-[3/4]');
   });
 
+  it('provides previous and next carousel controls for each C64 rail', () => {
+    renderGrid();
+
+    expect(screen.getByRole('button', { name: 'Previous Recent games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Next Recent games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Previous Favourites games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Next Classics games' })).toBeTruthy();
+  });
+
   it('uses the reference yellow title block and far-right cursor for a focused rail card', () => {
     render(
       <C64EditionGrid

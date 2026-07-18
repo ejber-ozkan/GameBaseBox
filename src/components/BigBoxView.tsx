@@ -13,7 +13,7 @@ import { BigBoxFooter } from './bigbox/BigBoxFooter';
 import { C64EditionGrid } from './library/C64EditionGrid';
 import { BigBoxExitPrompt } from './bigbox/BigBoxExitPrompt';
 import { HorizontalRail } from './HorizontalRail';
-import { useBigBoxLibraryData } from '../hooks/useBigBoxLibraryData';
+import { useBigBoxLibraryData, type BigBoxRailCategory } from '../hooks/useBigBoxLibraryData';
 import { useBigBoxNavigation } from '../hooks/useBigBoxNavigation';
 import { useBigBoxScrollSync } from '../hooks/useBigBoxScrollSync';
 import { ControllerSearchKeyboard } from './ControllerSearchKeyboard';
@@ -46,6 +46,13 @@ export interface BigBoxSessionState {
   focusedGameId: string | null;
   railFocusIndices: Record<string, number>;
   railId: string | null;
+}
+
+export function getC64NavigationRails(rails: BigBoxRailCategory[], flatGames: Game[]): BigBoxRailCategory[] {
+  return [
+    ...rails.filter((rail) => rail.type !== 'alphabet'),
+    { id: 'c64-library', title: 'Library', games: flatGames, type: 'alphabet' },
+  ];
 }
 
 export function BigBoxView({
@@ -88,7 +95,11 @@ export function BigBoxView({
     loadFlatLibrary: isC64Edition,
   });
 
-  const currentRail = activeRailIndex >= 0 ? rails[activeRailIndex] : null;
+  const navigationRails = useMemo(
+    () => isC64Edition ? getC64NavigationRails(rails, flatGames) : rails,
+    [flatGames, isC64Edition, rails],
+  );
+  const currentRail = activeRailIndex >= 0 ? navigationRails[activeRailIndex] : null;
   const currentFocusedIndex = currentRail ? (railFocusIndices[currentRail.id] ?? 0) : 0;
   const currentFocusedGame = currentRail?.games[currentFocusedIndex] ?? null;
   const isInteractionOverlayOpen = isControllerKeyboardOpen || isExitPromptOpen || isSubGenrePickerOpen;
@@ -149,7 +160,7 @@ export function BigBoxView({
   }, []);
 
   useEffect(() => {
-    if (hasRestoredPosition || rails.length === 0 || searchInput.trim()) {
+    if (hasRestoredPosition || navigationRails.length === 0 || searchInput.trim()) {
       return;
     }
 
@@ -162,7 +173,7 @@ export function BigBoxView({
         return;
       }
 
-      const targetRailIndex = rails.findIndex((rail) => rail.id === targetRailId);
+      const targetRailIndex = navigationRails.findIndex((rail) => rail.id === targetRailId);
       if (targetRailIndex === -1) {
         setHasRestoredPosition(true);
         return;
@@ -170,7 +181,7 @@ export function BigBoxView({
 
       setActiveRailIndex(targetRailIndex);
 
-      const targetRail = rails[targetRailIndex];
+      const targetRail = navigationRails[targetRailIndex];
       if (!targetGameId) {
         setHasRestoredPosition(true);
         return;
@@ -194,7 +205,7 @@ export function BigBoxView({
     return () => window.cancelAnimationFrame(frameId);
   }, [
     hasRestoredPosition,
-    rails,
+    navigationRails,
     searchInput,
     sessionState?.focusedGameId,
     sessionState?.railId,
@@ -339,7 +350,7 @@ export function BigBoxView({
     onShowSettings,
     platformSwitcherEnabled: showPlatformSwitcher,
     railFocusIndices,
-    rails,
+    rails: navigationRails,
     setActiveHeaderItemIndex,
     setActiveHeaderRow,
     setActiveRailIndex,
