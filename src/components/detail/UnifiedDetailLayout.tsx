@@ -324,6 +324,10 @@ export function UnifiedDetailLayout({
   const [selectedVersionId, setSelectedVersionId] = useState(() => readStoredVersionId(game.id));
   const extrasNavigationRef = useRef<ExtrasBigscreenNavigation | null>(null);
 
+  // A configuration flag to enable flush-height scaling (sits perfectly flush at the bottom of 720p/1080p/4K viewports)
+  // Set to true to make the page sit flush, or false to revert to fixed heights.
+  const FLUSH_HEIGHT_SCALING = true;
+
   // Arcade Void Tabbed Sidebar State & Refs
   const [activeSidebarTab, setActiveSidebarTab] = useState<'notes' | 'credits' | 'files'>('files');
   const [focusedFileIndex, setFocusedFileIndex] = useState(0);
@@ -561,9 +565,25 @@ export function UnifiedDetailLayout({
         <section className={panelCls + " shrink-0"}>
           <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
             <SectionHeading title="Version Details" />
-            <div className="grid gap-1.5">
-              <InfoRow label="Format" value={cleanMetadataValue(game.versionBy) ? (cleanMetadataValue(game.vPalNtsc) ?? 'PAL/NTSC') : 'G64'} layout={infoDensity} />
-              <InfoRow label="Protection" value={cleanMetadataValue(game.vTrainers) ? 'RapidLok' : 'None'} layout={infoDensity} />
+            <div className="grid gap-1.5 mt-2">
+              <InfoRow label="Version By" value={cleanMetadataValue(game.versionBy) ?? 'Unknown'} layout={infoDensity} />
+              <InfoRow label="PAL/NTSC" value={cleanMetadataValue(game.vPalNtsc) ?? formatVersionLabel(game)} layout={infoDensity} />
+              <InfoRow label="Size" value={cleanMetadataValue(game.vLength) ? `${game.vLength} Blocks` : 'Unknown'} layout={infoDensity} />
+              <InfoRow label="Trainers" value={cleanMetadataValue(game.vTrainers) ?? '0'} layout={infoDensity} />
+            </div>
+            <div
+              className="grid rounded-theme-md border border-theme-primary/20 bg-black/20 mt-3"
+              style={{
+                columnGap: 10,
+                gridTemplateColumns: `repeat(${sidebarStatusColumns}, minmax(0,1fr))`,
+                padding: Math.max(8, panelPadding - 2),
+                rowGap: 6,
+              }}
+            >
+              <StatusRow label="Loading Screen" value={game.vLoadingScreen} />
+              <StatusRow label="High Score Saver" value={game.vHighScoreSaver} />
+              <StatusRow label="Included Docs" value={game.vIncludedDocs} />
+              <StatusRow label="True Drive Emul" value={game.vTrueDriveEmu} />
             </div>
           </div>
         </section>
@@ -965,7 +985,7 @@ export function UnifiedDetailLayout({
                 className="grid h-full min-h-0"
                 style={{
                   gap: panelGap,
-                  gridTemplateRows: `${heroMinHeight}px minmax(0, ${mainColumnHeight}px)`,
+                  gridTemplateRows: `${heroMinHeight}px minmax(0, ${FLUSH_HEIGHT_SCALING ? '1fr' : `${mainColumnHeight}px`})`,
                 }}
               >
                 <DetailTitleBanner
@@ -1093,7 +1113,17 @@ export function UnifiedDetailLayout({
                 >
                   <div className="min-h-0">
                     {visibleTab === 'game' ? (
-                      <div className="grid h-full min-h-0" style={{ gap: panelGap, gridTemplateRows: `${mediaRowHeight}px ${lowerRowHeight}px` }}>
+                      <div
+                        className="grid h-full min-h-0"
+                        style={{
+                          gap: panelGap,
+                          gridTemplateRows: isArcade
+                            ? '1fr'
+                            : (FLUSH_HEIGHT_SCALING
+                                ? `${mediaRowHeight}fr ${lowerRowHeight}fr`
+                                : `${mediaRowHeight}px ${lowerRowHeight}px`),
+                        }}
+                      >
                         <section className={`${panelCls} overflow-hidden`}>
                           <div
                             className="grid h-full min-h-0"
@@ -1200,29 +1230,31 @@ export function UnifiedDetailLayout({
                           </div>
                         </section>
 
-                        <section className={panelCls}>
-                          <div className="flex h-full min-h-0 flex-col" style={{ gap: compactLowerPanelGap, padding: compactLowerPanelPadding }}>
-                            <SectionHeading title="Archive Notes" />
-                            <div className={insetPanelCls} style={{ padding: compactInnerCardPadding }}>
-                              <div
-                                className="text-theme-text/85 overflow-y-auto"
-                                style={{
-                                  ...clampTextLines(detailLayout?.notesLineClamp ?? 4),
-                                  fontSize: `${detailLayout?.notesFontSize ?? 13}px`,
-                                  lineHeight: 1.5,
-                                }}
-                              >
-                                {archiveNotes}
-                              </div>
-                              {isC64 && (
-                                <div className="mt-2 flex items-center gap-2">
-                                  <span className="w-1.5 h-3 bg-theme-primary theme-cursor-blink"></span>
-                                  <span className="text-theme-primary font-mono text-[10px]">SYSTEM_READY_FOR_BOOT</span>
+                        {!isArcade && (
+                          <section className={panelCls}>
+                            <div className="flex h-full min-h-0 flex-col" style={{ gap: compactLowerPanelGap, padding: compactLowerPanelPadding }}>
+                              <SectionHeading title="Archive Notes" />
+                              <div className={insetPanelCls} style={{ padding: compactInnerCardPadding }}>
+                                <div
+                                  className="text-theme-text/85 overflow-y-auto"
+                                  style={{
+                                    ...clampTextLines(detailLayout?.notesLineClamp ?? 4),
+                                    fontSize: `${detailLayout?.notesFontSize ?? 13}px`,
+                                    lineHeight: 1.5,
+                                  }}
+                                >
+                                  {archiveNotes}
                                 </div>
-                              )}
+                                {isC64 && (
+                                  <div className="mt-2 flex items-center gap-2">
+                                    <span className="w-1.5 h-3 bg-theme-primary theme-cursor-blink"></span>
+                                    <span className="text-theme-primary font-mono text-[10px]">SYSTEM_READY_FOR_BOOT</span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        </section>
+                          </section>
+                        )}
                       </div>
                     ) : (
                       <section
