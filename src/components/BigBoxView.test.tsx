@@ -117,7 +117,7 @@ describe('BigBoxView', () => {
 
     expect(screen.queryByTestId('cyberpunk-crt-grid')).toBeTruthy();
     expect(screen.getByTestId('cyberpunk-crt-grid').textContent).toBe(`${mockGames[0].name}|${mockGames[1].name}|${mockGames[0].name}`);
-    expect(screen.getByTestId('cyberpunk-crt-grid').getAttribute('data-grid-columns')).toBe('windowed');
+    expect(screen.getByTestId('cyberpunk-crt-grid').getAttribute('data-grid-columns')).toBe('6');
   });
 
   it('keeps C64 alphabet sections navigable with their visible ROMs', () => {

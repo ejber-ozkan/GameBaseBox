@@ -532,6 +532,7 @@ export function BigBoxView({
                 focusedIndex={currentFocusedIndex}
                 focusedRailId={currentRail?.id}
                 games={flatGames}
+                gridColumns={layout.gridColumns}
                 isFavorite={isFavorite}
                 onFocusSectionItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
                 onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
