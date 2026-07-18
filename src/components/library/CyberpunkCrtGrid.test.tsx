@@ -98,9 +98,27 @@ describe('CyberpunkCrtGrid', () => {
     );
 
     const libraryGrid = screen.getAllByTestId('cyberpunk-library-card')[0]?.parentElement;
-    expect(libraryGrid?.getAttribute('style')).toContain(
-      'grid-template-columns: repeat(auto-fill, minmax(max(160px, 11%), 1fr))',
+    expect(libraryGrid?.classList).toContain('grid-cols-2');
+    expect(libraryGrid?.classList).toContain('xl:grid-cols-8');
+  });
+
+  it('does not let a two-column navigation hint enlarge the library cards', () => {
+    render(
+      <CyberpunkCrtGrid
+        games={[mockGames[0], mockGames[1]]}
+        recentGames={[]}
+        favoriteGames={[]}
+        classicGames={[]}
+        gridColumns={2}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        toggleFavorite={vi.fn()}
+      />,
     );
+
+    const libraryGrid = screen.getAllByTestId('cyberpunk-library-card')[0]?.parentElement;
+    expect(libraryGrid?.classList).toContain('lg:grid-cols-6');
+    expect(libraryGrid?.getAttribute('style') ?? '').not.toContain('repeat(2');
   });
 
   it('keeps focus scrolling inside the active rail rather than using browser-wide scrollIntoView', () => {

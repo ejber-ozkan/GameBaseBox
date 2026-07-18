@@ -7979,7 +7979,7 @@
       "label": "getVisibleSubGenresHelper()",
       "file_type": "code",
       "source_file": "src/components/UnifiedLibraryView.tsx",
-      "source_location": "L865",
+      "source_location": "L864",
       "_origin": "ast",
       "id": "components_unifiedlibraryview_getvisiblesubgenreshelper",
       "community": 56,
@@ -56484,5 +56484,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "8e1ad7a3dca59ee9481dda6cfc7bb8b261ccb36f"
+  "built_at_commit": "106176cbf48b93ea90c6cf2ebbfd94df87d66918"
 }
