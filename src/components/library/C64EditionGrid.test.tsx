@@ -144,6 +144,7 @@ describe('C64EditionGrid', () => {
   it('renders C64 alphabet navigation as visible numbered and lettered library sections', () => {
     render(
       <C64EditionGrid
+        activeAlphabetRailId="alpha-A"
         alphabetSections={[
           { id: 'alpha-#', label: '#', games: [{ ...mockGames[0], name: '1942' }] },
           { id: 'alpha-A', label: 'A', games: [{ ...mockGames[1], name: 'Archon' }] },
@@ -180,6 +181,30 @@ describe('C64EditionGrid', () => {
     );
 
     expect((screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="alpha-A"] .grid') as HTMLElement).style.gridTemplateColumns).toBe('repeat(5, minmax(0, 1fr))');
+  });
+
+  it('renders ROM cards only for the focused alphabet section in BigBox', () => {
+    render(
+      <C64EditionGrid
+        activeAlphabetRailId="alpha-A"
+        alphabetSections={[
+          { id: 'alpha-A', label: 'A', games: [{ ...mockGames[0], name: 'Archon' }] },
+          { id: 'alpha-B', label: 'B', games: [{ ...mockGames[1], name: 'Boulder Dash' }] },
+        ]}
+        focusedIndex={0}
+        focusedRailId="alpha-A"
+        games={[]}
+        favoriteGames={[]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        recentGames={[]}
+        classicGames={[]}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    expect(screen.getAllByTestId('c64-rom-card')).toHaveLength(1);
+    expect(screen.getByTestId('c64-focused-title').textContent).toBe('Archon');
   });
 
   it('requests the next page when its ROM sentinel becomes visible', () => {

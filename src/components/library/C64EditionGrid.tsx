@@ -5,6 +5,7 @@ import { ImageSlider } from '../ImageSlider';
 import type { Game } from '../../types/game';
 
 interface C64EditionGridProps {
+  activeAlphabetRailId?: string | null;
   alphabetSections?: Array<{ id: string; label: string; games: Game[] }>;
   games: Game[];
   recentGames: Game[];
@@ -106,6 +107,7 @@ function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, railId, titl
 }
 
 export function C64EditionGrid({
+  activeAlphabetRailId,
   alphabetLabel,
   alphabetSections,
   classicGames,
@@ -156,7 +158,7 @@ export function C64EditionGrid({
             className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8"
             style={gridColumns ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` } : undefined}
           >
-            {section.games.map((game, index) => {
+            {(activeAlphabetRailId === undefined || activeAlphabetRailId === section.id ? section.games : []).map((game, index) => {
               const focused = focusedRailId
                 ? focusedRailId === section.id && (focusedIndex === index || focusedGameId === game.id.toString())
                 : focusedIndex === index;

@@ -493,6 +493,7 @@ export function BigBoxView({
             </div>
           ) : isC64Edition ? (
             <C64EditionGrid
+              activeAlphabetRailId={currentRail?.type === 'alphabet' ? currentRail.id : null}
               alphabetLabel={filters.letter}
               alphabetSections={navigationRails
                 .filter((rail) => rail.type === 'alphabet')

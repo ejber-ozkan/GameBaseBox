@@ -8549,7 +8549,7 @@
       "label": "getStudio()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L27",
+      "source_location": "L28",
       "_origin": "ast",
       "id": "library_c64editiongrid_getstudio",
       "community": 104,
@@ -8559,7 +8559,7 @@
       "label": "C64FocusTitle()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L33",
+      "source_location": "L34",
       "_origin": "ast",
       "id": "library_c64editiongrid_c64focustitle",
       "community": 104,
@@ -8569,7 +8569,7 @@
       "label": "C64Rail()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L42",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "library_c64editiongrid_c64rail",
       "community": 104,
@@ -8579,7 +8579,7 @@
       "label": "C64EditionGrid()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L108",
+      "source_location": "L109",
       "_origin": "ast",
       "id": "library_c64editiongrid_c64editiongrid",
       "community": 104,
@@ -44831,9 +44831,9 @@
       "source_file": "src/hooks/useBigBoxLibraryData.ts",
       "source_location": "L62",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_usebigboxlibrarydata",
-      "target": "hooks_usebigboxlibrarydata_getflatlibraryloadlimit",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxlibrarydata_getflatlibraryloadlimit"
     },
     {
       "relation": "contains",
@@ -54693,5 +54693,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "650565127da47eefd03efe29ab0cb6fc18a5b72b"
+  "built_at_commit": "196bd196fd1ec97d4844943ca27a5333062b6fa7"
 }
