@@ -4,6 +4,10 @@ setlocal enabledelayedexpansion
 :: Enable launch logging to console during development
 set VIC40_DEBUG_LAUNCH=1
 
+:: Expose the Tauri WebView DevTools protocol locally for runtime inspection.
+:: This is loopback-only and exists only while the development app is running.
+set "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-address=127.0.0.1 --remote-debugging-port=9222"
+
 :: Ensure Cargo/Rust binaries added by Rustup are available in this shell session
 set PATH=%USERPROFILE%\.cargo\bin;%PATH%
 
@@ -39,6 +43,6 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo [GBBox] Starting Tauri (connecting to http://localhost:3000)...
+echo [GBBox] Starting Tauri (connecting to http://localhost:3000; WebView debug: 127.0.0.1:9222)...
 npx tauri dev --no-dev-server-wait --config tauri.dev-override.json
 exit /b %errorlevel%
