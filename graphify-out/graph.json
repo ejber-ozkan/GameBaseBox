@@ -6909,7 +6909,7 @@
       "label": "SetupFolderKey",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L49",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "app_page_setupfolderkey",
       "community": 2,
@@ -6919,7 +6919,7 @@
       "label": "getRequiredPlatformFolderKeys()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L54",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "app_page_getrequiredplatformfolderkeys",
       "community": 2,
@@ -6929,7 +6929,7 @@
       "label": "LibraryApp()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L58",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "app_page_libraryapp",
       "community": 2,
@@ -6939,7 +6939,7 @@
       "label": "Home()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L492",
+      "source_location": "L307",
       "_origin": "ast",
       "id": "app_page_home",
       "community": 2,
@@ -7012,7 +7012,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_bigboxtilemedia",
-      "community": 66,
+      "community": 38,
       "norm_label": "bigboxtilemedia.tsx"
     },
     {
@@ -7022,7 +7022,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_bigboxtilemediaprops",
-      "community": 66,
+      "community": 38,
       "norm_label": "bigboxtilemediaprops"
     },
     {
@@ -7032,7 +7032,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_screenshot_cache",
-      "community": 66,
+      "community": 38,
       "norm_label": "screenshot_cache"
     },
     {
@@ -7042,7 +7042,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_cover_cache",
-      "community": 66,
+      "community": 38,
       "norm_label": "cover_cache"
     },
     {
@@ -7052,7 +7052,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_normalizepath",
-      "community": 66,
+      "community": 38,
       "norm_label": "normalizepath()"
     },
     {
@@ -7062,7 +7062,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_getscreenshoturls",
-      "community": 66,
+      "community": 38,
       "norm_label": "getscreenshoturls()"
     },
     {
@@ -7082,7 +7082,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_bigboxtilemedia",
-      "community": 66,
+      "community": 56,
       "norm_label": "bigboxtilemedia()"
     },
     {
@@ -7102,7 +7102,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "components_bigboxview_bigboxviewprops",
-      "community": 75,
+      "community": 25,
       "norm_label": "bigboxviewprops"
     },
     {
@@ -7112,7 +7112,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "components_bigboxview_bigboxsessionstate",
-      "community": 56,
+      "community": 2,
       "norm_label": "bigboxsessionstate"
     },
     {
@@ -7212,7 +7212,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_detailview",
-      "community": 2,
+      "community": 31,
       "norm_label": "detailview.tsx"
     },
     {
@@ -7222,7 +7222,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_detailview_detailviewprops",
-      "community": 104,
+      "community": 31,
       "norm_label": "detailviewprops"
     },
     {
@@ -7232,7 +7232,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "components_detailview_detaillayoutprops",
-      "community": 73,
+      "community": 31,
       "norm_label": "detaillayoutprops"
     },
     {
@@ -7242,7 +7242,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_detailview_detailfullscreenmedia",
-      "community": 2,
+      "community": 31,
       "norm_label": "detailfullscreenmedia"
     },
     {
@@ -7262,7 +7262,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "components_detailview_detail_config",
-      "community": 2,
+      "community": 31,
       "norm_label": "detail_config"
     },
     {
@@ -7272,7 +7272,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "components_detailview_detailcache",
-      "community": 2,
+      "community": 31,
       "norm_label": "detailcache"
     },
     {
@@ -7282,7 +7282,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "components_detailview_cleardetailcache",
-      "community": 2,
+      "community": 31,
       "norm_label": "cleardetailcache()"
     },
     {
@@ -7292,7 +7292,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "components_detailview_getcachedgamedetail",
-      "community": 80,
+      "community": 96,
       "norm_label": "getcachedgamedetail()"
     },
     {
@@ -7312,7 +7312,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_extrasdetail",
-      "community": 23,
+      "community": 60,
       "norm_label": "extrasdetail.tsx"
     },
     {
@@ -7322,7 +7322,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasdetailprops",
-      "community": 23,
+      "community": 60,
       "norm_label": "extrasdetailprops"
     },
     {
@@ -7332,7 +7332,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasbigscreennavigation",
-      "community": 23,
+      "community": 60,
       "norm_label": "extrasbigscreennavigation"
     },
     {
@@ -7382,7 +7382,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_horizontalrail",
-      "community": 66,
+      "community": 56,
       "norm_label": "horizontalrail.tsx"
     },
     {
@@ -7392,7 +7392,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_horizontalrail_horizontalrailprops",
-      "community": 66,
+      "community": 56,
       "norm_label": "horizontalrailprops"
     },
     {
@@ -7402,7 +7402,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "components_horizontalrail_gettargetvisiblecards",
-      "community": 66,
+      "community": 56,
       "norm_label": "gettargetvisiblecards()"
     },
     {
@@ -7412,7 +7412,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "components_horizontalrail_horizontalrail",
-      "community": 66,
+      "community": 56,
       "norm_label": "horizontalrail()"
     },
     {
@@ -7522,7 +7522,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_musicplayer",
-      "community": 81,
+      "community": 73,
       "norm_label": "musicplayer.tsx"
     },
     {
@@ -7532,7 +7532,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_musicplayer_musicplayerprops",
-      "community": 81,
+      "community": 73,
       "norm_label": "musicplayerprops"
     },
     {
@@ -7542,7 +7542,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_musicplayer_musicplayer",
-      "community": 81,
+      "community": 73,
       "norm_label": "musicplayer()"
     },
     {
@@ -7582,7 +7582,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_platformswitcher",
-      "community": 87,
+      "community": 25,
       "norm_label": "platformswitcher.tsx"
     },
     {
@@ -7592,7 +7592,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_platformswitcher_platformswitcherprops",
-      "community": 87,
+      "community": 25,
       "norm_label": "platformswitcherprops"
     },
     {
@@ -7602,7 +7602,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_platformswitcher_platformswitcher",
-      "community": 87,
+      "community": 25,
       "norm_label": "platformswitcher()"
     },
     {
@@ -7752,7 +7752,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "components_settingsmodal_settingsview",
-      "community": 2,
+      "community": 23,
       "norm_label": "settingsview()"
     },
     {
@@ -7852,7 +7852,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_subgenrepickermodal",
-      "community": 25,
+      "community": 23,
       "norm_label": "subgenrepickermodal.tsx"
     },
     {
@@ -7862,7 +7862,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodalprops",
-      "community": 25,
+      "community": 23,
       "norm_label": "subgenrepickermodalprops"
     },
     {
@@ -7872,7 +7872,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodal",
-      "community": 25,
+      "community": 23,
       "norm_label": "subgenrepickermodal()"
     },
     {
@@ -7936,6 +7936,56 @@
       "norm_label": "uisoundruntime()"
     },
     {
+      "label": "UnifiedLibraryView.tsx",
+      "file_type": "code",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "components_unifiedlibraryview",
+      "community": 56,
+      "norm_label": "unifiedlibraryview.tsx"
+    },
+    {
+      "label": "BigBoxSessionState",
+      "file_type": "code",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "components_unifiedlibraryview_bigboxsessionstate",
+      "community": 56,
+      "norm_label": "bigboxsessionstate"
+    },
+    {
+      "label": "UnifiedLibraryViewProps",
+      "file_type": "code",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "components_unifiedlibraryview_unifiedlibraryviewprops",
+      "community": 25,
+      "norm_label": "unifiedlibraryviewprops"
+    },
+    {
+      "label": "UnifiedLibraryView()",
+      "file_type": "code",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L89",
+      "_origin": "ast",
+      "id": "components_unifiedlibraryview_unifiedlibraryview",
+      "community": 56,
+      "norm_label": "unifiedlibraryview()"
+    },
+    {
+      "label": "getVisibleSubGenresHelper()",
+      "file_type": "code",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L863",
+      "_origin": "ast",
+      "id": "components_unifiedlibraryview_getvisiblesubgenreshelper",
+      "community": 56,
+      "norm_label": "getvisiblesubgenreshelper()"
+    },
+    {
       "label": "WasmPlayer.tsx",
       "file_type": "code",
       "source_file": "src/components/WasmPlayer.tsx",
@@ -7972,7 +8022,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bigbox_bigboxalphabetrail",
-      "community": 66,
+      "community": 25,
       "norm_label": "bigboxalphabetrail.tsx"
     },
     {
@@ -7982,7 +8032,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "bigbox_bigboxalphabetrail_bigboxalphabetrailprops",
-      "community": 17,
+      "community": 25,
       "norm_label": "bigboxalphabetrailprops"
     },
     {
@@ -7992,7 +8042,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "bigbox_bigboxalphabetrail_bigboxalphabetrail",
-      "community": 66,
+      "community": 25,
       "norm_label": "bigboxalphabetrail()"
     },
     {
@@ -8062,7 +8112,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bigbox_bigboxheader",
-      "community": 87,
+      "community": 25,
       "norm_label": "bigboxheader.tsx"
     },
     {
@@ -8072,7 +8122,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "bigbox_bigboxheader_bigboxheaderprops",
-      "community": 87,
+      "community": 25,
       "norm_label": "bigboxheaderprops"
     },
     {
@@ -8082,7 +8132,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "bigbox_bigboxheader_bigboxheader",
-      "community": 87,
+      "community": 25,
       "norm_label": "bigboxheader()"
     },
     {
@@ -8472,7 +8522,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "extras_resolvedextramedia_visualextrathumb",
-      "community": 23,
+      "community": 13,
       "norm_label": "visualextrathumb()"
     },
     {
@@ -9292,7 +9342,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "window_windoweddetaillayout_windoweddetaillayout",
-      "community": 38,
+      "community": 73,
       "norm_label": "windoweddetaillayout()"
     },
     {
@@ -9312,7 +9362,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "contexts_settingscontext_settings",
-      "community": 75,
+      "community": 25,
       "norm_label": "settings"
     },
     {
@@ -9322,7 +9372,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "contexts_settingscontext_settingscontexttype",
-      "community": 87,
+      "community": 22,
       "norm_label": "settingscontexttype"
     },
     {
@@ -9382,7 +9432,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "contexts_settingscontext_migrateplatformsettings",
-      "community": 22,
+      "community": 72,
       "norm_label": "migrateplatformsettings()"
     },
     {
@@ -9502,7 +9552,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "data_mockgames",
-      "community": 80,
+      "community": 96,
       "norm_label": "mockgames.ts"
     },
     {
@@ -9512,7 +9562,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "data_mockgames_mockgames",
-      "community": 80,
+      "community": 96,
       "norm_label": "mockgames"
     },
     {
@@ -9602,7 +9652,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata",
-      "community": 17,
+      "community": 25,
       "norm_label": "usebigboxlibrarydata.ts"
     },
     {
@@ -9622,7 +9672,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_bigboxrailcategory",
-      "community": 17,
+      "community": 25,
       "norm_label": "bigboxrailcategory"
     },
     {
@@ -9632,7 +9682,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_usebigboxlibrarydataprops",
-      "community": 75,
+      "community": 25,
       "norm_label": "usebigboxlibrarydataprops"
     },
     {
@@ -9642,7 +9692,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_letter_rail_cache",
-      "community": 17,
+      "community": 25,
       "norm_label": "letter_rail_cache"
     },
     {
@@ -9652,7 +9702,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_getalphabetrailcachekey",
-      "community": 17,
+      "community": 25,
       "norm_label": "getalphabetrailcachekey()"
     },
     {
@@ -9662,7 +9712,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_sortrecentgames",
-      "community": 17,
+      "community": 25,
       "norm_label": "sortrecentgames()"
     },
     {
@@ -9672,7 +9722,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_getflatlibraryloadlimit",
-      "community": 17,
+      "community": 25,
       "norm_label": "getflatlibraryloadlimit()"
     },
     {
@@ -9722,7 +9772,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "hooks_usebigboxnavigation_usebigboxnavigationprops",
-      "community": 17,
+      "community": 25,
       "norm_label": "usebigboxnavigationprops"
     },
     {
@@ -9742,7 +9792,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usebigboxscrollsync",
-      "community": 96,
+      "community": 56,
       "norm_label": "usebigboxscrollsync.ts"
     },
     {
@@ -9752,7 +9802,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "hooks_usebigboxscrollsync_usebigboxscrollsyncprops",
-      "community": 96,
+      "community": 56,
       "norm_label": "usebigboxscrollsyncprops"
     },
     {
@@ -9772,7 +9822,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation",
-      "community": 2,
+      "community": 31,
       "norm_label": "usedetailnavigation.ts"
     },
     {
@@ -9792,7 +9842,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_direction",
-      "community": 2,
+      "community": 31,
       "norm_label": "direction"
     },
     {
@@ -9802,7 +9852,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_navigationconfig",
-      "community": 2,
+      "community": 31,
       "norm_label": "navigationconfig"
     },
     {
@@ -9812,7 +9862,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailnavigationhook",
-      "community": 60,
+      "community": 31,
       "norm_label": "detailnavigationhook"
     },
     {
@@ -9822,7 +9872,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailnavprops",
-      "community": 2,
+      "community": 31,
       "norm_label": "detailnavprops"
     },
     {
@@ -9872,7 +9922,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics",
-      "community": 66,
+      "community": 7,
       "norm_label": "usefullscreenlayoutmetrics.ts"
     },
     {
@@ -9882,7 +9932,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedfullscreendensity",
-      "community": 66,
+      "community": 7,
       "norm_label": "resolvedfullscreendensity"
     },
     {
@@ -9892,7 +9942,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_viewportsnapshot",
-      "community": 66,
+      "community": 7,
       "norm_label": "viewportsnapshot"
     },
     {
@@ -9902,7 +9952,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_fullscreenlayoutmetrics",
-      "community": 66,
+      "community": 25,
       "norm_label": "fullscreenlayoutmetrics"
     },
     {
@@ -9912,7 +9962,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_default_viewport",
-      "community": 66,
+      "community": 7,
       "norm_label": "default_viewport"
     },
     {
@@ -9922,7 +9972,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_clamp",
-      "community": 66,
+      "community": 7,
       "norm_label": "clamp()"
     },
     {
@@ -9932,7 +9982,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_round",
-      "community": 66,
+      "community": 7,
       "norm_label": "round()"
     },
     {
@@ -9942,7 +9992,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_getviewportsnapshot",
-      "community": 66,
+      "community": 7,
       "norm_label": "getviewportsnapshot()"
     },
     {
@@ -9952,7 +10002,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedensitymode",
-      "community": 66,
+      "community": 7,
       "norm_label": "resolvedensitymode()"
     },
     {
@@ -9962,7 +10012,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_buildfullscreenlayoutmetrics",
-      "community": 66,
+      "community": 7,
       "norm_label": "buildfullscreenlayoutmetrics()"
     },
     {
@@ -10062,7 +10112,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "hooks_usegamepad_usegamepad",
-      "community": 2,
+      "community": 23,
       "norm_label": "usegamepad()"
     },
     {
@@ -10072,7 +10122,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_useinputmode",
-      "community": 2,
+      "community": 56,
       "norm_label": "useinputmode.ts"
     },
     {
@@ -10082,7 +10132,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "hooks_useinputmode_useinputmode",
-      "community": 2,
+      "community": 56,
       "norm_label": "useinputmode()"
     },
     {
@@ -10132,7 +10182,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_uselibraryshellinput",
-      "community": 25,
+      "community": 17,
       "norm_label": "uselibraryshellinput.ts"
     },
     {
@@ -10142,7 +10192,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "hooks_uselibraryshellinput_letters",
-      "community": 25,
+      "community": 17,
       "norm_label": "letters"
     },
     {
@@ -10172,7 +10222,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_useplatformimport",
-      "community": 75,
+      "community": 22,
       "norm_label": "useplatformimport.ts"
     },
     {
@@ -10182,7 +10232,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "hooks_useplatformimport_platformimportjobstate",
-      "community": 75,
+      "community": 22,
       "norm_label": "platformimportjobstate"
     },
     {
@@ -10192,7 +10242,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "hooks_useplatformimport_createplatformimportjobid",
-      "community": 75,
+      "community": 22,
       "norm_label": "createplatformimportjobid()"
     },
     {
@@ -10202,7 +10252,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "hooks_useplatformimport_buildimportedplatformsettings",
-      "community": 75,
+      "community": 22,
       "norm_label": "buildimportedplatformsettings()"
     },
     {
@@ -10212,7 +10262,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "hooks_useplatformimport_getmissingrequiredfolderkey",
-      "community": 75,
+      "community": 22,
       "norm_label": "getmissingrequiredfolderkey()"
     },
     {
@@ -10232,7 +10282,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usepopupopensound",
-      "community": 23,
+      "community": 9,
       "norm_label": "usepopupopensound.ts"
     },
     {
@@ -10242,7 +10292,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "hooks_usepopupopensound_popup_sounds",
-      "community": 23,
+      "community": 9,
       "norm_label": "popup_sounds"
     },
     {
@@ -10312,8 +10362,68 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_useresolvedboxarturl",
-      "community": 38,
+      "community": 73,
       "norm_label": "useresolvedboxarturl()"
+    },
+    {
+      "label": "useUnifiedLibraryNavigation.ts",
+      "file_type": "code",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "hooks_useunifiedlibrarynavigation",
+      "community": 17,
+      "norm_label": "useunifiedlibrarynavigation.ts"
+    },
+    {
+      "label": "LETTERS",
+      "file_type": "code",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "hooks_useunifiedlibrarynavigation_letters",
+      "community": 17,
+      "norm_label": "letters"
+    },
+    {
+      "label": "KeyEventLike",
+      "file_type": "code",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "hooks_useunifiedlibrarynavigation_keyeventlike",
+      "community": 17,
+      "norm_label": "keyeventlike"
+    },
+    {
+      "label": "SectionJumpDirection",
+      "file_type": "code",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "hooks_useunifiedlibrarynavigation_sectionjumpdirection",
+      "community": 17,
+      "norm_label": "sectionjumpdirection"
+    },
+    {
+      "label": "UseUnifiedLibraryNavigationProps",
+      "file_type": "code",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
+      "community": 25,
+      "norm_label": "useunifiedlibrarynavigationprops"
+    },
+    {
+      "label": "useUnifiedLibraryNavigation()",
+      "file_type": "code",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigation",
+      "community": 23,
+      "norm_label": "useunifiedlibrarynavigation()"
     },
     {
       "label": "useWindowLibraryShelves.ts",
@@ -10382,7 +10492,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "lib_detail_layout_detaillayoutspec",
-      "community": 23,
+      "community": 60,
       "norm_label": "detaillayoutspec"
     },
     {
@@ -10572,7 +10682,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "lib_extras_extragroup",
-      "community": 23,
+      "community": 60,
       "norm_label": "extragroup"
     },
     {
@@ -10672,7 +10782,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "lib_extras_buildextraassetpath",
-      "community": 23,
+      "community": 13,
       "norm_label": "buildextraassetpath()"
     },
     {
@@ -10762,7 +10872,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "lib_extras_supportsatariextracoverart",
-      "community": 38,
+      "community": 73,
       "norm_label": "supportsatariextracoverart()"
     },
     {
@@ -10772,7 +10882,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "lib_extras_getvisibledetailextracategories",
-      "community": 86,
+      "community": 73,
       "norm_label": "getvisibledetailextracategories()"
     },
     {
@@ -10782,7 +10892,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_game_display",
-      "community": 89,
+      "community": 0,
       "norm_label": "game-display.ts"
     },
     {
@@ -10792,7 +10902,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_game_display_unknown_values",
-      "community": 89,
+      "community": 0,
       "norm_label": "unknown_values"
     },
     {
@@ -10812,7 +10922,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_game_display_getgamestudios",
-      "community": 89,
+      "community": 0,
       "norm_label": "getgamestudios()"
     },
     {
@@ -10822,7 +10932,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "lib_game_display_getprimarystudiolabel",
-      "community": 89,
+      "community": 0,
       "norm_label": "getprimarystudiolabel()"
     },
     {
@@ -10912,7 +11022,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_library_navigation",
-      "community": 25,
+      "community": 17,
       "norm_label": "library-navigation.ts"
     },
     {
@@ -10922,7 +11032,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_library_navigation_libraryviewmode",
-      "community": 25,
+      "community": 17,
       "norm_label": "libraryviewmode"
     },
     {
@@ -10932,7 +11042,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "lib_library_navigation_verticaldirection",
-      "community": 25,
+      "community": 17,
       "norm_label": "verticaldirection"
     },
     {
@@ -10942,7 +11052,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_library_navigation_horizontaldirection",
-      "community": 25,
+      "community": 17,
       "norm_label": "horizontaldirection"
     },
     {
@@ -10952,7 +11062,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "lib_library_navigation_selectablegame",
-      "community": 25,
+      "community": 17,
       "norm_label": "selectablegame"
     },
     {
@@ -10962,7 +11072,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "lib_library_navigation_getlibrarycolumncount",
-      "community": 25,
+      "community": 17,
       "norm_label": "getlibrarycolumncount()"
     },
     {
@@ -10972,7 +11082,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "lib_library_navigation_getnextletterjump",
-      "community": 25,
+      "community": 17,
       "norm_label": "getnextletterjump()"
     },
     {
@@ -10982,7 +11092,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "lib_library_navigation_movelibraryfocushorizontally",
-      "community": 25,
+      "community": 17,
       "norm_label": "movelibraryfocushorizontally()"
     },
     {
@@ -10992,7 +11102,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "lib_library_navigation_movelibraryfocusvertically",
-      "community": 25,
+      "community": 17,
       "norm_label": "movelibraryfocusvertically()"
     },
     {
@@ -11002,7 +11112,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "lib_library_navigation_resolvefocusedgame",
-      "community": 25,
+      "community": 17,
       "norm_label": "resolvefocusedgame()"
     },
     {
@@ -11012,7 +11122,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_platform_capabilities",
-      "community": 31,
+      "community": 72,
       "norm_label": "platform-capabilities.ts"
     },
     {
@@ -11022,7 +11132,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_platform_capabilities_platform_emulator_profiles",
-      "community": 75,
+      "community": 60,
       "norm_label": "platform_emulator_profiles"
     },
     {
@@ -11032,7 +11142,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "lib_platform_capabilities_platform_profiles",
-      "community": 2,
+      "community": 31,
       "norm_label": "platform_profiles"
     },
     {
@@ -11042,7 +11152,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "lib_platform_capabilities_supported_platforms",
-      "community": 87,
+      "community": 25,
       "norm_label": "supported_platforms"
     },
     {
@@ -11052,7 +11162,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "lib_platform_capabilities_embedded_emulation_platform_ids",
-      "community": 31,
+      "community": 72,
       "norm_label": "embedded_emulation_platform_ids"
     },
     {
@@ -11062,7 +11172,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "lib_platform_capabilities_getplatformprofile",
-      "community": 31,
+      "community": 72,
       "norm_label": "getplatformprofile()"
     },
     {
@@ -11082,7 +11192,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "lib_platform_capabilities_isplatformid",
-      "community": 22,
+      "community": 72,
       "norm_label": "isplatformid()"
     },
     {
@@ -11092,7 +11202,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformlibrarystatus",
-      "community": 31,
+      "community": 72,
       "norm_label": "createdefaultplatformlibrarystatus()"
     },
     {
@@ -11102,7 +11212,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformfolders",
-      "community": 31,
+      "community": 72,
       "norm_label": "createdefaultplatformfolders()"
     },
     {
@@ -11112,7 +11222,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformnavigation",
-      "community": 31,
+      "community": 72,
       "norm_label": "createdefaultplatformnavigation()"
     },
     {
@@ -11122,7 +11232,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettings",
-      "community": 31,
+      "community": 72,
       "norm_label": "createdefaultplatformsettings()"
     },
     {
@@ -11132,7 +11242,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettingsmap",
-      "community": 22,
+      "community": 72,
       "norm_label": "createdefaultplatformsettingsmap()"
     },
     {
@@ -11142,7 +11252,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasmusiccapability",
-      "community": 31,
+      "community": 72,
       "norm_label": "hasmusiccapability()"
     },
     {
@@ -11152,7 +11262,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasphotoscapability",
-      "community": 31,
+      "community": 72,
       "norm_label": "hasphotoscapability()"
     },
     {
@@ -11162,7 +11272,7 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasscreenshotscapability",
-      "community": 31,
+      "community": 72,
       "norm_label": "hasscreenshotscapability()"
     },
     {
@@ -11172,7 +11282,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasextrascapability",
-      "community": 31,
+      "community": 72,
       "norm_label": "hasextrascapability()"
     },
     {
@@ -11182,7 +11292,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasvideoscapability",
-      "community": 31,
+      "community": 72,
       "norm_label": "hasvideoscapability()"
     },
     {
@@ -11192,7 +11302,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_platform_launch",
-      "community": 75,
+      "community": 60,
       "norm_label": "platform-launch.ts"
     },
     {
@@ -11202,7 +11312,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "lib_platform_launch_launchsource",
-      "community": 75,
+      "community": 60,
       "norm_label": "launchsource"
     },
     {
@@ -11212,7 +11322,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "lib_platform_launch_platformlaunchsettings",
-      "community": 75,
+      "community": 60,
       "norm_label": "platformlaunchsettings"
     },
     {
@@ -11222,7 +11332,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_platform_launch_normalizepathsegment",
-      "community": 75,
+      "community": 60,
       "norm_label": "normalizepathsegment()"
     },
     {
@@ -11612,7 +11722,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "lib_tauri_bridge_launchrequest",
-      "community": 75,
+      "community": 60,
       "norm_label": "launchrequest"
     },
     {
@@ -11702,7 +11812,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "lib_tauri_bridge_platformdatabaseimportresult",
-      "community": 75,
+      "community": 22,
       "norm_label": "platformdatabaseimportresult"
     },
     {
@@ -12112,7 +12222,7 @@
       "source_location": "L685",
       "_origin": "ast",
       "id": "lib_tauri_bridge_exitapp",
-      "community": 96,
+      "community": 34,
       "norm_label": "exitapp()"
     },
     {
@@ -12162,7 +12272,7 @@
       "source_location": "L734",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getgenres",
-      "community": 17,
+      "community": 25,
       "norm_label": "getgenres()"
     },
     {
@@ -12172,7 +12282,7 @@
       "source_location": "L744",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getsubgenres",
-      "community": 17,
+      "community": 96,
       "norm_label": "getsubgenres()"
     },
     {
@@ -12182,7 +12292,7 @@
       "source_location": "L768",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgamecount",
-      "community": 17,
+      "community": 96,
       "norm_label": "getdbgamecount()"
     },
     {
@@ -12192,7 +12302,7 @@
       "source_location": "L785",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getgameextras",
-      "community": 80,
+      "community": 96,
       "norm_label": "getgameextras()"
     },
     {
@@ -12202,7 +12312,7 @@
       "source_location": "L811",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgames",
-      "community": 17,
+      "community": 96,
       "norm_label": "getdbgames()"
     },
     {
@@ -12212,7 +12322,7 @@
       "source_location": "L931",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgamedetail",
-      "community": 80,
+      "community": 96,
       "norm_label": "getdbgamedetail()"
     },
     {
@@ -12552,44 +12662,44 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "themes_list_presentations",
-      "community": 56,
+      "community": 57,
       "norm_label": "list-presentations.ts"
     },
     {
       "label": "ThemeListPresentation",
       "file_type": "code",
       "source_file": "src/themes/list-presentations.ts",
-      "source_location": "L1",
+      "source_location": "L6",
       "_origin": "ast",
       "id": "themes_list_presentations_themelistpresentation",
-      "community": 56,
+      "community": 57,
       "norm_label": "themelistpresentation"
     },
     {
       "label": "sharedColumns",
       "file_type": "code",
       "source_file": "src/themes/list-presentations.ts",
-      "source_location": "L10",
+      "source_location": "L15",
       "_origin": "ast",
       "id": "themes_list_presentations_sharedcolumns",
-      "community": 56,
+      "community": 57,
       "norm_label": "sharedcolumns"
     },
     {
-      "label": "presentations",
+      "label": "staticThemes",
       "file_type": "code",
       "source_file": "src/themes/list-presentations.ts",
-      "source_location": "L12",
+      "source_location": "L17",
       "_origin": "ast",
-      "id": "themes_list_presentations_presentations",
-      "community": 56,
-      "norm_label": "presentations"
+      "id": "themes_list_presentations_staticthemes",
+      "community": 57,
+      "norm_label": "staticthemes"
     },
     {
       "label": "getThemeListPresentation()",
       "file_type": "code",
       "source_file": "src/themes/list-presentations.ts",
-      "source_location": "L37",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "themes_list_presentations_getthemelistpresentation",
       "community": 56,
@@ -12646,10 +12756,30 @@
       "norm_label": "themeeffects"
     },
     {
-      "label": "Theme",
+      "label": "ThemeLayout",
       "file_type": "code",
       "source_file": "src/themes/types.ts",
       "source_location": "L35",
+      "_origin": "ast",
+      "id": "themes_types_themelayout",
+      "community": 57,
+      "norm_label": "themelayout"
+    },
+    {
+      "label": "ThemeAssets",
+      "file_type": "code",
+      "source_file": "src/themes/types.ts",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "themes_types_themeassets",
+      "community": 57,
+      "norm_label": "themeassets"
+    },
+    {
+      "label": "Theme",
+      "file_type": "code",
+      "source_file": "src/themes/types.ts",
+      "source_location": "L48",
       "_origin": "ast",
       "id": "themes_types_theme",
       "community": 57,
@@ -12702,7 +12832,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "types_game_extra",
-      "community": 23,
+      "community": 60,
       "norm_label": "extra"
     },
     {
@@ -12732,7 +12862,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "types_platform",
-      "community": 88,
+      "community": 72,
       "norm_label": "platform.ts"
     },
     {
@@ -12742,7 +12872,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "types_platform_platformid",
-      "community": 87,
+      "community": 25,
       "norm_label": "platformid"
     },
     {
@@ -12762,7 +12892,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "types_platform_platformimportstatus",
-      "community": 88,
+      "community": 72,
       "norm_label": "platformimportstatus"
     },
     {
@@ -12772,7 +12902,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "types_platform_platformmusiccapability",
-      "community": 88,
+      "community": 72,
       "norm_label": "platformmusiccapability"
     },
     {
@@ -12812,7 +12942,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "types_platform_platformemulatorprofile",
-      "community": 88,
+      "community": 72,
       "norm_label": "platformemulatorprofile"
     },
     {
@@ -12822,7 +12952,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "types_platform_platformprofile",
-      "community": 88,
+      "community": 72,
       "norm_label": "platformprofile"
     },
     {
@@ -12832,7 +12962,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "types_platform_platformlibrarystatus",
-      "community": 88,
+      "community": 72,
       "norm_label": "platformlibrarystatus"
     },
     {
@@ -12852,7 +12982,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "types_platform_platformemulatorsettings",
-      "community": 88,
+      "community": 72,
       "norm_label": "platformemulatorsettings"
     },
     {
@@ -12862,7 +12992,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "types_platform_platformnavigationstate",
-      "community": 88,
+      "community": 72,
       "norm_label": "platformnavigationstate"
     },
     {
@@ -12872,7 +13002,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "types_platform_platformsettings",
-      "community": 75,
+      "community": 22,
       "norm_label": "platformsettings"
     },
     {
@@ -12882,7 +13012,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "types_platform_activeplatformstate",
-      "community": 88,
+      "community": 72,
       "norm_label": "activeplatformstate"
     },
     {
@@ -34880,6 +35010,39 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "app_page",
+      "target": "components_unifiedlibraryview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "app_page",
+      "target": "components_unifiedlibraryview_bigboxsessionstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_page",
+      "target": "components_unifiedlibraryview_unifiedlibraryview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
       "source_location": "L13",
       "weight": 1,
       "confidence_score": 1,
@@ -35674,6 +35837,28 @@
       "confidence_score": 1,
       "source": "components_alphabetjumpbar",
       "target": "components_alphabetjumpbar_letters"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_alphabetjumpbar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_alphabetjumpbar_alphabetjumpbar",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -36544,6 +36729,17 @@
       "target": "types_platform_platformid"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_bigboxview",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "context": "field",
       "confidence": "EXTRACTED",
@@ -36586,6 +36782,17 @@
       "confidence_score": 1,
       "source": "components_bigboxview_bigboxviewprops",
       "target": "types_platform_platformid"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_bigboxview_getc64navigationrails",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -36780,6 +36987,17 @@
       "target": "hooks_usepopupopensound_usepopupopensound"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_controllersearchkeyboard",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -36800,6 +37018,17 @@
       "weight": 1,
       "source": "components_controllersearchkeyboard_controllersearchkeyboard",
       "target": "hooks_usepopupopensound_usepopupopensound"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_controllersearchkeyboard_controllersearchkeyboard",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -37932,6 +38161,17 @@
       "target": "types_game_game"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_gridview",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "context": "field",
       "confidence": "EXTRACTED",
@@ -37952,6 +38192,17 @@
       "weight": 1,
       "source": "components_gridview_gridview",
       "target": "hooks_usefavorites_usefavorites"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_gridview_gridview",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -38050,6 +38301,17 @@
       "target": "types_game_game"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_horizontalrail",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "context": "field",
       "confidence": "EXTRACTED",
@@ -38081,6 +38343,17 @@
       "confidence_score": 1,
       "source": "components_horizontalrail_horizontalrail",
       "target": "components_horizontalrail_gettargetvisiblecards"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_horizontalrail_horizontalrail",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -38472,6 +38745,17 @@
       "target": "types_game_game"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_listview",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "context": "field",
       "confidence": "EXTRACTED",
@@ -38503,6 +38787,17 @@
       "weight": 1.0,
       "source": "components_listview_listview",
       "target": "themes_list_presentations_getthemelistpresentation"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_listview_listview",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -39856,6 +40151,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_subgenrepickermodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/components/library/LibraryHeader.tsx",
       "source_location": "L4",
       "weight": 1,
@@ -39873,6 +40179,17 @@
       "weight": 1,
       "source": "components_subgenrepickermodal_subgenrepickermodal",
       "target": "hooks_usegamepad_usegamepad"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_subgenrepickermodal_subgenrepickermodal",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -39979,6 +40296,750 @@
       "confidence_score": 1,
       "source": "components_uisoundruntime",
       "target": "lib_ui_sound_effects_playrotatinguisoundeffect"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "bigbox_bigboxalphabetrail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "bigbox_bigboxalphabetrail_bigboxalphabetrail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "bigbox_bigboxexitprompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "bigbox_bigboxexitprompt_bigboxexitprompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "bigbox_bigboxfooter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "bigbox_bigboxfooter_bigboxfooter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "bigbox_bigboxheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "bigbox_bigboxheader_bigboxheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_unifiedlibraryview_bigboxsessionstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L863",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_unifiedlibraryview_getvisiblesubgenreshelper",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_unifiedlibraryview_unifiedlibraryview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_unifiedlibraryview_unifiedlibraryviewprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "contexts_settingscontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "contexts_settingscontext_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "contexts_themecontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "contexts_themecontext_usetheme",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_usebigboxlibrarydata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_usebigboxlibrarydata_usebigboxlibrarydata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_usebigboxscrollsync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_usebigboxscrollsync_usebigboxscrollsync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_usefavorites",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_usefavorites_usefavorites",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_usefullscreenlayoutmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_usefullscreenlayoutmetrics_usefullscreenlayoutmetrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_useinputmode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_useinputmode_useinputmode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_uselibrarybrowserstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_uselibrarybrowserstate_libraryviewmode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_useunifiedlibrarynavigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_library_backgrounds",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_library_backgrounds_resolvelibrarybackground",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_platform_capabilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_platform_capabilities_supported_platforms",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_tauri_bridge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_tauri_bridge_exitapp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_tauri_bridge_gamefilters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_ui_sound_effects",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_ui_sound_effects_playrotatinguisoundeffect",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_ui_sound_effects_playuisoundeffect",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "lib_ui_sound_effects_playuisoundeffectandwait",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_c64editiongrid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_c64editiongrid_c64editiongrid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_cyberpunkcrtgrid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgrid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_libraryheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_libraryheader_libraryheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_windowgamelistsection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_windowgamelistsection_windowgamelistsection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_windowgameshelf",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "library_windowgameshelf_windowgameshelf",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "types_game",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "types_game_game",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "types_platform",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "types_platform_platformid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
+      "target": "contexts_settingscontext_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
+      "target": "hooks_uselibrarybrowserstate_libraryviewmode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
+      "target": "lib_tauri_bridge_gamefilters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
+      "target": "types_game_game",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
+      "target": "types_platform_platformid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryview",
+      "target": "contexts_themecontext_usetheme"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryview",
+      "target": "hooks_usebigboxlibrarydata_usebigboxlibrarydata"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L446",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryview",
+      "target": "hooks_usebigboxscrollsync_usebigboxscrollsync"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryview",
+      "target": "hooks_usefavorites_usefavorites"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryview",
+      "target": "hooks_usefullscreenlayoutmetrics_usefullscreenlayoutmetrics"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryview",
+      "target": "hooks_useinputmode_useinputmode"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L388",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryview",
+      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigation"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L144",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview_unifiedlibraryview",
+      "target": "lib_library_backgrounds_resolvelibrarybackground"
     },
     {
       "relation": "contains",
@@ -44404,6 +45465,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "contexts_settingscontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/lib/platform-launch.ts",
       "source_location": "L1",
       "weight": 1,
@@ -44498,6 +45570,28 @@
       "confidence_score": 1,
       "source": "hooks_useplatformimport",
       "target": "contexts_settingscontext_settings"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "contexts_settingscontext_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
+      "target": "contexts_settingscontext_settings",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -44939,6 +46033,17 @@
       "target": "hooks_navigation_math"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_navigation_math",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -44948,6 +46053,17 @@
       "confidence_score": 1,
       "source": "hooks_usebigboxnavigation",
       "target": "hooks_navigation_math_navigationstate"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_navigation_math_navigationstate",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -44964,12 +46080,34 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_navigation_math_navigationparams",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/hooks/useBigBoxNavigation.ts",
       "source_location": "L9",
       "weight": 1,
       "confidence_score": 1,
       "source": "hooks_usebigboxnavigation",
       "target": "hooks_navigation_math_calculaterightnavigation"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_navigation_math_calculaterightnavigation",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -44986,6 +46124,17 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_navigation_math_calculateleftnavigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/hooks/useBigBoxNavigation.ts",
       "source_location": "L9",
       "weight": 1,
@@ -44997,12 +46146,34 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_navigation_math_calculatedownnavigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/hooks/useBigBoxNavigation.ts",
       "source_location": "L9",
       "weight": 1,
       "confidence_score": 1,
       "source": "hooks_usebigboxnavigation",
       "target": "hooks_navigation_math_calculateupnavigation"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_navigation_math_calculateupnavigation",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -45184,6 +46355,17 @@
       "target": "hooks_usebigboxlibrarydata"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_usebigboxlibrarydata",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -45193,6 +46375,17 @@
       "confidence_score": 1,
       "source": "hooks_usebigboxnavigation",
       "target": "hooks_usebigboxlibrarydata_bigbox_letters"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_usebigboxlibrarydata_bigbox_letters",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -45215,6 +46408,28 @@
       "confidence_score": 1,
       "source": "hooks_usebigboxnavigation_usebigboxnavigationprops",
       "target": "hooks_usebigboxlibrarydata_bigboxrailcategory"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_usebigboxlibrarydata_bigboxrailcategory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
+      "target": "hooks_usebigboxlibrarydata_bigboxrailcategory",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -45867,6 +47082,17 @@
       "target": "hooks_usegamepad"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_usegamepad",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -45886,6 +47112,28 @@
       "source_location": "L51",
       "weight": 1,
       "source": "hooks_uselibraryshellinput_uselibraryshellinput",
+      "target": "hooks_usegamepad_usegamepad"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_usegamepad_usegamepad",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L559",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigation",
       "target": "hooks_usegamepad_usegamepad"
     },
     {
@@ -46017,6 +47265,17 @@
       "target": "hooks_uselibrarybrowserstate"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_uselibrarybrowserstate",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -46037,6 +47296,28 @@
       "confidence_score": 1,
       "source": "hooks_uselibraryshellinput_uselibraryshellinputprops",
       "target": "hooks_uselibrarybrowserstate_libraryviewmode"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_uselibrarybrowserstate_libraryviewmode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
+      "target": "hooks_uselibrarybrowserstate_libraryviewmode",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -46572,6 +47853,199 @@
       "weight": 1,
       "source": "hooks_useresolvedboxarturl_useresolvedboxarturl",
       "target": "lib_tauri_bridge_resolvemediapath"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_useunifiedlibrarynavigation_keyeventlike",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_useunifiedlibrarynavigation_letters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_useunifiedlibrarynavigation_sectionjumpdirection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "lib_library_navigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "lib_library_navigation_getlibrarycolumncount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "lib_library_navigation_getnextletterjump",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "lib_library_navigation_movelibraryfocushorizontally",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "lib_library_navigation_movelibraryfocusvertically",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "lib_library_navigation_resolvefocusedgame",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "lib_tauri_bridge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "lib_tauri_bridge_exitapp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "lib_tauri_bridge_gamefilters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "types_game",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation",
+      "target": "types_game_game",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
+      "target": "lib_tauri_bridge_gamefilters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
+      "target": "types_game_game",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50401,6 +51875,17 @@
       "target": "themes_arcade_void"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/list-presentations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "themes_list_presentations",
+      "target": "themes_arcade_void",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -50410,6 +51895,17 @@
       "confidence_score": 1.0,
       "source": "themes_index",
       "target": "themes_arcade_void_arcadevoidtheme"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/list-presentations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "themes_list_presentations",
+      "target": "themes_arcade_void_arcadevoidtheme",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50455,6 +51951,17 @@
       "target": "themes_c64_edition"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/list-presentations.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "themes_list_presentations",
+      "target": "themes_c64_edition",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -50464,6 +51971,17 @@
       "confidence_score": 1.0,
       "source": "themes_index",
       "target": "themes_c64_edition_c64editiontheme"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/list-presentations.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "themes_list_presentations",
+      "target": "themes_c64_edition_c64editiontheme",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50509,6 +52027,17 @@
       "target": "themes_cyberpunk_crt"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/list-presentations.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "themes_list_presentations",
+      "target": "themes_cyberpunk_crt",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -50518,6 +52047,17 @@
       "confidence_score": 1.0,
       "source": "themes_index",
       "target": "themes_cyberpunk_crt_cyberpunkcrttheme"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/list-presentations.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "themes_list_presentations",
+      "target": "themes_cyberpunk_crt_cyberpunkcrttheme",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50575,21 +52115,21 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/themes/list-presentations.ts",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "themes_list_presentations",
-      "target": "themes_list_presentations_presentations"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/themes/list-presentations.ts",
       "source_location": "L10",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "themes_list_presentations",
       "target": "themes_list_presentations_sharedcolumns"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/list-presentations.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "themes_list_presentations",
+      "target": "themes_list_presentations_staticthemes",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50602,6 +52142,28 @@
       "target": "themes_list_presentations_themelistpresentation"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/list-presentations.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "themes_list_presentations",
+      "target": "themes_types",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/list-presentations.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "themes_list_presentations",
+      "target": "themes_types_theme",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/themes/types.ts",
@@ -50610,6 +52172,16 @@
       "confidence_score": 1.0,
       "source": "themes_types",
       "target": "themes_types_theme"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/types.ts",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "themes_types",
+      "target": "themes_types_themeassets",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -50640,6 +52212,16 @@
       "confidence_score": 1.0,
       "source": "themes_types",
       "target": "themes_types_themeeffects"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/themes/types.ts",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "themes_types",
+      "target": "themes_types_themelayout",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -54902,5 +56484,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "5d90cab3461580982a3af840fba330a28e8a11a8"
+  "built_at_commit": "e0cb8d4dd47b3b84e16051a90a75a18316cc4260"
 }
