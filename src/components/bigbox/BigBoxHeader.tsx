@@ -155,7 +155,7 @@ export function BigBoxHeader({
                 width: `${layout.searchWidth}px`,
               }}
             />
-            {isC64Edition ? <span aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-6 w-3 -translate-y-1/2 bg-[var(--theme-primary)] animate-[blink_1s_steps(1,end)_infinite]" data-testid="c64-search-cursor" /> : <div className={`absolute right-4 top-1/2 -translate-y-1/2 transition-opacity ${searchFocused ? 'opacity-70' : 'opacity-20 group-hover:opacity-40'}`}>🔍</div>}
+            {isC64Edition ? <span aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-6 w-3 -translate-y-1/2 bg-[var(--theme-primary)] animate-[cursor-blink_1s_steps(1,end)_infinite]" data-testid="c64-search-cursor" /> : <div className={`absolute right-4 top-1/2 -translate-y-1/2 transition-opacity ${searchFocused ? 'opacity-70' : 'opacity-20 group-hover:opacity-40'}`}>🔍</div>}
           </div>
         </div>
 

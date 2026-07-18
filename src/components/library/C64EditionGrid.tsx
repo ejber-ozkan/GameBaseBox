@@ -31,7 +31,7 @@ function C64FocusTitle({ game }: { game: Game }) {
   return (
     <div className="mt-1 flex min-h-16 w-full items-center gap-3 bg-[#ffff66] px-4 py-3 text-black" data-testid="c64-focused-title-strip">
       <div className="min-w-0 truncate font-mono text-base font-black uppercase tracking-wide sm:text-xl" data-testid="c64-focused-title">{game.name}</div>
-      <span aria-hidden="true" className="ml-auto min-h-8 w-4 shrink-0 self-stretch bg-black animate-[blink_1s_steps(1,end)_infinite]" data-testid="c64-blinking-cursor" />
+      <span aria-hidden="true" className="ml-auto min-h-8 w-4 shrink-0 self-stretch bg-black animate-[cursor-blink_1s_steps(1,end)_infinite]" data-testid="c64-blinking-cursor" />
     </div>
   );
 }

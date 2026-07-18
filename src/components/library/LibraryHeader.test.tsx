@@ -38,6 +38,6 @@ describe('LibraryHeader', () => {
       <LibraryHeader activePlatformId="c64" filters={{}} genres={[]} onExit={vi.fn()} onFiltersChange={vi.fn()} onOpenSettings={vi.fn()} onPlatformSelect={vi.fn()} onSearchChange={vi.fn()} onViewModeChange={vi.fn()} searchInput="" subGenres={[]} viewMode="grid" />,
     );
 
-    expect(screen.getByTestId('c64-search-cursor').classList).toContain('animate-[blink_1s_steps(1,end)_infinite]');
+    expect(screen.getByTestId('c64-search-cursor').classList).toContain('animate-[cursor-blink_1s_steps(1,end)_infinite]');
   });
 });

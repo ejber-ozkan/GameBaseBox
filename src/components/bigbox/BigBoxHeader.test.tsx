@@ -55,6 +55,6 @@ describe('BigBoxHeader', () => {
       <BigBoxHeader activeHeaderItemIndex={0} activeHeaderRow={0} activePlatformId="c64" activeRailIndex={-1} filters={{}} genres={[]} hasOverflowSubGenres={false} isFiltered={false} layout={layout} onExit={vi.fn()} onFiltersChange={vi.fn()} onJumpToRail={vi.fn()} onOpenSubGenrePicker={vi.fn()} onPlatformSelect={vi.fn()} onSearchChange={vi.fn()} onSearchFocus={vi.fn()} onSetHeaderFocus={vi.fn()} onShowSettings={vi.fn()} searchInput="" totalGameCount={3} visibleSubGenres={[]} />,
     );
 
-    expect(screen.getByTestId('c64-search-cursor').classList).toContain('animate-[blink_1s_steps(1,end)_infinite]');
+    expect(screen.getByTestId('c64-search-cursor').classList).toContain('animate-[cursor-blink_1s_steps(1,end)_infinite]');
   });
 });

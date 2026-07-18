@@ -121,7 +121,7 @@ describe('C64EditionGrid', () => {
     expect(screen.getAllByTestId('c64-rom-media')[1].classList).toContain('aspect-[3/4]');
     expect(screen.getByTestId('c64-focused-title-strip').classList).toContain('bg-[#ffff66]');
     expect(screen.getByTestId('c64-focused-title').classList).toContain('text-base');
-    expect(screen.getByTestId('c64-blinking-cursor').classList).toContain('animate-[blink_1s_steps(1,end)_infinite]');
+    expect(screen.getByTestId('c64-blinking-cursor').classList).toContain('animate-[cursor-blink_1s_steps(1,end)_infinite]');
   });
 
   it('uses the active alphabet shortcut as the compact-library title', () => {
