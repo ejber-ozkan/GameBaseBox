@@ -80,9 +80,48 @@ describe('CyberpunkCrtGrid', () => {
     expect(screen.getByRole('button', { name: 'Next CLASSICS games' })).toBeTruthy();
 
     const recentTitle = screen.getByRole('heading', { name: 'RECENT' });
-    expect(recentTitle.nextElementSibling?.getAttribute('role')).toBe('group');
+    expect(recentTitle.nextElementSibling?.classList).toContain('flex-1');
+    expect(recentTitle.nextElementSibling?.nextElementSibling?.getAttribute('role')).toBe('group');
 
     fireEvent.click(screen.getByRole('button', { name: 'Next RECENT games' }));
     expect(scrollBy).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'smooth', left: 0 }));
+  });
+
+  it('keeps focus scrolling inside the active rail rather than using browser-wide scrollIntoView', () => {
+    const scrollTo = vi.fn();
+    const scrollIntoView = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollTo', { configurable: true, value: scrollTo });
+    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', { configurable: true, value: scrollIntoView });
+
+    const { rerender } = render(
+      <CyberpunkCrtGrid
+        focusedGameId={mockGames[0].id.toString()}
+        focusedRailId="recent"
+        games={[]}
+        recentGames={[mockGames[0]]}
+        favoriteGames={[]}
+        classicGames={[]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    rerender(
+      <CyberpunkCrtGrid
+        focusedGameId={mockGames[1].id.toString()}
+        focusedRailId="recent"
+        games={[]}
+        recentGames={[mockGames[0], mockGames[1]]}
+        favoriteGames={[]}
+        classicGames={[]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    expect(scrollTo).toHaveBeenCalled();
+    expect(scrollIntoView).not.toHaveBeenCalled();
   });
 });

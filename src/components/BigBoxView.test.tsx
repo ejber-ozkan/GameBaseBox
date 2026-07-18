@@ -58,7 +58,7 @@ vi.mock('./library/C64EditionGrid', () => ({
   C64EditionGrid: ({ recentGames, favoriteGames, classicGames }: { recentGames: typeof mockGames; favoriteGames: typeof mockGames; classicGames: typeof mockGames }) => <div data-testid="c64-edition-grid">{[...recentGames, ...favoriteGames, ...classicGames].map((game) => game.name).join('|')}</div>,
 }));
 vi.mock('./library/CyberpunkCrtGrid', () => ({
-  CyberpunkCrtGrid: ({ recentGames, favoriteGames, classicGames }: { recentGames: typeof mockGames; favoriteGames: typeof mockGames; classicGames: typeof mockGames }) => <div data-testid="cyberpunk-crt-grid">{[...recentGames, ...favoriteGames, ...classicGames].map((game) => game.name).join('|')}</div>,
+  CyberpunkCrtGrid: ({ recentGames, favoriteGames, classicGames, gridColumns }: { recentGames: typeof mockGames; favoriteGames: typeof mockGames; classicGames: typeof mockGames; gridColumns?: number }) => <div data-grid-columns={gridColumns ?? 'windowed'} data-testid="cyberpunk-crt-grid">{[...recentGames, ...favoriteGames, ...classicGames].map((game) => game.name).join('|')}</div>,
 }));
 vi.mock('../lib/ui-sound-effects', () => ({
   playRotatingUiSoundEffect: vi.fn(),
@@ -117,6 +117,7 @@ describe('BigBoxView', () => {
 
     expect(screen.queryByTestId('cyberpunk-crt-grid')).toBeTruthy();
     expect(screen.getByTestId('cyberpunk-crt-grid').textContent).toBe(`${mockGames[0].name}|${mockGames[1].name}|${mockGames[0].name}`);
+    expect(screen.getByTestId('cyberpunk-crt-grid').getAttribute('data-grid-columns')).toBe('windowed');
   });
 
   it('keeps C64 alphabet sections navigable with their visible ROMs', () => {

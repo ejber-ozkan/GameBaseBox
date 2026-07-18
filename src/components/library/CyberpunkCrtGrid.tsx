@@ -52,21 +52,26 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
 
   useEffect(() => {
     if (!focusedGameId) return;
-    const focusedCard = railScrollRef.current?.querySelector(`[data-game-id="${focusedGameId}"]`);
-    if (focusedCard instanceof HTMLElement) focusedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    const rail = railScrollRef.current;
+    const focusedCard = rail?.querySelector(`[data-game-id="${focusedGameId}"]`);
+    if (rail && focusedCard instanceof HTMLElement) {
+      rail.scrollTo({
+        behavior: 'smooth',
+        left: focusedCard.offsetLeft - (rail.clientWidth - focusedCard.clientWidth) / 2,
+      });
+    }
   }, [focusedGameId]);
 
   return (
     <section className="cyberpunk-game-rail" data-rail-id={railId}>
-      <div className="mb-3 flex items-end gap-3 border-b border-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)] pb-2">
+      <div data-rail-anchor className="mb-3 flex items-end gap-3 border-b border-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)] pb-2">
         <span aria-hidden="true" className="h-6 w-1.5 shrink-0 bg-[var(--theme-primary)] shadow-[2px_0_0_var(--theme-secondary)]" />
         <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{title}</h2>
+        <div className="h-px flex-1 bg-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)]" />
         <div role="group" aria-label={`${title} rail controls`} className="flex shrink-0 gap-2">
           <button aria-label={`Previous ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('previous')}>‹</button>
           <button aria-label={`Next ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('next')}>›</button>
         </div>
-        <div className="h-px flex-1 bg-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)]" />
-        <span className="hidden font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)] sm:block">SYS://LINK_ACTIVE</span>
       </div>
       {games.length > 0 ? (
         <div ref={railScrollRef} className="no-scrollbar grid snap-x snap-mandatory grid-flow-col auto-cols-[minmax(180px,16vw)] gap-4 overflow-x-auto pb-3" data-testid="cyberpunk-rail-scroll">
@@ -139,8 +144,8 @@ export function CyberpunkCrtGrid({ activeAlphabetRailId, alphabetLabel, alphabet
               const focused = focusedRailId ? focusedRailId === section.id && (focusedIndex === index || focusedGameId === game.id.toString()) : focusedIndex === index;
               const favorite = isFavorite(game.id.toString());
               return (
-                <article key={`${section.id}-${game.id}-${index}`} className={`group relative cursor-pointer border bg-[var(--theme-surface)] p-1 transition-[border-color,box-shadow] ${focused ? 'border-2 border-[var(--theme-primary)] shadow-[2px_2px_0_var(--theme-primary),-1px_-1px_0_var(--theme-tertiary)]' : 'border-[var(--theme-outline-variant)] hover:border-[var(--theme-primary)]'}`} data-focused={focused ? 'true' : 'false'} data-testid="cyberpunk-library-card" onClick={() => onSelectGame(game)} onMouseEnter={() => { onFocusChange?.(index); onFocusSectionItem?.(section.id, index); }} style={{ contentVisibility: 'auto', containIntrinsicSize: '0 230px' }}>
-                  <div className="aspect-[1.6] overflow-hidden bg-black"><ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className="h-full w-full object-contain grayscale opacity-85 transition-[filter,opacity] group-hover:grayscale-0 group-hover:opacity-100" /></div>
+                <article key={`${section.id}-${game.id}-${index}`} className={`group relative min-w-0 max-w-full cursor-pointer border bg-[var(--theme-surface)] p-1 transition-[border-color,box-shadow] ${focused ? 'border-2 border-[var(--theme-primary)] shadow-[2px_2px_0_var(--theme-primary),-1px_-1px_0_var(--theme-tertiary)]' : 'border-[var(--theme-outline-variant)] hover:border-[var(--theme-primary)]'}`} data-focused={focused ? 'true' : 'false'} data-testid="cyberpunk-library-card" onClick={() => onSelectGame(game)} onMouseEnter={() => { onFocusChange?.(index); onFocusSectionItem?.(section.id, index); }} style={{ contentVisibility: 'auto', containIntrinsicSize: '0 230px', minWidth: 0, maxWidth: '100%' }}>
+                  <div className="aspect-[1.6] min-h-0 min-w-0 overflow-hidden bg-black"><ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className="h-full min-h-0 w-full min-w-0 object-contain grayscale opacity-85 transition-[filter,opacity] group-hover:grayscale-0 group-hover:opacity-100" /></div>
                   <div className="mt-1 flex min-w-0 items-start gap-1 font-mono text-[9px] uppercase tracking-wide"><div className="min-w-0 flex-1"><div className="truncate font-black text-[var(--theme-text)]">{game.name}</div><div className="truncate text-[var(--theme-text-muted)]">{getMetadata(game)}</div></div><button aria-label={`Toggle favorite for ${game.name}`} className="shrink-0 text-sm text-[var(--theme-tertiary)]" onClick={(event) => { event.stopPropagation(); toggleFavorite(game.id.toString()); }}>{favorite ? '★' : '☆'}</button></div>
                 </article>
               );
