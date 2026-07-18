@@ -140,4 +140,25 @@ describe('DetailView platform capability gating', () => {
     render(<DetailView game={mockGame} onBack={vi.fn()} />);
     expect(screen.queryByText('Soundtrack Module')).toBeNull();
   });
+
+  test('renders publisher and developer separated by a pipe under the game title', async () => {
+    mockActivePlatformId = 'c64';
+    const gameWithStudios: Game = {
+      ...mockGame,
+      publisher: { id: 1, name: 'Origin Systems' },
+      developer: { id: 2, name: 'MicroProse' },
+    };
+    render(<DetailView game={gameWithStudios} onBack={vi.fn()} />);
+    await waitFor(() => {
+      expect(screen.getByText('Origin Systems | MicroProse')).toBeTruthy();
+    });
+  });
+
+  test('renders Unknown under the game title if developer and publisher are missing', async () => {
+    mockActivePlatformId = 'c64';
+    render(<DetailView game={mockGame} onBack={vi.fn()} />);
+    await waitFor(() => {
+      expect(screen.getAllByText('Unknown').length).toBeGreaterThan(0);
+    });
+  });
 });

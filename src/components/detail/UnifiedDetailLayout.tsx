@@ -798,7 +798,12 @@ export function UnifiedDetailLayout({
                         className="mt-4 font-semibold uppercase tracking-[0.18em] text-theme-primary"
                         style={{ fontSize: `${detailLayout?.subtitleSize ?? 16}px` }}
                       >
-                        {cleanMetadataValue(game.subGenre) ?? cleanMetadataValue(game.parentGenre) ?? 'GBBox Library'}
+                        {[
+                          cleanMetadataValue(game.publisher?.name),
+                          cleanMetadataValue(game.developer?.name),
+                        ]
+                          .filter(Boolean)
+                          .join(' | ') || 'Unknown'}
                       </div>
                     </div>
 
