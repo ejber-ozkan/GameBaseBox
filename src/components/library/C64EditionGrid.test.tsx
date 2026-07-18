@@ -141,6 +141,29 @@ describe('C64EditionGrid', () => {
     expect(screen.getByRole('heading', { name: 'A' })).toBeTruthy();
   });
 
+  it('renders C64 alphabet navigation as visible numbered and lettered library sections', () => {
+    render(
+      <C64EditionGrid
+        alphabetSections={[
+          { id: 'alpha-#', label: '#', games: [{ ...mockGames[0], name: '1942' }] },
+          { id: 'alpha-A', label: 'A', games: [{ ...mockGames[1], name: 'Archon' }] },
+        ]}
+        games={[]}
+        favoriteGames={[]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        recentGames={[]}
+        classicGames={[]}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: '#' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'A' })).toBeTruthy();
+    expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="alpha-#"]')).toBeTruthy();
+    expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="alpha-A"]')).toBeTruthy();
+  });
+
   it('requests the next page when its ROM sentinel becomes visible', () => {
     const onEndReached = vi.fn();
     let callback: IntersectionObserverCallback | undefined;

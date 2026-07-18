@@ -7072,7 +7072,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_getcoverurl",
-      "community": 71,
+      "community": 96,
       "norm_label": "getcoverurl()"
     },
     {
@@ -7452,7 +7452,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_imagewithfallback",
-      "community": 71,
+      "community": 96,
       "norm_label": "imagewithfallback.tsx"
     },
     {
@@ -7462,7 +7462,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_imagewithfallback_imagewithfallbackprops",
-      "community": 71,
+      "community": 96,
       "norm_label": "imagewithfallbackprops"
     },
     {
@@ -7552,7 +7552,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_musicianphoto",
-      "community": 71,
+      "community": 96,
       "norm_label": "musicianphoto.tsx"
     },
     {
@@ -7562,7 +7562,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_musicianphoto_musicianphotoprops",
-      "community": 71,
+      "community": 96,
       "norm_label": "musicianphotoprops"
     },
     {
@@ -8549,7 +8549,7 @@
       "label": "getStudio()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L24",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "library_c64editiongrid_getstudio",
       "community": 2,
@@ -8559,7 +8559,7 @@
       "label": "C64FocusTitle()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L30",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "library_c64editiongrid_c64focustitle",
       "community": 2,
@@ -8569,7 +8569,7 @@
       "label": "C64Rail()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L39",
+      "source_location": "L41",
       "_origin": "ast",
       "id": "library_c64editiongrid_c64rail",
       "community": 2,
@@ -8579,7 +8579,7 @@
       "label": "C64EditionGrid()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L105",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "library_c64editiongrid_c64editiongrid",
       "community": 2,
@@ -10192,7 +10192,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl",
-      "community": 71,
+      "community": 0,
       "norm_label": "useresolvedboxarturl.ts"
     },
     {
@@ -10202,7 +10202,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_cover_art_url_cache",
-      "community": 71,
+      "community": 0,
       "norm_label": "cover_art_url_cache"
     },
     {
@@ -10212,7 +10212,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_normalizepath",
-      "community": 71,
+      "community": 0,
       "norm_label": "normalizepath()"
     },
     {
@@ -10222,7 +10222,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_getresolvedcoverarturl",
-      "community": 71,
+      "community": 96,
       "norm_label": "getresolvedcoverarturl()"
     },
     {
@@ -10232,7 +10232,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_resolvedboxartgame",
-      "community": 71,
+      "community": 0,
       "norm_label": "resolvedboxartgame"
     },
     {
@@ -11502,7 +11502,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "lib_tauri_bridge_isdebugmode",
-      "community": 71,
+      "community": 96,
       "norm_label": "isdebugmode()"
     },
     {
@@ -11512,7 +11512,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "lib_tauri_bridge_logdebugmessage",
-      "community": 71,
+      "community": 96,
       "norm_label": "logdebugmessage()"
     },
     {
@@ -11792,7 +11792,7 @@
       "source_location": "L307",
       "_origin": "ast",
       "id": "lib_tauri_bridge_resolvemediapath",
-      "community": 71,
+      "community": 96,
       "norm_label": "resolvemediapath()"
     },
     {
@@ -11802,7 +11802,7 @@
       "source_location": "L337",
       "_origin": "ast",
       "id": "lib_tauri_bridge_findallmediavariants",
-      "community": 71,
+      "community": 96,
       "norm_label": "findallmediavariants()"
     },
     {
@@ -11902,7 +11902,7 @@
       "source_location": "L449",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getasseturl",
-      "community": 71,
+      "community": 96,
       "norm_label": "getasseturl()"
     },
     {
@@ -11922,7 +11922,7 @@
       "source_location": "L506",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getmediaurl",
-      "community": 71,
+      "community": 96,
       "norm_label": "getmediaurl()"
     },
     {
@@ -54673,5 +54673,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "883423bed56bd328e33ff18fc01526f33c525a42"
+  "built_at_commit": "a642ddc17d7fa9a88fd844e1a5f02864b3646e80"
 }

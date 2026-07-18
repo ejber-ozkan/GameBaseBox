@@ -112,9 +112,6 @@ export function BigBoxView({
   const currentRail = activeRailIndex >= 0 ? navigationRails[activeRailIndex] : null;
   const currentFocusedIndex = currentRail ? (railFocusIndices[currentRail.id] ?? 0) : 0;
   const currentFocusedGame = currentRail?.games[currentFocusedIndex] ?? null;
-  const c64GridFocusedIndex = isC64Edition && currentRail?.type === 'alphabet' && currentFocusedGame
-    ? flatGames.findIndex((game) => game.id === currentFocusedGame.id)
-    : currentFocusedIndex;
   const isInteractionOverlayOpen = isControllerKeyboardOpen || isExitPromptOpen || isSubGenrePickerOpen;
   const isShowingFilteredCount = Boolean(searchInput.trim() || filters.genre || filters.subGenre);
   const { hasOverflow, visibleSubGenres } = useMemo(
@@ -374,8 +371,8 @@ export function BigBoxView({
 
   const { scrollContainerRef, headerRef } = useBigBoxScrollSync({
     activeRailIndex,
-    currentFocusedIndex: c64GridFocusedIndex,
-    currentRailId: isC64Edition && currentRailType === 'alphabet' ? 'c64-library' : currentRailId,
+    currentFocusedIndex,
+    currentRailId,
     currentRailType,
     onSectionJumpHandled: () => setSectionJumpDirection(null),
     sectionJumpDirection,
@@ -497,23 +494,17 @@ export function BigBoxView({
           ) : isC64Edition ? (
             <C64EditionGrid
               alphabetLabel={filters.letter}
+              alphabetSections={navigationRails
+                .filter((rail) => rail.type === 'alphabet')
+                .map((rail) => ({ id: rail.id, label: rail.letter ?? rail.title, games: rail.games }))}
               classicGames={c64ClassicGames}
               favoriteGames={c64FavoriteGames}
               focusedGameId={currentFocusedGame?.id.toString()}
-              focusedIndex={c64GridFocusedIndex}
+              focusedIndex={currentFocusedIndex}
               focusedRailId={currentRail?.id}
               games={flatGames}
               isFavorite={isFavorite}
-              onFocusChange={(index) => {
-                const game = flatGames[index];
-                const railIndex = game
-                  ? navigationRails.findIndex((rail) => rail.type === 'alphabet' && rail.games.some((candidate) => candidate.id === game.id))
-                  : -1;
-                const rail = railIndex >= 0 ? navigationRails[railIndex] : null;
-                if (rail && game) {
-                  focusRailItem(railIndex, rail.id, rail.games.findIndex((candidate) => candidate.id === game.id));
-                }
-              }}
+              onFocusSectionItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
               onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
               onSelectGame={handleSelectGame}
               recentGames={c64RecentGames}

@@ -5,6 +5,7 @@ import { ImageSlider } from '../ImageSlider';
 import type { Game } from '../../types/game';
 
 interface C64EditionGridProps {
+  alphabetSections?: Array<{ id: string; label: string; games: Game[] }>;
   games: Game[];
   recentGames: Game[];
   favoriteGames: Game[];
@@ -17,6 +18,7 @@ interface C64EditionGridProps {
   focusedRailId?: string | null;
   focusedIndex?: number;
   onFocusChange?: (index: number) => void;
+  onFocusSectionItem?: (railId: string, index: number) => void;
   onEndReached?: () => void | Promise<void>;
   onFocusRailItem?: (railId: string, gameIndex: number) => void;
 }
@@ -104,6 +106,7 @@ function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, railId, titl
 
 export function C64EditionGrid({
   alphabetLabel,
+  alphabetSections,
   classicGames,
   favoriteGames,
   focusedGameId,
@@ -115,6 +118,7 @@ export function C64EditionGrid({
   toggleFavorite,
   focusedIndex = -1,
   onFocusChange,
+  onFocusSectionItem,
   onEndReached,
   onFocusRailItem,
 }: C64EditionGridProps) {
@@ -131,56 +135,63 @@ export function C64EditionGrid({
     return () => observer.disconnect();
   }, [onEndReached]);
 
+  const librarySections = alphabetSections ?? [{ id: 'c64-library', label: alphabetLabel ?? 'LIBRARY', games }];
+
   return (
     <div className="c64-edition-grid grid gap-8 px-4 pb-24 pt-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)] lg:px-8" data-c64-presentation="monitor" data-testid="c64-edition-grid">
       <C64Rail games={recentGames} focusedGameId={focusedRailId === 'recent' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('recent', gameIndex); }} onSelectGame={onSelectGame} railId="recent" title="RECENT" />
       <C64Rail games={favoriteGames} focusedGameId={focusedRailId === 'favorites' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('favorites', gameIndex); }} onSelectGame={onSelectGame} railId="favorites" title="FAVOURITES" />
       <C64Rail games={classicGames} focusedGameId={focusedRailId === 'classics' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('classics', gameIndex); }} onSelectGame={onSelectGame} railId="classics" title="CLASSICS" />
 
-      <section className="c64-library-romset" data-rail-id="c64-library">
-        <div className="mb-4 flex items-center gap-3">
-          <div className="h-5 w-5 bg-[var(--theme-secondary)]" />
-          <h2 className="font-mono text-xl font-black tracking-tight text-[var(--theme-secondary)] sm:text-2xl">{alphabetLabel ?? 'LIBRARY'}</h2>
-          <div className="h-px flex-1 bg-[var(--theme-outline-variant)]" />
-        </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-          {games.map((game, index) => {
-            const focused = focusedIndex === index || ((focusedRailId?.startsWith('alpha-') || focusedRailId === 'c64-library') && focusedGameId === game.id.toString());
-            const favorite = isFavorite(game.id.toString());
-            return (
-              <article
-                key={`${game.id}-${index}`}
-                className={`group relative cursor-pointer border-4 bg-black p-1 transition-colors ${focused ? 'border-[#ffff66] bg-[var(--theme-primary-container)] shadow-[0_0_0_2px_#ffff66]' : 'border-[var(--theme-outline-variant)] hover:border-[var(--theme-primary)]'}`}
-                data-focused={focused ? 'true' : 'false'}
-                data-testid="c64-rom-card"
-                onClick={() => onSelectGame(game)}
-                onMouseEnter={() => {
-                  onFocusChange?.(index);
-                }}
-                style={{ contentVisibility: 'auto', containIntrinsicSize: '0 300px' }}
-              >
-                <div className="aspect-[3/4] overflow-hidden bg-black" data-testid="c64-rom-media">
-                  <ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className="h-full w-full object-contain opacity-85 transition-opacity group-hover:opacity-100" />
-                </div>
-                {focused ? (
-                  <C64FocusTitle game={game} />
-                ) : (
-                  <div className="mt-1 flex items-start justify-between gap-1 px-1">
-                    <div className="min-w-0">
-                      <div className="truncate font-mono text-[10px] font-black uppercase tracking-wider text-[var(--theme-primary)]">{game.name}</div>
-                      <div className="font-mono text-[9px] uppercase text-[var(--theme-text-muted)]">{game.year || 'READY.'}</div>
-                    </div>
-                    <button aria-label={`Toggle favorite for ${game.name}`} className="shrink-0 font-mono text-sm text-[var(--theme-tertiary)]" onClick={(event) => { event.stopPropagation(); toggleFavorite(game.id.toString()); }}>
-                      {favorite ? '★' : '☆'}
-                    </button>
+      {librarySections.map((section, sectionIndex) => (
+        <section key={section.id} className="c64-library-romset" data-rail-id={section.id}>
+          <div className="mb-4 flex items-center gap-3">
+            <div className="h-5 w-5 bg-[var(--theme-secondary)]" />
+            <h2 className="font-mono text-xl font-black tracking-tight text-[var(--theme-secondary)] sm:text-2xl">{section.label}</h2>
+            <div className="h-px flex-1 bg-[var(--theme-outline-variant)]" />
+          </div>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+            {section.games.map((game, index) => {
+              const focused = focusedRailId
+                ? focusedRailId === section.id && (focusedIndex === index || focusedGameId === game.id.toString())
+                : focusedIndex === index;
+              const favorite = isFavorite(game.id.toString());
+              return (
+                <article
+                  key={`${section.id}-${game.id}-${index}`}
+                  className={`group relative cursor-pointer border-4 bg-black p-1 transition-colors ${focused ? 'border-[#ffff66] bg-[var(--theme-primary-container)] shadow-[0_0_0_2px_#ffff66]' : 'border-[var(--theme-outline-variant)] hover:border-[var(--theme-primary)]'}`}
+                  data-focused={focused ? 'true' : 'false'}
+                  data-testid="c64-rom-card"
+                  onClick={() => onSelectGame(game)}
+                  onMouseEnter={() => {
+                    onFocusChange?.(index);
+                    onFocusSectionItem?.(section.id, index);
+                  }}
+                  style={{ contentVisibility: 'auto', containIntrinsicSize: '0 300px' }}
+                >
+                  <div className="aspect-[3/4] overflow-hidden bg-black" data-testid="c64-rom-media">
+                    <ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className="h-full w-full object-contain opacity-85 transition-opacity group-hover:opacity-100" />
                   </div>
-                )}
-              </article>
-            );
-          })}
-        </div>
-        {onEndReached ? <div ref={endSentinelRef} aria-hidden="true" className="h-px" /> : null}
-      </section>
+                  {focused ? (
+                    <C64FocusTitle game={game} />
+                  ) : (
+                    <div className="mt-1 flex items-start justify-between gap-1 px-1">
+                      <div className="min-w-0">
+                        <div className="truncate font-mono text-[10px] font-black uppercase tracking-wider text-[var(--theme-primary)]">{game.name}</div>
+                        <div className="font-mono text-[9px] uppercase text-[var(--theme-text-muted)]">{game.year || 'READY.'}</div>
+                      </div>
+                      <button aria-label={`Toggle favorite for ${game.name}`} className="shrink-0 font-mono text-sm text-[var(--theme-tertiary)]" onClick={(event) => { event.stopPropagation(); toggleFavorite(game.id.toString()); }}>
+                        {favorite ? '★' : '☆'}
+                      </button>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+          {onEndReached && sectionIndex === librarySections.length - 1 ? <div ref={endSentinelRef} aria-hidden="true" className="h-px" /> : null}
+        </section>
+      ))}
     </div>
   );
 }
