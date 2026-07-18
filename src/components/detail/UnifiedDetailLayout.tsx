@@ -323,6 +323,12 @@ export function UnifiedDetailLayout({
   const [activeTab, setActiveTab] = useState<UnifiedDetailTab>('game');
   const [selectedVersionId, setSelectedVersionId] = useState(() => readStoredVersionId(game.id));
   const extrasNavigationRef = useRef<ExtrasBigscreenNavigation | null>(null);
+
+  // Arcade Void Tabbed Sidebar State & Refs
+  const [activeSidebarTab, setActiveSidebarTab] = useState<'notes' | 'credits' | 'files'>('files');
+  const [focusedFileIndex, setFocusedFileIndex] = useState(0);
+  const sidebarNotesScrollRef = useRef<HTMLDivElement | null>(null);
+  const sidebarCreditsScrollRef = useRef<HTMLDivElement | null>(null);
   
   const boxArtUrl = useResolvedBoxArtUrl(game);
   const showBoxArtPanel = Boolean(boxArtUrl);
@@ -512,6 +518,192 @@ export function UnifiedDetailLayout({
     }
   }, [activeMedia, availableMedia, boxArtUrl, boxFrontFilename, game.name, onFullscreen, screenshotFilename]);
 
+  const cycleSidebarTab = useCallback((dir: 'left' | 'right') => {
+    const tabs: Array<'notes' | 'credits' | 'files'> = ['files', 'notes', 'credits'];
+    const currentIndex = tabs.indexOf(activeSidebarTab);
+    const delta = dir === 'right' ? 1 : -1;
+    const nextIndex = (currentIndex + delta + tabs.length) % tabs.length;
+    setActiveSidebarTab(tabs[nextIndex]);
+  }, [activeSidebarTab]);
+
+  const renderArcadeSidebar = () => {
+    return (
+      <aside className="flex flex-col min-h-0 h-full shrink-0" style={{ gap: panelGap, width: `${sidebarWidth}px` }}>
+        {showSoundtrack && (
+          <section className={panelCls + " shrink-0"}>
+            <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(6, panelInnerGap - 8), padding: Math.max(8, panelPadding - 4) }}>
+              <SectionHeading title="Soundtrack Module" />
+              {game.musician ? (
+                <div className="flex items-center gap-2">
+                  {PLATFORM_PROFILES[settings.activePlatformId]?.mediaCapabilities.photos ? (
+                    <MusicianPhoto
+                      className="shrink-0"
+                      musicianName={game.musician.name}
+                      photoFilename={game.musician.photoPath}
+                      style={{ height: `${Math.max(28, (detailLayout?.musicianAvatarSize ?? 40) - 8)}px`, width: `${Math.max(28, (detailLayout?.musicianAvatarSize ?? 40) - 8)}px` }}
+                    />
+                  ) : null}
+                  <div className="min-w-0">
+                    <div className="truncate font-black text-theme-text" style={{ fontSize: `${Math.max(11, (detailLayout?.infoValueFontSize ?? 13) - 1)}px` }}>{game.musician.name}</div>
+                    <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-theme-text-muted">
+                      {settings.activePlatformId === 'c64' ? 'SID Composer' : 'Music Composer'}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              <div onMouseEnter={() => nav.hoverZone('sid')} className={nav.focusCls('sid')}>
+                <MusicPlayer platformId={settings.activePlatformId} filename={game.sidFilename} compact={true} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        <section className={panelCls + " shrink-0"}>
+          <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
+            <SectionHeading title="Version Details" />
+            <div className="grid gap-1.5">
+              <InfoRow label="Format" value={cleanMetadataValue(game.versionBy) ? (cleanMetadataValue(game.vPalNtsc) ?? 'PAL/NTSC') : 'G64'} layout={infoDensity} />
+              <InfoRow label="Protection" value={cleanMetadataValue(game.vTrainers) ? 'RapidLok' : 'None'} layout={infoDensity} />
+            </div>
+          </div>
+        </section>
+
+        {/* Tabbed Panel */}
+        <section className={panelCls + " flex-1 min-h-0 flex flex-col"}>
+          <div className="flex border-b border-theme-outline/20 shrink-0 select-none">
+            <button
+              type="button"
+              onClick={() => {
+                setActiveSidebarTab('files');
+                nav.setFocusedZone('sidebar-tabs');
+              }}
+              onMouseEnter={() => nav.hoverZone('sidebar-tabs')}
+              className={`flex-1 py-3 text-[10px] font-black uppercase tracking-[0.2em] border-r border-theme-outline/20 text-center transition-colors ${
+                activeSidebarTab === 'files'
+                  ? 'bg-theme-primary/10 border-t-2 border-t-theme-primary text-theme-primary'
+                  : 'bg-black/10 text-theme-text-muted hover:bg-black/20 hover:text-theme-text'
+              } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'files' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
+            >
+              FILES
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveSidebarTab('notes');
+                nav.setFocusedZone('sidebar-tabs');
+              }}
+              onMouseEnter={() => nav.hoverZone('sidebar-tabs')}
+              className={`flex-1 py-3 text-[10px] font-black uppercase tracking-[0.2em] border-r border-theme-outline/20 text-center transition-colors ${
+                activeSidebarTab === 'notes'
+                  ? 'bg-theme-primary/10 border-t-2 border-t-theme-primary text-theme-primary'
+                  : 'bg-black/10 text-theme-text-muted hover:bg-black/20 hover:text-theme-text'
+              } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'notes' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
+            >
+              NOTES
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveSidebarTab('credits');
+                nav.setFocusedZone('sidebar-tabs');
+              }}
+              onMouseEnter={() => nav.hoverZone('sidebar-tabs')}
+              className={`flex-1 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-center transition-colors ${
+                activeSidebarTab === 'credits'
+                  ? 'bg-theme-primary/10 border-t-2 border-t-theme-primary text-theme-primary'
+                  : 'bg-black/10 text-theme-text-muted hover:bg-black/20 hover:text-theme-text'
+              } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'credits' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
+            >
+              CREDITS
+            </button>
+          </div>
+
+          <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-3">
+            {activeSidebarTab === 'files' && (
+              <div className="space-y-2" id="sidebar-files-container">
+                {versions.map((version, index) => {
+                  const isSelected = selectedVersionId === version.id;
+                  const isFocused = nav.isFocused('sidebar-content') && focusedFileIndex === index;
+                  return (
+                    <button
+                      key={version.id}
+                      type="button"
+                      onClick={() => {
+                        selectVersion(version.id);
+                        setFocusedFileIndex(index);
+                        nav.setFocusedZone('sidebar-content');
+                      }}
+                      onMouseEnter={() => {
+                        setFocusedFileIndex(index);
+                        nav.hoverZone('sidebar-content');
+                      }}
+                      className={`w-full p-2.5 rounded-lg border text-left flex justify-between items-center transition-all ${
+                        isSelected
+                          ? 'bg-theme-primary/10 border-theme-primary/40 text-theme-primary'
+                          : 'bg-black/20 border-theme-outline/30 text-theme-text-muted hover:border-theme-outline/65 hover:text-theme-text'
+                      } ${
+                        isFocused
+                          ? 'ring-2 ring-[var(--theme-tertiary)] shadow-[0_0_12px_var(--theme-tertiary)] scale-[1.01] brightness-110 z-10'
+                          : ''
+                      }`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs font-bold truncate text-theme-text">{version.label}</div>
+                        <div className="text-[9px] uppercase tracking-wider text-theme-text-muted truncate mt-0.5">
+                          {version.subtitle}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                        <span className="text-[9px] font-mono border border-theme-outline/50 px-1 rounded text-theme-text-muted">
+                          {version.tag}
+                        </span>
+                        {isSelected && (
+                          <span className="text-[8px] bg-theme-primary text-[#00363e] px-1 py-0.5 rounded font-black uppercase tracking-wider">
+                            ACT
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {activeSidebarTab === 'notes' && (
+              <div
+                ref={sidebarNotesScrollRef}
+                className="text-theme-text/85 overflow-y-auto custom-scrollbar leading-relaxed h-full"
+                style={{
+                  fontSize: `${detailLayout?.notesFontSize ?? 13}px`,
+                }}
+              >
+                {archiveNotes}
+              </div>
+            )}
+
+            {activeSidebarTab === 'credits' && (
+              <div
+                ref={sidebarCreditsScrollRef}
+                className="space-y-1.5 overflow-y-auto custom-scrollbar h-full"
+              >
+                {personnel.length > 0 ? (
+                  personnel.map((entry) => (
+                    <div key={`${entry.label}-${entry.value}`} className="flex justify-between border-b border-theme-outline/20 pb-1 text-xs">
+                      <span className="font-mono uppercase tracking-wider text-theme-text-muted text-[10px]">{entry.label}</span>
+                      <span className="font-bold text-theme-primary text-[12px]">{entry.value}</span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-xs text-theme-text-muted">No credits metadata available.</div>
+                )}
+              </div>
+            )}
+          </div>
+        </section>
+      </aside>
+    );
+  };
+
   useEffect(() => {
     nav.registerAction('play', () => document.getElementById('play-game-btn')?.click());
     nav.registerAction('play-web', () => document.getElementById('play-browser-btn')?.click());
@@ -527,53 +719,112 @@ export function UnifiedDetailLayout({
     nav.registerAction('media-extras', () => {
       extrasNavigationRef.current?.activate();
     });
-    nav.registerAction('versions', () => undefined);
     nav.registerTabActions({
       previous: () => cycleTab('previous'),
       next: () => cycleTab('next'),
     });
 
-    nav.registerDirectionalOverride('versions', (direction) => {
-      const currentIndex = Math.max(versionIds.indexOf(selectedVersionId), 0);
-      if (direction === 'up') {
-        const nextIndex = currentIndex - versionColumns;
-        if (nextIndex >= 0) {
-          selectVersion(versionIds[nextIndex]);
+    if (isArcade) {
+      nav.registerAction('sidebar-tabs', () => undefined);
+      nav.registerDirectionalOverride('sidebar-tabs', (direction) => {
+        if (direction === 'left') {
+          cycleSidebarTab('left');
           return true;
         }
-      }
-      if (direction === 'down') {
-        const nextIndex = currentIndex + versionColumns;
-        if (nextIndex < versionIds.length) {
-          selectVersion(versionIds[nextIndex]);
+        if (direction === 'right') {
+          cycleSidebarTab('right');
           return true;
         }
-      }
-      if (direction === 'left') {
-        const nextIndex = currentIndex - 1;
-        const sameRow = Math.floor(nextIndex / versionColumns) === Math.floor(currentIndex / versionColumns);
-        if (nextIndex >= 0 && sameRow) {
-          selectVersion(versionIds[nextIndex]);
-          return true;
+        return false;
+      });
+
+      nav.registerDirectionalOverride('sidebar-content', (direction) => {
+        if (activeSidebarTab === 'files') {
+          if (direction === 'up') {
+            if (focusedFileIndex === 0) {
+              nav.setFocusedZone('sidebar-tabs');
+              return true;
+            }
+            setFocusedFileIndex((prev) => Math.max(0, prev - 1));
+            return true;
+          }
+          if (direction === 'down') {
+            setFocusedFileIndex((prev) => Math.min(versions.length - 1, prev + 1));
+            return true;
+          }
+        } else {
+          const container = activeSidebarTab === 'notes' ? sidebarNotesScrollRef.current : sidebarCreditsScrollRef.current;
+          if (container) {
+            if (direction === 'up') {
+              if (container.scrollTop === 0) {
+                nav.setFocusedZone('sidebar-tabs');
+                return true;
+              }
+              container.scrollTop -= 24;
+              return true;
+            }
+            if (direction === 'down') {
+              container.scrollTop += 24;
+              return true;
+            }
+          }
         }
-      }
-      if (direction === 'right') {
-        const nextIndex = currentIndex + 1;
-        const sameRow = Math.floor(nextIndex / versionColumns) === Math.floor(currentIndex / versionColumns);
-        if (nextIndex < versionIds.length && sameRow) {
-          selectVersion(versionIds[nextIndex]);
-          return true;
+        return false;
+      });
+
+      nav.registerAction('sidebar-content', () => {
+        if (activeSidebarTab === 'files' && versions[focusedFileIndex]) {
+          selectVersion(versions[focusedFileIndex].id);
         }
-      }
-      return false;
-    });
+      });
+    } else {
+      nav.registerAction('versions', () => undefined);
+      nav.registerDirectionalOverride('versions', (direction) => {
+        const currentIndex = Math.max(versionIds.indexOf(selectedVersionId), 0);
+        if (direction === 'up') {
+          const nextIndex = currentIndex - versionColumns;
+          if (nextIndex >= 0) {
+            selectVersion(versionIds[nextIndex]);
+            return true;
+          }
+        }
+        if (direction === 'down') {
+          const nextIndex = currentIndex + versionColumns;
+          if (nextIndex < versionIds.length) {
+            selectVersion(versionIds[nextIndex]);
+            return true;
+          }
+        }
+        if (direction === 'left') {
+          const nextIndex = currentIndex - 1;
+          const sameRow = Math.floor(nextIndex / versionColumns) === Math.floor(currentIndex / versionColumns);
+          if (nextIndex >= 0 && sameRow) {
+            selectVersion(versionIds[nextIndex]);
+            return true;
+          }
+        }
+        if (direction === 'right') {
+          const nextIndex = currentIndex + 1;
+          const sameRow = Math.floor(nextIndex / versionColumns) === Math.floor(currentIndex / versionColumns);
+          if (nextIndex < versionIds.length && sameRow) {
+            selectVersion(versionIds[nextIndex]);
+            return true;
+          }
+        }
+        return false;
+      });
+    }
 
     nav.registerDirectionalOverride('media-extras', (direction) => {
       return extrasNavigationRef.current?.move(direction) ?? false;
     });
   }, [
+    activeSidebarTab,
+    cycleSidebarTab,
     cycleTab,
+    focusedFileIndex,
     handleFullscreenMedia,
+    isArcade,
     nav,
     onToggleFavorite,
     selectVersion,
@@ -581,6 +832,7 @@ export function UnifiedDetailLayout({
     versionColumns,
     versionIds,
     versionIdsKey,
+    versions,
   ]);
 
   const bgStyle = useMemo(() => {
@@ -993,174 +1245,178 @@ export function UnifiedDetailLayout({
                     )}
                   </div>
 
-                  <aside className="grid min-h-0" style={{ gap: panelGap, gridTemplateRows: sidebarTemplateRows }}>
-                    <section className={panelCls}>
-                      <div className="flex h-full min-h-0 flex-col" style={{ gap: compactLowerPanelGap, padding: compactLowerPanelPadding }}>
-                        <SectionHeading title="Alternative Versions" />
-                        <div
-                          className="grid items-center justify-items-start"
-                          style={{
-                            columnGap: Math.max(10, panelPadding - 2),
-                            gridTemplateColumns: `repeat(${Math.max(versionColumns, 1)}, minmax(0, ${alternativeButtonSize}px))`,
-                            rowGap: 10,
-                          }}
-                        >
-                          {versions.map((version) => {
-                            const selected = selectedVersion?.id === version.id;
-                            const visualKind = getVersionVisualKind(version);
-                            const visualLabel = getVersionVisualLabel(visualKind);
-
-                            return (
-                              <button
-                                key={version.id}
-                                type="button"
-                                aria-label={`${visualLabel.label}: ${version.label}`}
-                                title={`${visualLabel.label}: ${version.label}`}
-                                onClick={() => {
-                                  selectVersion(version.id);
-                                  nav.setFocusedZone('versions');
-                                }}
-                                onMouseEnter={() => {
-                                  selectVersion(version.id);
-                                  nav.hoverZone('versions');
-                                }}
-                                className={`flex items-center justify-center rounded-theme-md border transition-all ${
-                                  selected && nav.isFocused('versions') 
-                                    ? 'bg-theme-primary/10 border-theme-primary shadow-sm shadow-theme-primary/35' 
-                                    : 'border-theme-outline/20 bg-theme-surface/10 hover:border-theme-primary/60'
-                                }`}
-                                style={{
-                                  width: `${alternativeButtonSize}px`,
-                                  height: `${alternativeButtonSize}px`,
-                                }}
-                              >
-                                <span
-                                  className="flex items-center justify-center"
-                                  style={{ height: `${alternativeGlyphSize}px`, width: `${alternativeGlyphSize}px` }}
-                                >
-                                  <VersionGlyph
-                                    kind={visualKind}
-                                    accent={selected ? 'var(--theme-primary)' : 'var(--theme-text-muted)'}
-                                    className="h-full w-full"
-                                  />
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-
-                        {selectedVersion ? (
-                          <div
-                            className={insetPanelCls}
-                            style={{ paddingInline: compactInnerCardPadding, paddingBlock: Math.max(8, compactInnerCardPadding - 1) }}
-                          >
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="min-w-0">
-                                <div
-                                  className="font-black uppercase tracking-[0.24em] text-theme-primary"
-                                  style={{ fontSize: `${detailLayout?.alternativeHintFontSize ?? 11}px` }}
-                                >
-                                  {getVersionVisualLabel(getVersionVisualKind(selectedVersion)).label}
-                                </div>
-                                <div
-                                  className="font-semibold text-theme-text"
-                                  style={{ ...clampTextLines(2), lineHeight: 1.3 }}
-                                >
-                                  {selectedVersion.label}
-                                </div>
-                              </div>
-                              <div
-                                className="rounded-full border border-theme-primary bg-theme-primary/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.22em] text-theme-primary"
-                              >
-                                Active
-                              </div>
-                            </div>
-                          </div>
-                        ) : null}
-                      </div>
-                    </section>
-
-                    {showSoundtrack && (
+                  {isArcade ? (
+                    renderArcadeSidebar()
+                  ) : (
+                    <aside className="grid min-h-0" style={{ gap: panelGap, gridTemplateRows: sidebarTemplateRows }}>
                       <section className={panelCls}>
-                        <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(6, panelInnerGap - 8), padding: Math.max(8, panelPadding - 4) }}>
-                          <SectionHeading title="Soundtrack Module" />
-                          {game.musician ? (
-                            <div className="flex items-center gap-2">
-                              {PLATFORM_PROFILES[settings.activePlatformId]?.mediaCapabilities.photos ? (
-                                <MusicianPhoto
-                                  className="shrink-0"
-                                  musicianName={game.musician.name}
-                                  photoFilename={game.musician.photoPath}
-                                  style={{ height: `${Math.max(28, (detailLayout?.musicianAvatarSize ?? 40) - 8)}px`, width: `${Math.max(28, (detailLayout?.musicianAvatarSize ?? 40) - 8)}px` }}
-                                />
-                              ) : null}
-                              <div className="min-w-0">
-                                <div className="truncate font-black text-theme-text" style={{ fontSize: `${Math.max(11, (detailLayout?.infoValueFontSize ?? 13) - 1)}px` }}>{game.musician.name}</div>
-                                <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-theme-text-muted">
-                                  {settings.activePlatformId === 'c64' ? 'SID Composer' : 'Music Composer'}
+                        <div className="flex h-full min-h-0 flex-col" style={{ gap: compactLowerPanelGap, padding: compactLowerPanelPadding }}>
+                          <SectionHeading title="Alternative Versions" />
+                          <div
+                            className="grid items-center justify-items-start"
+                            style={{
+                              columnGap: Math.max(10, panelPadding - 2),
+                              gridTemplateColumns: `repeat(${Math.max(versionColumns, 1)}, minmax(0, ${alternativeButtonSize}px))`,
+                              rowGap: 10,
+                            }}
+                          >
+                            {versions.map((version) => {
+                              const selected = selectedVersion?.id === version.id;
+                              const visualKind = getVersionVisualKind(version);
+                              const visualLabel = getVersionVisualLabel(visualKind);
+
+                              return (
+                                <button
+                                  key={version.id}
+                                  type="button"
+                                  aria-label={`${visualLabel.label}: ${version.label}`}
+                                  title={`${visualLabel.label}: ${version.label}`}
+                                  onClick={() => {
+                                    selectVersion(version.id);
+                                    nav.setFocusedZone('versions');
+                                  }}
+                                  onMouseEnter={() => {
+                                    selectVersion(version.id);
+                                    nav.hoverZone('versions');
+                                  }}
+                                  className={`flex items-center justify-center rounded-theme-md border transition-all ${
+                                    selected && nav.isFocused('versions') 
+                                      ? 'bg-theme-primary/10 border-theme-primary shadow-sm shadow-theme-primary/35' 
+                                      : 'border-theme-outline/20 bg-theme-surface/10 hover:border-theme-primary/60'
+                                  }`}
+                                  style={{
+                                    width: `${alternativeButtonSize}px`,
+                                    height: `${alternativeButtonSize}px`,
+                                  }}
+                                >
+                                  <span
+                                    className="flex items-center justify-center"
+                                    style={{ height: `${alternativeGlyphSize}px`, width: `${alternativeGlyphSize}px` }}
+                                  >
+                                    <VersionGlyph
+                                      kind={visualKind}
+                                      accent={selected ? 'var(--theme-primary)' : 'var(--theme-text-muted)'}
+                                      className="h-full w-full"
+                                    />
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {selectedVersion ? (
+                            <div
+                              className={insetPanelCls}
+                              style={{ paddingInline: compactInnerCardPadding, paddingBlock: Math.max(8, compactInnerCardPadding - 1) }}
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0">
+                                  <div
+                                    className="font-black uppercase tracking-[0.24em] text-theme-primary"
+                                    style={{ fontSize: `${detailLayout?.alternativeHintFontSize ?? 11}px` }}
+                                  >
+                                    {getVersionVisualLabel(getVersionVisualKind(selectedVersion)).label}
+                                  </div>
+                                  <div
+                                    className="font-semibold text-theme-text"
+                                    style={{ ...clampTextLines(2), lineHeight: 1.3 }}
+                                  >
+                                    {selectedVersion.label}
+                                  </div>
+                                </div>
+                                <div
+                                  className="rounded-full border border-theme-primary bg-theme-primary/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.22em] text-theme-primary"
+                                >
+                                  Active
                                 </div>
                               </div>
                             </div>
                           ) : null}
-                          <div onMouseEnter={() => nav.hoverZone('sid')} className={nav.focusCls('sid')}>
-                            <MusicPlayer platformId={settings.activePlatformId} filename={game.sidFilename} compact={true} />
+                        </div>
+                      </section>
+
+                      {showSoundtrack && (
+                        <section className={panelCls}>
+                          <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(6, panelInnerGap - 8), padding: Math.max(8, panelPadding - 4) }}>
+                            <SectionHeading title="Soundtrack Module" />
+                            {game.musician ? (
+                              <div className="flex items-center gap-2">
+                                {PLATFORM_PROFILES[settings.activePlatformId]?.mediaCapabilities.photos ? (
+                                  <MusicianPhoto
+                                    className="shrink-0"
+                                    musicianName={game.musician.name}
+                                    photoFilename={game.musician.photoPath}
+                                    style={{ height: `${Math.max(28, (detailLayout?.musicianAvatarSize ?? 40) - 8)}px`, width: `${Math.max(28, (detailLayout?.musicianAvatarSize ?? 40) - 8)}px` }}
+                                  />
+                                ) : null}
+                                <div className="min-w-0">
+                                  <div className="truncate font-black text-theme-text" style={{ fontSize: `${Math.max(11, (detailLayout?.infoValueFontSize ?? 13) - 1)}px` }}>{game.musician.name}</div>
+                                  <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-theme-text-muted">
+                                    {settings.activePlatformId === 'c64' ? 'SID Composer' : 'Music Composer'}
+                                  </div>
+                                </div>
+                              </div>
+                            ) : null}
+                            <div onMouseEnter={() => nav.hoverZone('sid')} className={nav.focusCls('sid')}>
+                              <MusicPlayer platformId={settings.activePlatformId} filename={game.sidFilename} compact={true} />
+                            </div>
+                          </div>
+                        </section>
+                      )}
+
+                      <section className={panelCls}>
+                        <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
+                          <SectionHeading title="Version Details" />
+                          <div className="grid gap-1.5">
+                            <InfoRow label="Version By" value={cleanMetadataValue(game.versionBy) ?? 'Unknown'} layout={infoDensity} />
+                            <InfoRow label="PAL/NTSC" value={cleanMetadataValue(game.vPalNtsc) ?? formatVersionLabel(game)} layout={infoDensity} />
+                            <InfoRow label="Size" value={cleanMetadataValue(game.vLength) ? `${game.vLength} Blocks` : 'Unknown'} layout={infoDensity} />
+                            <InfoRow label="Trainers" value={cleanMetadataValue(game.vTrainers) ?? '0'} layout={infoDensity} />
+                          </div>
+                          <div
+                            className={`grid rounded-theme-md ${
+                              isC64 
+                                ? 'border-8 border-t-theme-outline-variant border-l-theme-outline-variant border-b-theme-secondary border-r-theme-secondary bg-black/45' 
+                                : 'border border-theme-outline/20 bg-black/20'
+                            }`}
+                            style={{
+                              columnGap: 10,
+                              gridTemplateColumns: `repeat(${sidebarStatusColumns}, minmax(0,1fr))`,
+                              padding: Math.max(8, panelPadding - 2),
+                              rowGap: 6,
+                            }}
+                          >
+                            <StatusRow label="Loading Screen" value={game.vLoadingScreen} />
+                            <StatusRow label="High Score Saver" value={game.vHighScoreSaver} />
+                            <StatusRow label="Included Docs" value={game.vIncludedDocs} />
+                            <StatusRow label="True Drive Emul" value={game.vTrueDriveEmu} />
                           </div>
                         </div>
                       </section>
-                    )}
 
-                    <section className={panelCls}>
-                      <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
-                        <SectionHeading title="Version Details" />
-                        <div className="grid gap-1.5">
-                          <InfoRow label="Version By" value={cleanMetadataValue(game.versionBy) ?? 'Unknown'} layout={infoDensity} />
-                          <InfoRow label="PAL/NTSC" value={cleanMetadataValue(game.vPalNtsc) ?? formatVersionLabel(game)} layout={infoDensity} />
-                          <InfoRow label="Size" value={cleanMetadataValue(game.vLength) ? `${game.vLength} Blocks` : 'Unknown'} layout={infoDensity} />
-                          <InfoRow label="Trainers" value={cleanMetadataValue(game.vTrainers) ?? '0'} layout={infoDensity} />
+                      <section className={panelCls}>
+                        <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
+                          <SectionHeading title="Credits" />
+                          <div className="grid gap-1.5">
+                            {personnel.length > 0 ? (
+                              personnel.map((entry) => (
+                                <InfoRow
+                                  key={`${entry.label}-${entry.value}`}
+                                  label={entry.label}
+                                  value={entry.value}
+                                  layout={infoDensity}
+                                />
+                              ))
+                            ) : (
+                              <div className="rounded-theme-md border border-theme-outline/20 bg-black/20 px-4 py-3 text-sm text-theme-text-muted">
+                                No credits metadata available for this title.
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        <div
-                          className={`grid rounded-theme-md ${
-                            isC64 
-                              ? 'border-8 border-t-theme-outline-variant border-l-theme-outline-variant border-b-theme-secondary border-r-theme-secondary bg-black/45' 
-                              : 'border border-theme-outline/20 bg-black/20'
-                          }`}
-                          style={{
-                            columnGap: 10,
-                            gridTemplateColumns: `repeat(${sidebarStatusColumns}, minmax(0,1fr))`,
-                            padding: Math.max(8, panelPadding - 2),
-                            rowGap: 6,
-                          }}
-                        >
-                          <StatusRow label="Loading Screen" value={game.vLoadingScreen} />
-                          <StatusRow label="High Score Saver" value={game.vHighScoreSaver} />
-                          <StatusRow label="Included Docs" value={game.vIncludedDocs} />
-                          <StatusRow label="True Drive Emul" value={game.vTrueDriveEmu} />
-                        </div>
-                      </div>
-                    </section>
-
-                    <section className={panelCls}>
-                      <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
-                        <SectionHeading title="Credits" />
-                        <div className="grid gap-1.5">
-                          {personnel.length > 0 ? (
-                            personnel.map((entry) => (
-                              <InfoRow
-                                key={`${entry.label}-${entry.value}`}
-                                label={entry.label}
-                                value={entry.value}
-                                layout={infoDensity}
-                              />
-                            ))
-                          ) : (
-                            <div className="rounded-theme-md border border-theme-outline/20 bg-black/20 px-4 py-3 text-sm text-theme-text-muted">
-                              No credits metadata available for this title.
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </section>
-                  </aside>
+                      </section>
+                    </aside>
+                  )}
                 </div>
               </div>
             </div>

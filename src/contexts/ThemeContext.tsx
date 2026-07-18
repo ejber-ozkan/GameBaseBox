@@ -72,7 +72,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    return {
+      theme: arcadeVoidTheme,
+      setTheme: () => {},
+      availableThemes: BUILT_IN_THEMES,
+    };
   }
   return context;
 }

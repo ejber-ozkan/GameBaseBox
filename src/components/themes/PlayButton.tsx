@@ -8,6 +8,7 @@ import { WasmPlayer } from '../WasmPlayer';
 import { DetailNavigationHook } from '../../hooks/useDetailNavigation';
 import { buildLaunchRequest, buildPlatformAssetPath, getPlatformLaunchSettings } from '../../lib/platform-launch';
 import { supportsEmbeddedEmulation } from '../../lib/platform-capabilities';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export interface PlayLaunchTarget {
   label?: string;
@@ -47,6 +48,7 @@ function EmbeddedGlyph({ className = 'h-5 w-5' }: { className?: string }) {
 
 export function PlayButton({ game, launchTarget, nav, compact = false }: PlayButtonProps) {
   const { markAsPlayed, settings } = useSettings();
+  const { theme } = useTheme();
   const [status, setStatus] = useState<'idle' | 'launching' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const [showWasm, setShowWasm] = useState(false);
@@ -98,15 +100,19 @@ export function PlayButton({ game, launchTarget, nav, compact = false }: PlayBut
     setTimeout(() => setStatus('idle'), 4000);
   };
 
+  const isArcade = theme.id === 'arcade-void';
+
   const nativeButtonStyles: Record<typeof status, string> = {
-    idle:      'border-theme-primary bg-theme-primary text-theme-surface shadow-[0_0_0_1px_var(--theme-primary-container)_inset] hover:brightness-110',
+    idle:      isArcade
+      ? 'border-theme-primary bg-theme-primary text-[#00363e] shadow-[0_0_15px_var(--theme-primary-muted)] hover:shadow-[0_0_25px_var(--theme-primary)] hover:scale-[1.02]'
+      : 'border-theme-primary bg-theme-primary text-theme-surface shadow-[0_0_0_1px_var(--theme-primary-container)_inset] hover:brightness-110',
     launching: 'border-theme-outline-variant bg-theme-surface text-theme-text-muted cursor-not-allowed',
     success:   'border-emerald-300/60 bg-emerald-950/45 text-emerald-100',
     error:     'border-rose-400/55 bg-rose-950/45 text-rose-100',
   };
 
   const nativeIconStyles: Record<typeof status, string> = {
-    idle: 'text-theme-surface',
+    idle: isArcade ? 'text-[#00363e]' : 'text-theme-surface',
     launching: 'text-theme-text-muted',
     success: 'text-emerald-100',
     error: 'text-rose-100',
@@ -145,7 +151,9 @@ export function PlayButton({ game, launchTarget, nav, compact = false }: PlayBut
   const sideLabelClass = compact
     ? 'shrink-0 text-right text-[9px] uppercase tracking-[0.18em] text-white/75'
     : 'shrink-0 text-right text-[10px] uppercase tracking-[0.18em] text-white/75';
-  const webButtonClass = 'border-theme-primary/70 bg-theme-primary-container text-theme-primary shadow-[0_0_0_1px_var(--theme-primary-container)_inset] hover:border-theme-primary hover:brightness-110';
+  const webButtonClass = isArcade
+    ? 'border-theme-primary bg-transparent text-theme-primary shadow-none hover:bg-theme-primary/10 hover:scale-[1.02]'
+    : 'border-theme-primary/70 bg-theme-primary-container text-theme-primary shadow-[0_0_0_1px_var(--theme-primary-container)_inset] hover:border-theme-primary hover:brightness-110';
   const webIconClass = 'text-theme-primary';
   const nativeProviderLabel = platformLaunchSettings.providerLabel;
 

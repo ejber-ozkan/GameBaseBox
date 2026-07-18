@@ -10,6 +10,7 @@ import { buildLaunchRequest, buildPlatformAssetPath, getPlatformLaunchSettings }
 import { VisualExtraCard } from './extras/VisualExtraCard';
 import { VisualExtrasBrowser } from './extras/VisualExtrasBrowser';
 import { isVideoExtra, isAudioExtra } from './extras/ResolvedExtraMedia';
+import type { DetailNavigationHook } from '../hooks/useDetailNavigation';
 
 interface ExtrasDetailProps {
   game: Game;
@@ -19,6 +20,7 @@ interface ExtrasDetailProps {
   enableBigscreenGalleryUX?: boolean;
   layoutSpec?: DetailLayoutSpec;
   onRegisterBigscreenNavigation?: (navigation: ExtrasBigscreenNavigation | null) => void;
+  nav?: DetailNavigationHook;
 }
 
 export interface ExtrasBigscreenNavigation {
@@ -34,12 +36,16 @@ export function ExtrasDetail({
   enableBigscreenGalleryUX = false,
   layoutSpec,
   onRegisterBigscreenNavigation,
+  nav,
 }: ExtrasDetailProps) {
   const { markAsPlayed, settings } = useSettings();
   const [groupedExtras, setGroupedExtras] = useState<ExtraGroup[]>([]);
   const [launchStatus, setLaunchStatus] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const visualNavigationRef = useRef<ExtrasBigscreenNavigation | null>(null);
+
+  const [focusedDocIndex, setFocusedDocIndex] = useState(0);
+  const [focusedMediaIndex, setFocusedMediaIndex] = useState(0);
 
   useEffect(() => {
     setGroupedExtras(groupExtras(extras));
@@ -55,6 +61,9 @@ export function ExtrasDetail({
   const nonVideoMediaExtras = mediaGroupItems.filter((item) => !isVideoExtra(item));
   const galleryExtras = [...visualGroupItems, ...videoMediaExtras];
   const platformLaunchSettings = getPlatformLaunchSettings(settings);
+
+  const docsExtras = visibleGroups.find((group) => group.category === 'docs')?.items ?? [];
+  const mediaExtras = nonVideoMediaExtras;
 
   const handleLaunchExtra = async (extra: Extra) => {
     if (!platformLaunchSettings.emulatorPath) {
@@ -106,6 +115,100 @@ export function ExtrasDetail({
     return () => onRegisterBigscreenNavigation(null);
   }, [enableBigscreenGalleryUX, onRegisterBigscreenNavigation]);
 
+  // Handle auto-scrolling focused elements inside scrollable document/media grids
+  useEffect(() => {
+    const el = document.getElementById(`doc-item-${focusedDocIndex}`);
+    if (el) el.scrollIntoView({ block: 'nearest' });
+  }, [focusedDocIndex]);
+
+  useEffect(() => {
+    const el = document.getElementById(`media-item-${focusedMediaIndex}`);
+    if (el) el.scrollIntoView({ block: 'nearest' });
+  }, [focusedMediaIndex]);
+
+  // Register docs/media gamepad overrides dynamically
+  useEffect(() => {
+    if (!nav) return;
+
+    nav.registerAction('extras-docs', () => {
+      const doc = docsExtras[focusedDocIndex];
+      if (doc) handleOpenDoc(doc);
+    });
+
+    nav.registerDirectionalOverride('extras-docs', (direction) => {
+      if (direction === 'left') {
+        if (focusedDocIndex % 2 === 1) {
+          setFocusedDocIndex((idx) => idx - 1);
+          return true;
+        }
+        return false;
+      }
+      if (direction === 'right') {
+        if (focusedDocIndex % 2 === 0 && focusedDocIndex + 1 < docsExtras.length) {
+          setFocusedDocIndex((idx) => idx + 1);
+          return true;
+        }
+        return false;
+      }
+      if (direction === 'up') {
+        if (focusedDocIndex < 2) {
+          nav.setFocusedZone('media-extras');
+          return true;
+        }
+        setFocusedDocIndex((idx) => idx - 2);
+        return true;
+      }
+      if (direction === 'down') {
+        if (focusedDocIndex + 2 >= docsExtras.length) {
+          if (mediaExtras.length > 0) {
+            nav.setFocusedZone('extras-media');
+            setFocusedMediaIndex(0);
+          }
+          return true;
+        }
+        setFocusedDocIndex((idx) => idx + 2);
+        return true;
+      }
+      return false;
+    });
+
+    nav.registerAction('extras-media', () => {
+      const med = mediaExtras[focusedMediaIndex];
+      if (med) handleOpenDoc(med);
+    });
+
+    nav.registerDirectionalOverride('extras-media', (direction) => {
+      if (direction === 'left') {
+        if (focusedMediaIndex % 2 === 1) {
+          setFocusedMediaIndex((idx) => idx - 1);
+          return true;
+        }
+        return false;
+      }
+      if (direction === 'right') {
+        if (focusedMediaIndex % 2 === 0 && focusedMediaIndex + 1 < mediaExtras.length) {
+          setFocusedMediaIndex((idx) => idx + 1);
+          return true;
+        }
+        return false;
+      }
+      if (direction === 'up') {
+        if (focusedMediaIndex < 2) {
+          if (docsExtras.length > 0) {
+            nav.setFocusedZone('extras-docs');
+            setFocusedDocIndex(docsExtras.length - 1);
+          } else {
+            nav.setFocusedZone('media-extras');
+          }
+          return true;
+        }
+        setFocusedMediaIndex((idx) => idx - 2);
+        return true;
+      }
+      return false;
+    });
+  }, [nav, docsExtras.length, mediaExtras.length, focusedDocIndex, focusedMediaIndex]);
+
   if (extras.length === 0 || visibleGroups.length === 0) {
     if (hideEmptyState) return null;
     return (
@@ -117,9 +220,6 @@ export function ExtrasDetail({
   }
 
   if (enableBigscreenGalleryUX && layoutSpec) {
-    const docsExtras = (visibleGroups.find((group) => group.category === 'docs')?.items ?? []).slice(0, layoutSpec.extrasDocSlots);
-    const mediaExtras = nonVideoMediaExtras.slice(0, layoutSpec.extrasMediaSlots);
-
     return (
       <div ref={scrollContainerRef} className="grid h-full min-h-0 min-w-0" style={{ gap: layoutSpec.panelInnerGap, gridTemplateRows: 'minmax(0,1fr) auto auto' }}>
         {launchStatus && (
@@ -148,56 +248,96 @@ export function ExtrasDetail({
         )}
 
         {docsExtras.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center gap-3">
               <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">Documents & Manuals</h3>
               <div className="h-px flex-1 bg-gradient-to-r from-gray-700/50 to-transparent"></div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {docsExtras.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleOpenDoc(item)}
-                  className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-900/40 p-3 text-left transition-all hover:border-gray-600 hover:bg-gray-800/60"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-red-500/20 bg-red-950/30 text-red-400">
-                    {item.path.toLowerCase().endsWith('.pdf') ? '📄' : '📝'}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium text-white">{item.name}</div>
-                    <div className="truncate text-[10px] uppercase tracking-wider text-gray-500">{item.path.split(/[\/\\]/).shift()}</div>
-                  </div>
-                </button>
-              ))}
+            <div className="grid grid-cols-2 gap-3 max-h-[140px] overflow-y-auto custom-scrollbar p-1" id="extras-docs-container">
+              {docsExtras.map((item, index) => {
+                const isFocused = nav && nav.isFocused('extras-docs') && focusedDocIndex === index;
+                return (
+                  <button
+                    key={item.id}
+                    id={`doc-item-${index}`}
+                    onClick={() => {
+                      handleOpenDoc(item);
+                      if (nav) {
+                        setFocusedDocIndex(index);
+                        nav.setFocusedZone('extras-docs');
+                      }
+                    }}
+                    onMouseEnter={() => {
+                      if (nav) {
+                        setFocusedDocIndex(index);
+                        nav.hoverZone('extras-docs');
+                      }
+                    }}
+                    className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${
+                      isFocused
+                        ? 'ring-2 ring-[var(--theme-tertiary)] border-[var(--theme-tertiary)] bg-gray-800/80 shadow-[0_0_12px_var(--theme-tertiary)] scale-[1.01]'
+                        : 'border-gray-800 bg-gray-900/40 hover:border-gray-600 hover:bg-gray-800/60'
+                    }`}
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-red-500/20 bg-red-950/30 text-red-400">
+                      {item.path.toLowerCase().endsWith('.pdf') ? '📄' : '📝'}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium text-white">{item.name}</div>
+                      <div className="truncate text-[10px] uppercase tracking-wider text-gray-500">{item.path.split(/[\/\\]/).shift()}</div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
-        ) : <div />}
+        ) : null}
 
         {mediaExtras.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center gap-3">
               <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">Media Assets</h3>
               <div className="h-px flex-1 bg-gradient-to-r from-gray-700/50 to-transparent"></div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {mediaExtras.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleOpenDoc(item)}
-                  className="flex items-center gap-3 rounded-xl border border-purple-900/30 bg-purple-950/20 p-3 text-left transition-all hover:border-purple-500/50 hover:bg-purple-900/40"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-purple-500/30 bg-purple-500/10 text-purple-400">
-                    {item.path.toLowerCase().endsWith('.mp3') ? '🎵' : '🎬'}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium text-white">{item.name}</div>
-                    <div className="truncate text-[10px] uppercase tracking-wider text-purple-300/55">Asset file</div>
-                  </div>
-                </button>
-              ))}
+            <div className="grid grid-cols-2 gap-3 max-h-[140px] overflow-y-auto custom-scrollbar p-1" id="extras-media-container">
+              {mediaExtras.map((item, index) => {
+                const isFocused = nav && nav.isFocused('extras-media') && focusedMediaIndex === index;
+                return (
+                  <button
+                    key={item.id}
+                    id={`media-item-${index}`}
+                    onClick={() => {
+                      handleOpenDoc(item);
+                      if (nav) {
+                        setFocusedMediaIndex(index);
+                        nav.setFocusedZone('extras-media');
+                      }
+                    }}
+                    onMouseEnter={() => {
+                      if (nav) {
+                        setFocusedMediaIndex(index);
+                        nav.hoverZone('extras-media');
+                      }
+                    }}
+                    className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${
+                      isFocused
+                        ? 'ring-2 ring-[var(--theme-tertiary)] border-[var(--theme-tertiary)] bg-purple-900/50 shadow-[0_0_12px_var(--theme-tertiary)] scale-[1.01]'
+                        : 'border-purple-900/30 bg-purple-950/20 hover:border-purple-500/50 hover:bg-purple-900/40'
+                    }`}
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-purple-500/30 bg-purple-500/10 text-purple-400">
+                      {item.path.toLowerCase().endsWith('.mp3') ? '🎵' : '🎬'}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium text-white">{item.name}</div>
+                      <div className="truncate text-[10px] uppercase tracking-wider text-purple-300/55">Asset file</div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
-        ) : <div />}
+        ) : null}
       </div>
     );
   }
@@ -309,5 +449,3 @@ export function ExtrasDetail({
     </div>
   );
 }
-
-

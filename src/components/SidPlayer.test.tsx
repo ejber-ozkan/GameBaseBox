@@ -22,6 +22,14 @@ vi.mock('../contexts/SettingsContext', () => ({
   })
 }));
 
+vi.mock('../contexts/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: { id: 'c64-edition' },
+    setTheme: vi.fn(),
+    availableThemes: []
+  })
+}));
+
 // Mock tauri-bridge
 vi.mock('../lib/tauri-bridge', () => ({
   downloadMediaAsset: vi.fn(),

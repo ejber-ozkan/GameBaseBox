@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { downloadMediaAsset, resolveMediaPath, getMediaUrl } from '../lib/tauri-bridge';
 import { PLATFORM_PROFILES } from '../lib/platform-capabilities';
 
@@ -31,14 +32,39 @@ interface SidPlayerProps {
 
 export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProps) {
   const { settings } = useSettings();
+  const { theme } = useTheme();
   const platformId = settings?.activePlatformId || 'c64';
   const isSidPlatform = PLATFORM_PROFILES[platformId]?.mediaCapabilities.music === 'sid';
+  const isArcade = theme?.id === 'arcade-void';
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
   const [localUrl, setLocalUrl] = useState<string | undefined>(audioUrl);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+
+  const [barHeights, setBarHeights] = useState<number[]>([20, 20, 20, 20, 20]);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      const timer = setTimeout(() => {
+        setBarHeights((prev) => prev.every((h) => h === 20) ? prev : [20, 20, 20, 20, 20]);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+
+    const interval = setInterval(() => {
+      setBarHeights([
+        Math.floor(Math.random() * 80) + 20,
+        Math.floor(Math.random() * 80) + 20,
+        Math.floor(Math.random() * 80) + 20,
+        Math.floor(Math.random() * 80) + 20,
+        Math.floor(Math.random() * 80) + 20,
+      ]);
+    }, 120);
+
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
   useEffect(() => {
     setLocalUrl(audioUrl);
@@ -146,6 +172,95 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
 
   if (!filename) {
     return <div className={`text-theme-text-muted ${compact ? 'text-xs' : 'text-sm'}`}>No SID track available</div>;
+  }
+
+  if (isArcade) {
+    return (
+      <div data-testid="sid-player" className="w-full rounded-theme-lg border border-theme-outline bg-theme-surface/75 backdrop-blur-md p-3 flex flex-col gap-3 shadow-lg">
+        <div className="flex items-center gap-3">
+          {localUrl ? (
+            <button
+              id="sid-play-btn"
+              className={`w-9 h-9 rounded-full border border-theme-primary flex items-center justify-center shrink-0 transition-all ${
+                isPlaying ? 'bg-theme-primary text-[#00363e] animate-pulse shadow-[0_0_12px_var(--theme-primary)]' : 'bg-transparent text-theme-primary hover:bg-theme-primary/10'
+              }`}
+              onClick={() => {
+                if (!isPlaying) {
+                  if (typeof window !== 'undefined') {
+                    if (!window.jsSID) {
+                      setDownloadError("jsSID engine not loaded. Try refreshing the page.");
+                      return;
+                    }
+                    if (!window.SIDplayer) {
+                      window.SIDplayer = new window.jsSID(16384, 0.0005);
+                    }
+                    if (window.jsSID_aCtx && window.jsSID_aCtx.state === 'suspended') {
+                      window.jsSID_aCtx.resume();
+                    }
+                  }
+                }
+                setDownloadError(null);
+                setIsPlaying(!isPlaying);
+              }}
+              data-testid="play-button"
+              title="Play SID"
+            >
+              {isPlaying ? '⏸' : '▶'}
+            </button>
+          ) : (
+            <button
+              id="sid-play-btn"
+              className="px-2.5 py-1 text-[10px] rounded border border-theme-primary bg-theme-primary-container text-theme-primary font-bold uppercase hover:brightness-110 disabled:opacity-50"
+              onClick={handleScrape}
+              disabled={isDownloading}
+            >
+              {isDownloading ? 'Scraping...' : '⬇ Scrape'}
+            </button>
+          )}
+          
+          <div className="min-w-0 flex-1">
+            <div className="font-mono text-[10px] text-theme-primary tracking-widest uppercase truncate">
+              {isPlaying ? 'SID 6581 - ACTIVE' : 'SID 6581 - STANDBY'}
+            </div>
+            <div className="text-xs font-bold text-theme-primary truncate" title={filename}>
+              {filename.split(/[\\/]/).pop()}
+            </div>
+          </div>
+        </div>
+
+        <div className="h-6 bg-black/40 rounded border border-theme-outline/50 flex items-end px-2 gap-1 py-1">
+          {barHeights.map((height, i) => (
+            <div
+              key={i}
+              className="flex-1 bg-theme-primary rounded-t transition-all duration-100"
+              style={{ height: `${height}%` }}
+            />
+          ))}
+        </div>
+
+        {localUrl && (
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-theme-text-muted">🔈</span>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={volume}
+              onChange={(e) => setVolume(parseFloat(e.target.value))}
+              className="w-full accent-[var(--theme-primary)] h-1 rounded bg-black/40"
+              data-testid="volume-slider"
+            />
+          </div>
+        )}
+
+        {downloadError && (
+          <div className="text-[9px] leading-tight text-red-400">
+            ⚠ {downloadError}
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (

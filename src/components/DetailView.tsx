@@ -12,7 +12,9 @@ import { useInputMode } from '../hooks/useInputMode';
 import { useGamepad } from '../hooks/useGamepad';
 import { useFavorites } from '../hooks/useFavorites';
 import { useSettings } from '../contexts/SettingsContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { usePopupOpenSound } from '../hooks/usePopupOpenSound';
+import { supportsEmbeddedEmulation } from '../lib/platform-capabilities';
 import { FullscreenLayoutMetrics, useFullscreenLayoutMetrics } from '../hooks/useFullscreenLayoutMetrics';
 
 interface DetailViewProps {
@@ -73,6 +75,7 @@ function getCachedGameDetail(gameId: string, platformId: string) {
 
 export function DetailView({ game, onBack }: DetailViewProps) {
   const { settings } = useSettings();
+  const { theme } = useTheme();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [fullscreenMedia, setFullscreenMedia] = useState<DetailFullscreenMedia | null>(null);
   const [detailedGame, setDetailedGame] = useState<GameDetail | null>(null);
@@ -84,21 +87,40 @@ export function DetailView({ game, onBack }: DetailViewProps) {
   const showSoundtrack = PLATFORM_PROFILES[settings.activePlatformId]?.mediaCapabilities.music !== 'none';
 
   const detailConfig = useMemo(() => {
-    const config = { ...DETAIL_CONFIG } as Partial<typeof DETAIL_CONFIG>;
-    if (!showSoundtrack) {
-      delete config['sid'];
-      if (config['media-extras']?.right === 'sid') {
-        config['media-extras'] = { ...config['media-extras'], right: undefined };
+    const isArcade = theme.id === 'arcade-void';
+    const canPlayEmbedded = supportsEmbeddedEmulation(settings.activePlatformId);
+    
+    const config = {
+      'favorite':          { down: 'play' },
+      'play':              { up: 'favorite', right: 'media-boxfront', down: canPlayEmbedded ? 'play-web' : (isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions') },
+      'play-web':          { up: 'play', left: 'media-boxfront', down: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions' },
+      'media-gameplay':    { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },
+      'media-titlescreen': { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },
+      'media-videosna':    { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },
+      'media-boxfront':    { up: 'favorite', left: 'media-gameplay', right: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'media-extras' },
+      
+      'media-extras':      { up: 'media-gameplay', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'extras-docs' },
+      'extras-docs':       { up: 'media-extras', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'extras-media' },
+      'extras-media':      { up: 'extras-docs', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions' },
+      
+      'screenshot':        { left: 'media-gameplay', down: showSoundtrack ? 'sid' : undefined },
+    } as NavigationConfig;
+
+    if (isArcade) {
+      if (showSoundtrack) {
+        config['sid'] = { up: canPlayEmbedded ? 'play-web' : 'play', left: 'media-gameplay', down: 'sidebar-tabs' };
       }
-      if (config['versions']?.down === 'sid') {
-        config['versions'] = { ...config['versions'], down: undefined };
-      }
-      if (config['screenshot']?.down === 'sid') {
-        config['screenshot'] = { ...config['screenshot'], down: undefined };
+      config['sidebar-tabs'] = { up: showSoundtrack ? 'sid' : (canPlayEmbedded ? 'play-web' : 'play'), left: 'media-gameplay', down: 'sidebar-content' };
+      config['sidebar-content'] = { up: 'sidebar-tabs', left: 'media-gameplay' };
+    } else {
+      config['versions'] = { up: canPlayEmbedded ? 'play-web' : 'play', left: 'media-boxfront', down: showSoundtrack ? 'sid' : undefined };
+      if (showSoundtrack) {
+        config['sid'] = { up: 'versions', left: 'media-boxfront' };
       }
     }
+
     return config;
-  }, [showSoundtrack]);
+  }, [showSoundtrack, theme.id, settings.activePlatformId]);
 
   const nav = useDetailNavigation({ onBack, config: detailConfig as NavigationConfig, enabled: !fullscreenMedia });
   const hasBlockingModal = () => typeof document !== 'undefined' && Boolean(document.querySelector('[data-detail-modal="open"]'));
