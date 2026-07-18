@@ -474,6 +474,7 @@ export function BigBoxView({
               classicGames={c64ClassicGames}
               favoriteGames={c64FavoriteGames}
               focusedGameId={currentFocusedGame?.id.toString()}
+              focusedRailId={currentRail?.id}
               games={flatGames}
               isFavorite={isFavorite}
               onSelectGame={handleSelectGame}

@@ -36,11 +36,33 @@ describe('C64EditionGrid', () => {
     expect(screen.getAllByTestId('c64-rail-card')).toHaveLength(3);
   });
 
-  it('uses 16:9 screenshot cards for recent games and compact 3:4 ROM cards for the library', () => {
+  it('uses horizontally scrollable 16:9 rails and compact 3:4 ROM cards for the library', () => {
     renderGrid();
 
     expect(screen.getAllByTestId('c64-recent-media')[0].classList).toContain('aspect-video');
+    expect(screen.getAllByTestId('c64-rail-scroll')[0].classList).toContain('overflow-x-auto');
+    expect(screen.getAllByTestId('c64-rail-card')[0].classList).toContain('flex-none');
     expect(screen.getAllByTestId('c64-rom-media')[0].classList).toContain('aspect-[3/4]');
+  });
+
+  it('uses the reference yellow title block and far-right cursor for a focused rail card', () => {
+    render(
+      <C64EditionGrid
+        focusedGameId={mockGames[0].id.toString()}
+        focusedRailId="recent"
+        games={[]}
+        favoriteGames={[]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        recentGames={[mockGames[0]]}
+        classicGames={[]}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByTestId('c64-focused-rail-card').classList).toContain('border-[#ffff66]');
+    expect(screen.getByTestId('c64-focused-title-strip').classList).toContain('bg-[#ffff66]');
+    expect(screen.getByTestId('c64-blinking-cursor').classList).toContain('ml-auto');
   });
 
   it('keeps a focused ROM card visibly marked without changing its compact card contract', () => {
