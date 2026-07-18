@@ -32,4 +32,13 @@ export const c64EditionTheme: Theme = {
     steppedBorders: true,
     blinkingCursor: true,
   },
+  layout: {
+    structure: 'flat-alphabet',
+    alphabetNavType: 'rail',
+    itemAspectRatio: 'square',
+    headerStyle: 'retro-monitor',
+    railStyle: 'basic',
+  },
+  assets: {},
 };
+

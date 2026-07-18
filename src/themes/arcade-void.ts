@@ -33,4 +33,13 @@ export const arcadeVoidTheme: Theme = {
     blinkingCursor: false,
     glassmorphism: true,
   },
+  layout: {
+    structure: 'shelves',
+    alphabetNavType: 'jump-bar',
+    itemAspectRatio: 'portrait',
+    headerStyle: 'standard',
+    railStyle: 'acrylic',
+  },
+  assets: {},
 };
+

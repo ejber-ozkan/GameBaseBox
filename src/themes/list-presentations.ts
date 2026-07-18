@@ -1,5 +1,10 @@
+import { Theme } from './types';
+import { arcadeVoidTheme } from './arcade-void';
+import { cyberpunkCrtTheme } from './cyberpunk-crt';
+import { c64EditionTheme } from './c64-edition';
+
 export type ThemeListPresentation = {
-  id: 'arcade-void' | 'cyberpunk-crt' | 'c64-edition';
+  id: string;
   layout: 'arcade-dashboard' | 'cyberpunk-terminal' | 'c64-workspace';
   columns: readonly ['index', 'title', 'year', 'publisher', 'genre', 'system'];
   bigBox: {
@@ -9,31 +14,27 @@ export type ThemeListPresentation = {
 
 const sharedColumns = ['index', 'title', 'year', 'publisher', 'genre', 'system'] as const;
 
-const presentations: Record<ThemeListPresentation['id'], ThemeListPresentation> = {
-  'arcade-void': {
-    id: 'arcade-void',
-    layout: 'arcade-dashboard',
-    columns: sharedColumns,
-    bigBox: { railStyle: 'acrylic' },
-  },
-  'cyberpunk-crt': {
-    id: 'cyberpunk-crt',
-    layout: 'cyberpunk-terminal',
-    columns: sharedColumns,
-    bigBox: { railStyle: 'terminal' },
-  },
-  'c64-edition': {
-    id: 'c64-edition',
-    layout: 'c64-workspace',
-    columns: sharedColumns,
-    bigBox: { railStyle: 'basic' },
-  },
-};
+const staticThemes = [arcadeVoidTheme, cyberpunkCrtTheme, c64EditionTheme];
 
 /**
- * The list data contract is intentionally shared. A theme only chooses a
- * presenter, so custom themes have one obvious place to define list styling.
+ * The list data contract is dynamically derived from theme layout tokens,
+ * laying the groundwork for a future user UI Theme Maker.
  */
 export function getThemeListPresentation(themeId?: string): ThemeListPresentation {
-  return presentations[themeId as ThemeListPresentation['id']] ?? presentations['arcade-void'];
+  const matchedTheme = staticThemes.find(t => t.id === themeId) || arcadeVoidTheme;
+
+  let layoutPreset: ThemeListPresentation['layout'] = 'arcade-dashboard';
+  if (matchedTheme.layout.structure === 'flat-alphabet') {
+    layoutPreset = matchedTheme.id === 'c64-edition' ? 'c64-workspace' : 'cyberpunk-terminal';
+  }
+
+  return {
+    id: matchedTheme.id,
+    layout: layoutPreset,
+    columns: sharedColumns,
+    bigBox: {
+      railStyle: matchedTheme.layout.railStyle,
+    },
+  };
 }
+

@@ -32,4 +32,13 @@ export const cyberpunkCrtTheme: Theme = {
     steppedBorders: false,
     blinkingCursor: false,
   },
+  layout: {
+    structure: 'flat-alphabet',
+    alphabetNavType: 'rail',
+    itemAspectRatio: 'square',
+    headerStyle: 'minimal',
+    railStyle: 'terminal',
+  },
+  assets: {},
 };
+

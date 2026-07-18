@@ -32,6 +32,19 @@ export interface ThemeEffects {
   glassmorphism?: boolean;
 }
 
+export interface ThemeLayout {
+  structure: 'shelves' | 'flat-alphabet';
+  alphabetNavType: 'jump-bar' | 'rail';
+  itemAspectRatio: 'portrait' | 'square' | 'landscape';
+  headerStyle: 'standard' | 'minimal' | 'retro-monitor';
+  railStyle: 'acrylic' | 'terminal' | 'basic';
+}
+
+export interface ThemeAssets {
+  wallpaper?: string;
+  soundPack?: string;
+}
+
 export interface Theme {
   id: string;
   displayName: string;
@@ -39,4 +52,7 @@ export interface Theme {
   typography: ThemeTypography;
   borderRadius: ThemeBorderRadius;
   effects: ThemeEffects;
+  layout: ThemeLayout;
+  assets: ThemeAssets;
 }
+
