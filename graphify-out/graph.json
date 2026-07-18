@@ -7982,7 +7982,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "bigbox_bigboxalphabetrail_bigboxalphabetrailprops",
-      "community": 66,
+      "community": 17,
       "norm_label": "bigboxalphabetrailprops"
     },
     {
@@ -8639,7 +8639,7 @@
       "label": "CyberpunkCrtGrid()",
       "file_type": "code",
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
-      "source_location": "L93",
+      "source_location": "L103",
       "_origin": "ast",
       "id": "library_cyberpunkcrtgrid_cyberpunkcrtgrid",
       "community": 104,
@@ -35322,9 +35322,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page",
-      "target": "library_cyberpunkcrtgrid",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid"
     },
     {
       "relation": "imports",
@@ -35333,9 +35333,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page",
-      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgrid",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgrid"
     },
     {
       "relation": "imports_from",
@@ -36462,9 +36462,9 @@
       "source_file": "src/components/BigBoxView.tsx",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_bigboxview",
-      "target": "library_cyberpunkcrtgrid",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid"
     },
     {
       "relation": "imports",
@@ -36473,9 +36473,9 @@
       "source_file": "src/components/BigBoxView.tsx",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_bigboxview",
-      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgrid",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgrid"
     },
     {
       "relation": "imports_from",
@@ -38186,9 +38186,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid",
-      "target": "components_imageslider",
-      "confidence_score": 1.0
+      "target": "components_imageslider"
     },
     {
       "relation": "imports_from",
@@ -38252,9 +38252,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid",
-      "target": "components_imageslider_imageslider",
-      "confidence_score": 1.0
+      "target": "components_imageslider_imageslider"
     },
     {
       "relation": "imports",
@@ -41935,9 +41935,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid",
-      "target": "library_cyberpunkcrtgrid_ctrfocusedtitle",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid_ctrfocusedtitle"
     },
     {
       "relation": "contains",
@@ -41945,9 +41945,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L93",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid",
-      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgrid",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgrid"
     },
     {
       "relation": "contains",
@@ -41955,9 +41955,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid",
-      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgridprops",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgridprops"
     },
     {
       "relation": "contains",
@@ -41965,9 +41965,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid",
-      "target": "library_cyberpunkcrtgrid_cyberpunkrail",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid_cyberpunkrail"
     },
     {
       "relation": "contains",
@@ -41975,9 +41975,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid",
-      "target": "library_cyberpunkcrtgrid_getmetadata",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid_getmetadata"
     },
     {
       "relation": "imports_from",
@@ -41986,9 +41986,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid",
-      "target": "types_game",
-      "confidence_score": 1.0
+      "target": "types_game"
     },
     {
       "relation": "imports",
@@ -41997,9 +41997,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid",
-      "target": "types_game_game",
-      "confidence_score": 1.0
+      "target": "types_game_game"
     },
     {
       "relation": "references",
@@ -42008,9 +42008,9 @@
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "library_cyberpunkcrtgrid_cyberpunkcrtgridprops",
-      "target": "types_game_game",
-      "confidence_score": 1.0
+      "target": "types_game_game"
     },
     {
       "relation": "imports_from",
@@ -54902,5 +54902,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "1d46752c4c34e34493c2da8f6dc00b9af76d31de"
+  "built_at_commit": "ad097f501e54dfb1a1df8cd47f6bf834d1bfb914"
 }

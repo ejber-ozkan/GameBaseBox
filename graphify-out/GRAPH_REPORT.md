@@ -1,7 +1,7 @@
 # Graph Report - GameBaseBox  (2026-07-18)
 
 ## Corpus Check
-- 161 files · ~122,979 words
+- 161 files · ~123,059 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1d46752c`
+- Built from commit: `ad097f50`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -208,8 +208,8 @@ Cohesion: 0.10
 Nodes (20): app, security, windows, enable, scope, build, beforeBuildCommand, beforeDevCommand (+12 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.13
-Nodes (17): calculateDownNavigation(), calculateLeftNavigation(), calculateRightNavigation(), calculateUpNavigation(), NavigationParams, NavigationResult, NavigationState, BIGBOX_LETTERS (+9 more)
+Cohesion: 0.12
+Nodes (18): BigBoxAlphabetRailProps, calculateDownNavigation(), calculateLeftNavigation(), calculateRightNavigation(), calculateUpNavigation(), NavigationParams, NavigationResult, NavigationState (+10 more)
 
 ### Community 18 - "Component 18"
 Cohesion: 0.10
@@ -353,7 +353,7 @@ Nodes (11): Agent Instructions, Beads Issue Tracker, Codebase Navigation with Gr
 
 ### Community 66 - "Community 66"
 Cohesion: 0.12
-Nodes (16): BigBoxAlphabetRail(), BigBoxAlphabetRailProps, BigBoxTileMedia(), BigBoxTileMediaProps, COVER_CACHE, SCREENSHOT_CACHE, getTargetVisibleCards(), HorizontalRail() (+8 more)
+Nodes (15): BigBoxAlphabetRail(), BigBoxTileMedia(), BigBoxTileMediaProps, COVER_CACHE, SCREENSHOT_CACHE, getTargetVisibleCards(), HorizontalRail(), HorizontalRailProps (+7 more)
 
 ### Community 67 - "Component 67"
 Cohesion: 0.47

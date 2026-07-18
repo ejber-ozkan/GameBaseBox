@@ -44,6 +44,12 @@ function CtrFocusedTitle({ game }: { game: Game }) {
 function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId, title }: Pick<CyberpunkCrtGridProps, 'onSelectGame'> & { focusedGameId?: string | null; games: Game[]; onFocusGame: (gameId: string | null, gameIndex?: number) => void; railId: string; title: string }) {
   const railScrollRef = useRef<HTMLDivElement>(null);
 
+  const scrollRail = (direction: 'previous' | 'next') => {
+    const rail = railScrollRef.current;
+    if (!rail) return;
+    rail.scrollBy({ behavior: 'smooth', left: (direction === 'next' ? 1 : -1) * rail.clientWidth * 0.8 });
+  };
+
   useEffect(() => {
     if (!focusedGameId) return;
     const focusedCard = railScrollRef.current?.querySelector(`[data-game-id="${focusedGameId}"]`);
@@ -56,9 +62,13 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
         <span aria-hidden="true" className="h-6 w-1.5 shrink-0 bg-[var(--theme-primary)] shadow-[2px_0_0_var(--theme-secondary)]" />
         <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{title}</h2>
         <span className="ml-auto hidden font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)] sm:block">SYS://LINK_ACTIVE</span>
+        <div className="flex shrink-0 gap-2">
+          <button aria-label={`Previous ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('previous')}>‹</button>
+          <button aria-label={`Next ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('next')}>›</button>
+        </div>
       </div>
       {games.length > 0 ? (
-        <div ref={railScrollRef} className="no-scrollbar grid snap-x snap-mandatory grid-flow-col auto-cols-[minmax(260px,31vw)] gap-4 overflow-x-auto pb-3" data-testid="cyberpunk-rail-scroll">
+        <div ref={railScrollRef} className="no-scrollbar grid snap-x snap-mandatory grid-flow-col auto-cols-[minmax(180px,16vw)] gap-4 overflow-x-auto pb-3" data-testid="cyberpunk-rail-scroll">
           {games.map((game, gameIndex) => {
             const focused = focusedGameId === game.id.toString();
             return (
@@ -123,13 +133,13 @@ export function CyberpunkCrtGrid({ activeAlphabetRailId, alphabetLabel, alphabet
             <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{section.label}</h2>
             <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)]">DATABASE</span>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8" style={gridColumns ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` } : undefined}>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6" style={gridColumns ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` } : undefined}>
             {(activeAlphabetRailId === undefined || activeAlphabetRailId === section.id ? section.games : []).map((game, index) => {
               const focused = focusedRailId ? focusedRailId === section.id && (focusedIndex === index || focusedGameId === game.id.toString()) : focusedIndex === index;
               const favorite = isFavorite(game.id.toString());
               return (
-                <article key={`${section.id}-${game.id}-${index}`} className={`group relative cursor-pointer border bg-[var(--theme-surface)] p-1 transition-[border-color,box-shadow] ${focused ? 'border-2 border-[var(--theme-primary)] shadow-[2px_2px_0_var(--theme-primary),-1px_-1px_0_var(--theme-tertiary)]' : 'border-[var(--theme-outline-variant)] hover:border-[var(--theme-primary)]'}`} data-focused={focused ? 'true' : 'false'} data-testid="cyberpunk-library-card" onClick={() => onSelectGame(game)} onMouseEnter={() => { onFocusChange?.(index); onFocusSectionItem?.(section.id, index); }} style={{ contentVisibility: 'auto', containIntrinsicSize: '0 300px' }}>
-                  <div className="aspect-[3/4] overflow-hidden bg-black"><ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className="h-full w-full object-contain grayscale opacity-85 transition-[filter,opacity] group-hover:grayscale-0 group-hover:opacity-100" /></div>
+                <article key={`${section.id}-${game.id}-${index}`} className={`group relative cursor-pointer border bg-[var(--theme-surface)] p-1 transition-[border-color,box-shadow] ${focused ? 'border-2 border-[var(--theme-primary)] shadow-[2px_2px_0_var(--theme-primary),-1px_-1px_0_var(--theme-tertiary)]' : 'border-[var(--theme-outline-variant)] hover:border-[var(--theme-primary)]'}`} data-focused={focused ? 'true' : 'false'} data-testid="cyberpunk-library-card" onClick={() => onSelectGame(game)} onMouseEnter={() => { onFocusChange?.(index); onFocusSectionItem?.(section.id, index); }} style={{ contentVisibility: 'auto', containIntrinsicSize: '0 230px' }}>
+                  <div className="aspect-[1.6] overflow-hidden bg-black"><ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className="h-full w-full object-contain grayscale opacity-85 transition-[filter,opacity] group-hover:grayscale-0 group-hover:opacity-100" /></div>
                   <div className="mt-1 flex min-w-0 items-start gap-1 font-mono text-[9px] uppercase tracking-wide"><div className="min-w-0 flex-1"><div className="truncate font-black text-[var(--theme-text)]">{game.name}</div><div className="truncate text-[var(--theme-text-muted)]">{getMetadata(game)}</div></div><button aria-label={`Toggle favorite for ${game.name}`} className="shrink-0 text-sm text-[var(--theme-tertiary)]" onClick={(event) => { event.stopPropagation(); toggleFavorite(game.id.toString()); }}>{favorite ? '★' : '☆'}</button></div>
                 </article>
               );

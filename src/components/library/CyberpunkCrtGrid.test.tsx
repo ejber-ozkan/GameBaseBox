@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../../data/mockGames';
 import { CyberpunkCrtGrid } from './CyberpunkCrtGrid';
@@ -51,5 +51,35 @@ describe('CyberpunkCrtGrid', () => {
     expect(grid.querySelector('[data-rail-id="classics"]')).toBeTruthy();
     expect(grid.querySelector('[data-rail-id="alpha-A"]')).toBeTruthy();
     expect(screen.getByTestId('cyberpunk-focused-rail-card').getAttribute('data-focused')).toBe('true');
+  });
+
+  it('uses Void-density library panels and C64-style scrolling controls on every rail', () => {
+    const scrollBy = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollBy', { configurable: true, value: scrollBy });
+    render(
+      <CyberpunkCrtGrid
+        games={[mockGames[0]]}
+        recentGames={[mockGames[0]]}
+        favoriteGames={[mockGames[0]]}
+        classicGames={[mockGames[0]]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    const libraryGrid = screen.getByTestId('cyberpunk-library-card').parentElement;
+    expect(libraryGrid?.classList).toContain('md:grid-cols-4');
+    expect(libraryGrid?.classList).toContain('lg:grid-cols-6');
+    expect(screen.getByTestId('cyberpunk-library-card').querySelector('.aspect-\\[1\\.6\\]')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Previous RECENT games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Next RECENT games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Previous FAVOURITE games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Next FAVOURITE games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Previous CLASSICS games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Next CLASSICS games' })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next RECENT games' }));
+    expect(scrollBy).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'smooth', left: 0 }));
   });
 });
