@@ -157,4 +157,27 @@ describe('SidPlayer Component', () => {
       expect(screen.getByTestId('play-button')).not.toBeNull();
     });
   });
+
+  test('stops playback when game-launch event is dispatched', async () => {
+    render(<SidPlayer filename="test.sid" audioUrl="/audio/test.sid" />);
+    const playBtn = screen.getByTestId('play-button');
+
+    // Click play
+    await act(async () => {
+      fireEvent.click(playBtn);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('PLAYING')).not.toBeNull();
+    });
+
+    // Dispatch game-launch event
+    await act(async () => {
+      window.dispatchEvent(new CustomEvent('game-launch'));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('STOPPED')).not.toBeNull();
+    });
+  });
 });

@@ -71,6 +71,10 @@ export function ExtrasDetail({
       return;
     }
 
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('game-launch'));
+    }
+
     setLaunchStatus(`Launching ${extra.name}...`);
     try {
       const result = await launchEmulator(buildLaunchRequest(settings, 'extras', extra.path, game));

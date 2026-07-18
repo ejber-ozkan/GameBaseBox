@@ -79,6 +79,34 @@ export function SapPlayer({ filename, audioUrl, compact = false }: SapPlayerProp
     return () => clearInterval(interval);
   }, [isPlaying]);
 
+  // Listen for global game-launch event to stop playback and clean up on unmount
+  useEffect(() => {
+    const handleGameLaunch = () => {
+      setIsPlaying(false);
+      if (typeof window !== 'undefined' && window.SAPplayer) {
+        try {
+          window.SAPplayer.pause?.();
+          window.SAPplayer.stop?.();
+        } catch (err) {
+          console.warn('SAPplayer stop on game-launch ignored:', err);
+        }
+      }
+    };
+
+    window.addEventListener('game-launch', handleGameLaunch);
+    return () => {
+      window.removeEventListener('game-launch', handleGameLaunch);
+      if (typeof window !== 'undefined' && window.SAPplayer) {
+        try {
+          window.SAPplayer.pause?.();
+          window.SAPplayer.stop?.();
+        } catch (err) {
+          console.warn('SAPplayer stop on unmount ignored:', err);
+        }
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const player = typeof window !== 'undefined' ? window.SAPplayer : undefined;
     if (!player) return;

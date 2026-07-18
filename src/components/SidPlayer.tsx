@@ -66,6 +66,24 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
     return () => clearInterval(interval);
   }, [isPlaying]);
 
+  // Listen for global game-launch event to stop playback and clean up on unmount
+  useEffect(() => {
+    const handleGameLaunch = () => {
+      setIsPlaying(false);
+    };
+    window.addEventListener('game-launch', handleGameLaunch);
+    return () => {
+      window.removeEventListener('game-launch', handleGameLaunch);
+      if (typeof window !== 'undefined' && window.SIDplayer) {
+        try {
+          window.SIDplayer.pause();
+        } catch (err) {
+          console.warn('SIDplayer pause on unmount ignored:', err);
+        }
+      }
+    };
+  }, []);
+
   useEffect(() => {
     setLocalUrl(audioUrl);
   }, [audioUrl]);

@@ -81,6 +81,10 @@ export function PlayButton({ game, launchTarget, nav, compact = false }: PlayBut
       return;
     }
 
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('game-launch'));
+    }
+
     setStatus('launching');
     try {
       const result = await launchEmulator(buildLaunchRequest(settings, launchSource, romRelativePath, game));
@@ -136,6 +140,11 @@ export function PlayButton({ game, launchTarget, nav, compact = false }: PlayBut
       setTimeout(() => setStatus('idle'), 4000);
       return;
     }
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('game-launch'));
+    }
+
     markAsPlayed(game.id.toString());
     setShowWasm(true);
   };
