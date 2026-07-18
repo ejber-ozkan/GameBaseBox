@@ -49,10 +49,20 @@ export interface BigBoxSessionState {
 }
 
 export function getC64NavigationRails(rails: BigBoxRailCategory[], flatGames: Game[]): BigBoxRailCategory[] {
-  return [
-    ...rails.filter((rail) => rail.type !== 'alphabet'),
-    { id: 'c64-library', title: 'Library', games: flatGames, type: 'alphabet' },
-  ];
+  return rails.map((rail) => {
+    if (rail.type !== 'alphabet' || !rail.letter) {
+      return rail;
+    }
+
+    const games = flatGames.filter((game) => {
+      const firstCharacter = game.name.trim().charAt(0).toUpperCase();
+      return rail.letter === '#'
+        ? !/[A-Z]/.test(firstCharacter)
+        : firstCharacter === rail.letter;
+    });
+
+    return { ...rail, games };
+  });
 }
 
 export function BigBoxView({
@@ -102,6 +112,9 @@ export function BigBoxView({
   const currentRail = activeRailIndex >= 0 ? navigationRails[activeRailIndex] : null;
   const currentFocusedIndex = currentRail ? (railFocusIndices[currentRail.id] ?? 0) : 0;
   const currentFocusedGame = currentRail?.games[currentFocusedIndex] ?? null;
+  const c64GridFocusedIndex = isC64Edition && currentRail?.type === 'alphabet' && currentFocusedGame
+    ? flatGames.findIndex((game) => game.id === currentFocusedGame.id)
+    : currentFocusedIndex;
   const isInteractionOverlayOpen = isControllerKeyboardOpen || isExitPromptOpen || isSubGenrePickerOpen;
   const isShowingFilteredCount = Boolean(searchInput.trim() || filters.genre || filters.subGenre);
   const { hasOverflow, visibleSubGenres } = useMemo(
@@ -361,8 +374,8 @@ export function BigBoxView({
 
   const { scrollContainerRef, headerRef } = useBigBoxScrollSync({
     activeRailIndex,
-    currentFocusedIndex,
-    currentRailId,
+    currentFocusedIndex: c64GridFocusedIndex,
+    currentRailId: isC64Edition && currentRailType === 'alphabet' ? 'c64-library' : currentRailId,
     currentRailType,
     onSectionJumpHandled: () => setSectionJumpDirection(null),
     sectionJumpDirection,
@@ -487,11 +500,20 @@ export function BigBoxView({
               classicGames={c64ClassicGames}
               favoriteGames={c64FavoriteGames}
               focusedGameId={currentFocusedGame?.id.toString()}
-              focusedIndex={currentRail?.id === 'c64-library' ? currentFocusedIndex : -1}
+              focusedIndex={c64GridFocusedIndex}
               focusedRailId={currentRail?.id}
               games={flatGames}
               isFavorite={isFavorite}
-              onFocusChange={(index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === 'c64-library'), 'c64-library', index)}
+              onFocusChange={(index) => {
+                const game = flatGames[index];
+                const railIndex = game
+                  ? navigationRails.findIndex((rail) => rail.type === 'alphabet' && rail.games.some((candidate) => candidate.id === game.id))
+                  : -1;
+                const rail = railIndex >= 0 ? navigationRails[railIndex] : null;
+                if (rail && game) {
+                  focusRailItem(railIndex, rail.id, rail.games.findIndex((candidate) => candidate.id === game.id));
+                }
+              }}
               onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
               onSelectGame={handleSelectGame}
               recentGames={c64RecentGames}

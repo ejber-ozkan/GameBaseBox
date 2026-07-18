@@ -92,16 +92,24 @@ describe('BigBoxView', () => {
     expect(screen.getByTestId('c64-edition-grid').textContent).toBe(`${mockGames[0].name}|${mockGames[1].name}|${mockGames[0].name}`);
   });
 
-  it('replaces unloaded alphabet rails with the visible C64 ROM library for navigation', () => {
+  it('keeps C64 alphabet sections navigable with their visible ROMs', () => {
     const navigationRails = getC64NavigationRails([
       { id: 'recent', title: 'Recent', games: [mockGames[0]], type: 'recent' },
       { id: 'favorites', title: 'Favourites', games: [mockGames[1]], type: 'favorites' },
       { id: 'classics', title: 'Classics', games: [mockGames[0]], type: 'classics' },
+      { id: 'alpha-#', title: '0-9 & Symbols', games: [], type: 'alphabet', letter: '#' },
       { id: 'alpha-A', title: 'Letter A', games: [], type: 'alphabet', letter: 'A' },
-    ], [mockGames[0], mockGames[1]]);
+      { id: 'alpha-B', title: 'Letter B', games: [], type: 'alphabet', letter: 'B' },
+    ], [
+      { ...mockGames[0], name: '1942' },
+      { ...mockGames[1], name: 'Archon' },
+      { ...mockGames[2], name: 'Boulder Dash' },
+    ]);
 
-    expect(navigationRails.map((rail) => rail.id)).toEqual(['recent', 'favorites', 'classics', 'c64-library']);
-    expect(navigationRails[3]?.games).toEqual([mockGames[0], mockGames[1]]);
+    expect(navigationRails.map((rail) => rail.id)).toEqual(['recent', 'favorites', 'classics', 'alpha-#', 'alpha-A', 'alpha-B']);
+    expect(navigationRails[3]?.games.map((game) => game.name)).toEqual(['1942']);
+    expect(navigationRails[4]?.games.map((game) => game.name)).toEqual(['Archon']);
+    expect(navigationRails[5]?.games.map((game) => game.name)).toEqual(['Boulder Dash']);
   });
 
   it('keeps letter rails after classics without a pulsing decorative overlay', () => {
