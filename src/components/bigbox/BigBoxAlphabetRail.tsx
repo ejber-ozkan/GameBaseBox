@@ -10,7 +10,6 @@ interface BigBoxAlphabetRailProps {
   focusedIdx: number;
   isActive: boolean;
   isFavorite: (gameId: string) => boolean;
-  isMouseMode: boolean;
   layout: FullscreenLayoutMetrics;
   onFocus: (index: number) => void;
   onSelectGame: (gameId: number) => void;
@@ -21,7 +20,6 @@ export function BigBoxAlphabetRail({
   focusedIdx,
   isActive,
   isFavorite,
-  isMouseMode,
   layout,
   onFocus,
   onSelectGame,
@@ -86,11 +84,7 @@ export function BigBoxAlphabetRail({
             <div
               key={`${rail.id}-${game.id}-${gameIndex}`}
               onClick={() => onSelectGame(game.id)}
-              onMouseEnter={() => {
-                if (isMouseMode) {
-                  onFocus(gameIndex);
-                }
-              }}
+              onMouseEnter={() => onFocus(gameIndex)}
               className={`group relative aspect-[1.75] cursor-pointer overflow-hidden rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] shadow-lg transition-all duration-500 ${
                 isFocused
                   ? `z-10 border-[var(--theme-primary)] shadow-[0_0_32px_var(--theme-primary)]`

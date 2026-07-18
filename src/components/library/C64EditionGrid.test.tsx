@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../../data/mockGames';
 import { C64EditionGrid } from './C64EditionGrid';
@@ -52,6 +52,26 @@ describe('C64EditionGrid', () => {
     expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="favorites"]')).toBeTruthy();
     expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="classics"]')).toBeTruthy();
     expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="c64-library"]')).toBeTruthy();
+  });
+
+  it('reports the mouse-highlighted C64 rail card as the next controller focus target', () => {
+    const onFocusRailItem = vi.fn();
+    render(
+      <C64EditionGrid
+        games={[]}
+        favoriteGames={[]}
+        isFavorite={() => false}
+        onFocusRailItem={onFocusRailItem}
+        onSelectGame={vi.fn()}
+        recentGames={[mockGames[0]]}
+        classicGames={[]}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    fireEvent.mouseEnter(screen.getByTestId('c64-rail-card'));
+
+    expect(onFocusRailItem).toHaveBeenCalledWith('recent', 0);
   });
 
   it('provides previous and next carousel controls for each C64 rail', () => {

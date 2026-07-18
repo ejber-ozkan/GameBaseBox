@@ -69,7 +69,7 @@ export function BigBoxView({
   onFiltersChange,
 }: BigBoxViewProps) {
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
-  const { isMouseMode, onGamepadInput } = useInputMode();
+  const { onGamepadInput, showMouse } = useInputMode();
   const [activeRailIndex, setActiveRailIndex] = useState(sessionState?.activeRailIndex ?? 0);
   const [activeHeaderRow, setActiveHeaderRow] = useState(sessionState?.activeHeaderRow ?? 0);
   const [activeHeaderItemIndex, setActiveHeaderItemIndex] = useState(sessionState?.activeHeaderItemIndex ?? 0);
@@ -378,6 +378,8 @@ export function BigBoxView({
   return (
     <div 
       className={`bigbox-list-surface fixed inset-0 flex flex-col overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] select-none ${
+        !showMouse ? 'cursor-none' : ''
+      } ${
         isC64Edition ? 'border-[24px] border-[var(--theme-secondary)]' : ''
       }`}
       data-list-presentation={listPresentation.layout}
@@ -489,6 +491,8 @@ export function BigBoxView({
               focusedRailId={currentRail?.id}
               games={flatGames}
               isFavorite={isFavorite}
+              onFocusChange={(index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === 'c64-library'), 'c64-library', index)}
+              onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
               onSelectGame={handleSelectGame}
               recentGames={c64RecentGames}
               toggleFavorite={toggleFavorite}
@@ -505,7 +509,6 @@ export function BigBoxView({
                     focusedIdx={focusedIdx}
                     isActive={isActive}
                     isFavorite={isFavorite}
-                    isMouseMode={isMouseMode}
                     layout={layout}
                     onFocus={(gameIndex) => focusRailItem(idx, rail.id, gameIndex)}
                     onSelectGame={(gameId) => {
@@ -527,7 +530,6 @@ export function BigBoxView({
                     onSelectGame={handleSelectGame}
                     focusedIndex={focusedIdx}
                     isActive={isActive}
-                    isMouseFocusEnabled={isMouseMode}
                     onFocusChange={(fIdx) => focusRailItem(idx, rail.id, fIdx)}
                     isFavorite={isFavorite}
                     layout={layout}

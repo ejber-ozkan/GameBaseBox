@@ -18,6 +18,7 @@ interface C64EditionGridProps {
   focusedIndex?: number;
   onFocusChange?: (index: number) => void;
   onEndReached?: () => void | Promise<void>;
+  onFocusRailItem?: (railId: string, gameIndex: number) => void;
 }
 
 function getStudio(game: Game) {
@@ -35,7 +36,7 @@ function C64FocusTitle({ game }: { game: Game }) {
   );
 }
 
-function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, railId, title }: Pick<C64EditionGridProps, 'onSelectGame'> & { focusedGameId?: string | null; games: Game[]; onFocusGame: (gameId: string | null) => void; railId: string; title: string }) {
+function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, railId, title }: Pick<C64EditionGridProps, 'onSelectGame'> & { focusedGameId?: string | null; games: Game[]; onFocusGame: (gameId: string | null, gameIndex?: number) => void; railId: string; title: string }) {
   const railScrollRef = useRef<HTMLDivElement>(null);
 
   const scrollRail = (direction: 'previous' | 'next') => {
@@ -65,7 +66,7 @@ function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, railId, titl
       </div>
       {games.length > 0 ? (
         <div ref={railScrollRef} className="no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto pb-3" data-testid="c64-rail-scroll">
-          {games.map((game) => {
+          {games.map((game, gameIndex) => {
             const focused = focusedGameId === game.id.toString();
             return (
                 <article
@@ -74,7 +75,7 @@ function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, railId, titl
                   data-game-id={game.id.toString()}
                   data-testid={focused ? 'c64-focused-rail-card' : 'c64-rail-card'}
                   onClick={() => onSelectGame(game)}
-                  onMouseEnter={() => onFocusGame(game.id.toString())}
+                  onMouseEnter={() => onFocusGame(game.id.toString(), gameIndex)}
                   onMouseLeave={() => onFocusGame(null)}
                   style={{ width: 'clamp(300px, 32vw, 440px)' }}
                 >
@@ -115,6 +116,7 @@ export function C64EditionGrid({
   focusedIndex = -1,
   onFocusChange,
   onEndReached,
+  onFocusRailItem,
 }: C64EditionGridProps) {
   const endSentinelRef = useRef<HTMLDivElement>(null);
   const [hoveredRailGameId, setHoveredRailGameId] = useState<string | null>(null);
@@ -131,9 +133,9 @@ export function C64EditionGrid({
 
   return (
     <div className="c64-edition-grid grid gap-8 px-4 pb-24 pt-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)] lg:px-8" data-c64-presentation="monitor" data-testid="c64-edition-grid">
-      <C64Rail games={recentGames} focusedGameId={focusedRailId === 'recent' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} railId="recent" title="RECENT" />
-      <C64Rail games={favoriteGames} focusedGameId={focusedRailId === 'favorites' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} railId="favorites" title="FAVOURITES" />
-      <C64Rail games={classicGames} focusedGameId={focusedRailId === 'classics' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} railId="classics" title="CLASSICS" />
+      <C64Rail games={recentGames} focusedGameId={focusedRailId === 'recent' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('recent', gameIndex); }} onSelectGame={onSelectGame} railId="recent" title="RECENT" />
+      <C64Rail games={favoriteGames} focusedGameId={focusedRailId === 'favorites' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('favorites', gameIndex); }} onSelectGame={onSelectGame} railId="favorites" title="FAVOURITES" />
+      <C64Rail games={classicGames} focusedGameId={focusedRailId === 'classics' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('classics', gameIndex); }} onSelectGame={onSelectGame} railId="classics" title="CLASSICS" />
 
       <section className="c64-library-romset" data-rail-id="c64-library">
         <div className="mb-4 flex items-center gap-3">
@@ -152,7 +154,9 @@ export function C64EditionGrid({
                 data-focused={focused ? 'true' : 'false'}
                 data-testid="c64-rom-card"
                 onClick={() => onSelectGame(game)}
-                onMouseEnter={() => onFocusChange?.(index)}
+                onMouseEnter={() => {
+                  onFocusChange?.(index);
+                }}
                 style={{ contentVisibility: 'auto', containIntrinsicSize: '0 300px' }}
               >
                 <div className="aspect-[3/4] overflow-hidden bg-black" data-testid="c64-rom-media">

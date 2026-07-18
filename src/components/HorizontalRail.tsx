@@ -15,7 +15,6 @@ interface HorizontalRailProps {
   onFocusChange: (index: number) => void;
   tileScale?: 'large' | 'normal';
   loop?: boolean;
-  isMouseFocusEnabled?: boolean;
   isFavorite?: (gameId: string) => boolean;
   layout?: FullscreenLayoutMetrics;
 }
@@ -53,7 +52,6 @@ export function HorizontalRail({
   onFocusChange,
   tileScale = 'normal',
   loop = true,
-  isMouseFocusEnabled = true,
   isFavorite,
   layout,
 }: HorizontalRailProps) {
@@ -198,13 +196,11 @@ export function HorizontalRail({
               key={`${game.id}-${idx}`}
               onClick={() => onSelectGame(game)}
               onMouseEnter={() => {
-                if (isMouseFocusEnabled) {
-                  if (loop) {
-                    // Normalize back to original index
-                    onFocusChange(idx % originalCount);
-                  } else {
-                    onFocusChange(idx);
-                  }
+                if (loop) {
+                  // Normalize back to original index
+                  onFocusChange(idx % originalCount);
+                } else {
+                  onFocusChange(idx);
                 }
               }}
               className={`group relative shrink-0 cursor-pointer overflow-hidden rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] shadow-lg transition-all duration-500 ${
