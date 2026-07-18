@@ -148,6 +148,28 @@ describe('useBigBoxNavigation', () => {
     expect(props.setActiveRailIndex).toHaveBeenCalledWith(2);
   });
 
+  it('jumps to the matching letter in the C64 library when that is the only alphabet rail', () => {
+    const archon = { ...mockGames[0], name: 'Archon' };
+    const boulderDash = { ...mockGames[1], name: 'Boulder Dash' };
+    const props = createProps({
+      activeHeaderItemIndex: 2,
+      activeHeaderRow: 2,
+      railFocusIndices: { 'c64-library': 0 },
+      rails: [{ id: 'c64-library', title: 'Library', games: [archon, boulderDash], type: 'alphabet' }],
+    });
+
+    renderHook(() => useBigBoxNavigation(props));
+
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+
+    expect(props.onLetterJump).toHaveBeenCalledOnce();
+    expect(props.setActiveRailIndex).toHaveBeenCalledWith(0);
+    expect(props.setRailFocusIndices).toHaveBeenCalledWith(expect.any(Function));
+    expect(props.setRailFocusIndices.mock.calls[0]?.[0]({ 'c64-library': 0 })).toEqual({ 'c64-library': 1 });
+  });
+
   it('toggles favorite on the focused game when gamepad Y is pressed', () => {
     const props = createProps({
       activeRailIndex: 0,

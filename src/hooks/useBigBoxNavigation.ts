@@ -104,8 +104,27 @@ export function useBigBoxNavigation({
     if (targetRailIndex !== -1) {
       setSectionJumpDirection(null);
       setActiveRailIndex(targetRailIndex);
+      return;
     }
-  }, [rails, setActiveRailIndex]);
+
+    const c64LibraryIndex = rails.findIndex((rail) => rail.id === 'c64-library');
+    if (c64LibraryIndex === -1 || !railId.startsWith('alpha-')) {
+      return;
+    }
+
+    const c64Library = rails[c64LibraryIndex];
+    const letter = railId.slice('alpha-'.length);
+    const gameIndex = c64Library.games.findIndex((game) => {
+      const firstCharacter = game.name.trim().charAt(0).toUpperCase();
+      return letter === '#' ? !/[A-Z]/.test(firstCharacter) : firstCharacter === letter;
+    });
+
+    setSectionJumpDirection(null);
+    setActiveRailIndex(c64LibraryIndex);
+    if (gameIndex >= 0) {
+      setRailFocusIndices((previous) => ({ ...previous, [c64Library.id]: gameIndex }));
+    }
+  }, [rails, setActiveRailIndex, setRailFocusIndices]);
 
   const focusRailItem = useCallback((railIndex: number, railId: string, gameIndex: number) => {
     setSectionJumpDirection(null);
