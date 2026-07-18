@@ -58,6 +58,11 @@ export function sortRecentGames(games: Game[], recentlyPlayedIds: readonly strin
     .filter((game): game is Game => Boolean(game));
 }
 
+/** @internal Exported for unit testing */
+export function getFlatLibraryLoadLimit(totalGameCount: number, loadFlatLibrary: boolean) {
+  return loadFlatLibrary ? totalGameCount : 0;
+}
+
 export function useBigBoxLibraryData({
   activeRailIndex,
   activePlatformId,
@@ -106,9 +111,6 @@ export function useBigBoxLibraryData({
         const query = searchInput || undefined;
         const libraryFilters = { ...filters, searchQuery: query };
         const gameCountPromise = getDbGameCount(libraryFilters, activePlatformId);
-        const flatGamesPromise = loadFlatLibrary
-          ? getDbGames(1000, 0, libraryFilters, activePlatformId)
-          : Promise.resolve([] as Game[]);
 
         if (recentlyPlayedIds.length > 0) {
           const recent = await getDbGames(100, 0, { ...libraryFilters, favoriteIds: recentlyPlayedIds }, activePlatformId);
@@ -150,8 +152,11 @@ export function useBigBoxLibraryData({
           ]);
         }
 
-        setTotalGameCount(await gameCountPromise);
-        setFlatGames(await flatGamesPromise);
+        const gameCount = await gameCountPromise;
+        setTotalGameCount(gameCount);
+        setFlatGames(loadFlatLibrary
+          ? await getDbGames(getFlatLibraryLoadLimit(gameCount, true), 0, libraryFilters, activePlatformId)
+          : []);
       } catch (error) {
         console.error('BigBox init error:', error);
       } finally {

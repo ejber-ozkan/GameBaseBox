@@ -49,7 +49,7 @@ export function useBigBoxScrollSync({
     });
   }, [getHeaderHeight]);
 
-  const scrollAlphabetTileToCenterBand = useCallback((tile: HTMLElement) => {
+  const scrollAlphabetTileToCenterBand = useCallback((tile: HTMLElement, force = false) => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
@@ -69,7 +69,7 @@ export function useBigBoxScrollSync({
     const bandBottom = visibleTop + visibleHeight * 0.75;
     const tileCenter = tileRect.top + tileRect.height / 2;
 
-    if (tileCenter >= bandTop && tileCenter <= bandBottom) {
+    if (!force && tileCenter >= bandTop && tileCenter <= bandBottom) {
       return;
     }
 
@@ -123,7 +123,7 @@ export function useBigBoxScrollSync({
     const tile = gridElement?.children[currentFocusedIndex] as HTMLElement | undefined;
 
     if (tile && currentRailType === 'alphabet') {
-      scrollAlphabetTileToCenterBand(tile);
+      scrollAlphabetTileToCenterBand(tile, sectionJumpDirection !== null);
     } else {
       scrollElementBelowHeader(anchorElement ?? resolvedRailElement);
     }

@@ -11,6 +11,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import {
   getAlphabetRailCacheKey,
+  getFlatLibraryLoadLimit,
   sortRecentGames,
   BIGBOX_LETTERS,
   useBigBoxLibraryData,
@@ -123,6 +124,13 @@ describe('BIGBOX_LETTERS', () => {
 
   it('contains all uppercase A–Z letters plus #', () => {
     expect(BIGBOX_LETTERS).toHaveLength(27); // # + A-Z
+  });
+});
+
+describe('getFlatLibraryLoadLimit', () => {
+  it('loads every matching game for the fullscreen C64 alphabet sections', () => {
+    expect(getFlatLibraryLoadLimit(1_847, true)).toBe(1_847);
+    expect(getFlatLibraryLoadLimit(1_847, false)).toBe(0);
   });
 });
 

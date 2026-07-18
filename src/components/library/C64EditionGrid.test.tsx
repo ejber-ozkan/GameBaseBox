@@ -164,6 +164,24 @@ describe('C64EditionGrid', () => {
     expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="alpha-A"]')).toBeTruthy();
   });
 
+  it('uses the controller navigation column count for C64 alphabet grids', () => {
+    render(
+      <C64EditionGrid
+        alphabetSections={[{ id: 'alpha-A', label: 'A', games: [mockGames[0]] }]}
+        games={[]}
+        favoriteGames={[]}
+        gridColumns={5}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        recentGames={[]}
+        classicGames={[]}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    expect((screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="alpha-A"] .grid') as HTMLElement).style.gridTemplateColumns).toBe('repeat(5, minmax(0, 1fr))');
+  });
+
   it('requests the next page when its ROM sentinel becomes visible', () => {
     const onEndReached = vi.fn();
     let callback: IntersectionObserverCallback | undefined;

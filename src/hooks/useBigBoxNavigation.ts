@@ -132,6 +132,20 @@ export function useBigBoxNavigation({
     setRailFocusIndices((previous) => ({ ...previous, [railId]: gameIndex }));
   }, [setActiveRailIndex, setRailFocusIndices]);
 
+  const moveToNextPopulatedRail = useCallback((startIndex: number, direction: 'up' | 'down') => {
+    const step = direction === 'down' ? 1 : -1;
+    for (let index = startIndex + step; index >= 0 && index < rails.length; index += step) {
+      const rail = rails[index];
+      if (rail.games.length > 0) {
+        setActiveRailIndex(index);
+        setRailFocusIndices((previous) => ({ ...previous, [rail.id]: 0 }));
+        setSectionJumpDirection(direction);
+        return true;
+      }
+    }
+    return false;
+  }, [rails, setActiveRailIndex, setRailFocusIndices]);
+
   const hasSubGenres = Boolean(filters.genre && (visibleSubGenres.length > 0 || hasOverflowSubGenres));
   const jumpRowIndex = hasSubGenres ? 3 : 2;
   const getHeaderRowType = useCallback((row: number) => {
@@ -289,15 +303,11 @@ export function useBigBoxNavigation({
           onNavigationMove?.();
           setActiveHeaderRow((previous) => previous + 1);
           setActiveHeaderItemIndex(0);
-        } else if (rails.length > 0) {
+        } else if (moveToNextPopulatedRail(-1, 'down')) {
           onNavigationMove?.();
-          setSectionJumpDirection(null);
-          setActiveRailIndex(0);
         }
-      } else if (activeRailIndex < rails.length - 1) {
+      } else if (moveToNextPopulatedRail(activeRailIndex, 'down')) {
         onNavigationMove?.();
-        setSectionJumpDirection(null);
-        setActiveRailIndex((previous) => previous + 1);
       }
       return;
     }
@@ -312,10 +322,8 @@ export function useBigBoxNavigation({
       } else if (activeRailIndex === 0) {
         onNavigationMove?.();
         focusHeader(jumpRowIndex, 0);
-      } else {
+      } else if (moveToNextPopulatedRail(activeRailIndex, 'up')) {
         onNavigationMove?.();
-        setSectionJumpDirection(null);
-        setActiveRailIndex((previous) => previous - 1);
       }
       return;
     }
@@ -393,6 +401,7 @@ export function useBigBoxNavigation({
     hasOverflowSubGenres,
     jumpRowIndex,
     jumpToRail,
+    moveToNextPopulatedRail,
     onFiltersChange,
     onFocusSearchInput,
     isControllerKeyboardOpen,

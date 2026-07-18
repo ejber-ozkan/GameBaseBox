@@ -17,6 +17,7 @@ interface C64EditionGridProps {
   focusedGameId?: string | null;
   focusedRailId?: string | null;
   focusedIndex?: number;
+  gridColumns?: number;
   onFocusChange?: (index: number) => void;
   onFocusSectionItem?: (railId: string, index: number) => void;
   onEndReached?: () => void | Promise<void>;
@@ -112,6 +113,7 @@ export function C64EditionGrid({
   focusedGameId,
   focusedRailId,
   games,
+  gridColumns,
   recentGames,
   onSelectGame,
   isFavorite,
@@ -150,7 +152,10 @@ export function C64EditionGrid({
             <h2 className="font-mono text-xl font-black tracking-tight text-[var(--theme-secondary)] sm:text-2xl">{section.label}</h2>
             <div className="h-px flex-1 bg-[var(--theme-outline-variant)]" />
           </div>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+          <div
+            className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8"
+            style={gridColumns ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` } : undefined}
+          >
             {section.games.map((game, index) => {
               const focused = focusedRailId
                 ? focusedRailId === section.id && (focusedIndex === index || focusedGameId === game.id.toString())
