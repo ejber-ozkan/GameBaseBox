@@ -109,25 +109,30 @@ export function useBigBoxScrollSync({
       return;
     }
 
-    const railElement = scrollContainerRef.current.children[activeRailIndex] as HTMLElement | undefined;
-    if (!railElement) {
+    const railElement = currentRailId
+      ? scrollContainerRef.current.querySelector(`[data-rail-id="${currentRailId}"]`) as HTMLElement | null
+      : null;
+    const fallbackRailElement = scrollContainerRef.current.children[activeRailIndex] as HTMLElement | undefined;
+    const resolvedRailElement = railElement ?? fallbackRailElement;
+    if (!resolvedRailElement) {
       return;
     }
 
-    const anchorElement = railElement.querySelector('[data-rail-anchor]') as HTMLElement | null;
-    const gridElement = railElement.querySelector('.grid');
+    const anchorElement = resolvedRailElement.querySelector('[data-rail-anchor]') as HTMLElement | null;
+    const gridElement = resolvedRailElement.querySelector('.grid');
     const tile = gridElement?.children[currentFocusedIndex] as HTMLElement | undefined;
 
     if (tile && currentRailType === 'alphabet') {
       scrollAlphabetTileToCenterBand(tile);
     } else {
-      scrollElementBelowHeader(anchorElement ?? railElement);
+      scrollElementBelowHeader(anchorElement ?? resolvedRailElement);
     }
 
     onSectionJumpHandled();
   }, [
     activeRailIndex,
     currentFocusedIndex,
+    currentRailId,
     currentRailType,
     onSectionJumpHandled,
     scrollAlphabetTileToCenterBand,
@@ -144,8 +149,11 @@ export function useBigBoxScrollSync({
 
     const headerHeight = getHeaderHeight();
     const containerRect = scrollContainerRef.current.getBoundingClientRect();
-    const railElement = scrollContainerRef.current.children[activeRailIndex] as HTMLElement | undefined;
-    const gridElement = railElement?.querySelector('.grid');
+    const railElement = currentRailId
+      ? scrollContainerRef.current.querySelector(`[data-rail-id="${currentRailId}"]`) as HTMLElement | null
+      : null;
+    const fallbackRailElement = scrollContainerRef.current.children[activeRailIndex] as HTMLElement | undefined;
+    const gridElement = (railElement ?? fallbackRailElement)?.querySelector('.grid');
     const tile = gridElement?.children[currentFocusedIndex] as HTMLElement | undefined;
 
     if (!tile) return;

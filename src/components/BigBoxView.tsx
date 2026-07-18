@@ -485,6 +485,7 @@ export function BigBoxView({
               classicGames={c64ClassicGames}
               favoriteGames={c64FavoriteGames}
               focusedGameId={currentFocusedGame?.id.toString()}
+              focusedIndex={currentRail?.id === 'c64-library' ? currentFocusedIndex : -1}
               focusedRailId={currentRail?.id}
               games={flatGames}
               isFavorite={isFavorite}

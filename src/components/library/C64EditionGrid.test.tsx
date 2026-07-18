@@ -25,14 +25,14 @@ describe('C64EditionGrid', () => {
     />,
   );
 
-  it('uses the C64 monitor body with matching Recent, Favourites, and Classics rails', () => {
+  it('uses all-caps C64 monitor labels and a Library ROM section', () => {
     renderGrid();
 
     expect(screen.getByTestId('c64-edition-grid').getAttribute('data-c64-presentation')).toBe('monitor');
-    expect(screen.getByRole('heading', { name: 'Recent' })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'Favourites' })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'Classics' })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'LIBRARY_ROMSET' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'RECENT' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'FAVOURITES' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'CLASSICS' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'LIBRARY' })).toBeTruthy();
     expect(screen.getAllByTestId('c64-rail-card')).toHaveLength(3);
   });
 
@@ -45,13 +45,22 @@ describe('C64EditionGrid', () => {
     expect(screen.getAllByTestId('c64-rom-media')[0].classList).toContain('aspect-[3/4]');
   });
 
+  it('exposes each C64 rail by its navigation id so BigBox can scroll from Classics into Library', () => {
+    renderGrid();
+
+    expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="recent"]')).toBeTruthy();
+    expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="favorites"]')).toBeTruthy();
+    expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="classics"]')).toBeTruthy();
+    expect(screen.getByTestId('c64-edition-grid').querySelector('[data-rail-id="c64-library"]')).toBeTruthy();
+  });
+
   it('provides previous and next carousel controls for each C64 rail', () => {
     renderGrid();
 
-    expect(screen.getByRole('button', { name: 'Previous Recent games' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Next Recent games' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Previous Favourites games' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Next Classics games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Previous RECENT games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Next RECENT games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Previous FAVOURITES games' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Next CLASSICS games' })).toBeTruthy();
   });
 
   it('uses the reference yellow title block and far-right cursor for a focused rail card', () => {

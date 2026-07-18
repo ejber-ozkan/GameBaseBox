@@ -35,7 +35,7 @@ function C64FocusTitle({ game }: { game: Game }) {
   );
 }
 
-function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, title }: Pick<C64EditionGridProps, 'onSelectGame'> & { focusedGameId?: string | null; games: Game[]; onFocusGame: (gameId: string | null) => void; title: string }) {
+function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, railId, title }: Pick<C64EditionGridProps, 'onSelectGame'> & { focusedGameId?: string | null; games: Game[]; onFocusGame: (gameId: string | null) => void; railId: string; title: string }) {
   const railScrollRef = useRef<HTMLDivElement>(null);
 
   const scrollRail = (direction: 'previous' | 'next') => {
@@ -53,7 +53,7 @@ function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, title }: Pic
   }, [focusedGameId]);
 
   return (
-    <section className="c64-game-rail">
+    <section className="c64-game-rail" data-rail-id={railId}>
       <div className="mb-4 flex items-center gap-3">
         <div className="h-5 w-5 bg-[var(--theme-primary)]" />
         <h2 className="font-mono text-xl font-black tracking-tight text-[var(--theme-primary)] sm:text-2xl">{title}</h2>
@@ -131,14 +131,14 @@ export function C64EditionGrid({
 
   return (
     <div className="c64-edition-grid grid gap-8 px-4 pb-24 pt-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)] lg:px-8" data-c64-presentation="monitor" data-testid="c64-edition-grid">
-      <C64Rail games={recentGames} focusedGameId={focusedRailId === 'recent' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} title="Recent" />
-      <C64Rail games={favoriteGames} focusedGameId={focusedRailId === 'favorites' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} title="Favourites" />
-      <C64Rail games={classicGames} focusedGameId={focusedRailId === 'classics' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} title="Classics" />
+      <C64Rail games={recentGames} focusedGameId={focusedRailId === 'recent' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} railId="recent" title="RECENT" />
+      <C64Rail games={favoriteGames} focusedGameId={focusedRailId === 'favorites' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} railId="favorites" title="FAVOURITES" />
+      <C64Rail games={classicGames} focusedGameId={focusedRailId === 'classics' ? focusedGameId : hoveredRailGameId} onFocusGame={setHoveredRailGameId} onSelectGame={onSelectGame} railId="classics" title="CLASSICS" />
 
       <section className="c64-library-romset" data-rail-id="c64-library">
         <div className="mb-4 flex items-center gap-3">
           <div className="h-5 w-5 bg-[var(--theme-secondary)]" />
-          <h2 className="font-mono text-xl font-black tracking-tight text-[var(--theme-secondary)] sm:text-2xl">{alphabetLabel ?? 'LIBRARY_ROMSET'}</h2>
+          <h2 className="font-mono text-xl font-black tracking-tight text-[var(--theme-secondary)] sm:text-2xl">{alphabetLabel ?? 'LIBRARY'}</h2>
           <div className="h-px flex-1 bg-[var(--theme-outline-variant)]" />
         </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
