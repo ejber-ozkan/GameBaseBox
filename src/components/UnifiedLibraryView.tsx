@@ -725,7 +725,7 @@ export function UnifiedLibraryView({
       />
 
       <div data-library-scroll-container className="no-scrollbar relative z-10 flex-1 overflow-y-auto overflow-x-hidden pl-8 pr-4">
-        {theme.layout.alphabetNavType === 'jump-bar' && (
+        {(theme.layout.alphabetNavType === 'jump-bar' || theme.id === 'c64-edition' || theme.id === 'cyberpunk-crt') && (
           <AlphabetJumpBar
             activeLetter={filters.letter}
             onLetterSelect={(l) => {

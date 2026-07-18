@@ -151,6 +151,26 @@ html[data-theme="cyberpunk-crt"] .alphabet-jump-bar button.text-blue-400 {
   background: var(--theme-primary);
 }
 
+html[data-theme="c64-edition"] .alphabet-jump-bar {
+  border-right: 4px solid var(--theme-outline-variant);
+  background: var(--theme-surface);
+}
+
+html[data-theme="c64-edition"] .alphabet-jump-bar button {
+  color: var(--theme-text-muted);
+}
+
+html[data-theme="c64-edition"] .alphabet-jump-bar button:hover,
+html[data-theme="c64-edition"] .alphabet-jump-bar button:focus-visible {
+  background: var(--theme-primary);
+  color: #131313;
+}
+
+html[data-theme="c64-edition"] .alphabet-jump-bar button.text-blue-400 {
+  color: #131313;
+  background: var(--theme-primary);
+}
+
 .bigbox-list-surface[data-list-presentation="c64-workspace"] [data-rail-anchor] {
   border: 4px solid var(--theme-outline-variant);
   background: var(--theme-surface);
