@@ -57,16 +57,16 @@ interface UnifiedLibraryViewProps {
   onSelectGame: (game: Game) => void;
   onPlatformSelect: (platformId: PlatformId) => void;
   filters: GameFilters;
-  onFiltersChange: (f: GameFilters) => void;
+  onFiltersChange: React.Dispatch<React.SetStateAction<GameFilters>>;
   viewMode: LibraryViewMode;
-  setViewMode: (mode: LibraryViewMode) => void;
+  setViewMode: React.Dispatch<React.SetStateAction<LibraryViewMode>>;
   searchInput: string;
   onSearchChange: (val: string) => void;
 
   // Windowed Data
   games: Game[];
   focusedIndex: number;
-  setFocusedIndex: (idx: number) => void;
+  setFocusedIndex: React.Dispatch<React.SetStateAction<number>>;
   loadNextPage: () => void;
   handleSort: (column: keyof Game) => void;
   shelfRef?: React.RefObject<HTMLDivElement | null>;
@@ -362,11 +362,12 @@ export function UnifiedLibraryView({
     onSearchChange(value);
   }, [onSearchChange, searchInput]);
 
-  const handleFiltersChange = useCallback((nextFilters: GameFilters) => {
+  const handleFiltersChange = useCallback((nextFilters: React.SetStateAction<GameFilters>) => {
+    const resolvedFilters = typeof nextFilters === 'function' ? (nextFilters as Function)(filters) : nextFilters;
     if (
-      filters.genre !== nextFilters.genre ||
-      filters.subGenre !== nextFilters.subGenre ||
-      filters.letter !== nextFilters.letter
+      filters.genre !== resolvedFilters.genre ||
+      filters.subGenre !== resolvedFilters.subGenre ||
+      filters.letter !== resolvedFilters.letter
     ) {
       void playUiSoundEffect('search-filter', 0.42);
     }
@@ -374,7 +375,7 @@ export function UnifiedLibraryView({
       setIsSubGenrePickerOpen(false);
     }
     onFiltersChange(nextFilters);
-  }, [filters.genre, filters.letter, filters.subGenre, isSubGenrePickerOpen, onFiltersChange]);
+  }, [filters, isSubGenrePickerOpen, onFiltersChange]);
 
   // Bind the Unified library navigation state and focus logic
   const {
@@ -625,6 +626,7 @@ export function UnifiedLibraryView({
                     focusedIndex={currentFocusedIndex}
                     focusedRailId={currentRail?.id}
                     games={bigboxFlatGames}
+                    gridColumns={layout.gridColumns}
                     isFavorite={isFavorite}
                     onFocusSectionItem={(railId, index) => focusRailItem(navigationRails.findIndex((r) => r.id === railId), railId, index)}
                     onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((r) => r.id === railId), railId, index)}
@@ -722,7 +724,7 @@ export function UnifiedLibraryView({
         viewMode={viewMode}
       />
 
-      <div data-library-scroll-container className="no-scrollbar relative z-10 flex-1 overflow-auto pl-8 pr-4">
+      <div data-library-scroll-container className="no-scrollbar relative z-10 flex-1 overflow-y-auto overflow-x-hidden pl-8 pr-4">
         {theme.layout.alphabetNavType === 'jump-bar' && (
           <AlphabetJumpBar
             activeLetter={filters.letter}
@@ -760,6 +762,7 @@ export function UnifiedLibraryView({
                 favoriteGames={favoriteGames}
                 focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
                 games={games}
+                gridColumns={layout.gridColumns}
                 isFavorite={isFavorite}
                 onEndReached={loadNextPage}
                 onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}

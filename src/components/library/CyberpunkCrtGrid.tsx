@@ -64,7 +64,7 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
 
   return (
     <section className="cyberpunk-game-rail" data-rail-id={railId}>
-      <div data-rail-anchor className="mb-3 flex items-end gap-3 border-b border-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)] pb-2">
+      <div data-rail-anchor className="mb-3 flex items-center gap-3 border-b border-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)] pb-2">
         <span aria-hidden="true" className="h-6 w-1.5 shrink-0 bg-[var(--theme-primary)] shadow-[2px_0_0_var(--theme-secondary)]" />
         <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{title}</h2>
         <div className="h-px flex-1 bg-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)]" />
@@ -74,7 +74,7 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
         </div>
       </div>
       {games.length > 0 ? (
-        <div ref={railScrollRef} className="no-scrollbar grid snap-x snap-mandatory grid-flow-col auto-cols-[minmax(180px,16vw)] gap-4 overflow-x-auto pb-3" data-testid="cyberpunk-rail-scroll">
+        <div ref={railScrollRef} className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3" data-testid="cyberpunk-rail-scroll">
           {games.map((game, gameIndex) => {
             const focused = focusedGameId === game.id.toString();
             return (
@@ -87,6 +87,7 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
                 onClick={() => onSelectGame(game)}
                 onMouseEnter={() => onFocusGame(game.id.toString(), gameIndex)}
                 onMouseLeave={() => onFocusGame(null)}
+                style={{ width: 'clamp(280px, 16vw, 360px)', flexShrink: 0 }}
               >
                 <div className="aspect-video overflow-hidden border border-[color-mix(in_srgb,var(--theme-primary)_45%,transparent)] bg-black">
                   <ImageSlider type="screenshot" filename={game.screenshotFilename} alt={game.name} className="h-full w-full object-cover grayscale transition-[filter] duration-200 group-hover:grayscale-0" />
@@ -101,23 +102,48 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
             );
           })}
         </div>
-      ) : <div className="border border-dashed border-[var(--theme-outline-variant)] p-3 font-mono text-xs uppercase text-[var(--theme-text-muted)]">NO {title} DATA.</div>}
+      ) : (
+        <div className="border border-dashed border-[var(--theme-outline-variant)] p-4 font-mono text-xs text-[var(--theme-text-muted)]">NO {title.toUpperCase()} LOADED.</div>
+      )}
     </section>
   );
 }
 
-export function CyberpunkCrtGrid({ activeAlphabetRailId, alphabetLabel, alphabetSections, classicGames, favoriteGames, focusedGameId, focusedRailId, games, gridColumns, recentGames, onSelectGame, isFavorite, toggleFavorite, focusedIndex = -1, onFocusChange, onFocusSectionItem, onEndReached, onFocusRailItem }: CyberpunkCrtGridProps) {
+export function CyberpunkCrtGrid({
+  activeAlphabetRailId,
+  alphabetLabel,
+  alphabetSections,
+  classicGames,
+  favoriteGames,
+  focusedGameId,
+  focusedRailId,
+  games,
+  gridColumns,
+  recentGames,
+  onSelectGame,
+  isFavorite,
+  toggleFavorite,
+  focusedIndex = -1,
+  onFocusChange,
+  onFocusSectionItem,
+  onEndReached,
+  onFocusRailItem,
+}: CyberpunkCrtGridProps) {
   const endSentinelRef = useRef<HTMLDivElement>(null);
   const [hoveredRailGameId, setHoveredRailGameId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!onEndReached || !endSentinelRef.current || !('IntersectionObserver' in window)) return;
-    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) void onEndReached(); }, { rootMargin: '400px 0px' });
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) void onEndReached();
+    }, { rootMargin: '400px 0px' });
     observer.observe(endSentinelRef.current);
     return () => observer.disconnect();
   }, [onEndReached]);
 
   const librarySections = alphabetSections ?? [{ id: 'cyberpunk-library', label: alphabetLabel ?? 'LIBRARY_DATABASE', games }];
+
   const railProps = (railId: string) => ({
     focusedGameId: focusedRailId === railId ? focusedGameId : hoveredRailGameId,
     onFocusGame: (gameId: string | null, gameIndex?: number) => {
@@ -141,11 +167,13 @@ export function CyberpunkCrtGrid({ activeAlphabetRailId, alphabetLabel, alphabet
           </div>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6" style={gridColumns ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` } : undefined}>
             {(activeAlphabetRailId === undefined || activeAlphabetRailId === section.id ? section.games : []).map((game, index) => {
-              const focused = focusedRailId ? focusedRailId === section.id && (focusedIndex === index || focusedGameId === game.id.toString()) : focusedIndex === index;
+              const focused = focusedRailId
+                ? focusedRailId === section.id && (focusedIndex === index || focusedGameId === game.id.toString())
+                : focusedIndex === index;
               const favorite = isFavorite(game.id.toString());
               return (
                 <article key={`${section.id}-${game.id}-${index}`} className={`group relative min-w-0 max-w-full cursor-pointer border bg-[var(--theme-surface)] p-1 transition-[border-color,box-shadow] ${focused ? 'border-2 border-[var(--theme-primary)] shadow-[2px_2px_0_var(--theme-primary),-1px_-1px_0_var(--theme-tertiary)]' : 'border-[var(--theme-outline-variant)] hover:border-[var(--theme-primary)]'}`} data-focused={focused ? 'true' : 'false'} data-testid="cyberpunk-library-card" onClick={() => onSelectGame(game)} onMouseEnter={() => { onFocusChange?.(index); onFocusSectionItem?.(section.id, index); }} style={{ contentVisibility: 'auto', containIntrinsicSize: '0 230px', minWidth: 0, maxWidth: '100%' }}>
-                  <div className="aspect-[1.6] min-h-0 min-w-0 overflow-hidden bg-black"><ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className="h-full min-h-0 w-full min-w-0 object-contain grayscale opacity-85 transition-[filter,opacity] group-hover:grayscale-0 group-hover:opacity-100" /></div>
+                  <div className="aspect-[1.75] min-h-0 min-w-0 overflow-hidden bg-black"><ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className="h-full min-h-0 w-full min-w-0 object-cover grayscale opacity-85 transition-[filter,opacity] group-hover:grayscale-0 group-hover:opacity-100" /></div>
                   <div className="mt-1 flex min-w-0 items-start gap-1 font-mono text-[9px] uppercase tracking-wide"><div className="min-w-0 flex-1"><div className="truncate font-black text-[var(--theme-text)]">{game.name}</div><div className="truncate text-[var(--theme-text-muted)]">{getMetadata(game)}</div></div><button aria-label={`Toggle favorite for ${game.name}`} className="shrink-0 text-sm text-[var(--theme-tertiary)]" onClick={(event) => { event.stopPropagation(); toggleFavorite(game.id.toString()); }}>{favorite ? '★' : '☆'}</button></div>
                 </article>
               );

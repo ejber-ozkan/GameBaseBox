@@ -483,7 +483,7 @@ export function BigBoxView({
       <div className="z-10 flex-1 overflow-hidden">
         <main
           ref={scrollContainerRef}
-          className="no-scrollbar h-full overflow-y-auto scroll-smooth pb-[100vh]"
+          className="no-scrollbar h-full overflow-y-auto overflow-x-hidden scroll-smooth pb-[100vh]"
           style={{
             width: 'calc(100% + 28px)',
             paddingRight: '28px',

@@ -7979,7 +7979,7 @@
       "label": "getVisibleSubGenresHelper()",
       "file_type": "code",
       "source_file": "src/components/UnifiedLibraryView.tsx",
-      "source_location": "L863",
+      "source_location": "L865",
       "_origin": "ast",
       "id": "components_unifiedlibraryview_getvisiblesubgenreshelper",
       "community": 56,
@@ -8689,7 +8689,7 @@
       "label": "CyberpunkCrtGrid()",
       "file_type": "code",
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
-      "source_location": "L109",
+      "source_location": "L112",
       "_origin": "ast",
       "id": "library_cyberpunkcrtgrid_cyberpunkcrtgrid",
       "community": 104,
@@ -35012,9 +35012,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page",
-      "target": "components_unifiedlibraryview",
-      "confidence_score": 1.0
+      "target": "components_unifiedlibraryview"
     },
     {
       "relation": "imports",
@@ -35023,9 +35023,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page",
-      "target": "components_unifiedlibraryview_bigboxsessionstate",
-      "confidence_score": 1.0
+      "target": "components_unifiedlibraryview_bigboxsessionstate"
     },
     {
       "relation": "imports",
@@ -35034,9 +35034,9 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_page",
-      "target": "components_unifiedlibraryview_unifiedlibraryview",
-      "confidence_score": 1.0
+      "target": "components_unifiedlibraryview_unifiedlibraryview"
     },
     {
       "relation": "imports_from",
@@ -35845,9 +35845,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_alphabetjumpbar",
-      "confidence_score": 1.0
+      "target": "components_alphabetjumpbar"
     },
     {
       "relation": "imports",
@@ -35856,9 +35856,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_alphabetjumpbar_alphabetjumpbar",
-      "confidence_score": 1.0
+      "target": "components_alphabetjumpbar_alphabetjumpbar"
     },
     {
       "relation": "contains",
@@ -36735,9 +36735,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_bigboxview",
-      "confidence_score": 1.0
+      "target": "components_bigboxview"
     },
     {
       "relation": "references",
@@ -36790,9 +36790,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_bigboxview_getc64navigationrails",
-      "confidence_score": 1.0
+      "target": "components_bigboxview_getc64navigationrails"
     },
     {
       "relation": "calls",
@@ -36993,9 +36993,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_controllersearchkeyboard",
-      "confidence_score": 1.0
+      "target": "components_controllersearchkeyboard"
     },
     {
       "relation": "calls",
@@ -37026,9 +37026,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_controllersearchkeyboard_controllersearchkeyboard",
-      "confidence_score": 1.0
+      "target": "components_controllersearchkeyboard_controllersearchkeyboard"
     },
     {
       "relation": "contains",
@@ -38167,9 +38167,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_gridview",
-      "confidence_score": 1.0
+      "target": "components_gridview"
     },
     {
       "relation": "references",
@@ -38200,9 +38200,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_gridview_gridview",
-      "confidence_score": 1.0
+      "target": "components_gridview_gridview"
     },
     {
       "relation": "contains",
@@ -38307,9 +38307,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_horizontalrail",
-      "confidence_score": 1.0
+      "target": "components_horizontalrail"
     },
     {
       "relation": "references",
@@ -38351,9 +38351,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_horizontalrail_horizontalrail",
-      "confidence_score": 1.0
+      "target": "components_horizontalrail_horizontalrail"
     },
     {
       "relation": "contains",
@@ -38751,9 +38751,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_listview",
-      "confidence_score": 1.0
+      "target": "components_listview"
     },
     {
       "relation": "references",
@@ -38795,9 +38795,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_listview_listview",
-      "confidence_score": 1.0
+      "target": "components_listview_listview"
     },
     {
       "relation": "contains",
@@ -40154,9 +40154,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_subgenrepickermodal",
-      "confidence_score": 1.0
+      "target": "components_subgenrepickermodal"
     },
     {
       "relation": "imports_from",
@@ -40187,9 +40187,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_subgenrepickermodal_subgenrepickermodal",
-      "confidence_score": 1.0
+      "target": "components_subgenrepickermodal_subgenrepickermodal"
     },
     {
       "relation": "imports",
@@ -40304,9 +40304,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "bigbox_bigboxalphabetrail",
-      "confidence_score": 1.0
+      "target": "bigbox_bigboxalphabetrail"
     },
     {
       "relation": "imports",
@@ -40315,9 +40315,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "bigbox_bigboxalphabetrail_bigboxalphabetrail",
-      "confidence_score": 1.0
+      "target": "bigbox_bigboxalphabetrail_bigboxalphabetrail"
     },
     {
       "relation": "imports_from",
@@ -40326,9 +40326,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "bigbox_bigboxexitprompt",
-      "confidence_score": 1.0
+      "target": "bigbox_bigboxexitprompt"
     },
     {
       "relation": "imports",
@@ -40337,9 +40337,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "bigbox_bigboxexitprompt_bigboxexitprompt",
-      "confidence_score": 1.0
+      "target": "bigbox_bigboxexitprompt_bigboxexitprompt"
     },
     {
       "relation": "imports_from",
@@ -40348,9 +40348,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "bigbox_bigboxfooter",
-      "confidence_score": 1.0
+      "target": "bigbox_bigboxfooter"
     },
     {
       "relation": "imports",
@@ -40359,9 +40359,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "bigbox_bigboxfooter_bigboxfooter",
-      "confidence_score": 1.0
+      "target": "bigbox_bigboxfooter_bigboxfooter"
     },
     {
       "relation": "imports_from",
@@ -40370,9 +40370,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "bigbox_bigboxheader",
-      "confidence_score": 1.0
+      "target": "bigbox_bigboxheader"
     },
     {
       "relation": "imports",
@@ -40381,9 +40381,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "bigbox_bigboxheader_bigboxheader",
-      "confidence_score": 1.0
+      "target": "bigbox_bigboxheader_bigboxheader"
     },
     {
       "relation": "contains",
@@ -40391,9 +40391,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_unifiedlibraryview_bigboxsessionstate",
-      "confidence_score": 1.0
+      "target": "components_unifiedlibraryview_bigboxsessionstate"
     },
     {
       "relation": "contains",
@@ -40401,9 +40401,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L863",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_unifiedlibraryview_getvisiblesubgenreshelper",
-      "confidence_score": 1.0
+      "target": "components_unifiedlibraryview_getvisiblesubgenreshelper"
     },
     {
       "relation": "contains",
@@ -40411,9 +40411,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L89",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_unifiedlibraryview_unifiedlibraryview",
-      "confidence_score": 1.0
+      "target": "components_unifiedlibraryview_unifiedlibraryview"
     },
     {
       "relation": "contains",
@@ -40421,9 +40421,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L54",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "components_unifiedlibraryview_unifiedlibraryviewprops",
-      "confidence_score": 1.0
+      "target": "components_unifiedlibraryview_unifiedlibraryviewprops"
     },
     {
       "relation": "imports_from",
@@ -40432,9 +40432,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "contexts_settingscontext",
-      "confidence_score": 1.0
+      "target": "contexts_settingscontext"
     },
     {
       "relation": "imports",
@@ -40443,9 +40443,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "contexts_settingscontext_settings",
-      "confidence_score": 1.0
+      "target": "contexts_settingscontext_settings"
     },
     {
       "relation": "imports_from",
@@ -40454,9 +40454,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "contexts_themecontext",
-      "confidence_score": 1.0
+      "target": "contexts_themecontext"
     },
     {
       "relation": "imports",
@@ -40465,9 +40465,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "contexts_themecontext_usetheme",
-      "confidence_score": 1.0
+      "target": "contexts_themecontext_usetheme"
     },
     {
       "relation": "imports_from",
@@ -40476,9 +40476,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_usebigboxlibrarydata",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxlibrarydata"
     },
     {
       "relation": "imports",
@@ -40487,9 +40487,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_usebigboxlibrarydata_usebigboxlibrarydata",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxlibrarydata_usebigboxlibrarydata"
     },
     {
       "relation": "imports_from",
@@ -40498,9 +40498,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_usebigboxscrollsync",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxscrollsync"
     },
     {
       "relation": "imports",
@@ -40509,9 +40509,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_usebigboxscrollsync_usebigboxscrollsync",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxscrollsync_usebigboxscrollsync"
     },
     {
       "relation": "imports_from",
@@ -40520,9 +40520,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_usefavorites",
-      "confidence_score": 1.0
+      "target": "hooks_usefavorites"
     },
     {
       "relation": "imports",
@@ -40531,9 +40531,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_usefavorites_usefavorites",
-      "confidence_score": 1.0
+      "target": "hooks_usefavorites_usefavorites"
     },
     {
       "relation": "imports_from",
@@ -40542,9 +40542,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_usefullscreenlayoutmetrics",
-      "confidence_score": 1.0
+      "target": "hooks_usefullscreenlayoutmetrics"
     },
     {
       "relation": "imports",
@@ -40553,9 +40553,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_usefullscreenlayoutmetrics_usefullscreenlayoutmetrics",
-      "confidence_score": 1.0
+      "target": "hooks_usefullscreenlayoutmetrics_usefullscreenlayoutmetrics"
     },
     {
       "relation": "imports_from",
@@ -40564,9 +40564,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_useinputmode",
-      "confidence_score": 1.0
+      "target": "hooks_useinputmode"
     },
     {
       "relation": "imports",
@@ -40575,9 +40575,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_useinputmode_useinputmode",
-      "confidence_score": 1.0
+      "target": "hooks_useinputmode_useinputmode"
     },
     {
       "relation": "imports_from",
@@ -40586,9 +40586,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_uselibrarybrowserstate",
-      "confidence_score": 1.0
+      "target": "hooks_uselibrarybrowserstate"
     },
     {
       "relation": "imports",
@@ -40597,9 +40597,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_uselibrarybrowserstate_libraryviewmode",
-      "confidence_score": 1.0
+      "target": "hooks_uselibrarybrowserstate_libraryviewmode"
     },
     {
       "relation": "imports_from",
@@ -40608,9 +40608,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_useunifiedlibrarynavigation",
-      "confidence_score": 1.0
+      "target": "hooks_useunifiedlibrarynavigation"
     },
     {
       "relation": "imports",
@@ -40619,9 +40619,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigation",
-      "confidence_score": 1.0
+      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigation"
     },
     {
       "relation": "imports_from",
@@ -40630,9 +40630,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_library_backgrounds",
-      "confidence_score": 1.0
+      "target": "lib_library_backgrounds"
     },
     {
       "relation": "imports",
@@ -40641,9 +40641,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_library_backgrounds_resolvelibrarybackground",
-      "confidence_score": 1.0
+      "target": "lib_library_backgrounds_resolvelibrarybackground"
     },
     {
       "relation": "imports_from",
@@ -40652,9 +40652,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_platform_capabilities",
-      "confidence_score": 1.0
+      "target": "lib_platform_capabilities"
     },
     {
       "relation": "imports",
@@ -40663,9 +40663,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_platform_capabilities_supported_platforms",
-      "confidence_score": 1.0
+      "target": "lib_platform_capabilities_supported_platforms"
     },
     {
       "relation": "imports_from",
@@ -40674,9 +40674,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_tauri_bridge",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge"
     },
     {
       "relation": "imports",
@@ -40685,9 +40685,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_tauri_bridge_exitapp",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_exitapp"
     },
     {
       "relation": "imports",
@@ -40696,9 +40696,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_tauri_bridge_gamefilters",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_gamefilters"
     },
     {
       "relation": "imports_from",
@@ -40707,9 +40707,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_ui_sound_effects",
-      "confidence_score": 1.0
+      "target": "lib_ui_sound_effects"
     },
     {
       "relation": "imports",
@@ -40718,9 +40718,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_ui_sound_effects_playrotatinguisoundeffect",
-      "confidence_score": 1.0
+      "target": "lib_ui_sound_effects_playrotatinguisoundeffect"
     },
     {
       "relation": "imports",
@@ -40729,9 +40729,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_ui_sound_effects_playuisoundeffect",
-      "confidence_score": 1.0
+      "target": "lib_ui_sound_effects_playuisoundeffect"
     },
     {
       "relation": "imports",
@@ -40740,9 +40740,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_ui_sound_effects_playuisoundeffectandwait",
-      "confidence_score": 1.0
+      "target": "lib_ui_sound_effects_playuisoundeffectandwait"
     },
     {
       "relation": "imports_from",
@@ -40751,9 +40751,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_c64editiongrid",
-      "confidence_score": 1.0
+      "target": "library_c64editiongrid"
     },
     {
       "relation": "imports",
@@ -40762,9 +40762,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_c64editiongrid_c64editiongrid",
-      "confidence_score": 1.0
+      "target": "library_c64editiongrid_c64editiongrid"
     },
     {
       "relation": "imports_from",
@@ -40773,9 +40773,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_cyberpunkcrtgrid",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid"
     },
     {
       "relation": "imports",
@@ -40784,9 +40784,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgrid",
-      "confidence_score": 1.0
+      "target": "library_cyberpunkcrtgrid_cyberpunkcrtgrid"
     },
     {
       "relation": "imports_from",
@@ -40795,9 +40795,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_libraryheader",
-      "confidence_score": 1.0
+      "target": "library_libraryheader"
     },
     {
       "relation": "imports",
@@ -40806,9 +40806,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_libraryheader_libraryheader",
-      "confidence_score": 1.0
+      "target": "library_libraryheader_libraryheader"
     },
     {
       "relation": "imports_from",
@@ -40817,9 +40817,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_windowgamelistsection",
-      "confidence_score": 1.0
+      "target": "library_windowgamelistsection"
     },
     {
       "relation": "imports",
@@ -40828,9 +40828,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_windowgamelistsection_windowgamelistsection",
-      "confidence_score": 1.0
+      "target": "library_windowgamelistsection_windowgamelistsection"
     },
     {
       "relation": "imports_from",
@@ -40839,9 +40839,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_windowgameshelf",
-      "confidence_score": 1.0
+      "target": "library_windowgameshelf"
     },
     {
       "relation": "imports",
@@ -40850,9 +40850,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "library_windowgameshelf_windowgameshelf",
-      "confidence_score": 1.0
+      "target": "library_windowgameshelf_windowgameshelf"
     },
     {
       "relation": "imports_from",
@@ -40861,9 +40861,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "types_game",
-      "confidence_score": 1.0
+      "target": "types_game"
     },
     {
       "relation": "imports",
@@ -40872,9 +40872,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "types_game_game",
-      "confidence_score": 1.0
+      "target": "types_game_game"
     },
     {
       "relation": "imports_from",
@@ -40883,9 +40883,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "types_platform",
-      "confidence_score": 1.0
+      "target": "types_platform"
     },
     {
       "relation": "imports",
@@ -40894,9 +40894,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "types_platform_platformid",
-      "confidence_score": 1.0
+      "target": "types_platform_platformid"
     },
     {
       "relation": "references",
@@ -40905,9 +40905,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L56",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
-      "target": "contexts_settingscontext_settings",
-      "confidence_score": 1.0
+      "target": "contexts_settingscontext_settings"
     },
     {
       "relation": "references",
@@ -40916,9 +40916,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L61",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
-      "target": "hooks_uselibrarybrowserstate_libraryviewmode",
-      "confidence_score": 1.0
+      "target": "hooks_uselibrarybrowserstate_libraryviewmode"
     },
     {
       "relation": "references",
@@ -40927,9 +40927,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
-      "target": "lib_tauri_bridge_gamefilters",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_gamefilters"
     },
     {
       "relation": "references",
@@ -40938,9 +40938,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
-      "target": "types_game_game",
-      "confidence_score": 1.0
+      "target": "types_game_game"
     },
     {
       "relation": "references",
@@ -40949,9 +40949,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview_unifiedlibraryviewprops",
-      "target": "types_platform_platformid",
-      "confidence_score": 1.0
+      "target": "types_platform_platformid"
     },
     {
       "relation": "calls",
@@ -45468,9 +45468,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "contexts_settingscontext",
-      "confidence_score": 1.0
+      "target": "contexts_settingscontext"
     },
     {
       "relation": "imports_from",
@@ -45578,9 +45578,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "contexts_settingscontext_settings",
-      "confidence_score": 1.0
+      "target": "contexts_settingscontext_settings"
     },
     {
       "relation": "references",
@@ -45589,9 +45589,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
-      "target": "contexts_settingscontext_settings",
-      "confidence_score": 1.0
+      "target": "contexts_settingscontext_settings"
     },
     {
       "relation": "imports",
@@ -46039,9 +46039,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_navigation_math",
-      "confidence_score": 1.0
+      "target": "hooks_navigation_math"
     },
     {
       "relation": "imports",
@@ -46061,9 +46061,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_navigation_math_navigationstate",
-      "confidence_score": 1.0
+      "target": "hooks_navigation_math_navigationstate"
     },
     {
       "relation": "imports",
@@ -46083,9 +46083,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_navigation_math_navigationparams",
-      "confidence_score": 1.0
+      "target": "hooks_navigation_math_navigationparams"
     },
     {
       "relation": "imports",
@@ -46105,9 +46105,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_navigation_math_calculaterightnavigation",
-      "confidence_score": 1.0
+      "target": "hooks_navigation_math_calculaterightnavigation"
     },
     {
       "relation": "imports",
@@ -46127,9 +46127,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_navigation_math_calculateleftnavigation",
-      "confidence_score": 1.0
+      "target": "hooks_navigation_math_calculateleftnavigation"
     },
     {
       "relation": "imports",
@@ -46149,9 +46149,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_navigation_math_calculatedownnavigation",
-      "confidence_score": 1.0
+      "target": "hooks_navigation_math_calculatedownnavigation"
     },
     {
       "relation": "imports",
@@ -46171,9 +46171,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_navigation_math_calculateupnavigation",
-      "confidence_score": 1.0
+      "target": "hooks_navigation_math_calculateupnavigation"
     },
     {
       "relation": "contains",
@@ -46361,9 +46361,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_usebigboxlibrarydata",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxlibrarydata"
     },
     {
       "relation": "imports",
@@ -46383,9 +46383,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_usebigboxlibrarydata_bigbox_letters",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxlibrarydata_bigbox_letters"
     },
     {
       "relation": "imports",
@@ -46416,9 +46416,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_usebigboxlibrarydata_bigboxrailcategory",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxlibrarydata_bigboxrailcategory"
     },
     {
       "relation": "references",
@@ -46427,9 +46427,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
-      "target": "hooks_usebigboxlibrarydata_bigboxrailcategory",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxlibrarydata_bigboxrailcategory"
     },
     {
       "relation": "references",
@@ -47088,9 +47088,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_usegamepad",
-      "confidence_score": 1.0
+      "target": "hooks_usegamepad"
     },
     {
       "relation": "imports",
@@ -47121,9 +47121,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_usegamepad_usegamepad",
-      "confidence_score": 1.0
+      "target": "hooks_usegamepad_usegamepad"
     },
     {
       "relation": "calls",
@@ -47271,9 +47271,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_uselibrarybrowserstate",
-      "confidence_score": 1.0
+      "target": "hooks_uselibrarybrowserstate"
     },
     {
       "relation": "imports",
@@ -47304,9 +47304,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_uselibrarybrowserstate_libraryviewmode",
-      "confidence_score": 1.0
+      "target": "hooks_uselibrarybrowserstate_libraryviewmode"
     },
     {
       "relation": "references",
@@ -47315,9 +47315,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L36",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
-      "target": "hooks_uselibrarybrowserstate_libraryviewmode",
-      "confidence_score": 1.0
+      "target": "hooks_uselibrarybrowserstate_libraryviewmode"
     },
     {
       "relation": "calls",
@@ -47860,9 +47860,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_useunifiedlibrarynavigation_keyeventlike",
-      "confidence_score": 1.0
+      "target": "hooks_useunifiedlibrarynavigation_keyeventlike"
     },
     {
       "relation": "contains",
@@ -47870,9 +47870,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_useunifiedlibrarynavigation_letters",
-      "confidence_score": 1.0
+      "target": "hooks_useunifiedlibrarynavigation_letters"
     },
     {
       "relation": "contains",
@@ -47880,9 +47880,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_useunifiedlibrarynavigation_sectionjumpdirection",
-      "confidence_score": 1.0
+      "target": "hooks_useunifiedlibrarynavigation_sectionjumpdirection"
     },
     {
       "relation": "contains",
@@ -47890,9 +47890,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L79",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigation",
-      "confidence_score": 1.0
+      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigation"
     },
     {
       "relation": "contains",
@@ -47900,9 +47900,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
-      "confidence_score": 1.0
+      "target": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops"
     },
     {
       "relation": "imports_from",
@@ -47911,9 +47911,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "lib_library_navigation",
-      "confidence_score": 1.0
+      "target": "lib_library_navigation"
     },
     {
       "relation": "imports",
@@ -47922,9 +47922,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "lib_library_navigation_getlibrarycolumncount",
-      "confidence_score": 1.0
+      "target": "lib_library_navigation_getlibrarycolumncount"
     },
     {
       "relation": "imports",
@@ -47933,9 +47933,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "lib_library_navigation_getnextletterjump",
-      "confidence_score": 1.0
+      "target": "lib_library_navigation_getnextletterjump"
     },
     {
       "relation": "imports",
@@ -47944,9 +47944,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "lib_library_navigation_movelibraryfocushorizontally",
-      "confidence_score": 1.0
+      "target": "lib_library_navigation_movelibraryfocushorizontally"
     },
     {
       "relation": "imports",
@@ -47955,9 +47955,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "lib_library_navigation_movelibraryfocusvertically",
-      "confidence_score": 1.0
+      "target": "lib_library_navigation_movelibraryfocusvertically"
     },
     {
       "relation": "imports",
@@ -47966,9 +47966,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "lib_library_navigation_resolvefocusedgame",
-      "confidence_score": 1.0
+      "target": "lib_library_navigation_resolvefocusedgame"
     },
     {
       "relation": "imports_from",
@@ -47977,9 +47977,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "lib_tauri_bridge",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge"
     },
     {
       "relation": "imports",
@@ -47988,9 +47988,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "lib_tauri_bridge_exitapp",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_exitapp"
     },
     {
       "relation": "imports",
@@ -47999,9 +47999,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "lib_tauri_bridge_gamefilters",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_gamefilters"
     },
     {
       "relation": "imports_from",
@@ -48010,9 +48010,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "types_game",
-      "confidence_score": 1.0
+      "target": "types_game"
     },
     {
       "relation": "imports",
@@ -48021,9 +48021,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation",
-      "target": "types_game_game",
-      "confidence_score": 1.0
+      "target": "types_game_game"
     },
     {
       "relation": "references",
@@ -48032,9 +48032,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
-      "target": "lib_tauri_bridge_gamefilters",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_gamefilters"
     },
     {
       "relation": "references",
@@ -48043,9 +48043,9 @@
       "source_file": "src/hooks/useUnifiedLibraryNavigation.ts",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
-      "target": "types_game_game",
-      "confidence_score": 1.0
+      "target": "types_game_game"
     },
     {
       "relation": "contains",
@@ -51881,9 +51881,9 @@
       "source_file": "src/themes/list-presentations.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_list_presentations",
-      "target": "themes_arcade_void",
-      "confidence_score": 1.0
+      "target": "themes_arcade_void"
     },
     {
       "relation": "imports",
@@ -51903,9 +51903,9 @@
       "source_file": "src/themes/list-presentations.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_list_presentations",
-      "target": "themes_arcade_void_arcadevoidtheme",
-      "confidence_score": 1.0
+      "target": "themes_arcade_void_arcadevoidtheme"
     },
     {
       "relation": "contains",
@@ -51957,9 +51957,9 @@
       "source_file": "src/themes/list-presentations.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_list_presentations",
-      "target": "themes_c64_edition",
-      "confidence_score": 1.0
+      "target": "themes_c64_edition"
     },
     {
       "relation": "imports",
@@ -51979,9 +51979,9 @@
       "source_file": "src/themes/list-presentations.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_list_presentations",
-      "target": "themes_c64_edition_c64editiontheme",
-      "confidence_score": 1.0
+      "target": "themes_c64_edition_c64editiontheme"
     },
     {
       "relation": "contains",
@@ -52033,9 +52033,9 @@
       "source_file": "src/themes/list-presentations.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_list_presentations",
-      "target": "themes_cyberpunk_crt",
-      "confidence_score": 1.0
+      "target": "themes_cyberpunk_crt"
     },
     {
       "relation": "imports",
@@ -52055,9 +52055,9 @@
       "source_file": "src/themes/list-presentations.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_list_presentations",
-      "target": "themes_cyberpunk_crt_cyberpunkcrttheme",
-      "confidence_score": 1.0
+      "target": "themes_cyberpunk_crt_cyberpunkcrttheme"
     },
     {
       "relation": "contains",
@@ -52127,9 +52127,9 @@
       "source_file": "src/themes/list-presentations.ts",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_list_presentations",
-      "target": "themes_list_presentations_staticthemes",
-      "confidence_score": 1.0
+      "target": "themes_list_presentations_staticthemes"
     },
     {
       "relation": "contains",
@@ -52148,9 +52148,9 @@
       "source_file": "src/themes/list-presentations.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_list_presentations",
-      "target": "themes_types",
-      "confidence_score": 1.0
+      "target": "themes_types"
     },
     {
       "relation": "imports",
@@ -52159,9 +52159,9 @@
       "source_file": "src/themes/list-presentations.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_list_presentations",
-      "target": "themes_types_theme",
-      "confidence_score": 1.0
+      "target": "themes_types_theme"
     },
     {
       "relation": "contains",
@@ -52179,9 +52179,9 @@
       "source_file": "src/themes/types.ts",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_types",
-      "target": "themes_types_themeassets",
-      "confidence_score": 1.0
+      "target": "themes_types_themeassets"
     },
     {
       "relation": "contains",
@@ -52219,9 +52219,9 @@
       "source_file": "src/themes/types.ts",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "themes_types",
-      "target": "themes_types_themelayout",
-      "confidence_score": 1.0
+      "target": "themes_types_themelayout"
     },
     {
       "relation": "contains",
@@ -56484,5 +56484,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "e0cb8d4dd47b3b84e16051a90a75a18316cc4260"
+  "built_at_commit": "b5b21506af0369e3aaabd3e5994f2bfccb9e34f6"
 }

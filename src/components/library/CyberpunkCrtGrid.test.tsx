@@ -71,7 +71,7 @@ describe('CyberpunkCrtGrid', () => {
     const libraryGrid = screen.getByTestId('cyberpunk-library-card').parentElement;
     expect(libraryGrid?.classList).toContain('md:grid-cols-4');
     expect(libraryGrid?.classList).toContain('lg:grid-cols-6');
-    expect(screen.getByTestId('cyberpunk-library-card').querySelector('.aspect-\\[1\\.6\\]')).toBeTruthy();
+    expect(screen.getByTestId('cyberpunk-library-card').querySelector('.aspect-\\[1\\.75\\]')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Previous RECENT games' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Next RECENT games' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Previous FAVOURITE games' })).toBeTruthy();

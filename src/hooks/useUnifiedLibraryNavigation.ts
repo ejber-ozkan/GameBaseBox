@@ -26,7 +26,7 @@ import {
 
 const LETTERS = ['#', ...Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index))];
 
-type KeyEventLike = Pick<KeyboardEvent, 'key'>;
+type KeyEventLike = { key: string; shiftKey?: boolean; altKey?: boolean; };
 type SectionJumpDirection = 'up' | 'down' | null;
 
 export interface UseUnifiedLibraryNavigationProps {
