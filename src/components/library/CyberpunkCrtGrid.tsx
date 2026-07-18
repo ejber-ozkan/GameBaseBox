@@ -61,11 +61,12 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
       <div className="mb-3 flex items-end gap-3 border-b border-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)] pb-2">
         <span aria-hidden="true" className="h-6 w-1.5 shrink-0 bg-[var(--theme-primary)] shadow-[2px_0_0_var(--theme-secondary)]" />
         <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{title}</h2>
-        <span className="ml-auto hidden font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)] sm:block">SYS://LINK_ACTIVE</span>
-        <div className="flex shrink-0 gap-2">
+        <div role="group" aria-label={`${title} rail controls`} className="flex shrink-0 gap-2">
           <button aria-label={`Previous ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('previous')}>‹</button>
           <button aria-label={`Next ${title} games`} className="flex h-8 w-8 items-center justify-center border-2 border-[var(--theme-primary)] bg-black font-mono text-lg font-black text-[var(--theme-primary)] transition-colors hover:bg-[var(--theme-primary)] hover:text-black" onClick={() => scrollRail('next')}>›</button>
         </div>
+        <div className="h-px flex-1 bg-[color-mix(in_srgb,var(--theme-primary)_50%,transparent)]" />
+        <span className="hidden font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)] sm:block">SYS://LINK_ACTIVE</span>
       </div>
       {games.length > 0 ? (
         <div ref={railScrollRef} className="no-scrollbar grid snap-x snap-mandatory grid-flow-col auto-cols-[minmax(180px,16vw)] gap-4 overflow-x-auto pb-3" data-testid="cyberpunk-rail-scroll">

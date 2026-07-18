@@ -7352,7 +7352,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_gridview",
-      "community": 2,
+      "community": 104,
       "norm_label": "gridview.tsx"
     },
     {
@@ -7372,7 +7372,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_gridview_gridview",
-      "community": 2,
+      "community": 104,
       "norm_label": "gridview()"
     },
     {
@@ -8639,7 +8639,7 @@
       "label": "CyberpunkCrtGrid()",
       "file_type": "code",
       "source_file": "src/components/library/CyberpunkCrtGrid.tsx",
-      "source_location": "L103",
+      "source_location": "L104",
       "_origin": "ast",
       "id": "library_cyberpunkcrtgrid_cyberpunkcrtgrid",
       "community": 104,
@@ -12892,7 +12892,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils_sorting",
-      "community": 2,
+      "community": 104,
       "norm_label": "sorting.ts"
     },
     {
@@ -12902,7 +12902,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "utils_sorting_sortdirection",
-      "community": 2,
+      "community": 104,
       "norm_label": "sortdirection"
     },
     {
@@ -12912,7 +12912,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "utils_sorting_sortgames",
-      "community": 2,
+      "community": 104,
       "norm_label": "sortgames()"
     },
     {
@@ -54902,5 +54902,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "ad097f501e54dfb1a1df8cd47f6bf834d1bfb914"
+  "built_at_commit": "386ff6bb4d12ef4d95bec495734cb224958e841a"
 }

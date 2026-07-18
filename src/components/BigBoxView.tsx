@@ -99,6 +99,7 @@ export function BigBoxView({
     typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
   ).id === 'cyberpunk-crt';
   const usesRailGridNavigation = isC64Edition || isCyberpunkCrt;
+  const cyberpunkGridColumns = layout.viewportWidth >= 1024 ? 6 : layout.viewportWidth >= 768 ? 4 : 2;
 
   const { flatGames, genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
     activeRailIndex,
@@ -337,7 +338,7 @@ export function BigBoxView({
     genres,
     hasOverflowSubGenres: hasOverflow,
     isControllerKeyboardOpen: isInteractionOverlayOpen,
-    gridColumns: layout.gridColumns,
+    gridColumns: isCyberpunkCrt ? cyberpunkGridColumns : layout.gridColumns,
     onBack: openExitPrompt,
     onFiltersChange: handleFiltersChange,
     onFocusSearchInput: () => {
@@ -530,7 +531,7 @@ export function BigBoxView({
                 focusedGameId={currentFocusedGame?.id.toString()}
                 focusedIndex={currentFocusedIndex}
                 focusedRailId={currentRail?.id}
-                gridColumns={layout.gridColumns}
+                gridColumns={cyberpunkGridColumns}
                 games={flatGames}
                 isFavorite={isFavorite}
                 onFocusSectionItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}

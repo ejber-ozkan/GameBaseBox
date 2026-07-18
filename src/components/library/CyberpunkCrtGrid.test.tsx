@@ -79,6 +79,9 @@ describe('CyberpunkCrtGrid', () => {
     expect(screen.getByRole('button', { name: 'Previous CLASSICS games' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Next CLASSICS games' })).toBeTruthy();
 
+    const recentTitle = screen.getByRole('heading', { name: 'RECENT' });
+    expect(recentTitle.nextElementSibling?.getAttribute('role')).toBe('group');
+
     fireEvent.click(screen.getByRole('button', { name: 'Next RECENT games' }));
     expect(scrollBy).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'smooth', left: 0 }));
   });

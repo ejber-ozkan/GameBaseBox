@@ -28,6 +28,7 @@ export function useBigBoxScrollSync({
   const headerRef = useRef<HTMLElement>(null);
   const lastEscTime = useRef<number>(0);
   const lastRail = useRef(activeRailIndex);
+  const lastViewportRailId = useRef<string | null>(null);
 
   const getHeaderHeight = useCallback(() => {
     return headerRef.current?.offsetHeight ?? HEADER_HEIGHT_FALLBACK;
@@ -104,6 +105,7 @@ export function useBigBoxScrollSync({
     }
 
     if (activeRailIndex === -1) {
+      lastViewportRailId.current = null;
       onSectionJumpHandled();
       scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -122,11 +124,15 @@ export function useBigBoxScrollSync({
     const gridElement = resolvedRailElement.querySelector('.grid');
     const tile = gridElement?.children[currentFocusedIndex] as HTMLElement | undefined;
 
+    const shouldScrollViewport = lastViewportRailId.current !== currentRailId || sectionJumpDirection !== null;
+
     if (tile && currentRailType === 'alphabet') {
       scrollAlphabetTileToCenterBand(tile, sectionJumpDirection !== null);
-    } else {
+    } else if (shouldScrollViewport) {
       scrollElementBelowHeader(anchorElement ?? resolvedRailElement);
     }
+
+    lastViewportRailId.current = currentRailId;
 
     onSectionJumpHandled();
   }, [

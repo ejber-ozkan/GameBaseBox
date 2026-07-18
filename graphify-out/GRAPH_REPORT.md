@@ -1,7 +1,7 @@
 # Graph Report - GameBaseBox  (2026-07-18)
 
 ## Corpus Check
-- 161 files · ~123,059 words
+- 161 files · ~123,111 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ad097f50`
+- Built from commit: `386ff6bb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -152,8 +152,8 @@ Cohesion: 0.22
 Nodes (9): EmulatorJS vice_x64 Core, Project 64Box Requirements, SID Player Requirements, SQLite Database Requirements, Tauri Desktop Wrapper Requirements, WASM Emulation Requirements, EmulatorJS Localization, WASM Emulator Iframe (+1 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.10
-Nodes (33): getRequiredPlatformFolderKeys(), Home(), LibraryApp(), SetupFolderKey, AlphabetJumpBar(), AlphabetJumpBarProps, LETTERS, AppLaunchSplash() (+25 more)
+Cohesion: 0.12
+Nodes (30): getRequiredPlatformFolderKeys(), Home(), LibraryApp(), SetupFolderKey, AlphabetJumpBar(), AlphabetJumpBarProps, LETTERS, AppLaunchSplash() (+22 more)
 
 ### Community 3 - "WASM Emulator Core & Localization"
 Cohesion: 0.07
@@ -444,8 +444,8 @@ Cohesion: 0.50
 Nodes (3): GBBox 0.3.1 Release Notes, Highlights, Validation
 
 ### Community 104 - "Community 104"
-Cohesion: 0.09
-Nodes (20): DetailViewProps, GridViewProps, ImageSlider(), ImageSliderProps, ScrapeButtonProps, C64EditionGrid(), C64EditionGridProps, CyberpunkCrtGrid() (+12 more)
+Cohesion: 0.08
+Nodes (23): DetailViewProps, GridView(), GridViewProps, ImageSlider(), ImageSliderProps, ScrapeButtonProps, C64EditionGrid(), C64EditionGridProps (+15 more)
 
 ### Community 105 - "Community 105"
 Cohesion: 0.33
@@ -482,6 +482,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Detail View Layout & Navigation` be split into smaller, more focused modules?**
   _Cohesion score 0.12923076923076923 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.10359408033826638 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11875843454790823 - nodes in this community are weakly interconnected._
 - **Should `WASM Emulator Core & Localization` be split into smaller, more focused modules?**
   _Cohesion score 0.07347915242652085 - nodes in this community are weakly interconnected._
