@@ -46,6 +46,7 @@ describe('BigBoxHeader', () => {
     const platformSelect = screen.getByLabelText('Active platform');
     const gameCount = screen.getByText('3 GAMES AVAILABLE');
     expect(platformSelect.parentElement?.parentElement?.contains(gameCount)).toBe(true);
+    expect(screen.getByTestId('platform-switcher').className).toContain('bg-[var(--theme-primary-container)]');
   });
 
   it('shows the C64 blinking cursor in the BigBox search field', () => {
