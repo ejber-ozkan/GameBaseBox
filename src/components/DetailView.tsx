@@ -192,7 +192,7 @@ export function DetailView({ game, onBack }: DetailViewProps) {
   };
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full" data-testid="detail-view">
       {renderTheme()}
       
       {fullscreenMedia && (

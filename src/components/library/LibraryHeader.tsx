@@ -48,9 +48,9 @@ export function LibraryHeader({
 
   return (
     <>
-      <header className="theme-panel sticky top-0 z-10 border-b border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] px-8 py-5 shadow-lg backdrop-blur-2xl">
-        <div className="flex items-center justify-between gap-6">
-        <div className="flex items-center gap-6">
+      <header className="theme-panel sticky top-0 z-10 border-b border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] px-4 py-3 shadow-lg backdrop-blur-2xl sm:px-8 sm:py-5">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-6">
           <div className="flex flex-col">
             <h1 className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-secondary)] bg-clip-text text-4xl font-black italic leading-none tracking-tighter text-transparent">
               GBBox
@@ -59,7 +59,7 @@ export function LibraryHeader({
               GameBase Box
             </div>
           </div>
-          <div className="mx-2 h-8 w-px bg-[var(--theme-outline-variant)]" />
+          <div className="mx-2 hidden h-8 w-px bg-[var(--theme-outline-variant)] sm:block" />
           <div className="flex items-center gap-3">
             <PlatformSwitcher activePlatformId={activePlatformId} onPlatformSelect={onPlatformSelect} />
             {totalGameCount !== undefined ? (
@@ -70,14 +70,14 @@ export function LibraryHeader({
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="relative">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:gap-4 lg:w-auto lg:flex-nowrap">
+          <div className="relative min-w-0 flex-1 lg:flex-none">
             <input
               type="text"
               placeholder="QUICK SEARCH"
               value={searchInput}
               onChange={(event) => onSearchChange(event.target.value)}
-              className={`w-80 rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-6 py-3 text-sm font-bold text-[var(--theme-text)] shadow-inner transition-colors placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:bg-[var(--theme-surface)] focus:outline-none ${isC64Edition ? 'pr-12 font-mono uppercase tracking-[0.14em]' : ''}`}
+              className={`w-full rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-6 py-3 text-sm font-bold text-[var(--theme-text)] shadow-inner transition-colors placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:bg-[var(--theme-surface)] focus:outline-none sm:w-80 ${isC64Edition ? 'pr-12 font-mono uppercase tracking-[0.14em]' : ''}`}
             />
             {isC64Edition ? <span aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-5 w-2 -translate-y-1/2 bg-[var(--theme-primary)] animate-[cursor-blink_1s_steps(1,end)_infinite]" data-testid="c64-search-cursor" /> : null}
           </div>
