@@ -73,6 +73,7 @@ export interface UseUnifiedLibraryNavigationProps {
   persistWindowSize?: (size: { width: number; height: number }) => void;
   scrollNavigation?: boolean;
   recentlyPlayedIds?: string[];
+  onFocusSearchInput?: () => void;
 }
 
 export function useUnifiedLibraryNavigation({
@@ -116,6 +117,7 @@ export function useUnifiedLibraryNavigation({
   persistWindowSize,
   scrollNavigation = true,
   recentlyPlayedIds = [],
+  onFocusSearchInput,
 }: UseUnifiedLibraryNavigationProps) {
   const [sectionJumpDirection, setSectionJumpDirection] = useState<SectionJumpDirection>(null);
 

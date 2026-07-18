@@ -433,6 +433,12 @@ export function UnifiedLibraryView({
     persistWindowSize,
     scrollNavigation: settings.scrollNavigation,
     recentlyPlayedIds: settings.recentlyPlayedIds,
+    onFocusSearchInput: () => {
+      const input = headerRef.current?.querySelector('input');
+      if (input) {
+        (input as HTMLElement).focus();
+      }
+    },
   });
 
   const { scrollContainerRef, headerRef } = useBigBoxScrollSync({
