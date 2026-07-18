@@ -98,6 +98,14 @@ describe('CyberpunkCrtGrid', () => {
     );
 
     const libraryGrid = screen.getAllByTestId('cyberpunk-library-card')[0]?.parentElement;
+    const presenter = screen.getByTestId('cyberpunk-crt-grid');
+    const librarySection = presenter.querySelector('[data-rail-id="cyberpunk-library"]');
+
+    expect(presenter.classList).toContain('min-w-0');
+    expect(presenter.classList).toContain('grid-cols-[minmax(0,1fr)]');
+    expect(librarySection?.classList).toContain('min-w-0');
+    expect(libraryGrid?.classList).toContain('min-w-0');
+    expect(libraryGrid?.classList).toContain('w-full');
     expect(libraryGrid?.classList).toContain('grid-cols-2');
     expect(libraryGrid?.classList).toContain('xl:grid-cols-8');
   });

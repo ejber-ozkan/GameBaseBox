@@ -153,20 +153,20 @@ export function CyberpunkCrtGrid({
   });
 
   return (
-    <div className="cyberpunk-crt-grid grid gap-8 px-4 pb-24 pt-5 sm:px-6 lg:px-8" data-cyberpunk-presentation="crt-terminal" data-testid="cyberpunk-crt-grid">
+    <div className="cyberpunk-crt-grid grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 px-4 pb-24 pt-5 sm:px-6 lg:px-8" data-cyberpunk-presentation="crt-terminal" data-testid="cyberpunk-crt-grid">
       <CyberpunkRail {...railProps('recent')} games={recentGames} onSelectGame={onSelectGame} railId="recent" title="RECENT" />
       <CyberpunkRail {...railProps('favorites')} games={favoriteGames} onSelectGame={onSelectGame} railId="favorites" title="FAVOURITE" />
       <CyberpunkRail {...railProps('classics')} games={classicGames} onSelectGame={onSelectGame} railId="classics" title="CLASSICS" />
 
       {librarySections.map((section, sectionIndex) => (
-        <section key={section.id} data-rail-id={section.id}>
+        <section key={section.id} className="min-w-0" data-rail-id={section.id}>
           <div className="mb-3 flex items-end gap-3 border-b-2 border-[var(--theme-secondary)] pb-2">
             <span aria-hidden="true" className="h-6 w-1.5 bg-[var(--theme-secondary)] shadow-[2px_0_0_var(--theme-primary)]" />
             <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{section.label}</h2>
             <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)]">DATABASE</span>
           </div>
           <div
-            className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8"
+            className="grid min-w-0 w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8"
             data-navigation-columns={gridColumns}
           >
             {(activeAlphabetRailId === undefined || activeAlphabetRailId === section.id ? section.games : []).map((game, index) => {
