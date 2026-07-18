@@ -1,7 +1,7 @@
 # Graph Report - GameBaseBox  (2026-07-18)
 
 ## Corpus Check
-- 160 files · ~121,665 words
+- 160 files · ~121,767 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cfd45eae`
+- Built from commit: `1574c900`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -227,8 +227,8 @@ Cohesion: 0.29
 Nodes (16): get_db_game_count(), get_db_games(), get_game_detail(), get_game_extras(), get_genres(), get_secure_setting(), get_sub_genres(), save_secure_setting() (+8 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.14
-Nodes (19): DETAIL_CONFIG, detailCache, DetailFullscreenMedia, DetailFullscreenRequest, DetailView(), DetailViewProps, getCachedGameDetail(), useSettings() (+11 more)
+Cohesion: 0.13
+Nodes (21): DETAIL_CONFIG, detailCache, DetailFullscreenMedia, DetailFullscreenRequest, DetailLayoutProps, DetailView(), DetailViewProps, getCachedGameDetail() (+13 more)
 
 ### Community 23 - "Community 23"
 Cohesion: 0.11
@@ -327,8 +327,8 @@ Cohesion: 0.50
 Nodes (4): tauri-dev-debug.sh script, frontend_ready(), GAMEBASEBOX_DEBUG, PATH
 
 ### Community 60 - "Community 60"
-Cohesion: 0.17
-Nodes (13): ExtrasDetail(), DetailNavigationHook, PLATFORM_EMULATOR_PROFILES, supportsEmbeddedEmulation(), buildLaunchRequest(), buildPlatformAssetPath(), getPlatformLaunchSettings(), LaunchSource (+5 more)
+Cohesion: 0.19
+Nodes (11): ExtrasDetail(), PLATFORM_EMULATOR_PROFILES, supportsEmbeddedEmulation(), buildLaunchRequest(), buildPlatformAssetPath(), getPlatformLaunchSettings(), LaunchSource, PlatformLaunchSettings (+3 more)
 
 ### Community 61 - "Community 61"
 Cohesion: 0.50
@@ -351,8 +351,8 @@ Cohesion: 0.17
 Nodes (11): Agent Instructions, Beads Issue Tracker, Codebase Navigation with Graphify, Ejber's Ways of working, Non-Interactive Shell Commands, Quick Reference, Quick Reference, Rules (+3 more)
 
 ### Community 66 - "Community 66"
-Cohesion: 0.14
-Nodes (16): BigBoxAlphabetRail(), BigBoxAlphabetRailProps, BigBoxTileMedia(), DetailLayoutProps, getTargetVisibleCards(), HorizontalRail(), HorizontalRailProps, BigBoxRailCategory (+8 more)
+Cohesion: 0.16
+Nodes (14): BigBoxAlphabetRail(), BigBoxAlphabetRailProps, BigBoxTileMedia(), getTargetVisibleCards(), HorizontalRail(), HorizontalRailProps, BigBoxRailCategory, buildFullscreenLayoutMetrics() (+6 more)
 
 ### Community 67 - "Component 67"
 Cohesion: 0.47
@@ -439,8 +439,8 @@ Cohesion: 0.50
 Nodes (3): GBBox 0.3.1 Release Notes, Highlights, Validation
 
 ### Community 104 - "Community 104"
-Cohesion: 0.11
-Nodes (18): GridView(), GridViewProps, ImageSlider(), ImageSliderProps, ScrapeButtonProps, C64EditionGrid(), C64EditionGridProps, WindowGameListSection() (+10 more)
+Cohesion: 0.10
+Nodes (20): GridView(), GridViewProps, ImageSlider(), ImageSliderProps, ScrapeButtonProps, C64EditionGrid(), C64EditionGridProps, WindowGameListSection() (+12 more)
 
 ### Community 105 - "Community 105"
 Cohesion: 0.33

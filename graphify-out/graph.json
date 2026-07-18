@@ -7232,7 +7232,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "components_detailview_detaillayoutprops",
-      "community": 66,
+      "community": 22,
       "norm_label": "detaillayoutprops"
     },
     {
@@ -7399,7 +7399,7 @@
       "label": "getTargetVisibleCards()",
       "file_type": "code",
       "source_file": "src/components/HorizontalRail.tsx",
-      "source_location": "L23",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "components_horizontalrail_gettargetvisiblecards",
       "community": 66,
@@ -7409,7 +7409,7 @@
       "label": "HorizontalRail()",
       "file_type": "code",
       "source_file": "src/components/HorizontalRail.tsx",
-      "source_location": "L47",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "components_horizontalrail_horizontalrail",
       "community": 66,
@@ -7989,7 +7989,7 @@
       "label": "BigBoxAlphabetRail()",
       "file_type": "code",
       "source_file": "src/components/bigbox/BigBoxAlphabetRail.tsx",
-      "source_location": "L20",
+      "source_location": "L19",
       "_origin": "ast",
       "id": "bigbox_bigboxalphabetrail_bigboxalphabetrail",
       "community": 66,
@@ -8549,7 +8549,7 @@
       "label": "getStudio()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "library_c64editiongrid_getstudio",
       "community": 104,
@@ -8559,7 +8559,7 @@
       "label": "C64FocusTitle()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L29",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "library_c64editiongrid_c64focustitle",
       "community": 104,
@@ -8569,7 +8569,7 @@
       "label": "C64Rail()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "library_c64editiongrid_c64rail",
       "community": 104,
@@ -8579,7 +8579,7 @@
       "label": "C64EditionGrid()",
       "file_type": "code",
       "source_file": "src/components/library/C64EditionGrid.tsx",
-      "source_location": "L104",
+      "source_location": "L105",
       "_origin": "ast",
       "id": "library_c64editiongrid_c64editiongrid",
       "community": 104,
@@ -9112,7 +9112,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "themes_playbutton_playbuttonprops",
-      "community": 60,
+      "community": 22,
       "norm_label": "playbuttonprops"
     },
     {
@@ -9192,7 +9192,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "window_windoweddetaillayout_windoweddetaillayoutprops",
-      "community": 66,
+      "community": 22,
       "norm_label": "windoweddetaillayoutprops"
     },
     {
@@ -9742,7 +9742,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailnavigationhook",
-      "community": 60,
+      "community": 22,
       "norm_label": "detailnavigationhook"
     },
     {
@@ -12822,7 +12822,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils_sorting",
-      "community": 22,
+      "community": 104,
       "norm_label": "sorting.ts"
     },
     {
@@ -12832,7 +12832,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "utils_sorting_sortdirection",
-      "community": 22,
+      "community": 104,
       "norm_label": "sortdirection"
     },
     {
@@ -12842,7 +12842,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "utils_sorting_sortgames",
-      "community": 22,
+      "community": 104,
       "norm_label": "sortgames()"
     },
     {
@@ -35974,9 +35974,9 @@
       "source_file": "src/components/BigBoxView.tsx",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_bigboxview",
-      "target": "components_bigboxview_getc64navigationrails",
-      "confidence_score": 1.0
+      "target": "components_bigboxview_getc64navigationrails"
     },
     {
       "relation": "imports_from",
@@ -36084,9 +36084,9 @@
       "source_file": "src/components/BigBoxView.tsx",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_bigboxview",
-      "target": "hooks_usebigboxlibrarydata_bigboxrailcategory",
-      "confidence_score": 1.0
+      "target": "hooks_usebigboxlibrarydata_bigboxrailcategory"
     },
     {
       "relation": "imports",
@@ -54651,5 +54651,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "cfd45eaea83e3d159b768aeffc6c23f8908c6d3e"
+  "built_at_commit": "1574c90067cac6b4060519e9729d790273d01e67"
 }
