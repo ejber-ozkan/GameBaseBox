@@ -13,22 +13,13 @@ import {
 } from '@/lib/tauri-bridge';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { GridView } from '@/components/GridView';
-import { ListView } from '@/components/ListView';
 import { DetailView } from '@/components/DetailView';
 import { SettingsView } from '@/components/SettingsModal';
-import { AlphabetJumpBar } from '@/components/AlphabetJumpBar';
 import { useInputMode } from '@/hooks/useInputMode';
-import { BigBoxView } from '@/components/BigBoxView';
-import type { BigBoxSessionState } from '@/components/BigBoxView';
+import { UnifiedLibraryView } from '@/components/UnifiedLibraryView';
+import type { BigBoxSessionState } from '@/components/UnifiedLibraryView';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useLibraryBrowserState } from '@/hooks/useLibraryBrowserState';
-import { useLibraryShellInput } from '@/hooks/useLibraryShellInput';
-import { LibraryHeader } from '@/components/library/LibraryHeader';
-import { WindowGameShelf } from '@/components/library/WindowGameShelf';
-import { C64EditionGrid } from '@/components/library/C64EditionGrid';
-import { CyberpunkCrtGrid } from '@/components/library/CyberpunkCrtGrid';
-import { WindowGameListSection } from '@/components/library/WindowGameListSection';
 import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
 import { useWindowLibraryShelves } from '@/hooks/useWindowLibraryShelves';
@@ -158,29 +149,6 @@ function LibraryApp() {
     previousFullscreenRef.current = settings.isFullscreen;
   }, [settings.isFullscreen]);
 
-  useLibraryShellInput({
-    closeDetail,
-    filters,
-    focusedIndex,
-    games,
-    handleGameSelect,
-    onGamepadInput,
-    persistWindowSize,
-    selectedGame,
-    setFilters,
-    setFocusedIndex,
-    setSearchInput,
-    setViewMode,
-    settings: {
-      isFullscreen: settings.isFullscreen,
-      recentlyPlayedIds: theme.id === 'c64-edition' ? [] : settings.recentlyPlayedIds,
-      scrollNavigation: settings.scrollNavigation,
-    },
-    toggleFocusedFavorite,
-    updateSettings,
-    viewMode,
-  });
-
   const handleBrowsePlatformMdb = useCallback(async () => {
     const selected = await openMdbFileDialog();
     if (!selected) {
@@ -282,209 +250,55 @@ function LibraryApp() {
     );
   }
 
-  if (settings.isFullscreen) {
-    return (
-      <>
-        {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <BigBoxView 
-          settings={settings}
-          onSelectGame={handleGameSelect}
-          sessionState={bigBoxSession}
-          onSessionChange={setBigBoxSession}
-          onRequestExit={({ dontAskAgain, focusedGameId, railId }) => {
-            flushSync(() => {
-              updateSettings({
-                confirmFullscreenExit: !dontAskAgain,
-                lastBigBoxGameId: focusedGameId,
-                lastBigBoxRailId: railId,
-              });
-            });
-            void (async () => {
-              await playRotatingUiSoundEffectAndWait('bigbox-close', [
-                'close-app-1',
-                'close-app-2',
-                'close-app-3',
-                'close-app-4',
-              ], 0.7);
-              void exitApp();
-            })();
-          }}
-          searchInput={searchInput}
-          onSearchChange={setSearchInput}
-          onShowSettings={() => setViewMode('settings')}
-          onPlatformSelect={setActivePlatform}
-          filters={filters}
-          onFiltersChange={setFilters}
-        />
-      </>
-    );
-  }
-
   return (
     <>
       {showLaunchSplash ? <AppLaunchSplash /> : null}
-      <main className={`h-screen overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] flex flex-col font-sans transition-all ${
-        settings.isFullscreen && !showMouse ? 'cursor-none' : ''
-      }`}>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat saturate-[0.85] contrast-[1.08]"
-          style={{
-            backgroundImage: `url('${libraryBackgroundImage}')`,
-            opacity: LIBRARY_BACKGROUND_OPACITY,
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-0"
-          style={{ background: 'linear-gradient(180deg, color-mix(in srgb, var(--theme-background) 58%, transparent), var(--theme-background))' }}
-        />
-        <LibraryHeader
-          filters={filters}
-          genres={genres}
-          onExit={exitApp}
-          onFiltersChange={setFilters}
-          onOpenSettings={() => setViewMode('settings')}
-          onPlatformSelect={setActivePlatform}
-          onSearchChange={setSearchInput}
-          subGenres={subGenres}
-          onViewModeChange={setViewMode}
-          searchInput={searchInput}
-          activePlatformId={settings.activePlatformId}
-          totalGameCount={listGameCount}
-          viewMode={viewMode}
-        />
-
-        <div data-library-scroll-container className="no-scrollbar relative z-10 flex-1 overflow-auto pl-8 pr-4">
-          <AlphabetJumpBar 
-            activeLetter={filters.letter} 
-            onLetterSelect={(l) => {
-              setFilters(prev => ({ ...prev, letter: prev.letter === l ? undefined : l, searchQuery: undefined }));
-              setSearchInput(''); // Clear search box when browsing by letter
-            }} 
-          />
-          
-          {viewMode === 'grid' ? (
-            theme.id === 'c64-edition' ? (
-              <C64EditionGrid
-                alphabetLabel={filters.letter}
-                classicGames={classicGames}
-                favoriteGames={favoriteGames}
-                focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
-                games={games}
-                isFavorite={isFavorite}
-                onEndReached={loadNextPage}
-                onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
-                onSelectGame={handleGameSelect}
-                recentGames={recentGames}
-                toggleFavorite={toggleFavorite}
-              />
-            ) : theme.id === 'cyberpunk-crt' ? (
-              <CyberpunkCrtGrid
-                alphabetLabel={filters.letter}
-                classicGames={classicGames}
-                favoriteGames={favoriteGames}
-                focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
-                games={games}
-                isFavorite={isFavorite}
-                onEndReached={loadNextPage}
-                onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
-                onSelectGame={handleGameSelect}
-                recentGames={recentGames}
-                toggleFavorite={toggleFavorite}
-              />
-            ) : (
-            <>
-              {mounted && (
-                <WindowGameShelf
-                  games={recentGames}
-                  isFavorite={isFavorite}
-                  isArcadeVoid={theme.id === 'arcade-void'}
-                  isMouseMode={isMouseMode}
-                  onFocusChange={() => {}}
-                  onSelectGame={handleGameSelect}
-                  section="recent"
-                  subtitle="Your latest launches, kept near the top for quick return trips."
-                  shelfRef={shelfRef}
-                  title="Recent Games"
-                />
-              )}
-
-              <WindowGameShelf
-                games={favoriteGames}
-                isFavorite={isFavorite}
-                isArcadeVoid={theme.id === 'arcade-void'}
-                isMouseMode={isMouseMode}
-                onFocusChange={() => {}}
-                onSelectGame={handleGameSelect}
-                section="favorites"
-                subtitle="Pinned titles from your personal shortlist."
-                title="Your Favorites"
-              />
-
-              <WindowGameShelf
-                games={classicGames}
-                isFavorite={isFavorite}
-                isArcadeVoid={theme.id === 'arcade-void'}
-                isMouseMode={isMouseMode}
-                onFocusChange={() => {}}
-                onSelectGame={handleGameSelect}
-                section="legendary"
-                subtitle="Essential GB64 staples surfaced in the windowed library too."
-                title="🏆 Legendary Classics 🏆"
-              />
-
-              <GridView 
-                games={games} 
-                onSelectGame={handleGameSelect} 
-                focusedIndex={focusedIndex >= 0 ? focusedIndex : -1} 
-                onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
-                onEndReached={loadNextPage}
-              />
-            </>
-            )
-          ) : (
-            <>
-              {mounted && (
-                <WindowGameListSection
-                  games={recentGames}
-                  isFavorite={isFavorite}
-                  onSelectGame={handleGameSelect}
-                  section="recent"
-                  title="Recent Games"
-                />
-              )}
-              <WindowGameListSection
-                games={favoriteGames}
-                isFavorite={isFavorite}
-                onSelectGame={handleGameSelect}
-                section="favorites"
-                title="Your Favorites"
-              />
-              <WindowGameListSection
-                games={classicGames}
-                isFavorite={isFavorite}
-                onSelectGame={handleGameSelect}
-                section="legendary"
-                title="🏆 Legendary Classics 🏆"
-              />
-              <ListView 
-                games={games} 
-                onSelectGame={handleGameSelect} 
-                onSort={handleSort} 
-                focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
-                onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
-                isFavorite={isFavorite}
-                onEndReached={loadNextPage}
-                activePlatformName={activePlatform.displayName}
-                totalGameCount={listGameCount}
-                favoriteCount={favorites.length}
-                themeId={theme.id}
-              />
-            </>
-          )}
-        </div>
-      </main>
+      <UnifiedLibraryView
+        settings={settings}
+        updateSettings={updateSettings}
+        onSelectGame={handleGameSelect}
+        onPlatformSelect={setActivePlatform}
+        filters={filters}
+        onFiltersChange={setFilters}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        searchInput={searchInput}
+        onSearchChange={setSearchInput}
+        games={games}
+        focusedIndex={focusedIndex}
+        setFocusedIndex={setFocusedIndex}
+        loadNextPage={loadNextPage}
+        handleSort={handleSort}
+        shelfRef={shelfRef}
+        toggleFocusedFavorite={toggleFocusedFavorite}
+        onGamepadInput={onGamepadInput}
+        recentGames={recentGames}
+        favoriteGames={favoriteGames}
+        classicGames={classicGames}
+        genres={genres}
+        subGenres={subGenres}
+        listGameCount={listGameCount}
+        sessionState={bigBoxSession}
+        onSessionChange={setBigBoxSession}
+        onRequestExit={({ dontAskAgain, focusedGameId, railId }) => {
+          flushSync(() => {
+            updateSettings({
+              confirmFullscreenExit: !dontAskAgain,
+              lastBigBoxGameId: focusedGameId,
+              lastBigBoxRailId: railId,
+            });
+          });
+          void (async () => {
+            await playRotatingUiSoundEffectAndWait('bigbox-close', [
+              'close-app-1',
+              'close-app-2',
+              'close-app-3',
+              'close-app-4',
+            ], 0.7);
+            void exitApp();
+          })();
+        }}
+      />
     </>
   );
 }
