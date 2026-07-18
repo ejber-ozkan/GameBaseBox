@@ -134,13 +134,7 @@ export function UnifiedLibraryView({
   const layout = useFullscreenLayoutMetrics();
   const usesRailGridNavigation = theme.layout.structure === 'flat-alphabet';
   const isC64Edition = theme.id === 'c64-edition';
-  const isCyberpunkCrt = theme.id === 'cyberpunk-crt';
   const isArcadeVoid = theme.id === 'arcade-void';
-  const cyberpunkGridColumns =
-    layout.viewportWidth >= 2560 ? 8 :
-    layout.viewportWidth >= 1440 ? 7 :
-    layout.viewportWidth >= 1024 ? 6 :
-    layout.viewportWidth >= 768 ? 4 : 2;
 
   // Background Resolver
   const [libraryBackgroundSeed] = useState(() => Math.floor(Math.random() * 1000));
@@ -418,7 +412,7 @@ export function UnifiedLibraryView({
     genres: finalGenres,
     visibleSubGenres,
     hasOverflowSubGenres: hasOverflow,
-    gridColumns: isCyberpunkCrt ? cyberpunkGridColumns : layout.gridColumns,
+    gridColumns: layout.gridColumns,
     onOpenSubGenrePicker: () => setIsSubGenrePickerOpen(true),
     onOpenControllerKeyboard: () => {
       if (document.activeElement instanceof HTMLElement) {
@@ -630,7 +624,7 @@ export function UnifiedLibraryView({
                     focusedIndex={currentFocusedIndex}
                     focusedRailId={currentRail?.id}
                     games={bigboxFlatGames}
-                    gridColumns={cyberpunkGridColumns}
+                    gridColumns={layout.gridColumns}
                     isFavorite={isFavorite}
                     onFocusSectionItem={(railId, index) => focusRailItem(navigationRails.findIndex((r) => r.id === railId), railId, index)}
                     onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((r) => r.id === railId), railId, index)}

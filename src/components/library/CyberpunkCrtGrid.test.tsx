@@ -68,9 +68,6 @@ describe('CyberpunkCrtGrid', () => {
       />,
     );
 
-    const libraryGrid = screen.getByTestId('cyberpunk-library-card').parentElement;
-    expect(libraryGrid?.classList).toContain('md:grid-cols-4');
-    expect(libraryGrid?.classList).toContain('lg:grid-cols-6');
     expect(screen.getByTestId('cyberpunk-library-card').querySelector('.aspect-\\[1\\.75\\]')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Previous RECENT games' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Next RECENT games' })).toBeTruthy();
@@ -85,6 +82,25 @@ describe('CyberpunkCrtGrid', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Next RECENT games' }));
     expect(scrollBy).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'smooth', left: 0 }));
+  });
+
+  it('keeps an unfiltered two-game library compact', () => {
+    render(
+      <CyberpunkCrtGrid
+        games={[mockGames[0], mockGames[1]]}
+        recentGames={[]}
+        favoriteGames={[]}
+        classicGames={[]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    const libraryGrid = screen.getAllByTestId('cyberpunk-library-card')[0]?.parentElement;
+    expect(libraryGrid?.getAttribute('style')).toContain(
+      'grid-template-columns: repeat(auto-fill, minmax(max(160px, 11%), 1fr))',
+    );
   });
 
   it('keeps focus scrolling inside the active rail rather than using browser-wide scrollIntoView', () => {

@@ -165,7 +165,14 @@ export function CyberpunkCrtGrid({
             <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{section.label}</h2>
             <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)]">DATABASE</span>
           </div>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8" style={gridColumns ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` } : undefined}>
+          <div
+            className="grid gap-4"
+            style={{
+              gridTemplateColumns: gridColumns
+                ? `repeat(${gridColumns}, minmax(0, 1fr))`
+                : 'repeat(auto-fill, minmax(max(160px, 11%), 1fr))',
+            }}
+          >
             {(activeAlphabetRailId === undefined || activeAlphabetRailId === section.id ? section.games : []).map((game, index) => {
               const focused = focusedRailId
                 ? focusedRailId === section.id && (focusedIndex === index || focusedGameId === game.id.toString())

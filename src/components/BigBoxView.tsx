@@ -99,7 +99,6 @@ export function BigBoxView({
     typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
   ).id === 'cyberpunk-crt';
   const usesRailGridNavigation = isC64Edition || isCyberpunkCrt;
-  const cyberpunkGridColumns = layout.viewportWidth >= 1024 ? 6 : layout.viewportWidth >= 768 ? 4 : 2;
 
   const { flatGames, genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
     activeRailIndex,
@@ -338,7 +337,7 @@ export function BigBoxView({
     genres,
     hasOverflowSubGenres: hasOverflow,
     isControllerKeyboardOpen: isInteractionOverlayOpen,
-    gridColumns: isCyberpunkCrt ? cyberpunkGridColumns : layout.gridColumns,
+    gridColumns: layout.gridColumns,
     onBack: openExitPrompt,
     onFiltersChange: handleFiltersChange,
     onFocusSearchInput: () => {
