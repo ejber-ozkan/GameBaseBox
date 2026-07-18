@@ -73,6 +73,7 @@ describe('ThemeDecorator', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('theme-decorator-scanlines')).not.toBeNull();
     });
+    expect(screen.queryByTestId('theme-decorator-noise')).not.toBeNull();
     expect(screen.queryByTestId('theme-decorator-glow')).toBeNull();
     expect(screen.queryByTestId('theme-decorator-outer-border')).toBeNull();
     expect(screen.queryByTestId('theme-decorator-normal-container')).not.toBeNull();
@@ -85,6 +86,7 @@ describe('ThemeDecorator', () => {
     });
     expect(screen.queryByTestId('theme-decorator-glow')).toBeNull();
     expect(screen.queryByTestId('theme-decorator-scanlines')).toBeNull();
+    expect(screen.queryByTestId('theme-decorator-noise')).toBeNull();
     expect(screen.queryByTestId('theme-decorator-normal-container')).toBeNull();
   });
 });

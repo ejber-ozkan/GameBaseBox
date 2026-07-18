@@ -9,7 +9,7 @@ interface ThemeDecoratorProps {
 
 export function ThemeDecorator({ children }: ThemeDecoratorProps) {
   const { theme } = useTheme();
-  const { scanlines, outerBorder, ambientGlow } = theme.effects;
+  const { scanlines, outerBorder, ambientGlow, tvNoise } = theme.effects;
 
   // Render C64 outer border if active
   const content = outerBorder ? (
@@ -53,6 +53,14 @@ export function ThemeDecorator({ children }: ThemeDecoratorProps) {
         <div
           className="scanlines-overlay"
           data-testid="theme-decorator-scanlines"
+        />
+      )}
+
+      {/* TV Noise Overlay */}
+      {tvNoise && (
+        <div
+          className="fixed inset-0 pointer-events-none noise-bg z-[110]"
+          data-testid="theme-decorator-noise"
         />
       )}
     </>

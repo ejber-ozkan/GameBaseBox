@@ -94,10 +94,10 @@ describe('ThemeContext', () => {
     });
     
     expect(screen.getByTestId('current-theme-name').textContent).toBe('Cyberpunk CRT');
-    expect(screen.getByTestId('current-theme-primary').textContent).toBe('#ff003c');
+    expect(screen.getByTestId('current-theme-primary').textContent).toBe('#ffb3b2');
     
     const styleEl = document.getElementById('active-theme-styles');
-    expect(styleEl?.textContent).toContain('--theme-primary: #ff003c');
+    expect(styleEl?.textContent).toContain('--theme-primary: #ffb3b2');
     expect(document.documentElement.getAttribute('data-theme')).toBe('cyberpunk-crt');
 
     // Verify localStorage persistence

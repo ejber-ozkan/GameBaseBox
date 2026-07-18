@@ -30,6 +30,7 @@ export interface ThemeEffects {
   steppedBorders: boolean;
   blinkingCursor: boolean;
   glassmorphism?: boolean;
+  tvNoise?: boolean;
 }
 
 export interface ThemeLayout {
