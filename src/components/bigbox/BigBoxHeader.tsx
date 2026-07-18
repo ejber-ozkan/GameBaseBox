@@ -55,6 +55,7 @@ export function BigBoxHeader({
   visibleSubGenres,
 }: BigBoxHeaderProps) {
   const isC64Edition = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'c64-edition';
+  const isCyberpunkCrt = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'cyberpunk-crt';
   const hasSubGenres = Boolean(filters.genre && (visibleSubGenres.length > 0 || hasOverflowSubGenres));
   const showPlatformSwitcher = SUPPORTED_PLATFORMS.length > 1;
   const subGenreRowIndex = 2;
@@ -86,7 +87,7 @@ export function BigBoxHeader({
   const exitIndex = showPlatformSwitcher ? 3 : 2;
 
   return (
-    <header className="theme-panel sticky top-0 z-50 flex flex-col border-b border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] shadow-lg backdrop-blur-3xl">
+    <header className={`theme-panel sticky top-0 z-50 flex flex-col border-b border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] shadow-lg backdrop-blur-3xl ${isCyberpunkCrt ? 'cyberpunk-crt-header' : ''}`}>
       <div className="w-full" style={{ paddingTop: `${layout.headerPaddingY}px` }}>
         <div className="flex flex-wrap items-center justify-between gap-5" style={shellStyle}>
         <div className="flex min-w-0 flex-wrap items-center gap-5">

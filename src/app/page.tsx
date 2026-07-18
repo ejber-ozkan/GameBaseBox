@@ -27,6 +27,7 @@ import { useLibraryShellInput } from '@/hooks/useLibraryShellInput';
 import { LibraryHeader } from '@/components/library/LibraryHeader';
 import { WindowGameShelf } from '@/components/library/WindowGameShelf';
 import { C64EditionGrid } from '@/components/library/C64EditionGrid';
+import { CyberpunkCrtGrid } from '@/components/library/CyberpunkCrtGrid';
 import { WindowGameListSection } from '@/components/library/WindowGameListSection';
 import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
@@ -366,6 +367,20 @@ function LibraryApp() {
           {viewMode === 'grid' ? (
             theme.id === 'c64-edition' ? (
               <C64EditionGrid
+                alphabetLabel={filters.letter}
+                classicGames={classicGames}
+                favoriteGames={favoriteGames}
+                focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
+                games={games}
+                isFavorite={isFavorite}
+                onEndReached={loadNextPage}
+                onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
+                onSelectGame={handleGameSelect}
+                recentGames={recentGames}
+                toggleFavorite={toggleFavorite}
+              />
+            ) : theme.id === 'cyberpunk-crt' ? (
+              <CyberpunkCrtGrid
                 alphabetLabel={filters.letter}
                 classicGames={classicGames}
                 favoriteGames={favoriteGames}

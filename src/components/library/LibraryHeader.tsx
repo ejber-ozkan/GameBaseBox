@@ -41,6 +41,7 @@ export function LibraryHeader({
 }: LibraryHeaderProps) {
   const [isSubGenrePickerOpen, setIsSubGenrePickerOpen] = useState(false);
   const isC64Edition = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'c64-edition';
+  const isCyberpunkCrt = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'cyberpunk-crt';
   const { hasOverflow, visibleSubGenres } = useMemo(
     () => getVisibleSubGenres(subGenres, filters.subGenre, 11),
     [filters.subGenre, subGenres],
@@ -48,7 +49,7 @@ export function LibraryHeader({
 
   return (
     <>
-      <header className="theme-panel sticky top-0 z-10 border-b border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] px-4 py-3 shadow-lg backdrop-blur-2xl sm:px-8 sm:py-5">
+      <header className={`theme-panel sticky top-0 z-10 border-b border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] px-4 py-3 shadow-lg backdrop-blur-2xl sm:px-8 sm:py-5 ${isCyberpunkCrt ? 'cyberpunk-crt-header' : ''}`}>
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
         <div className="flex flex-wrap items-center gap-3 sm:gap-6">
           <div className="flex flex-col">

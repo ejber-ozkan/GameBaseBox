@@ -57,6 +57,9 @@ vi.mock('./SubGenrePickerModal', () => ({ SubGenrePickerModal: () => null }));
 vi.mock('./library/C64EditionGrid', () => ({
   C64EditionGrid: ({ recentGames, favoriteGames, classicGames }: { recentGames: typeof mockGames; favoriteGames: typeof mockGames; classicGames: typeof mockGames }) => <div data-testid="c64-edition-grid">{[...recentGames, ...favoriteGames, ...classicGames].map((game) => game.name).join('|')}</div>,
 }));
+vi.mock('./library/CyberpunkCrtGrid', () => ({
+  CyberpunkCrtGrid: ({ recentGames, favoriteGames, classicGames }: { recentGames: typeof mockGames; favoriteGames: typeof mockGames; classicGames: typeof mockGames }) => <div data-testid="cyberpunk-crt-grid">{[...recentGames, ...favoriteGames, ...classicGames].map((game) => game.name).join('|')}</div>,
+}));
 vi.mock('../lib/ui-sound-effects', () => ({
   playRotatingUiSoundEffect: vi.fn(),
   playUiSoundEffect: vi.fn(),
@@ -90,6 +93,30 @@ describe('BigBoxView', () => {
 
     expect(screen.queryByTestId('c64-edition-grid')).toBeTruthy();
     expect(screen.getByTestId('c64-edition-grid').textContent).toBe(`${mockGames[0].name}|${mockGames[1].name}|${mockGames[0].name}`);
+  });
+
+  it('uses the same keyboard and gamepad-aware CRT grid presentation in BigBox', () => {
+    document.documentElement.dataset.theme = 'cyberpunk-crt';
+
+    render(
+      <BigBoxView
+        filters={{}}
+        onFiltersChange={vi.fn()}
+        onPlatformSelect={vi.fn()}
+        onRequestExit={vi.fn()}
+        onSearchChange={vi.fn()}
+        onSelectGame={vi.fn()}
+        onSessionChange={vi.fn()}
+        onShowSettings={vi.fn()}
+        searchInput=""
+        settings={{
+          activePlatformId: 'c64', confirmFullscreenExit: true, lastBigBoxGameId: null, lastBigBoxRailId: null, recentlyPlayedIds: [],
+        } as never}
+      />,
+    );
+
+    expect(screen.queryByTestId('cyberpunk-crt-grid')).toBeTruthy();
+    expect(screen.getByTestId('cyberpunk-crt-grid').textContent).toBe(`${mockGames[0].name}|${mockGames[1].name}|${mockGames[0].name}`);
   });
 
   it('keeps C64 alphabet sections navigable with their visible ROMs', () => {

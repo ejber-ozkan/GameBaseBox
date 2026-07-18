@@ -117,6 +117,40 @@ html:not([data-theme-glass]) .theme-panel {
   color: var(--theme-secondary);
 }
 
+/* Cyberpunk CRT grid: shared windowed and BigBox hardware-shell treatment. */
+.cyberpunk-crt-header {
+  border-bottom: 2px solid var(--theme-primary) !important;
+  box-shadow: 2px 2px 0 var(--theme-primary), -1px 0 0 var(--theme-tertiary) !important;
+}
+
+.cyberpunk-crt-header,
+.cyberpunk-crt-header button,
+.cyberpunk-crt-header input {
+  border-radius: 0 !important;
+  font-family: var(--theme-font-mono, monospace);
+}
+
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar {
+  border-right: 2px solid var(--theme-primary);
+  background: color-mix(in srgb, var(--theme-surface) 94%, black);
+}
+
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar button {
+  color: var(--theme-text-muted);
+}
+
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar button:hover,
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar button:focus-visible {
+  background: color-mix(in srgb, var(--theme-primary) 20%, transparent);
+  color: var(--theme-primary);
+  outline: 1px solid var(--theme-primary);
+}
+
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar button.text-blue-400 {
+  color: #0a0a0c;
+  background: var(--theme-primary);
+}
+
 .bigbox-list-surface[data-list-presentation="c64-workspace"] [data-rail-anchor] {
   border: 4px solid var(--theme-outline-variant);
   background: var(--theme-surface);

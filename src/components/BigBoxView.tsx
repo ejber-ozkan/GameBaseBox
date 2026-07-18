@@ -11,6 +11,7 @@ import { BigBoxAlphabetRail } from './bigbox/BigBoxAlphabetRail';
 import { getThemeListPresentation } from '../themes/list-presentations';
 import { BigBoxFooter } from './bigbox/BigBoxFooter';
 import { C64EditionGrid } from './library/C64EditionGrid';
+import { CyberpunkCrtGrid } from './library/CyberpunkCrtGrid';
 import { BigBoxExitPrompt } from './bigbox/BigBoxExitPrompt';
 import { HorizontalRail } from './HorizontalRail';
 import { useBigBoxLibraryData, type BigBoxRailCategory } from '../hooks/useBigBoxLibraryData';
@@ -94,6 +95,10 @@ export function BigBoxView({
   const isC64Edition = getThemeListPresentation(
     typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
   ).id === 'c64-edition';
+  const isCyberpunkCrt = getThemeListPresentation(
+    typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
+  ).id === 'cyberpunk-crt';
+  const usesRailGridNavigation = isC64Edition || isCyberpunkCrt;
 
   const { flatGames, genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
     activeRailIndex,
@@ -102,12 +107,12 @@ export function BigBoxView({
     filters,
     recentlyPlayedIds: settings.recentlyPlayedIds,
     searchInput,
-    loadFlatLibrary: isC64Edition,
+    loadFlatLibrary: usesRailGridNavigation,
   });
 
   const navigationRails = useMemo(
-    () => isC64Edition ? getC64NavigationRails(rails, flatGames) : rails,
-    [flatGames, isC64Edition, rails],
+    () => usesRailGridNavigation ? getC64NavigationRails(rails, flatGames) : rails,
+    [flatGames, rails, usesRailGridNavigation],
   );
   const currentRail = activeRailIndex >= 0 ? navigationRails[activeRailIndex] : null;
   const currentFocusedIndex = currentRail ? (railFocusIndices[currentRail.id] ?? 0) : 0;
@@ -491,7 +496,8 @@ export function BigBoxView({
                <div className="h-12 w-12 rounded-full border-4 border-[var(--theme-outline-variant)] border-t-[var(--theme-primary)] animate-spin"></div>
                <div className="font-bold uppercase tracking-widest text-[var(--theme-primary)] animate-pulse">Scanning Library...</div>
             </div>
-          ) : isC64Edition ? (
+          ) : usesRailGridNavigation ? (
+            isC64Edition ? (
             <C64EditionGrid
               activeAlphabetRailId={currentRail?.type === 'alphabet' ? currentRail.id : null}
               alphabetLabel={filters.letter}
@@ -512,6 +518,28 @@ export function BigBoxView({
               recentGames={c64RecentGames}
               toggleFavorite={toggleFavorite}
             />
+            ) : (
+              <CyberpunkCrtGrid
+                activeAlphabetRailId={currentRail?.type === 'alphabet' ? currentRail.id : null}
+                alphabetLabel={filters.letter}
+                alphabetSections={navigationRails
+                  .filter((rail) => rail.type === 'alphabet')
+                  .map((rail) => ({ id: rail.id, label: rail.letter ?? rail.title, games: rail.games }))}
+                classicGames={c64ClassicGames}
+                favoriteGames={c64FavoriteGames}
+                focusedGameId={currentFocusedGame?.id.toString()}
+                focusedIndex={currentFocusedIndex}
+                focusedRailId={currentRail?.id}
+                gridColumns={layout.gridColumns}
+                games={flatGames}
+                isFavorite={isFavorite}
+                onFocusSectionItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
+                onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
+                onSelectGame={handleSelectGame}
+                recentGames={c64RecentGames}
+                toggleFavorite={toggleFavorite}
+              />
+            )
           ) : (
             rails.map((rail, idx) => {
               const isActive = idx === activeRailIndex;
