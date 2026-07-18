@@ -176,6 +176,8 @@ export function UnifiedLibraryView({
   const currentRail = activeRailIndex >= 0 ? navigationRails[activeRailIndex] : null;
   const currentFocusedIndex = currentRail ? (railFocusIndices[currentRail.id] ?? 0) : 0;
   const currentFocusedGame = currentRail?.games[currentFocusedIndex] ?? null;
+  const currentRailId = currentRail?.id ?? null;
+  const currentRailType = currentRail?.type ?? null;
   const isInteractionOverlayOpen = isControllerKeyboardOpen || isExitPromptOpen || isSubGenrePickerOpen;
   const isShowingFilteredCount = Boolean(searchInput.trim() || filters.genre || filters.subGenre);
 
