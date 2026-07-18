@@ -78,6 +78,7 @@ interface UnifiedLibraryViewProps {
   genres: string[];
   subGenres: string[];
   listGameCount?: number;
+  persistWindowSize?: (size: { width: number; height: number }) => void;
 
   // Fullscreen state persistence
   sessionState?: BigBoxSessionState | null;
@@ -110,6 +111,7 @@ export function UnifiedLibraryView({
   genres: windowGenres,
   subGenres: windowSubGenres,
   listGameCount,
+  persistWindowSize,
   sessionState,
   onSessionChange,
   onRequestExit,

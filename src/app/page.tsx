@@ -278,6 +278,7 @@ function LibraryApp() {
         genres={genres}
         subGenres={subGenres}
         listGameCount={listGameCount}
+        persistWindowSize={persistWindowSize}
         sessionState={bigBoxSession}
         onSessionChange={setBigBoxSession}
         onRequestExit={({ dontAskAgain, focusedGameId, railId }) => {
