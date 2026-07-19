@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type Dispatch, type SetStateAction, useRef } from 'react';
+import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { exitApp, type GameFilters } from '../lib/tauri-bridge';
 import { useGamepad } from './useGamepad';
 import type { Game } from '../types/game';
@@ -36,11 +36,10 @@ export interface UseUnifiedLibraryNavigationProps {
   setViewMode: Dispatch<SetStateAction<LibraryViewMode>>;
   games: Game[];
   selectedGame: Game | null;
-  handleGameSelect: (game: Game) => void;
+  handleGameSelect: (game: Game | null) => void;
   filters: GameFilters;
   setFilters: Dispatch<SetStateAction<GameFilters>>;
-  searchInput: string;
-  setSearchInput: Dispatch<SetStateAction<string>>;
+  setSearchInput: (value: string) => void;
   focusedIndex: number;
   setFocusedIndex: Dispatch<SetStateAction<number>>;
   toggleFocusedFavorite: () => boolean;
@@ -85,7 +84,6 @@ export function useUnifiedLibraryNavigation({
   handleGameSelect,
   filters,
   setFilters,
-  searchInput,
   setSearchInput,
   focusedIndex,
   setFocusedIndex,
@@ -229,10 +227,6 @@ export function useUnifiedLibraryNavigation({
     setActiveHeaderRow,
     setActiveRailIndex,
   ]);
-
-  const cyclePlatform = useCallback(() => {
-    // Cycled by caller or external event triggers
-  }, []);
 
   // 2. Main Key Down handler (combined)
   const handleKeyDown = useCallback((event: KeyEventLike) => {
@@ -515,8 +509,11 @@ export function useUnifiedLibraryNavigation({
     toggleFocusedFavorite,
     updateSettings,
     activeHeaderItemIndex,
+    setActiveHeaderItemIndex,
     activeHeaderRow,
+    setActiveHeaderRow,
     activeRailIndex,
+    setActiveRailIndex,
     railFocusIndices,
     rails,
     genres,
@@ -524,7 +521,6 @@ export function useUnifiedLibraryNavigation({
     hasOverflowSubGenres,
     gridColumns,
     onOpenSubGenrePicker,
-    onOpenControllerKeyboard,
     onShowSettings,
     onPlatformCycle,
     platformSwitcherEnabled,
@@ -570,7 +566,7 @@ export function useUnifiedLibraryNavigation({
         if (button === 'X') setViewMode((previous) => (previous === 'grid' ? 'list' : 'grid'));
         if (button === 'START') setViewMode('settings');
         if (button === 'B') {
-          if (selectedGame) handleGameSelect(null as any); // back out of detail
+          if (selectedGame) handleGameSelect(null); // back out of detail
         }
 
         if (button === 'RB' || button === 'LB') {

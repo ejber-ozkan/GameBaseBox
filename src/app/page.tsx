@@ -12,7 +12,6 @@ import {
   openMdbFileDialog,
 } from '@/lib/tauri-bridge';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useTheme } from '@/contexts/ThemeContext';
 import { DetailView } from '@/components/DetailView';
 import { SettingsView } from '@/components/SettingsModal';
 import { useInputMode } from '@/hooks/useInputMode';
@@ -29,7 +28,6 @@ import {
   getPlatformAliases,
   getRequiredPlatformFolderKeys as getManifestRequiredPlatformFolderKeys,
 } from '@/lib/platform-manifest';
-import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '@/lib/library-backgrounds';
 import type { PlatformFolderSettings, PlatformId, PlatformSettings } from '@/types/platform';
 import {
   playRotatingUiSoundEffectAndWait,
@@ -48,9 +46,8 @@ function getRequiredPlatformFolderKeys(platformId: keyof typeof PLATFORM_PROFILE
 
 function LibraryApp() {
   const { settings, updateSettings, setActivePlatform } = useSettings();
-  const { theme } = useTheme();
-  const { favorites, isFavorite, toggleFavorite } = useFavorites();
-  const { isMouseMode, onGamepadInput, showMouse } = useInputMode();
+  const { favorites } = useFavorites();
+  const { onGamepadInput } = useInputMode();
   const {
     closeDetail,
     effectiveFilters: filters,
@@ -59,7 +56,6 @@ function LibraryApp() {
     handleGameSelect,
     handleSort,
     loadNextPage,
-    mounted,
     openTigerHeliFromSettings,
     persistWindowSize,
     searchInput,
@@ -77,7 +73,6 @@ function LibraryApp() {
   const [showLaunchSplash, setShowLaunchSplash] = useState(true);
   const [listGameCount, setListGameCount] = useState<number | undefined>(undefined);
   const [bigBoxSession, setBigBoxSession] = useState<BigBoxSessionState | null>(null);
-  const [libraryBackgroundSeed] = useState(() => Math.floor(Math.random() * 1000));
   const previousFullscreenRef = useRef(settings.isFullscreen);
   const { classicGames, favoriteGames, recentGames } = useWindowLibraryShelves({
     activePlatformId: settings.activePlatformId,
@@ -95,12 +90,6 @@ function LibraryApp() {
     requiredFolderKeys: getRequiredPlatformFolderKeys(settings.activePlatformId),
     updateSettings,
   });
-  const libraryViewBackgroundMode = viewMode === 'list' ? 'list' : 'grid';
-  const libraryBackgroundImage = resolveLibraryBackground(
-    settings.activePlatformId,
-    libraryViewBackgroundMode,
-    libraryBackgroundSeed,
-  );
 
   useEffect(() => {
     void getGenres(settings.activePlatformId).then(setGenres);

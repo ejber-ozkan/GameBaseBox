@@ -1,4 +1,3 @@
-import { Theme } from './types';
 import { arcadeVoidTheme } from './arcade-void';
 import { cyberpunkCrtTheme } from './cyberpunk-crt';
 import { c64EditionTheme } from './c64-edition';

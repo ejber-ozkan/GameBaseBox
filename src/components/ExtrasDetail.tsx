@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { Game, Extra } from '../types/game';
 import { groupExtras, ExtraGroup } from '../lib/extras';
 import { useSettings } from '../contexts/SettingsContext';
@@ -51,19 +51,41 @@ export function ExtrasDetail({
     setGroupedExtras(groupExtras(extras));
   }, [extras]);
 
-  const visibleGroups = visibleCategories
-    ? groupedExtras.filter((group) => visibleCategories.includes(group.category))
-    : groupedExtras;
+  const visibleGroups = useMemo(() => {
+    return visibleCategories
+      ? groupedExtras.filter((group) => visibleCategories.includes(group.category))
+      : groupedExtras;
+  }, [groupedExtras, visibleCategories]);
 
-  const visualGroupItems = visibleGroups.find((group) => group.category === 'visual')?.items ?? [];
-  const mediaGroupItems = visibleGroups.find((group) => group.category === 'media')?.items ?? [];
-  const videoMediaExtras = mediaGroupItems.filter(isVideoExtra);
-  const nonVideoMediaExtras = mediaGroupItems.filter((item) => !isVideoExtra(item));
-  const galleryExtras = [...visualGroupItems, ...videoMediaExtras];
+  const visualGroupItems = useMemo(() => {
+    return visibleGroups.find((group) => group.category === 'visual')?.items ?? [];
+  }, [visibleGroups]);
+
+  const mediaGroupItems = useMemo(() => {
+    return visibleGroups.find((group) => group.category === 'media')?.items ?? [];
+  }, [visibleGroups]);
+
+  const videoMediaExtras = useMemo(() => {
+    return mediaGroupItems.filter(isVideoExtra);
+  }, [mediaGroupItems]);
+
+  const nonVideoMediaExtras = useMemo(() => {
+    return mediaGroupItems.filter((item) => !isVideoExtra(item));
+  }, [mediaGroupItems]);
+
+  const galleryExtras = useMemo(() => {
+    return [...visualGroupItems, ...videoMediaExtras];
+  }, [visualGroupItems, videoMediaExtras]);
+
   const platformLaunchSettings = getPlatformLaunchSettings(settings);
 
-  const docsExtras = visibleGroups.find((group) => group.category === 'docs')?.items ?? [];
-  const mediaExtras = nonVideoMediaExtras;
+  const docsExtras = useMemo(() => {
+    return visibleGroups.find((group) => group.category === 'docs')?.items ?? [];
+  }, [visibleGroups]);
+
+  const mediaExtras = useMemo(() => {
+    return nonVideoMediaExtras;
+  }, [nonVideoMediaExtras]);
 
   const handleLaunchExtra = async (extra: Extra) => {
     if (!platformLaunchSettings.emulatorPath) {
@@ -91,14 +113,14 @@ export function ExtrasDetail({
     setTimeout(() => setLaunchStatus(null), 5000);
   };
 
-  const handleOpenDoc = async (extra: Extra) => {
+  const handleOpenDoc = useCallback(async (extra: Extra) => {
     if (/^https?:\/\//i.test(extra.path.trim())) {
       window.open(extra.path, '_blank', 'noopener,noreferrer');
       return;
     }
     const fullPath = buildPlatformAssetPath(settings, 'extras', extra.path);
     await openFile(fullPath);
-  };
+  }, [settings]);
 
   useEffect(() => {
     if (!enableBigscreenGalleryUX || !onRegisterBigscreenNavigation) {
@@ -211,7 +233,16 @@ export function ExtrasDetail({
       }
       return false;
     });
-  }, [nav, docsExtras.length, mediaExtras.length, focusedDocIndex, focusedMediaIndex]);
+  }, [
+    nav,
+    docsExtras.length,
+    mediaExtras.length,
+    focusedDocIndex,
+    focusedMediaIndex,
+    docsExtras,
+    handleOpenDoc,
+    mediaExtras,
+  ]);
 
   if (extras.length === 0 || visibleGroups.length === 0) {
     if (hideEmptyState) return null;

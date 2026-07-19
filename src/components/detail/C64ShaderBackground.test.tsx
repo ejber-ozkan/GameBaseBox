@@ -1,10 +1,10 @@
-import { expect, test, describe, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { expect, test, describe, vi, beforeEach, afterEach, type Mock } from 'vitest';
+import { render } from '@testing-library/react';
 import React from 'react';
 import { C64ShaderBackground } from './C64ShaderBackground';
 
 describe('C64ShaderBackground', () => {
-  let mockGetContext: any;
+  let mockGetContext: Mock;
 
   beforeEach(() => {
     // Mock WebGLRenderingContext
@@ -34,7 +34,7 @@ describe('C64ShaderBackground', () => {
       deleteShader: vi.fn(),
     });
 
-    HTMLCanvasElement.prototype.getContext = mockGetContext as any;
+    HTMLCanvasElement.prototype.getContext = mockGetContext as unknown as typeof HTMLCanvasElement.prototype.getContext;
   });
 
   afterEach(() => {

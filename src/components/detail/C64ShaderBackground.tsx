@@ -199,7 +199,7 @@ void main() {
         gl.deleteShader(fragmentShader);
       }
     };
-  }, []);
+  }, [shaderType]);
 
   return (
     <div className="absolute inset-0 w-full h-full -z-10 bg-black" style={{ display: 'block' }}>

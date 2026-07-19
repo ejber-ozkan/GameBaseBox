@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
 import type { Game } from '../types/game';
 import type { PlatformId } from '../types/platform';
 import type { Settings } from '../contexts/SettingsContext';
@@ -307,9 +306,13 @@ export function UnifiedLibraryView({
     settings.confirmFullscreenExit,
   ]);
 
-  const handleSelectGame = useCallback((game: Game) => {
+  const handleSelectGame = useCallback((game: Game | null) => {
     if (classicTimeoutRef.current) {
       clearTimeout(classicTimeoutRef.current);
+    }
+
+    if (!game) {
+      return;
     }
 
     if (settings.isFullscreen) {
@@ -361,7 +364,7 @@ export function UnifiedLibraryView({
   }, [onSearchChange, searchInput]);
 
   const handleFiltersChange = useCallback((nextFilters: React.SetStateAction<GameFilters>) => {
-    const resolvedFilters = typeof nextFilters === 'function' ? (nextFilters as Function)(filters) : nextFilters;
+    const resolvedFilters = typeof nextFilters === 'function' ? (nextFilters as (prev: GameFilters) => GameFilters)(filters) : nextFilters;
     if (
       filters.genre !== resolvedFilters.genre ||
       filters.subGenre !== resolvedFilters.subGenre ||
@@ -392,9 +395,8 @@ export function UnifiedLibraryView({
     selectedGame: null, // detail page handles its own logic
     handleGameSelect: handleSelectGame,
     filters,
-    setFilters: handleFiltersChange as any,
-    searchInput,
-    setSearchInput: onSearchChange as any,
+    setFilters: handleFiltersChange,
+    setSearchInput: onSearchChange,
     focusedIndex,
     setFocusedIndex,
     toggleFocusedFavorite,

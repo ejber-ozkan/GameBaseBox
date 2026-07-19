@@ -19,7 +19,6 @@ import { ScrapersSettingsTab } from './settings/ScrapersSettingsTab';
 import {
   getEditableSettings,
   getPlatformIdFromSettingsTab,
-  getSettingsItemCount,
   getSettingsTabs,
   type EditableSettings,
   type SettingsTabId,
