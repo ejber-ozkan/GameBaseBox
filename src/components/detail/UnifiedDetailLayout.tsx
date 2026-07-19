@@ -790,7 +790,7 @@ export function UnifiedDetailLayout({
         >
           <div className="flex h-full items-center justify-between p-4">
             <div className="flex min-w-0 flex-1 flex-col pr-4">
-              <h1 className="font-mono text-2xl font-black text-theme-primary tracking-tighter uppercase leading-none truncate flex items-center gap-2">
+              <h1 className="font-mono text-[30px] font-black text-theme-primary tracking-tighter uppercase leading-none truncate flex items-center gap-2">
                 <span>{game.name}</span>
                 {game.isClassic && <span title="Legendary Classic" className="text-xl">🏆</span>}
               </h1>

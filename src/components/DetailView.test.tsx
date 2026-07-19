@@ -186,4 +186,13 @@ describe('DetailView platform capability gating', () => {
     const titlePanel = await screen.findByTestId('c64-detail-title-panel');
     expect(titlePanel.querySelector('img')?.getAttribute('src')).toBe('D:/boxart/test_box.png');
   });
+
+  test('uses a 25% larger title font in the C64 title panel', async () => {
+    mockThemeId = 'c64-edition';
+
+    render(<DetailView game={mockGame} onBack={vi.fn()} />);
+
+    const title = await screen.findByRole('heading', { name: /Test C64 Game/i });
+    expect(title.classList.contains('text-[30px]')).toBe(true);
+  });
 });
