@@ -90,7 +90,7 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
                 style={{ width: 'clamp(280px, 16vw, 360px)', flexShrink: 0 }}
               >
                 <div className="aspect-video overflow-hidden border border-[color-mix(in_srgb,var(--theme-primary)_45%,transparent)] bg-black">
-                  <ImageSlider type="screenshot" filename={game.screenshotFilename} alt={game.name} className="h-full w-full object-cover grayscale transition-[filter] duration-200 group-hover:grayscale-0" />
+                  <ImageSlider type="screenshot" filename={game.screenshotFilename} alt={game.name} className={`h-full w-full object-cover transition-[filter] duration-200 ${focused ? 'grayscale' : 'group-hover:grayscale'}`} />
                 </div>
                 {focused ? <CtrFocusedTitle game={game} /> : (
                   <div className="mt-1 flex items-center gap-2 px-1 py-1.5 font-mono text-[10px] uppercase tracking-wide">
@@ -176,7 +176,7 @@ export function CyberpunkCrtGrid({
               const favorite = isFavorite(game.id.toString());
               return (
                 <article key={`${section.id}-${game.id}-${index}`} className={`group relative min-w-0 max-w-full cursor-pointer border bg-[var(--theme-surface)] p-1 transition-[border-color,box-shadow] ${focused ? 'border-2 border-[var(--theme-primary)] shadow-[2px_2px_0_var(--theme-primary),-1px_-1px_0_var(--theme-tertiary)]' : 'border-[var(--theme-outline-variant)] hover:border-[var(--theme-primary)]'}`} data-focused={focused ? 'true' : 'false'} data-testid="cyberpunk-library-card" onClick={() => onSelectGame(game)} onMouseEnter={() => { onFocusChange?.(index); onFocusSectionItem?.(section.id, index); }} style={{ contentVisibility: 'auto', containIntrinsicSize: '0 230px', minWidth: 0, maxWidth: '100%' }}>
-                  <div className="aspect-[1.75] min-h-0 min-w-0 overflow-hidden bg-black"><ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className="h-full min-h-0 w-full min-w-0 object-cover grayscale opacity-85 transition-[filter,opacity] group-hover:grayscale-0 group-hover:opacity-100" /></div>
+                  <div className="aspect-[1.75] min-h-0 min-w-0 overflow-hidden bg-black"><ImageSlider defer type="screenshot" filename={game.screenshotFilename} alt={`${game.name} cover graphic`} className={`h-full min-h-0 w-full min-w-0 object-cover transition-[filter,opacity] duration-200 ${focused ? 'grayscale opacity-100' : 'opacity-85 group-hover:grayscale group-hover:opacity-100'}`} /></div>
                   <div className="mt-1 flex min-w-0 items-start gap-1 font-mono text-[9px] uppercase tracking-wide"><div className="min-w-0 flex-1"><div className="truncate font-black text-[var(--theme-text)]">{game.name}</div><div className="truncate text-[var(--theme-text-muted)]">{getMetadata(game)}</div></div><button aria-label={`Toggle favorite for ${game.name}`} className="shrink-0 text-sm text-[var(--theme-tertiary)]" onClick={(event) => { event.stopPropagation(); toggleFavorite(game.id.toString()); }}>{favorite ? '★' : '☆'}</button></div>
                 </article>
               );

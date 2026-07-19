@@ -38,19 +38,6 @@ export type DetailFullscreenMedia =
 
 export type DetailFullscreenRequest = string | DetailFullscreenMedia | null;
 
-const DETAIL_CONFIG: NavigationConfig = {
-  'favorite':          { down: 'play' },
-  'play':              { up: 'favorite', right: 'media-boxfront', down: 'play-web' },
-  'play-web':          { up: 'play', left: 'media-boxfront', down: 'versions' },
-  'media-gameplay':    { up: 'favorite', right: 'media-boxfront', down: 'versions' },
-  'media-titlescreen': { up: 'favorite', right: 'media-boxfront', down: 'versions' },
-  'media-videosna':    { up: 'favorite', right: 'media-boxfront', down: 'versions' },
-  'media-boxfront':    { up: 'favorite', left: 'media-gameplay', right: 'versions', down: 'versions' },
-  'media-extras':      { up: 'media-boxfront', left: 'play-web', right: 'sid' },
-  'versions':          { up: 'play-web', left: 'media-boxfront', down: 'sid' },
-  'sid':               { up: 'versions', left: 'media-boxfront' },
-  'screenshot':        { left: 'media-boxfront', down: 'sid' },
-};
 
 const detailCache = new Map<string, Promise<GameDetail | null>>();
 
@@ -88,6 +75,7 @@ export function DetailView({ game, onBack }: DetailViewProps) {
 
   const detailConfig = useMemo(() => {
     const isArcade = theme.id === 'arcade-void';
+    const isCyberpunk = theme.id === 'cyberpunk-crt';
     const canPlayEmbedded = supportsEmbeddedEmulation(settings.activePlatformId);
     
     const config = {
@@ -112,6 +100,21 @@ export function DetailView({ game, onBack }: DetailViewProps) {
       }
       config['sidebar-tabs'] = { up: showSoundtrack ? 'sid' : (canPlayEmbedded ? 'play-web' : 'play'), left: 'media-gameplay', down: 'sidebar-content' };
       config['sidebar-content'] = { up: 'sidebar-tabs', left: 'media-gameplay' };
+    } else if (isCyberpunk) {
+      config['play'] = { up: 'favorite', right: canPlayEmbedded ? 'play-web' : 'sidebar-tabs', down: 'media-gameplay' };
+      if (canPlayEmbedded) {
+        config['play-web'] = { up: 'play', left: 'play', right: 'sidebar-tabs', down: 'media-gameplay' };
+      }
+      config['media-gameplay'] = { up: 'play', right: 'media-boxfront' };
+      config['media-titlescreen'] = { up: 'play', right: 'media-boxfront' };
+      config['media-videosna'] = { up: 'play', right: 'media-boxfront' };
+      config['media-boxfront'] = { up: 'play', left: 'media-gameplay', right: 'sidebar-tabs' };
+
+      config['sidebar-tabs'] = { up: 'play', left: 'media-gameplay', down: 'sidebar-content' };
+      config['sidebar-content'] = { up: 'sidebar-tabs', left: 'media-gameplay', down: showSoundtrack ? 'sid' : undefined };
+      if (showSoundtrack) {
+        config['sid'] = { up: 'sidebar-content', left: 'media-gameplay' };
+      }
     } else {
       config['versions'] = { up: canPlayEmbedded ? 'play-web' : 'play', left: 'media-boxfront', down: showSoundtrack ? 'sid' : undefined };
       if (showSoundtrack) {
