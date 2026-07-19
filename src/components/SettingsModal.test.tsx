@@ -368,10 +368,10 @@ describe('SettingsView platform emulator settings', () => {
     renderSettings();
 
     // Check F-key hints are present on the category labels
-    expect(screen.getByText(/Appearance \[F1\]/)).toBeTruthy();
-    expect(screen.getByText(/Content \[F3\]/)).toBeTruthy();
-    expect(screen.getByText(/C64 Platform Paths \[F5\]/)).toBeTruthy();
-    expect(screen.getByText(/Scrapers \(Coming Soon\) \[F7\]/)).toBeTruthy();
+    expect(screen.getByText(/Theme & UI \[F1\]/)).toBeTruthy();
+    expect(screen.getByText(/Display & Video \[F3\]/)).toBeTruthy();
+    expect(screen.getByText(/Media & Gallery \[F5\]/)).toBeTruthy();
+    expect(screen.getByText(/Input & Interaction \[F7\]/)).toBeTruthy();
   });
 
   test('does not show C64 key hints in other themes', () => {
@@ -381,8 +381,8 @@ describe('SettingsView platform emulator settings', () => {
     renderSettings();
 
     // Check F-key hints are not present
-    expect(screen.queryByText(/Appearance \[F1\]/)).toBeNull();
-    expect(screen.getByText(/Appearance/)).toBeTruthy();
+    expect(screen.queryByText(/Theme & UI \[F1\]/)).toBeNull();
+    expect(screen.getByText(/Theme & UI/)).toBeTruthy();
   });
 
   test('C64 F-Keys switch tabs when c64 theme is active', () => {
@@ -391,19 +391,19 @@ describe('SettingsView platform emulator settings', () => {
 
     renderSettings();
 
-    // Initially active tab is appearance, press F3 to switch to content tab
+    // Initially active tab is appearance, press F3 to switch to display tab
     fireEvent.keyDown(window, { key: 'F3' });
 
-    // Verify content tab is now selected or inputs from Content tab are shown
-    expect(screen.getByText(/Hide Adult Content/)).toBeTruthy();
+    // Verify display tab content is shown
+    expect(screen.getByText(/Fullscreen Mode/)).toBeTruthy();
 
     // Press F1 to switch back to appearance
     fireEvent.keyDown(window, { key: 'F1' });
-    expect(screen.getByText(/Cycle Multiple Images/)).toBeTruthy();
+    expect(screen.getByText(/Application Theme/)).toBeTruthy();
 
-    // Press F5 to switch to platform paths tab
+    // Press F5 to switch to media tab
     fireEvent.keyDown(window, { key: 'F5' });
-    expect(screen.getByText('Games folder')).toBeTruthy();
+    expect(screen.getByText(/Cycle Multiple Images/)).toBeTruthy();
   });
 
   test('F-Keys do not switch tabs when theme is not C64', () => {
@@ -415,9 +415,9 @@ describe('SettingsView platform emulator settings', () => {
     // Press F3
     fireEvent.keyDown(window, { key: 'F3' });
 
-    // Verify it remains on appearance tab and doesn't show Content tab content
-    expect(screen.queryByText(/Hide Adult Content/)).toBeNull();
-    expect(screen.getByText(/Cycle Multiple Images/)).toBeTruthy();
+    // Verify it remains on appearance tab and doesn't show Display tab content
+    expect(screen.queryByText(/Fullscreen Mode/)).toBeNull();
+    expect(screen.getByText(/Application Theme/)).toBeTruthy();
   });
 });
 

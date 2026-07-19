@@ -5,10 +5,13 @@ import { useSettings } from '../contexts/SettingsContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useGamepad } from '../hooks/useGamepad';
 import { useInputMode } from '../hooks/useInputMode';
-import { openDirectoryDialog, openFileDialog } from '../lib/tauri-bridge';
+import { openDirectoryDialog, openFileDialog, isTauri } from '../lib/tauri-bridge';
 import { playUiSoundEffect } from '../lib/ui-sound-effects';
 import { AboutSettingsTab } from './settings/AboutSettingsTab';
 import { AppearanceSettingsTab } from './settings/AppearanceSettingsTab';
+import { DisplaySettingsTab } from './settings/DisplaySettingsTab';
+import { MediaSettingsTab } from './settings/MediaSettingsTab';
+import { InteractionSettingsTab } from './settings/InteractionSettingsTab';
 import { ContentSettingsTab } from './settings/ContentSettingsTab';
 import { MaintenanceSettingsTab } from './settings/MaintenanceSettingsTab';
 import { PathsSettingsTab } from './settings/PathsSettingsTab';
@@ -21,6 +24,7 @@ import {
   type EditableSettings,
   type SettingsTabId,
 } from './settings/types';
+import packageJson from '../../package.json';
 
 interface SettingsViewProps {
   onBack: () => void;
@@ -83,6 +87,36 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
 
   const browseFile = useCallback(async () => openFileDialog(), []);
 
+  // Reset focus to top-leftmost element inside the content when active tab changes
+  useEffect(() => {
+    if (navZone === 'content') {
+      const timer = setTimeout(() => {
+        const elements = Array.from(
+          document.querySelectorAll('.theme-panel [class*="focus-idx-"]')
+        ) as HTMLElement[];
+        if (elements.length > 0) {
+          elements.sort((a, b) => {
+            const rectA = a.getBoundingClientRect();
+            const rectB = b.getBoundingClientRect();
+            if (Math.abs(rectA.top - rectB.top) < 5) {
+              return rectA.left - rectB.left;
+            }
+            return rectA.top - rectB.top;
+          });
+          const match = Array.from(elements[0].classList).find((c) =>
+            c.startsWith('focus-idx-')
+          );
+          if (match) {
+            setFocusedIdx(parseInt(match.split('-')[2], 10));
+          }
+        } else {
+          setFocusedIdx(0);
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab, navZone]);
+
   const moveFocus = useCallback(
     (dir: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') => {
       void playUiSoundEffect('menu-move-1', 0.28);
@@ -104,34 +138,108 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
         return;
       }
 
-      if (dir === 'UP' && focusedIdx === 0) {
-        setNavZone('header');
-        setFocusedIdx(0);
-        return;
-      }
-
-      if (dir === 'RIGHT' && navZone === 'tabs') {
-        setNavZone('content');
-        setFocusedIdx(0);
-        return;
-      }
-      if (dir === 'LEFT' && navZone === 'content') {
-        setNavZone('tabs');
-        setFocusedIdx(settingsTabs.findIndex((tab) => tab.id === activeTab));
-        return;
-      }
-
       if (navZone === 'tabs') {
+        if (dir === 'RIGHT') {
+          const elements = Array.from(
+            document.querySelectorAll('.theme-panel [class*="focus-idx-"]')
+          ) as HTMLElement[];
+          if (elements.length > 0) {
+            elements.sort((a, b) => {
+              const rectA = a.getBoundingClientRect();
+              const rectB = b.getBoundingClientRect();
+              if (Math.abs(rectA.top - rectB.top) < 5) {
+                return rectA.left - rectB.left;
+              }
+              return rectA.top - rectB.top;
+            });
+            const match = Array.from(elements[0].classList).find((c) =>
+              c.startsWith('focus-idx-')
+            );
+            if (match) {
+              const idx = parseInt(match.split('-')[2], 10);
+              setFocusedIdx(idx);
+              setNavZone('content');
+              return;
+            }
+          }
+          return;
+        }
+
+        if (dir === 'UP' && focusedIdx === 0) {
+          setNavZone('header');
+          setFocusedIdx(0);
+          return;
+        }
+
         const max = settingsTabs.length - 1;
         if (dir === 'UP') setFocusedIdx((prev) => (prev > 0 ? prev - 1 : max));
         if (dir === 'DOWN') setFocusedIdx((prev) => (prev < max ? prev + 1 : 0));
-      } else {
-        const max = getSettingsItemCount(activeTab) - 1;
-        if (dir === 'UP') setFocusedIdx((prev) => (prev > 0 ? prev - 1 : max));
-        if (dir === 'DOWN') setFocusedIdx((prev) => (prev < max ? prev + 1 : 0));
+        return;
+      }
+
+      if (navZone === 'content') {
+        const elements = Array.from(
+          document.querySelectorAll('.theme-panel [class*="focus-idx-"]')
+        ) as HTMLElement[];
+        const currentEl = document.querySelector(`.theme-panel .focus-idx-${focusedIdx}`) as HTMLElement | null;
+
+        if (currentEl) {
+          const currentRect = currentEl.getBoundingClientRect();
+          const cx = currentRect.left + currentRect.width / 2;
+          const cy = currentRect.top + currentRect.height / 2;
+
+          let bestCandidate: HTMLElement | null = null;
+          let minDistance = Infinity;
+
+          for (const el of elements) {
+            if (el === currentEl) continue;
+            const rect = el.getBoundingClientRect();
+            const ex = rect.left + rect.width / 2;
+            const ey = rect.top + rect.height / 2;
+
+            const dx = ex - cx;
+            const dy = ey - cy;
+
+            if (dir === 'RIGHT' && dx <= 5) continue;
+            if (dir === 'LEFT' && dx >= -5) continue;
+            if (dir === 'UP' && dy >= -5) continue;
+            if (dir === 'DOWN' && dy <= 5) continue;
+
+            let dist = 0;
+            if (dir === 'UP' || dir === 'DOWN') {
+              dist = Math.abs(dy) * 1.0 + Math.abs(dx) * 2.2;
+            } else {
+              dist = Math.abs(dx) * 1.0 + Math.abs(dy) * 2.2;
+            }
+
+            if (dist < minDistance) {
+              minDistance = dist;
+              bestCandidate = el;
+            }
+          }
+
+          if (bestCandidate) {
+            const match = Array.from(bestCandidate.classList).find((c) =>
+              c.startsWith('focus-idx-')
+            );
+            if (match) {
+              const idx = parseInt(match.split('-')[2], 10);
+              setFocusedIdx(idx);
+              return;
+            }
+          }
+        }
+
+        if (dir === 'LEFT') {
+          setNavZone('tabs');
+          setFocusedIdx(settingsTabs.findIndex((tab) => tab.id === activeTab));
+        } else if (dir === 'UP') {
+          setNavZone('header');
+          setFocusedIdx(0);
+        }
       }
     },
-    [activeTab, focusedIdx, navZone, settingsTabs],
+    [activeTab, focusedIdx, navZone, settingsTabs]
   );
 
   const handleSelect = useCallback(() => {
@@ -151,7 +259,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
       return;
     }
 
-    const element = document.querySelector(`.focus-idx-${focusedIdx}`) as HTMLElement | null;
+    const element = document.querySelector(`.theme-panel .focus-idx-${focusedIdx}`) as HTMLElement | null;
     if (element) {
       element.focus();
       element.click();
@@ -162,7 +270,6 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
     const handleKeyDown = (event: KeyboardEvent) => {
       onGamepadInput();
 
-      // C64 F-Key Easter Egg
       if (isC64Theme) {
         if (event.key === 'F1') {
           event.preventDefault();
@@ -274,11 +381,11 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
   };
 
   return (
-    <div className="flex h-full min-h-screen w-full flex-col overflow-hidden bg-theme-background text-theme-text font-sans">
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-theme-background text-theme-text font-sans select-none">
       <div
         className={`sticky top-0 z-10 flex items-center justify-between border-b ${
           theme.effects.steppedBorders ? 'border-theme-outline border-b-4' : 'border-theme-outline-variant'
-        } bg-theme-surface shadow-lg ${
+        } bg-theme-surface shadow-lg shrink-0 ${
           isFullscreenLayout ? 'px-8 py-5 xl:px-12' : 'p-4'
         }`}
       >
@@ -318,49 +425,62 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
         className={`flex flex-1 overflow-hidden ${
           isFullscreenLayout
             ? 'w-full gap-8 px-8 py-8 xl:px-12 2xl:gap-10'
-            : 'mx-auto max-w-[1600px] gap-6 p-6'
+            : 'mx-auto w-full max-w-[1600px] gap-6 p-6'
         }`}
       >
         <div
-          className={`flex flex-col gap-2 overflow-y-auto pb-10 ${
-            isFullscreenLayout ? 'w-[320px] shrink-0 pr-4 2xl:w-[360px]' : 'w-64 pr-2'
+          className={`flex flex-col justify-between pb-4 shrink-0 ${
+            isFullscreenLayout ? 'w-[320px] pr-4 2xl:w-[360px]' : 'w-64 pr-2'
           }`}
         >
-          <div className="mb-2 px-2 text-xs font-bold uppercase tracking-widest text-theme-text-muted">
-            Configuration Categories
+          <div className="flex flex-col gap-2 overflow-y-auto max-h-[75vh]">
+            <div className="mb-2 px-2 text-xs font-bold uppercase tracking-widest text-theme-text-muted">
+              Configuration Categories
+            </div>
+
+            {settingsTabs.map((tab, idx) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                onMouseEnter={() => isMouseMode && (setNavZone('tabs'), setFocusedIdx(idx))}
+                className={`flex items-center gap-3 p-4 text-left transition shrink-0 ${
+                  theme.effects.steppedBorders
+                    ? `border-2 ${
+                        (activeTab === tab.id && navZone !== 'tabs') || (navZone === 'tabs' && focusedIdx === idx)
+                          ? 'border-theme-outline bg-theme-primary-container text-theme-text'
+                          : 'border-theme-outline-variant bg-theme-surface text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
+                      }`
+                    : `rounded-theme-lg border ${
+                        (activeTab === tab.id && navZone !== 'tabs') || (navZone === 'tabs' && focusedIdx === idx)
+                          ? 'border-theme-primary bg-theme-primary/10 text-theme-text shadow-lg shadow-theme-primary/5'
+                          : 'border-theme-outline-variant bg-theme-surface/30 text-theme-text-muted hover:bg-theme-surface/80 hover:text-theme-text'
+                      }`
+                }`}
+              >
+                <span className="font-semibold text-xs">
+                  {tab.label}
+                  {getC64KeyHint(idx)}
+                </span>
+              </button>
+            ))}
           </div>
 
-          {settingsTabs.map((tab, idx) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              onMouseEnter={() => isMouseMode && (setNavZone('tabs'), setFocusedIdx(idx))}
-              className={`flex items-center gap-3 p-4 text-left transition ${
-                theme.effects.steppedBorders
-                  ? `border-2 ${
-                      (activeTab === tab.id && navZone !== 'tabs') || (navZone === 'tabs' && focusedIdx === idx)
-                        ? 'border-theme-outline bg-theme-primary-container text-theme-text'
-                        : 'border-theme-outline-variant bg-theme-surface text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
-                    }`
-                  : `rounded-theme-lg border ${
-                      (activeTab === tab.id && navZone !== 'tabs') || (navZone === 'tabs' && focusedIdx === idx)
-                        ? 'border-theme-primary bg-theme-primary/10 text-theme-text shadow-lg shadow-theme-primary/5'
-                        : 'border-theme-outline-variant bg-theme-surface/30 text-theme-text-muted hover:bg-theme-surface/80 hover:text-theme-text'
-                    }`
-              }`}
-            >
-              <span className="font-semibold">
-                {tab.label}
-                {getC64KeyHint(idx)}
-              </span>
-            </button>
-          ))}
+          {/* System Status in Sidebar Footer */}
+          <div className={`mt-auto p-4 border border-dashed border-theme-outline-variant bg-theme-surface/10 ${theme.effects.steppedBorders ? '' : 'rounded-theme-xl'}`}>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-theme-primary">SYSTEM STATUS</span>
+            </div>
+            <p className="font-mono text-[9px] text-theme-text-muted leading-relaxed">
+              Version: {packageJson.version}<br />
+              Environment: {isTauri() ? 'Desktop' : 'Web Dev'}
+            </p>
+          </div>
         </div>
 
         <div
           className={`relative flex flex-1 flex-col overflow-y-auto shadow-2xl theme-panel ${
             theme.effects.steppedBorders ? 'stepped-border' : 'rounded-theme-xl border border-theme-outline-variant'
-          } ${
+          } bg-theme-surface/15 ${
             isFullscreenLayout ? 'min-w-0' : ''
           }`}
         >
@@ -368,9 +488,18 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
             <div className="absolute inset-x-0 top-0 z-10 h-1 bg-gradient-to-r from-transparent via-theme-primary/50 to-transparent" />
           )}
 
-          <div className={isFullscreenLayout ? 'p-10 xl:p-12 2xl:p-14' : 'p-8'}>
+          <div className={`flex-1 overflow-y-auto ${isFullscreenLayout ? 'p-10 xl:p-12 2xl:p-14' : 'p-8'}`}>
             {activeTab === 'appearance' && (
               <AppearanceSettingsTab draft={draft} setField={setField} {...contentNavProps} />
+            )}
+            {activeTab === 'display' && (
+              <DisplaySettingsTab draft={draft} setField={setField} {...contentNavProps} />
+            )}
+            {activeTab === 'media' && (
+              <MediaSettingsTab draft={draft} setField={setField} {...contentNavProps} />
+            )}
+            {activeTab === 'interaction' && (
+              <InteractionSettingsTab draft={draft} setField={setField} {...contentNavProps} />
             )}
             {activeTab === 'content' && (
               <ContentSettingsTab draft={draft} setField={setField} {...contentNavProps} />

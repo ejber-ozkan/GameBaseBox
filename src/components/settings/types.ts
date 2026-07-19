@@ -4,6 +4,9 @@ import type { PlatformId } from '../../types/platform';
 
 export type SettingsTabId =
   | 'appearance'
+  | 'display'
+  | 'media'
+  | 'interaction'
   | 'content'
   | `platform-paths:${PlatformId}`
   | 'scrapers'
@@ -16,10 +19,11 @@ export interface SettingsTabOption {
 }
 
 const STATIC_SETTINGS_TABS: SettingsTabOption[] = [
-  { id: 'appearance', label: '🎨 Appearance' },
-  { id: 'content', label: '🔞 Content' },
-  { id: 'scrapers', label: '🖼️ Scrapers (Coming Soon)' },
-  { id: 'maintenance', label: '🛠️ Maintenance' },
+  { id: 'appearance', label: '🎨 Theme & UI' },
+  { id: 'display', label: '🖥️ Display & Video' },
+  { id: 'media', label: '🖼️ Media & Gallery' },
+  { id: 'interaction', label: '🖱️ Input & Interaction' },
+  { id: 'content', label: '🔞 Content Filter' },
   { id: 'about', label: 'ℹ️ About & Credits' },
 ];
 
@@ -45,10 +49,13 @@ export function getSettingsTabs(settings: Pick<Settings, 'platformSettings'>): S
     }));
 
   return [
-    STATIC_SETTINGS_TABS[0],
-    STATIC_SETTINGS_TABS[1],
+    STATIC_SETTINGS_TABS[0], // appearance
+    STATIC_SETTINGS_TABS[1], // display
+    STATIC_SETTINGS_TABS[2], // media
+    STATIC_SETTINGS_TABS[3], // interaction
+    STATIC_SETTINGS_TABS[4], // content
     ...platformTabs,
-    ...STATIC_SETTINGS_TABS.slice(2),
+    STATIC_SETTINGS_TABS[5], // about
   ];
 }
 
@@ -59,12 +66,14 @@ export function getSettingsItemCount(tabId: SettingsTabId): number {
 
   switch (tabId) {
     case 'appearance':
-      return 20;
+      return 4;
+    case 'display':
+      return 14;
+    case 'media':
+      return 3;
+    case 'interaction':
+      return 4;
     case 'content':
-      return 1;
-    case 'scrapers':
-      return 10;
-    case 'maintenance':
       return 1;
     case 'about':
       return 3;

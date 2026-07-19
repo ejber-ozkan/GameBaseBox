@@ -235,3 +235,30 @@ html[data-theme="c64-edition"] .alphabet-jump-bar button.text-blue-400 {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   opacity: 0.015;
 }
+
+/* Focus state styling per theme */
+.settings-card {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Arcade Void: Yellow glow and yellow border */
+html[data-theme="arcade-void"] .settings-card-focused {
+  box-shadow: 0 0 22px color-mix(in srgb, var(--theme-secondary) 50%, transparent);
+  border-color: var(--theme-secondary) !important;
+}
+
+/* Cyberpunk CRT: Hazard Orange / Warning Red flat offset shadow and border */
+html[data-theme="cyberpunk-crt"] .settings-card-focused {
+  box-shadow: 3px 3px 0 var(--theme-primary);
+  border-color: var(--theme-primary) !important;
+}
+
+/* C64 Edition (Breadbox 64): Inverse color block */
+html[data-theme="c64-edition"] .settings-card-focused {
+  border-color: var(--theme-outline) !important;
+  background-color: var(--theme-primary) !important;
+  color: var(--theme-background) !important;
+}
+html[data-theme="c64-edition"] .settings-card-focused * {
+  color: var(--theme-background) !important;
+}
