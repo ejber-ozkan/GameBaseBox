@@ -69,6 +69,10 @@ GameBase database (`.mdb`) files, ROMs, screenshots, music, extras, and other me
 
 ![BigBox home rails](docs/images/bigbox-home-rails.png)
 
+### BigBox Rails (C64 Edition Theme)
+
+![BigBox home rails - C64 Edition](docs/images/c64theme-home-rails.png)
+
 ### BigBox Letter Jump
 
 ![BigBox scroll by letter](docs/images/bigbox-scroll-letter.png)
@@ -76,6 +80,18 @@ GameBase database (`.mdb`) files, ROMs, screenshots, music, extras, and other me
 ### Detail View: Gallery
 
 ![Detail view gallery tab](docs/images/detail-gallery.png)
+
+### Detail View: Gallery (C64 Edition Theme)
+
+![Detail view gallery - C64 Edition](docs/images/c64theme-detail-gallery.png)
+
+### Detail View: Gallery (Cyberpunk CRT Theme)
+
+![Detail view gallery - Cyberpunk CRT](docs/images/cyberpunk-detail-gallery.png)
+
+### Detail View: Gallery (Arcade Void Theme)
+
+![Detail view gallery - Arcade Void](docs/images/void-detail-gallery.png)
 
 ### Detail View: Extras Gallery
 
