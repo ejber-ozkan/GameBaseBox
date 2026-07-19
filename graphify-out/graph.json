@@ -7102,7 +7102,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "components_bigboxview_bigboxviewprops",
-      "community": 31,
+      "community": 17,
       "norm_label": "bigboxviewprops"
     },
     {
@@ -7212,7 +7212,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_detailview",
-      "community": 23,
+      "community": 31,
       "norm_label": "detailview.tsx"
     },
     {
@@ -7222,7 +7222,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "components_detailview_detailviewprops",
-      "community": 23,
+      "community": 31,
       "norm_label": "detailviewprops"
     },
     {
@@ -7242,7 +7242,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_detailview_detailfullscreenmedia",
-      "community": 23,
+      "community": 31,
       "norm_label": "detailfullscreenmedia"
     },
     {
@@ -7252,7 +7252,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "components_detailview_detailfullscreenrequest",
-      "community": 23,
+      "community": 31,
       "norm_label": "detailfullscreenrequest"
     },
     {
@@ -7262,7 +7262,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "components_detailview_detailcache",
-      "community": 23,
+      "community": 31,
       "norm_label": "detailcache"
     },
     {
@@ -7272,7 +7272,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "components_detailview_cleardetailcache",
-      "community": 23,
+      "community": 31,
       "norm_label": "cleardetailcache()"
     },
     {
@@ -7282,7 +7282,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "components_detailview_getcachedgamedetail",
-      "community": 23,
+      "community": 31,
       "norm_label": "getcachedgamedetail()"
     },
     {
@@ -7682,7 +7682,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_scrapebutton",
-      "community": 31,
+      "community": 17,
       "norm_label": "scrapebutton.tsx"
     },
     {
@@ -7692,7 +7692,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "components_scrapebutton_scrapebuttonprops",
-      "community": 31,
+      "community": 17,
       "norm_label": "scrapebuttonprops"
     },
     {
@@ -7702,7 +7702,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_scrapebutton_scrapebutton",
-      "community": 31,
+      "community": 17,
       "norm_label": "scrapebutton()"
     },
     {
@@ -7952,7 +7952,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "components_unifiedlibraryview_unifiedlibraryviewprops",
-      "community": 31,
+      "community": 17,
       "norm_label": "unifiedlibraryviewprops"
     },
     {
@@ -8209,7 +8209,7 @@
       "label": "DetailTitleBanner()",
       "file_type": "code",
       "source_file": "src/components/detail/DetailTitleBanner.tsx",
-      "source_location": "L12",
+      "source_location": "L13",
       "_origin": "ast",
       "id": "detail_detailtitlebanner_detailtitlebanner",
       "community": 73,
@@ -8722,7 +8722,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "library_libraryheader_libraryheaderprops",
-      "community": 31,
+      "community": 17,
       "norm_label": "libraryheaderprops"
     },
     {
@@ -9372,7 +9372,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "contexts_settingscontext_settings",
-      "community": 31,
+      "community": 17,
       "norm_label": "settings"
     },
     {
@@ -9682,7 +9682,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_bigboxrailcategory",
-      "community": 34,
+      "community": 17,
       "norm_label": "bigboxrailcategory"
     },
     {
@@ -9692,7 +9692,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "hooks_usebigboxlibrarydata_usebigboxlibrarydataprops",
-      "community": 31,
+      "community": 17,
       "norm_label": "usebigboxlibrarydataprops"
     },
     {
@@ -9782,7 +9782,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "hooks_usebigboxnavigation_usebigboxnavigationprops",
-      "community": 31,
+      "community": 17,
       "norm_label": "usebigboxnavigationprops"
     },
     {
@@ -9832,7 +9832,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation",
-      "community": 23,
+      "community": 9,
       "norm_label": "usedetailnavigation.ts"
     },
     {
@@ -9842,7 +9842,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailzone",
-      "community": 23,
+      "community": 9,
       "norm_label": "detailzone"
     },
     {
@@ -9852,7 +9852,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_direction",
-      "community": 23,
+      "community": 9,
       "norm_label": "direction"
     },
     {
@@ -9862,7 +9862,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_navigationconfig",
-      "community": 23,
+      "community": 9,
       "norm_label": "navigationconfig"
     },
     {
@@ -9882,7 +9882,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailnavprops",
-      "community": 23,
+      "community": 9,
       "norm_label": "detailnavprops"
     },
     {
@@ -10152,7 +10152,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate",
-      "community": 31,
+      "community": 2,
       "norm_label": "uselibrarybrowserstate.ts"
     },
     {
@@ -10162,7 +10162,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate_libraryviewmode",
-      "community": 31,
+      "community": 17,
       "norm_label": "libraryviewmode"
     },
     {
@@ -10212,7 +10212,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "hooks_uselibraryshellinput_uselibraryshellinputprops",
-      "community": 31,
+      "community": 17,
       "norm_label": "uselibraryshellinputprops"
     },
     {
@@ -10422,7 +10422,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "hooks_useunifiedlibrarynavigation_useunifiedlibrarynavigationprops",
-      "community": 31,
+      "community": 17,
       "norm_label": "useunifiedlibrarynavigationprops"
     },
     {
@@ -12272,7 +12272,7 @@
       "source_location": "L724",
       "_origin": "ast",
       "id": "lib_tauri_bridge_gamefilters",
-      "community": 31,
+      "community": 17,
       "norm_label": "gamefilters"
     },
     {
@@ -12332,7 +12332,7 @@
       "source_location": "L931",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgamedetail",
-      "community": 23,
+      "community": 31,
       "norm_label": "getdbgamedetail()"
     },
     {
@@ -12852,7 +12852,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "types_game_game",
-      "community": 31,
+      "community": 17,
       "norm_label": "game"
     },
     {
@@ -13032,7 +13032,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils_sorting",
-      "community": 31,
+      "community": 2,
       "norm_label": "sorting.ts"
     },
     {
@@ -13042,7 +13042,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "utils_sorting_sortdirection",
-      "community": 31,
+      "community": 2,
       "norm_label": "sortdirection"
     },
     {
@@ -13052,7 +13052,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "utils_sorting_sortgames",
-      "community": 31,
+      "community": 2,
       "norm_label": "sortgames()"
     },
     {
@@ -41674,9 +41674,9 @@
       "source_file": "src/components/detail/C64ShaderBackground.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "detail_c64shaderbackground",
-      "target": "detail_c64shaderbackground_c64shaderbackground",
-      "confidence_score": 1.0
+      "target": "detail_c64shaderbackground_c64shaderbackground"
     },
     {
       "relation": "imports_from",
@@ -41685,9 +41685,9 @@
       "source_file": "src/components/detail/UnifiedDetailLayout.tsx",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "detail_unifieddetaillayout",
-      "target": "detail_c64shaderbackground",
-      "confidence_score": 1.0
+      "target": "detail_c64shaderbackground"
     },
     {
       "relation": "imports",
@@ -41696,9 +41696,9 @@
       "source_file": "src/components/detail/UnifiedDetailLayout.tsx",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "detail_unifieddetaillayout",
-      "target": "detail_c64shaderbackground_c64shaderbackground",
-      "confidence_score": 1.0
+      "target": "detail_c64shaderbackground_c64shaderbackground"
     },
     {
       "relation": "contains",
@@ -42241,9 +42241,9 @@
       "source_file": "src/components/detail/UnifiedDetailLayout.tsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "detail_unifieddetaillayout",
-      "target": "lib_platform_capabilities_supportsembeddedemulation",
-      "confidence_score": 1.0
+      "target": "lib_platform_capabilities_supportsembeddedemulation"
     },
     {
       "relation": "imports_from",
@@ -42252,9 +42252,9 @@
       "source_file": "src/components/detail/UnifiedDetailLayout.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "detail_unifieddetaillayout",
-      "target": "lib_platform_launch",
-      "confidence_score": 1.0
+      "target": "lib_platform_launch"
     },
     {
       "relation": "imports",
@@ -42263,9 +42263,9 @@
       "source_file": "src/components/detail/UnifiedDetailLayout.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "detail_unifieddetaillayout",
-      "target": "lib_platform_launch_buildlaunchrequest",
-      "confidence_score": 1.0
+      "target": "lib_platform_launch_buildlaunchrequest"
     },
     {
       "relation": "imports_from",
@@ -42296,9 +42296,9 @@
       "source_file": "src/components/detail/UnifiedDetailLayout.tsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "detail_unifieddetaillayout",
-      "target": "lib_tauri_bridge_launchemulator",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_launchemulator"
     },
     {
       "relation": "imports_from",
@@ -42815,9 +42815,9 @@
       "source_file": "src/components/extras/ResolvedExtraMedia.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "extras_resolvedextramedia",
-      "target": "lib_tauri_bridge_isdebugmode",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_isdebugmode"
     },
     {
       "relation": "imports",
@@ -42837,9 +42837,9 @@
       "source_file": "src/components/extras/ResolvedExtraMedia.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "extras_resolvedextramedia",
-      "target": "lib_tauri_bridge_logdebugmessage",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_logdebugmessage"
     },
     {
       "relation": "imports",
@@ -43034,9 +43034,9 @@
       "source_file": "src/components/extras/VisualExtraCard.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "extras_visualextracard",
-      "target": "lib_tauri_bridge_isdebugmode",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_isdebugmode"
     },
     {
       "relation": "imports",
@@ -43045,9 +43045,9 @@
       "source_file": "src/components/extras/VisualExtraCard.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "extras_visualextracard",
-      "target": "lib_tauri_bridge_logdebugmessage",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_logdebugmessage"
     },
     {
       "relation": "imports_from",
@@ -56811,5 +56811,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "025c57c62827ee05d49869147a1255cd8f197b18"
+  "built_at_commit": "0c25e395f2bece9fcba90b32c94fe31b194ce1bb"
 }

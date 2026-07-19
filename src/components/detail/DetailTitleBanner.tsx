@@ -7,6 +7,7 @@ interface DetailTitleBannerProps {
   children: ReactNode;
   className?: string;
   contentClassName?: string;
+  dataTestId?: string;
 }
 
 export function DetailTitleBanner({
@@ -14,11 +15,12 @@ export function DetailTitleBanner({
   children,
   className = '',
   contentClassName = '',
+  dataTestId,
 }: DetailTitleBannerProps) {
   const hasArtwork = Boolean(artUrl);
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div className={`relative overflow-hidden ${className}`} data-testid={dataTestId}>
       {hasArtwork ? (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}

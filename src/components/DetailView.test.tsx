@@ -9,7 +9,16 @@ vi.mock('../contexts/SettingsContext', () => ({
   useSettings: () => ({
     settings: {
       activePlatformId: mockActivePlatformId,
-      platformSettings: createDefaultPlatformSettingsMap(),
+      platformSettings: {
+        ...createDefaultPlatformSettingsMap(),
+        c64: {
+          ...createDefaultPlatformSettingsMap().c64,
+          folders: {
+            ...createDefaultPlatformSettingsMap().c64.folders,
+            screenshotsPath: mockScreenshotsPath,
+          },
+        },
+      },
     },
     resolveMediaPath: (type: string, filename: string) => `/mocked-${type}/${filename}`,
     findAllVariants: vi.fn().mockImplementation(() => Promise.resolve([])),
@@ -40,7 +49,7 @@ vi.mock('../hooks/usePopupOpenSound', () => ({
 vi.mock('../contexts/ThemeContext', () => ({
   useTheme: () => ({
     theme: {
-      id: 'arcade-void',
+      id: mockThemeId,
       displayName: 'Arcade Void & Neon Acrylic',
       colors: {
         primary: '#8aebff',
@@ -81,9 +90,12 @@ vi.mock('../lib/tauri-bridge', () => ({
   getDbGameDetail: (...args: unknown[]) => mockGetDbGameDetail(...args),
   getGameExtras: vi.fn().mockImplementation(() => Promise.resolve([])),
   isDebugMode: vi.fn().mockResolvedValue(false),
+  isTauri: () => false,
 }));
 
 let mockActivePlatformId = 'c64';
+let mockThemeId = 'arcade-void';
+let mockScreenshotsPath = '';
 
 const mockGame: Game = {
   id: 1,
@@ -112,6 +124,9 @@ describe('DetailView platform capability gating', () => {
   beforeEach(() => {
     mockGetDbGameDetail.mockResolvedValue(null);
     clearDetailCache();
+    mockActivePlatformId = 'c64';
+    mockThemeId = 'arcade-void';
+    mockScreenshotsPath = '';
   });
 
   afterEach(() => {
@@ -160,5 +175,15 @@ describe('DetailView platform capability gating', () => {
     await waitFor(() => {
       expect(screen.getAllByText('Unknown').length).toBeGreaterThan(0);
     });
+  });
+
+  test('uses C64 box art as the title panel background', async () => {
+    mockThemeId = 'c64-edition';
+    mockScreenshotsPath = 'D:/boxart';
+
+    render(<DetailView game={mockGame} onBack={vi.fn()} />);
+
+    const titlePanel = await screen.findByTestId('c64-detail-title-panel');
+    expect(titlePanel.querySelector('img')?.getAttribute('src')).toBe('D:/boxart/test_box.png');
   });
 });

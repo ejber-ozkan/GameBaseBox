@@ -1,7 +1,7 @@
 # Graph Report - GameBaseBox  (2026-07-19)
 
 ## Corpus Check
-- 164 files · ~136,149 words
+- 164 files · ~136,706 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `025c57c6`
+- Built from commit: `0c25e395`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -148,8 +148,8 @@ Cohesion: 0.22
 Nodes (9): EmulatorJS vice_x64 Core, Project 64Box Requirements, SID Player Requirements, SQLite Database Requirements, Tauri Desktop Wrapper Requirements, WASM Emulation Requirements, EmulatorJS Localization, WASM Emulator Iframe (+1 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.13
-Nodes (27): getRequiredPlatformFolderKeys(), Home(), LibraryApp(), SetupFolderKey, AlphabetJumpBar(), AlphabetJumpBarProps, LETTERS, AppLaunchSplash() (+19 more)
+Cohesion: 0.12
+Nodes (29): getRequiredPlatformFolderKeys(), Home(), LibraryApp(), SetupFolderKey, AlphabetJumpBar(), AlphabetJumpBarProps, LETTERS, AppLaunchSplash() (+21 more)
 
 ### Community 3 - "WASM Emulator Core & Localization"
 Cohesion: 0.07
@@ -172,8 +172,8 @@ Cohesion: 0.13
 Nodes (36): clean_unc_prefix(), download_media_asset(), find_all_media_variants(), find_case_insensitive_file(), get_candidate_paths(), read_file_bytes(), resolve_media_child_path(), resolve_media_path() (+28 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.29
-Nodes (10): areMenuSoundEffectsEnabled(), audioCache, canPlayUiSoundEffects(), getAudioElement(), getNextRotatingUiSoundEffect(), getUiSoundEffectUrl(), playRotatingUiSoundEffect(), playRotatingUiSoundEffectAndWait() (+2 more)
+Cohesion: 0.19
+Nodes (14): DetailNavProps, DetailZone, Direction, NavigationConfig, areMenuSoundEffectsEnabled(), audioCache, canPlayUiSoundEffects(), getAudioElement() (+6 more)
 
 ### Community 10 - "Component 10"
 Cohesion: 0.09
@@ -204,8 +204,8 @@ Cohesion: 0.10
 Nodes (20): app, security, windows, enable, scope, build, beforeBuildCommand, beforeDevCommand (+12 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.13
-Nodes (23): calculateDownNavigation(), calculateLeftNavigation(), calculateRightNavigation(), calculateUpNavigation(), NavigationParams, NavigationResult, NavigationState, BIGBOX_LETTERS (+15 more)
+Cohesion: 0.10
+Nodes (36): BigBoxViewProps, ScrapeButtonProps, UnifiedLibraryViewProps, Settings, calculateDownNavigation(), calculateLeftNavigation(), calculateRightNavigation(), calculateUpNavigation() (+28 more)
 
 ### Community 18 - "Component 18"
 Cohesion: 0.10
@@ -228,8 +228,8 @@ Cohesion: 0.11
 Nodes (13): defaultPlatformSettings, defaultSettings, LEGACY_PATH_FIELDS, migratePlatformSettings(), PlatformImportStatusSnapshot, SECURE_FIELDS, SettingsContext, PlatformImportJobState (+5 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.08
-Nodes (30): BigBoxExitPrompt(), BigBoxExitPromptProps, ExitPromptFocus, ControllerSearchKeyboard(), ControllerSearchKeyboardProps, KEYBOARD_ROWS, KeyboardAction, KeyboardKey (+22 more)
+Cohesion: 0.12
+Nodes (20): BigBoxExitPrompt(), BigBoxExitPromptProps, ExitPromptFocus, ControllerSearchKeyboard(), ControllerSearchKeyboardProps, KEYBOARD_ROWS, KeyboardAction, KeyboardKey (+12 more)
 
 ### Community 24 - "Component 24"
 Cohesion: 0.50
@@ -256,8 +256,8 @@ Cohesion: 0.20
 Nodes (10): dependencies, next, playwright, react, react-dom, @tauri-apps/api, @tauri-apps/plugin-dialog, @tauri-apps/plugin-fs (+2 more)
 
 ### Community 31 - "Community 31"
-Cohesion: 0.10
-Nodes (27): BigBoxViewProps, ScrapeButtonProps, UnifiedLibraryViewProps, Settings, mockGames, LETTER_RAIL_CACHE, UseBigBoxLibraryDataProps, UseBigBoxNavigationProps (+19 more)
+Cohesion: 0.09
+Nodes (19): detailCache, DetailFullscreenMedia, DetailFullscreenRequest, DetailViewProps, getCachedGameDetail(), mockGames, LETTER_RAIL_CACHE, getDbGameCount() (+11 more)
 
 ### Community 32 - "Component 32"
 Cohesion: 0.04
@@ -269,7 +269,7 @@ Nodes (6): FOLDERS, fs, NODE_MODULES, path, PUBLIC_EMU, ROOT
 
 ### Community 34 - "Community 34"
 Cohesion: 0.12
-Nodes (17): BigBoxAlphabetRail(), BigBoxAlphabetRailProps, BigBoxTileMedia(), BigBoxTileMediaProps, COVER_CACHE, SCREENSHOT_CACHE, getTargetVisibleCards(), HorizontalRail() (+9 more)
+Nodes (16): BigBoxAlphabetRail(), BigBoxAlphabetRailProps, BigBoxTileMedia(), BigBoxTileMediaProps, COVER_CACHE, SCREENSHOT_CACHE, getTargetVisibleCards(), HorizontalRail() (+8 more)
 
 ### Community 35 - "Community 35"
 Cohesion: 0.10
@@ -455,13 +455,13 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `open_db_connection()` connect `WASM Emulator Core & Localization` to `Database & Performance Paradigms`, `Component 15`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **Why does `Game` connect `Community 31` to `Detail View Layout & Navigation`, `Community 34`, `Community 2`, `Community 38`, `Community 104`, `Community 73`, `Community 80`, `Community 17`, `Community 23`, `Community 25`, `Community 60`?**
+- **Why does `Game` connect `Community 17` to `Detail View Layout & Navigation`, `Community 34`, `Community 2`, `Community 38`, `Community 104`, `Community 73`, `Community 80`, `Community 25`, `Community 60`, `Community 31`?**
   _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **What connects `eslintConfig`, `nextConfig`, `name` to the rest of the system?**
   _661 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Detail View Layout & Navigation` be split into smaller, more focused modules?**
   _Cohesion score 0.11954022988505747 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.1268939393939394 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11561561561561562 - nodes in this community are weakly interconnected._
 - **Should `WASM Emulator Core & Localization` be split into smaller, more focused modules?**
   _Cohesion score 0.07347915242652085 - nodes in this community are weakly interconnected._

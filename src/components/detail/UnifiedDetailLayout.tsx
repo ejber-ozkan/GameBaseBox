@@ -450,6 +450,7 @@ export function UnifiedDetailLayout({
   const heroPaddingX = detailLayout?.panelPadding ?? 18;
   const heroPaddingY = detailLayout?.panelPadding ?? 18;
   const heroMinHeight = detailLayout?.heroHeight ?? 280;
+  const c64TitlePanelHeight = Math.round(heroMinHeight * 1.25);
   const detailTitleMax = detailLayout?.titleSize ?? 50;
   const compactButtons = (detailLayout?.sidCompact ?? Boolean(fullscreenLayout)) || settings.isFullscreen;
   const sidebarWidth = detailLayout?.sidebarWidth ?? 320;
@@ -775,27 +776,37 @@ export function UnifiedDetailLayout({
     const metadataStr = `PUBLISHER: ${publisher} _ DEVELOPER: ${developer} // ${year} // ${genre}`;
     
     return (
-      <div className="grid h-full min-h-0" style={{ gap: panelGap, gridTemplateRows: `auto minmax(0, 1fr)` }}>
+      <div
+        className="grid h-full min-h-0"
+        style={{ gap: panelGap, gridTemplateRows: `${c64TitlePanelHeight}px minmax(0, 1fr)` }}
+      >
         
         {/* Game Title Header (Internal retro monitor bezel header) */}
-        <div className="p-4 border-8 border-t-theme-secondary border-l-theme-secondary border-b-theme-outline-variant border-r-theme-outline-variant bg-[#1f1f1f] flex items-center justify-between shrink-0 select-none">
-          <div className="flex flex-col min-w-0 flex-1 pr-4">
-            <h1 className="font-mono text-2xl font-black text-theme-primary tracking-tighter uppercase leading-none truncate flex items-center gap-2">
-              <span>{game.name}</span>
-              {game.isClassic && <span title="Legendary Classic" className="text-xl">🏆</span>}
-            </h1>
-            <p className="font-mono text-[10px] text-theme-text-muted mt-1.5 uppercase font-bold tracking-wider">{loadCommand}</p>
-            <p className="font-mono text-[10px] text-theme-text mt-2 uppercase font-bold tracking-wide border-t border-theme-outline-variant/30 pt-1.5 truncate">
-              {metadataStr}
-            </p>
-          </div>
-          <div className="flex flex-col items-end gap-1 font-mono shrink-0">
-            <div className="flex items-center gap-1 bg-theme-primary px-2 py-0.5 text-black font-black text-[10px] uppercase font-bold">
-              READY. <span className="theme-cursor-blink"></span>
+        <DetailTitleBanner
+          artUrl={boxArtUrl}
+          className="border-8 border-t-theme-secondary border-l-theme-secondary border-b-theme-outline-variant border-r-theme-outline-variant bg-[#1f1f1f] shrink-0 select-none"
+          contentClassName="h-full"
+          dataTestId="c64-detail-title-panel"
+        >
+          <div className="flex h-full items-center justify-between p-4">
+            <div className="flex min-w-0 flex-1 flex-col pr-4">
+              <h1 className="font-mono text-2xl font-black text-theme-primary tracking-tighter uppercase leading-none truncate flex items-center gap-2">
+                <span>{game.name}</span>
+                {game.isClassic && <span title="Legendary Classic" className="text-xl">🏆</span>}
+              </h1>
+              <p className="font-mono text-[10px] text-theme-text-muted mt-1.5 uppercase font-bold tracking-wider">{loadCommand}</p>
+              <p className="font-mono text-[10px] text-theme-text mt-2 uppercase font-bold tracking-wide border-t border-theme-outline-variant/30 pt-1.5 truncate">
+                {metadataStr}
+              </p>
             </div>
-            <div className="text-[8px] text-theme-text-muted opacity-70">SYS 64738</div>
+            <div className="flex flex-col items-end gap-1 font-mono shrink-0">
+              <div className="flex items-center gap-1 bg-theme-primary px-2 py-0.5 text-black font-black text-[10px] uppercase font-bold">
+                READY. <span className="theme-cursor-blink"></span>
+              </div>
+              <div className="text-[8px] text-theme-text-muted opacity-70">SYS 64738</div>
+            </div>
           </div>
-        </div>
+        </DetailTitleBanner>
 
         {/* Two-Column Grid */}
         <div className="grid min-h-0 items-stretch pb-16" style={{ gap: panelGap, gridTemplateColumns: `minmax(0, 1.4fr) 1fr` }}>
