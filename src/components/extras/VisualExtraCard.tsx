@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Extra } from '../../types/game';
-import { getAssetUrl } from '../../lib/tauri-bridge';
+import { getAssetUrl, isDebugMode, logDebugMessage } from '../../lib/tauri-bridge';
 import { buildExtraAssetPath } from '../../lib/extras';
 import { ImageWithFallback } from '../ImageWithFallback';
 import { useGamepad } from '../../hooks/useGamepad';
@@ -22,6 +22,7 @@ export function VisualExtraCard({
   visualExtras: Extra[];
 }) {
   const [url, setUrl] = useState<string>('');
+  const [fallbackText, setFallbackText] = useState('No Image');
   const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
   const currentExtra = fullscreenIndex !== null ? (visualExtras[fullscreenIndex] ?? extra) : extra;
   const isFullscreen = fullscreenIndex !== null;
@@ -29,8 +30,23 @@ export function VisualExtraCard({
 
   useEffect(() => {
     const fullPath = buildExtraAssetPath(extrasPath, currentExtra.path);
-    getAssetUrl(fullPath).then(setUrl);
-  }, [currentExtra.path, extrasPath]);
+    getAssetUrl(fullPath)
+      .then((resolvedUrl) => {
+        setUrl(resolvedUrl);
+        setFallbackText('No Image');
+      })
+      .catch((error) => {
+        const errorStr = String(error);
+        if (errorStr.includes('Asset parent directory does not exist')) {
+          setFallbackText('unavailable');
+        }
+        isDebugMode().then((debug) => {
+          if (debug) {
+            logDebugMessage(`[DEBUG WARNING] VisualExtraCard: Failed to resolve asset parent directory for "${currentExtra.name}": ${errorStr}`);
+          }
+        });
+      });
+  }, [currentExtra.path, extrasPath, currentExtra.name]);
 
   const cycleFullscreen = useCallback((direction: -1 | 1) => {
     if (!enableCarousel || visualExtras.length <= 1) {
@@ -102,6 +118,7 @@ export function VisualExtraCard({
         <ImageWithFallback
           src={url}
           alt={extra.name}
+          fallbackText={fallbackText}
           fit="contain"
           className="w-full h-full bg-black/60 p-3 transition-transform duration-300 group-hover:scale-[1.03]"
         />
@@ -128,6 +145,7 @@ export function VisualExtraCard({
              <ImageWithFallback
                 src={url}
                 alt={currentExtra.name}
+                fallbackText={fallbackText}
                 fit="contain"
                 className="max-w-full max-h-[85vh] shadow-2xl rounded-lg"
              />
