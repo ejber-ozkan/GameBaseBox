@@ -699,6 +699,18 @@ fn validate_identifier(identifier: &str) -> Result<(), String> {
     Ok(())
 }
 
+fn sanitize_identifier(identifier: &str) -> String {
+    let mut sanitized = String::new();
+    for character in identifier.chars() {
+        if character.is_ascii_alphanumeric() || character == '_' {
+            sanitized.push(character);
+        } else {
+            sanitized.push('_');
+        }
+    }
+    sanitized
+}
+
 fn quote_identifier(identifier: &str) -> Result<String, String> {
     validate_identifier(identifier)?;
     Ok(format!("\"{identifier}\""))
@@ -715,11 +727,12 @@ fn list_csv_files(export_dir: &Path) -> Result<Vec<PathBuf>, String> {
 }
 
 fn import_single_csv_table(conn: &mut Connection, csv_path: &Path) -> Result<bool, String> {
-    let table_name = csv_path
+    let table_name_raw = csv_path
         .file_stem()
         .and_then(|value| value.to_str())
         .ok_or_else(|| format!("Invalid CSV filename: {}", csv_path.display()))?;
-    let quoted_table_name = quote_identifier(table_name)?;
+    let table_name = sanitize_identifier(table_name_raw);
+    let quoted_table_name = quote_identifier(&table_name)?;
     let file =
         fs::File::open(csv_path).map_err(|error| format!("{}: {error}", csv_path.display()))?;
     let mut reader = BufReader::new(file);
@@ -1957,6 +1970,42 @@ mod tests {
         assert_eq!(id, "1");
         assert_eq!(name, "Tiger Heli");
         assert_eq!(comment, "Line one\nLine two");
+    }
+
+    #[test]
+    fn test_import_single_csv_table_sanitizes_table_name() {
+        let temp_db = NamedTempFile::new().unwrap();
+        let mut conn = Connection::open(temp_db.path()).unwrap();
+        let export_dir = tempdir().unwrap();
+        let csv_path = export_dir.path().join("Paste Errors.csv");
+
+        fs::write(
+            &csv_path,
+            concat!(
+                "GA_Id,Name,Comment\n",
+                "1,\"Tiger Heli\",\"Access violation\"\n",
+            ),
+        )
+        .unwrap();
+
+        let imported = import_single_csv_table(&mut conn, &csv_path).unwrap();
+        assert!(imported);
+
+        let row_count: i64 = conn
+            .query_row("SELECT COUNT(*) FROM \"Paste_Errors\"", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(row_count, 1);
+
+        let (id, name, comment): (String, String, String) = conn
+            .query_row(
+                "SELECT \"GA_Id\", \"Name\", \"Comment\" FROM \"Paste_Errors\"",
+                [],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )
+            .unwrap();
+        assert_eq!(id, "1");
+        assert_eq!(name, "Tiger Heli");
+        assert_eq!(comment, "Access violation");
     }
 
     #[test]

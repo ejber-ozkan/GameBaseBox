@@ -1,16 +1,16 @@
 # Graph Report - GameBaseBox  (2026-07-19)
 
 ## Corpus Check
-- 167 files · ~137,705 words
+- 168 files · ~138,204 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1740 nodes · 3765 edges · 94 communities (85 shown, 9 thin omitted)
+- 1746 nodes · 3773 edges · 98 communities (89 shown, 9 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 70 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a59fabfc`
+- Built from commit: `8cb865cd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -53,6 +53,7 @@
 - [[_COMMUNITY_Community 35|Community 35]]
 - [[_COMMUNITY_Component 36|Component 36]]
 - [[_COMMUNITY_Component 37|Component 37]]
+- [[_COMMUNITY_Community 38|Community 38]]
 - [[_COMMUNITY_Component 39|Component 39]]
 - [[_COMMUNITY_Component 40|Component 40]]
 - [[_COMMUNITY_Component 41|Component 41]]
@@ -81,6 +82,7 @@
 - [[_COMMUNITY_Community 70|Community 70]]
 - [[_COMMUNITY_Community 71|Community 71]]
 - [[_COMMUNITY_Community 72|Community 72]]
+- [[_COMMUNITY_Community 73|Community 73]]
 - [[_COMMUNITY_Community 74|Community 74]]
 - [[_COMMUNITY_Community 75|Community 75]]
 - [[_COMMUNITY_Community 76|Community 76]]
@@ -90,6 +92,8 @@
 - [[_COMMUNITY_Community 80|Community 80]]
 - [[_COMMUNITY_Community 81|Community 81]]
 - [[_COMMUNITY_Community 86|Community 86]]
+- [[_COMMUNITY_Community 87|Community 87]]
+- [[_COMMUNITY_Community 88|Community 88]]
 - [[_COMMUNITY_Component 91|Component 91]]
 - [[_COMMUNITY_Component 96|Component 96]]
 - [[_COMMUNITY_Community 102|Community 102]]
@@ -101,7 +105,7 @@
 - [[_COMMUNITY_Component 128|Component 128]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `String` - 51 edges
+1. `String` - 52 edges
 2. `namedColors` - 51 edges
 3. `Result` - 48 edges
 4. `namedColors` - 48 edges
@@ -136,19 +140,19 @@
 ## Hyperedges (group relationships)
 - **Offline C64 WASM Emulation Flow** — gb64_modern_frontend_requirements_wasm_emulation, public_emulator_wasm_iframe, cores_readme_emulatorjs_core [EXTRACTED 1.00]
 
-## Communities (94 total, 9 thin omitted)
+## Communities (98 total, 9 thin omitted)
 
 ### Community 0 - "Detail View Layout & Navigation"
-Cohesion: 0.09
-Nodes (27): DetailFullscreenRequest, ExtrasBigscreenNavigation, C64ShaderBackground(), DetailGameTitle(), DetailGameTitleProps, OUTLINED_TITLE_STYLE, DetailTitleBanner(), DetailTitleBannerProps (+19 more)
+Cohesion: 0.11
+Nodes (21): DetailFullscreenRequest, C64ShaderBackground(), buildPersonnel(), buildVersions(), clampTextLines(), formatVersionLabel(), getArchiveNotes(), getMusicGlyph() (+13 more)
 
 ### Community 1 - "Core Architecture & Requirements"
 Cohesion: 0.22
 Nodes (9): EmulatorJS vice_x64 Core, Project 64Box Requirements, SID Player Requirements, SQLite Database Requirements, Tauri Desktop Wrapper Requirements, WASM Emulation Requirements, EmulatorJS Localization, WASM Emulator Iframe (+1 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.13
-Nodes (25): getRequiredPlatformFolderKeys(), Home(), LibraryApp(), SetupFolderKey, AlphabetJumpBar(), AlphabetJumpBarProps, LETTERS, AppLaunchSplash() (+17 more)
+Cohesion: 0.20
+Nodes (17): getRequiredPlatformFolderKeys(), Home(), LibraryApp(), SetupFolderKey, AlphabetJumpBar(), AlphabetJumpBarProps, LETTERS, AppLaunchSplash() (+9 more)
 
 ### Community 3 - "WASM Emulator Core & Localization"
 Cohesion: 0.07
@@ -156,15 +160,15 @@ Nodes (52): build_game_detail_query(), build_game_summary_query(), get_db_game_c
 
 ### Community 4 - "Database & Performance Paradigms"
 Cohesion: 0.11
-Nodes (75): R, cleanup_export_directory(), configure_runtime_db_path(), create_export_directory(), create_import_temp_db_path(), create_runtime_db_path(), csv_record_has_unclosed_quotes(), ensure_cover_index() (+67 more)
+Nodes (77): R, cleanup_export_directory(), configure_runtime_db_path(), create_export_directory(), create_import_temp_db_path(), create_runtime_db_path(), csv_record_has_unclosed_quotes(), ensure_cover_index() (+69 more)
 
 ### Community 6 - "Component 6"
 Cohesion: 0.10
 Nodes (48): cancel_platform_import(), clear_platform_import_cancellation(), get_database_bootstrap_status(), get_platform_import_status(), import_database_from_mdb(), import_platform_database_from_mdb(), is_platform_import_cancelled(), open_mdb_file_dialog() (+40 more)
 
 ### Community 7 - "Component 7"
-Cohesion: 0.20
-Nodes (12): allocateTracks(), buildDetailLayoutSpec(), clamp(), DetailDesignViewport, DetailResolutionTier, DetailTierDefinition, DetailViewportSnapshot, resolveDetailDesignViewport() (+4 more)
+Cohesion: 0.12
+Nodes (18): buildFullscreenLayoutMetrics(), clamp(), DEFAULT_VIEWPORT, resolveDensityMode(), ResolvedFullscreenDensity, ViewportSnapshot, allocateTracks(), buildDetailLayoutSpec() (+10 more)
 
 ### Community 8 - "Component 8"
 Cohesion: 0.13
@@ -187,8 +191,8 @@ Cohesion: 0.15
 Nodes (25): allow_asset_path(), exit_app(), get_window_size(), log_debug_message_command(), open_directory_dialog(), open_file_dialog(), open_path_with_system_default(), open_validated_path() (+17 more)
 
 ### Community 13 - "Component 13"
-Cohesion: 0.14
-Nodes (18): getCoverUrl(), ImageWithFallback(), ImageWithFallbackProps, AUDIO_EXTENSIONS, isAudioExtra(), isVideoExtra(), ResolvedExtraMedia(), VIDEO_EXTENSIONS (+10 more)
+Cohesion: 0.15
+Nodes (17): ExtrasBigscreenNavigation, ExtrasDetailProps, AUDIO_EXTENSIONS, isAudioExtra(), isVideoExtra(), ResolvedExtraMedia(), VIDEO_EXTENSIONS, VisualExtraThumb() (+9 more)
 
 ### Community 14 - "Component 14"
 Cohesion: 0.07
@@ -223,20 +227,20 @@ Cohesion: 0.29
 Nodes (16): get_db_game_count(), get_db_games(), get_game_detail(), get_game_extras(), get_genres(), get_secure_setting(), get_sub_genres(), save_secure_setting() (+8 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.11
-Nodes (23): BigBoxHeader(), BigBoxViewProps, PlatformSwitcher(), PlatformSwitcherProps, UnifiedLibraryViewProps, Settings, SettingsContextType, LETTER_RAIL_CACHE (+15 more)
+Cohesion: 0.17
+Nodes (19): BigBoxHeader(), BigBoxHeaderProps, BigBoxViewProps, PlatformSwitcher(), PlatformSwitcherProps, UnifiedLibraryViewProps, Settings, UseBigBoxLibraryDataProps (+11 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.08
-Nodes (31): BigBoxExitPrompt(), BigBoxExitPromptProps, ExitPromptFocus, ControllerSearchKeyboard(), ControllerSearchKeyboardProps, KEYBOARD_ROWS, KeyboardAction, KeyboardKey (+23 more)
+Cohesion: 0.11
+Nodes (17): BigBoxExitPrompt(), BigBoxExitPromptProps, ExitPromptFocus, ControllerSearchKeyboard(), ControllerSearchKeyboardProps, KEYBOARD_ROWS, KeyboardAction, KeyboardKey (+9 more)
 
 ### Community 24 - "Component 24"
 Cohesion: 0.50
 Nodes (3): GBBox 0.4.1 Release Notes, Highlights, Validation
 
 ### Community 25 - "Community 25"
-Cohesion: 0.12
-Nodes (9): ImageSlider(), ImageSliderProps, C64EditionGrid(), C64EditionGridProps, CyberpunkCrtGrid(), CyberpunkCrtGridProps, WindowGameShelf(), WindowGameShelfProps (+1 more)
+Cohesion: 0.10
+Nodes (18): DetailViewProps, GridViewProps, ImageSlider(), ImageSliderProps, ScrapeButtonProps, C64EditionGrid(), C64EditionGridProps, CyberpunkCrtGrid() (+10 more)
 
 ### Community 27 - "Community 27"
 Cohesion: 0.04
@@ -251,12 +255,12 @@ Cohesion: 0.17
 Nodes (11): 1. C64 iPad spike, 2. Mobile storage and launch service, 3. Mobile quality and submission, 4. Platform expansion, Architecture direction, Delivery stages, GBBox iPad/iOS feasibility plan, iOS storage and import (+3 more)
 
 ### Community 30 - "Component 30"
-Cohesion: 0.11
-Nodes (18): dependencies, next, playwright, react, react-dom, @tauri-apps/api, @tauri-apps/plugin-dialog, @tauri-apps/plugin-fs (+10 more)
+Cohesion: 0.20
+Nodes (10): dependencies, next, playwright, react, react-dom, @tauri-apps/api, @tauri-apps/plugin-dialog, @tauri-apps/plugin-fs (+2 more)
 
 ### Community 31 - "Community 31"
-Cohesion: 0.12
-Nodes (10): defaultPlatformSettings, defaultSettings, LEGACY_PATH_FIELDS, PlatformImportStatusSnapshot, SECURE_FIELDS, SettingsContext, PlatformImportJobState, clearMediaCache() (+2 more)
+Cohesion: 0.11
+Nodes (11): defaultPlatformSettings, defaultSettings, LEGACY_PATH_FIELDS, PlatformImportStatusSnapshot, SECURE_FIELDS, SettingsContext, SettingsContextType, PlatformImportJobState (+3 more)
 
 ### Community 32 - "Component 32"
 Cohesion: 0.04
@@ -267,8 +271,8 @@ Cohesion: 0.25
 Nodes (6): FOLDERS, fs, NODE_MODULES, path, PUBLIC_EMU, ROOT
 
 ### Community 34 - "Community 34"
-Cohesion: 0.09
-Nodes (24): BigBoxAlphabetRail(), BigBoxAlphabetRailProps, BigBoxHeaderProps, BigBoxTileMedia(), BigBoxTileMediaProps, COVER_CACHE, SCREENSHOT_CACHE, getTargetVisibleCards() (+16 more)
+Cohesion: 0.12
+Nodes (20): BigBoxAlphabetRail(), BigBoxAlphabetRailProps, BigBoxFooter(), BigBoxTileMedia(), BigBoxSessionState, getC64NavigationRails(), getTargetVisibleCards(), HorizontalRail() (+12 more)
 
 ### Community 35 - "Community 35"
 Cohesion: 0.10
@@ -279,8 +283,12 @@ Cohesion: 0.33
 Nodes (5): description, identifier, permissions, $schema, windows
 
 ### Community 37 - "Component 37"
-Cohesion: 0.28
-Nodes (6): buildFullscreenLayoutMetrics(), clamp(), DEFAULT_VIEWPORT, resolveDensityMode(), ResolvedFullscreenDensity, ViewportSnapshot
+Cohesion: 0.14
+Nodes (18): BigBoxTileMediaProps, COVER_CACHE, getCoverUrl(), SCREENSHOT_CACHE, ImageWithFallback(), ImageWithFallbackProps, MusicianPhoto(), MusicianPhotoProps (+10 more)
+
+### Community 38 - "Community 38"
+Cohesion: 0.24
+Nodes (6): LETTER_RAIL_CACHE, useBigBoxLibraryData(), getDbGameCount(), getDbGames(), getGenres(), getSubGenres()
 
 ### Community 44 - "Community 44"
 Cohesion: 0.04
@@ -303,12 +311,12 @@ Cohesion: 0.50
 Nodes (3): GBBox 0.5.3 Release Notes, Highlights, Validation
 
 ### Community 56 - "Community 56"
-Cohesion: 0.20
-Nodes (13): arcadeVoidTheme, c64EditionTheme, cyberpunkCrtTheme, sharedColumns, staticThemes, ThemeListPresentation, Theme, ThemeAssets (+5 more)
+Cohesion: 0.18
+Nodes (15): ThemeContextType, arcadeVoidTheme, c64EditionTheme, cyberpunkCrtTheme, applyTheme(), sharedColumns, staticThemes, ThemeListPresentation (+7 more)
 
 ### Community 57 - "Community 57"
-Cohesion: 0.13
-Nodes (24): HeaderZone, SettingsView(), SettingsViewProps, useTheme(), PLATFORM_PROFILES, AboutSettingsTab(), AboutSettingsTabProps, AppearanceSettingsTab() (+16 more)
+Cohesion: 0.12
+Nodes (35): HeaderZone, SettingsView(), SettingsViewProps, SidPlayer(), useTheme(), AboutSettingsTab(), AboutSettingsTabProps, AppearanceSettingsTab() (+27 more)
 
 ### Community 58 - "Community 58"
 Cohesion: 0.40
@@ -319,8 +327,8 @@ Cohesion: 0.50
 Nodes (4): tauri-dev-debug.sh script, frontend_ready(), GAMEBASEBOX_DEBUG, PATH
 
 ### Community 60 - "Community 60"
-Cohesion: 0.17
-Nodes (17): ExtrasDetail(), ExtrasDetailProps, DetailNavigationHook, DetailLayoutSpec, ExtraGroup, PLATFORM_EMULATOR_PROFILES, supportsEmbeddedEmulation(), buildLaunchRequest() (+9 more)
+Cohesion: 0.19
+Nodes (11): ExtrasDetail(), PLATFORM_EMULATOR_PROFILES, supportsEmbeddedEmulation(), buildLaunchRequest(), buildPlatformAssetPath(), getPlatformLaunchSettings(), LaunchSource, PlatformLaunchSettings (+3 more)
 
 ### Community 61 - "Community 61"
 Cohesion: 0.50
@@ -343,8 +351,8 @@ Cohesion: 0.15
 Nodes (12): Agent Instructions, Beads Issue Tracker, Codebase Navigation with Graphify, Ejber's Ways of working, Local Tauri WebView Debugging, Non-Interactive Shell Commands, Quick Reference, Quick Reference (+4 more)
 
 ### Community 66 - "Community 66"
-Cohesion: 0.30
-Nodes (11): AppearanceSettingsTabProps, ContentSettingsTabProps, DisplaySettingsTabProps, InteractionSettingsTabProps, MediaSettingsTabProps, PathsSettingsTabProps, ScrapersSettingsTabProps, ThemedToggle() (+3 more)
+Cohesion: 0.22
+Nodes (8): engines, node, name, overrides, esbuild, postcss, private, version
 
 ### Community 67 - "Component 67"
 Cohesion: 0.47
@@ -363,20 +371,24 @@ Cohesion: 0.04
 Nodes (48): background, error, error_container, inverse_on_surface, inverse_primary, inverse_surface, on_background, on_error (+40 more)
 
 ### Community 71 - "Community 71"
-Cohesion: 0.09
-Nodes (26): DetailLayoutProps, MusicianPhoto(), MusicianPhotoProps, MusicPlayer(), MusicPlayerProps, SidPlayer(), SidPlayerProps, SidPlayerRuntime (+18 more)
+Cohesion: 0.12
+Nodes (18): DetailLayoutProps, Props, StatusRow(), DetailGameTitle(), DetailGameTitleProps, OUTLINED_TITLE_STYLE, DetailTitleBanner(), DetailTitleBannerProps (+10 more)
 
 ### Community 72 - "Community 72"
 Cohesion: 0.07
 Nodes (35): migratePlatformSettings(), createDefaultPlatformFolders(), createDefaultPlatformLibraryStatus(), createDefaultPlatformNavigation(), createDefaultPlatformSettings(), createDefaultPlatformSettingsMap(), EMBEDDED_EMULATION_PLATFORM_IDS, getPlatformProfile() (+27 more)
+
+### Community 73 - "Community 73"
+Cohesion: 0.32
+Nodes (6): BACKGROUND_POOL, getLibraryBackgroundForPlatform(), getLibraryBackgroundPoolForPlatform(), LibraryViewMode, PLATFORM_BACKGROUND_POOLS, resolveLibraryBackground()
 
 ### Community 74 - "Community 74"
 Cohesion: 0.14
 Nodes (13): 1. Project Vision, 2. Core Architectural Principles, 3. Established Themes, 4. Key Screen Specifications, 5. Technical Requirements (Summary), 6. Current Status, Arcade Void & Neon Acrylic, C64 Edition (+5 more)
 
 ### Community 75 - "Community 75"
-Cohesion: 0.17
-Nodes (10): metadata, ThemeDecorator(), ThemeDecoratorProps, ERROR_SOUNDS, UiSoundRuntime(), SettingsProvider(), ThemeContext, ThemeContextType (+2 more)
+Cohesion: 0.13
+Nodes (13): metadata, ThemeDecorator(), ThemeDecoratorProps, ERROR_SOUNDS, UiSoundRuntime(), SettingsProvider(), ThemeContext, ThemeProvider() (+5 more)
 
 ### Community 76 - "Community 76"
 Cohesion: 0.18
@@ -395,32 +407,40 @@ Cohesion: 0.20
 Nodes (9): displayName, styleGuidelines, theme, bodyFont, colorMode, customColor, font, headlineFont (+1 more)
 
 ### Community 80 - "Community 80"
-Cohesion: 0.33
-Nodes (5): DatabaseSetupViewProps, folderLabels, RequiredPlatformFolderKey, BUILT_IN_THEMES, PlatformFolderSettings
+Cohesion: 0.60
+Nodes (4): formatCount(), ListView(), ListViewProps, getThemeListPresentation()
 
 ### Community 81 - "Community 81"
-Cohesion: 0.29
-Nodes (7): isNativePath(), resolvePlayableSapUrl(), SapPlayer(), SapPlayerProps, SapPlayerRuntime, SapRuntimeConstructor, Window
+Cohesion: 0.14
+Nodes (13): MusicPlayer(), MusicPlayerProps, isNativePath(), resolvePlayableSapUrl(), SapPlayer(), SapPlayerProps, SapPlayerRuntime, SapRuntimeConstructor (+5 more)
 
 ### Community 86 - "Community 86"
 Cohesion: 0.15
-Nodes (18): DOC_EXT, DOC_FOLDERS, GAME_EXT, GAME_FOLDERS, getExtraExtension(), getExtraLaunchLabel(), getExtraSourceLabel(), getVisibleDetailExtraCategories() (+10 more)
+Nodes (18): buildExtraAssetPath(), DOC_EXT, DOC_FOLDERS, GAME_EXT, GAME_FOLDERS, getExtraExtension(), getExtraLaunchLabel(), getExtraSourceLabel() (+10 more)
+
+### Community 87 - "Community 87"
+Cohesion: 0.50
+Nodes (3): getLibraryRefreshToken(), SortDirection, sortGames()
+
+### Community 88 - "Community 88"
+Cohesion: 0.50
+Nodes (3): GBBox 0.6.0 Release Notes, Highlights, Validation
 
 ### Community 91 - "Component 91"
 Cohesion: 0.22
 Nodes (7): ScreenScraperApiResponse, ScreenScraperGameResponse, ScreenScraperLocalizedName, ScreenScraperMedia, ScreenScraperMediaResponse, ScreenScraperResult, ScreenScraperSynopsis
 
 ### Community 96 - "Component 96"
-Cohesion: 0.08
-Nodes (49): ActivePlatformStateResponse, assetUrlCache, cancelPlatformImport(), convertExtraVideo(), DatabaseBootstrapStatus, DatabaseImportResult, downloadArchiveExtraVideo(), downloadMediaAsset() (+41 more)
+Cohesion: 0.07
+Nodes (53): getCachedGameDetail(), mockGames, ActivePlatformStateResponse, assetUrlCache, cancelPlatformImport(), convertExtraVideo(), DatabaseBootstrapStatus, DatabaseImportResult (+45 more)
 
 ### Community 103 - "Community 103"
 Cohesion: 0.50
 Nodes (3): GBBox 0.3.1 Release Notes, Highlights, Validation
 
 ### Community 104 - "Community 104"
-Cohesion: 0.12
-Nodes (24): BigBoxFooter(), BigBoxSessionState, BigBoxView(), getC64NavigationRails(), formatCount(), ListView(), ListViewProps, UnifiedLibraryView() (+16 more)
+Cohesion: 0.15
+Nodes (18): BigBoxView(), detailCache, DetailFullscreenMedia, DetailView(), UnifiedLibraryView(), WasmPlayer(), WasmPlayerProps, useBigBoxNavigation() (+10 more)
 
 ### Community 105 - "Community 105"
 Cohesion: 0.33
@@ -439,24 +459,24 @@ Cohesion: 0.33
 Nodes (4): TheGamesDBGameLookupResponse, TheGamesDBImage, TheGamesDBImageLookupResponse, TheGamesDBResult
 
 ## Knowledge Gaps
-- **665 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+660 more)
+- **667 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+662 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `devDependencies` connect `Component 18` to `Component 30`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `devDependencies` connect `Component 18` to `Community 66`?**
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **Why does `get_db_path()` connect `Database & Performance Paradigms` to `Component 10`, `WASM Emulator Core & Localization`, `Component 6`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `useSettings()` connect `Community 2` to `Detail View Layout & Navigation`, `Community 34`, `Component 37`, `Community 71`, `Community 104`, `Community 75`, `Community 31`, `Community 80`, `Community 23`, `Community 25`, `Community 60`, `Community 57`?**
-  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+- **Why does `open_db_connection()` connect `WASM Emulator Core & Localization` to `Database & Performance Paradigms`, `Component 15`?**
+  _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **What connects `eslintConfig`, `nextConfig`, `name` to the rest of the system?**
-  _665 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _667 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Detail View Layout & Navigation` be split into smaller, more focused modules?**
-  _Cohesion score 0.08502024291497975 - nodes in this community are weakly interconnected._
-- **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.1310483870967742 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11397849462365592 - nodes in this community are weakly interconnected._
 - **Should `WASM Emulator Core & Localization` be split into smaller, more focused modules?**
   _Cohesion score 0.07347915242652085 - nodes in this community are weakly interconnected._
+- **Should `Database & Performance Paradigms` be split into smaller, more focused modules?**
+  _Cohesion score 0.11049074346165148 - nodes in this community are weakly interconnected._

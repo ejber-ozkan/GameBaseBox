@@ -335,7 +335,7 @@ export default function Home() {
         ready: false,
         reason: null,
       });
-      setSetupError(error instanceof Error ? error.message : 'Unable to verify database setup.');
+      setSetupError(typeof error === 'string' ? error : (error instanceof Error ? error.message : 'Unable to verify database setup.'));
     } finally {
       setIsCheckingSetup(false);
     }

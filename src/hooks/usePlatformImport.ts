@@ -114,7 +114,7 @@ export function usePlatformImport({
     try {
       await cancelPlatformImport(jobId);
     } catch (error) {
-      setJob({ status: 'failed', error: error instanceof Error ? error.message : 'Unable to cancel platform import.', result: null });
+      setJob({ status: 'failed', error: typeof error === 'string' ? error : (error instanceof Error ? error.message : 'Unable to cancel platform import.'), result: null });
     }
   }, [job]);
 
@@ -177,7 +177,7 @@ export function usePlatformImport({
       });
       return result;
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Platform import failed.';
+      const message = typeof error === 'string' ? error : (error instanceof Error ? error.message : 'Platform import failed.');
       const cancelled = message === 'Platform import cancelled.';
       const next = {
         ...platformSettings,
