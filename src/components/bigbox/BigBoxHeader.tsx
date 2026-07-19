@@ -76,7 +76,10 @@ export function BigBoxHeader({
     fontSize: `${Math.max(layout.chipFontSize - 0.5, 10)}px`,
   };
   const headerPillBaseClass =
-    'border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] text-[var(--theme-text-muted)] hover:border-[var(--theme-outline)] hover:bg-[var(--theme-primary-container)] hover:text-[var(--theme-text)]';
+    `border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] ${
+      isC64Edition ? 'text-[var(--theme-primary)]' : 'text-[var(--theme-text-muted)]'
+    } hover:border-[var(--theme-outline)] hover:bg-[var(--theme-primary-container)] hover:text-[var(--theme-text)]`;
+  const headerLabelClass = isC64Edition ? 'text-[var(--theme-primary)]' : 'text-[var(--theme-text-muted)]';
   const headerPillFocusClass =
     'z-10 scale-105 border-[var(--theme-primary)] bg-[var(--theme-primary-container)] text-[var(--theme-text)] shadow-[0_0_18px_var(--theme-primary)]';
   const headerPillSelectedClass =
@@ -99,7 +102,7 @@ export function BigBoxHeader({
               GBBox
             </h1>
             <div
-              className="ml-1 font-bold uppercase tracking-[0.3em] text-[var(--theme-text-muted)]"
+              className={`ml-1 font-bold uppercase tracking-[0.3em] ${headerLabelClass}`}
               style={{ fontSize: `${layout.headerEyebrowSize}px` }}
             >
               GameBase Box
@@ -118,7 +121,7 @@ export function BigBoxHeader({
                 onMouseEnter={() => onSetHeaderFocus(0, 1)}
                 onPlatformSelect={onPlatformSelect}
               />
-              <div className="shrink-0 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.2em] text-[var(--theme-text-muted)]">
+              <div className={`shrink-0 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.2em] ${headerLabelClass}`}>
                 {totalGameCount} {isFiltered ? 'GAMES FOUND' : 'GAMES AVAILABLE'}
               </div>
             </div>
@@ -196,7 +199,7 @@ export function BigBoxHeader({
 
       <div className="w-full" style={{ paddingTop: `${Math.max(layout.headerPaddingY - 8, 8)}px` }}>
         <div className="flex items-center gap-2 overflow-hidden max-w-full" style={{ ...shellStyle, paddingBottom: '12px' }}>
-        <div className="shrink-0 font-black uppercase tracking-[0.2em] text-[var(--theme-text-muted)]" style={{ fontSize: `${layout.headerEyebrowSize}px` }}>Genre</div>
+        <div className={`shrink-0 font-black uppercase tracking-[0.2em] ${headerLabelClass}`} style={{ fontSize: `${layout.headerEyebrowSize}px` }}>Genre</div>
         <div className="min-w-0 flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth flex-1 justify-start">
           {genres.map((genre, index) => {
             const isSelected = filters.genre === genre;
@@ -232,7 +235,7 @@ export function BigBoxHeader({
       {hasSubGenres ? (
         <div className="w-full border-t border-[var(--theme-outline-variant)]" style={{ paddingTop: `${Math.max(layout.headerPaddingY - 6, 10)}px` }}>
         <div className="flex items-center gap-2 overflow-hidden max-w-full" style={{ ...shellStyle, paddingBottom: '12px' }}>
-        <div className="shrink-0 font-black uppercase tracking-[0.2em] text-[var(--theme-text-muted)]" style={{ fontSize: `${layout.headerEyebrowSize}px` }}>Sub-Genre</div>
+        <div className={`shrink-0 font-black uppercase tracking-[0.2em] ${headerLabelClass}`} style={{ fontSize: `${layout.headerEyebrowSize}px` }}>Sub-Genre</div>
         <div className="min-w-0 flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth flex-1 justify-start">
             {visibleSubGenres.map((subGenre, index) => {
               const isSelected = filters.subGenre === subGenre;
@@ -285,7 +288,7 @@ export function BigBoxHeader({
 
       <div className="w-full border-t border-[var(--theme-outline-variant)]" style={{ paddingTop: `${Math.max(layout.headerPaddingY - 6, 10)}px`, paddingBottom: `${layout.headerPaddingY}px` }}>
         <div className="flex items-center gap-2 overflow-hidden max-w-full" style={shellStyle}>
-        <div className="shrink-0 font-black uppercase tracking-[0.2em] text-[var(--theme-text-muted)]" style={{ fontSize: `${layout.headerEyebrowSize}px` }}>Jump To</div>
+        <div className={`shrink-0 font-black uppercase tracking-[0.2em] ${headerLabelClass}`} style={{ fontSize: `${layout.headerEyebrowSize}px` }}>Jump To</div>
         <div className="min-w-0 flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth flex-1 justify-start">
           {BIGBOX_LETTERS.map((letter, index) => {
             const isFocused = activeRailIndex === -1 && activeHeaderRow === jumpRowIndex && activeHeaderItemIndex === index;

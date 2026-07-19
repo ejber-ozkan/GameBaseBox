@@ -58,4 +58,23 @@ describe('BigBoxHeader', () => {
 
     expect(screen.getByTestId('c64-search-cursor').classList).toContain('animate-[cursor-blink_1s_steps(1,end)_infinite]');
   });
+
+  it('uses the C64 light blue for grid header labels and controls', () => {
+    document.documentElement.dataset.theme = 'c64-edition';
+
+    render(
+      <BigBoxHeader activeHeaderItemIndex={0} activeHeaderRow={0} activePlatformId="c64" activeRailIndex={-1} filters={{}} genres={['Action']} hasOverflowSubGenres={false} isFiltered={false} layout={layout} onExit={vi.fn()} onFiltersChange={vi.fn()} onJumpToRail={vi.fn()} onOpenSubGenrePicker={vi.fn()} onPlatformSelect={vi.fn()} onSearchChange={vi.fn()} onSearchFocus={vi.fn()} onSetHeaderFocus={vi.fn()} onShowSettings={vi.fn()} searchInput="" totalGameCount={3} visibleSubGenres={[]} />,
+    );
+
+    for (const element of [
+      screen.getByText('GameBase Box'),
+      screen.getByText('3 GAMES AVAILABLE'),
+      screen.getByText('Genre'),
+      screen.getByRole('button', { name: 'Action' }),
+      screen.getByText('Jump To'),
+      screen.getByRole('button', { name: 'A' }),
+    ]) {
+      expect(element.classList.contains('text-[var(--theme-primary)]')).toBe(true);
+    }
+  });
 });
