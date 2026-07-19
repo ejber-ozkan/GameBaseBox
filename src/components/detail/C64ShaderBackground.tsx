@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function C64ShaderBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [shaderType] = useState<'blue' | 'rainbow'>(() => Math.random() < 0.5 ? 'blue' : 'rainbow');
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,7 +27,7 @@ void main() {
   gl_Position = vec4(a_position, 0.0, 1.0);
 }`;
 
-    const fsSource = `precision highp float;
+    const fsSourceBlue = `precision highp float;
 varying vec2 v_texCoord;
 uniform float u_time;
 uniform vec2 u_resolution;
@@ -50,6 +51,53 @@ void main() {
     final_color -= scanline;
     gl_FragColor = vec4(final_color, 1.0);
 }`;
+
+    const fsSourceRainbow = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
+vec3 getC64Color(float val) {
+    float idx = mod(floor(val), 16.0);
+    if (idx < 1.0) return vec3(0.000, 0.000, 0.000);
+    if (idx < 2.0) return vec3(0.384, 0.384, 0.384);
+    if (idx < 3.0) return vec3(0.537, 0.537, 0.537);
+    if (idx < 4.0) return vec3(0.678, 0.678, 0.678);
+    if (idx < 5.0) return vec3(1.000, 1.000, 1.000);
+    if (idx < 6.0) return vec3(0.624, 0.306, 0.267);
+    if (idx < 7.0) return vec3(0.796, 0.494, 0.459);
+    if (idx < 8.0) return vec3(0.427, 0.329, 0.071);
+    if (idx < 9.0) return vec3(0.631, 0.408, 0.235);
+    if (idx < 10.0) return vec3(0.788, 0.831, 0.529);
+    if (idx < 11.0) return vec3(0.604, 0.886, 0.608);
+    if (idx < 12.0) return vec3(0.361, 0.671, 0.369);
+    if (idx < 13.0) return vec3(0.416, 0.749, 0.776);
+    if (idx < 14.0) return vec3(0.533, 0.494, 0.796);
+    if (idx < 15.0) return vec3(0.314, 0.271, 0.608);
+    return vec3(0.627, 0.341, 0.639);
+}
+
+void main() {
+    vec2 uv = v_texCoord;
+    float num_stripes = 48.0;
+    float time_scale = u_time * 12.0;
+    float stripe_y = uv.y * num_stripes;
+    float scroll = time_scale;
+    float noise_val = sin(floor(stripe_y) * 0.35 + time_scale * 0.5);
+    float color_index = floor(stripe_y + scroll + noise_val * 4.0);
+    vec3 final_color = getC64Color(color_index);
+    float noise = random(vec2(uv.y, u_time)) * 0.04;
+    final_color += vec3(noise);
+    float scanline = sin(uv.y * u_resolution.y * 1.5) * 0.05;
+    final_color -= scanline;
+    gl_FragColor = vec4(final_color, 1.0);
+}`;
+
+    const fsSource = shaderType === 'rainbow' ? fsSourceRainbow : fsSourceBlue;
 
     // Helper functions to compile shaders
     function createShader(gl: WebGLRenderingContext, type: number, source: string) {
