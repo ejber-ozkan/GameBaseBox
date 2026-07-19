@@ -281,6 +281,107 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
     );
   }
 
+  const isC64Theme = theme?.id === 'c64-edition';
+
+  if (isC64Theme) {
+    return (
+      <div data-testid="sid-player" className="w-full flex flex-col gap-2 bg-[#1f1f1f] border-8 border-t-theme-outline-variant border-l-theme-outline-variant border-b-theme-secondary border-r-theme-secondary p-3">
+        <div className="flex items-center justify-between border-b-4 border-theme-outline-variant pb-1.5 mb-1 select-none">
+          <span className="text-[10px] font-mono font-bold text-theme-primary">SOUNDTRACK // C64 SID</span>
+          <span className="text-[9px] font-mono text-theme-text-muted uppercase truncate max-w-[120px]">
+            {isPlaying ? '6581 ACTIVE' : '6581 STANDBY'}
+          </span>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          {localUrl ? (
+            <button
+              id="sid-play-btn"
+              className={`w-9 h-9 flex items-center justify-center font-mono text-sm border-4 cursor-pointer transition-all ${
+                isPlaying 
+                  ? 'bg-theme-tertiary border-t-white border-l-white border-b-black border-r-black text-black font-black' 
+                  : 'bg-theme-secondary-container border-t-theme-primary border-l-theme-primary border-b-black border-r-black text-theme-primary font-black'
+              }`}
+              onClick={() => {
+                if (!isPlaying) {
+                  if (typeof window !== 'undefined') {
+                    if (!window.jsSID) {
+                      setDownloadError("jsSID engine not loaded. Try refreshing.");
+                      return;
+                    }
+                    if (!window.SIDplayer) {
+                      window.SIDplayer = new window.jsSID(16384, 0.0005);
+                    }
+                    if (window.jsSID_aCtx && window.jsSID_aCtx.state === 'suspended') {
+                      window.jsSID_aCtx.resume();
+                    }
+                  }
+                }
+                setDownloadError(null);
+                setIsPlaying(!isPlaying);
+              }}
+              data-testid="play-button"
+              title="Play SID"
+            >
+              {isPlaying ? '■' : '▶'}
+            </button>
+          ) : (
+            <button
+              id="sid-play-btn"
+              className="px-2 py-1 text-[10px] bg-theme-primary text-black font-bold uppercase cursor-pointer border-4 border-t-white border-l-white border-b-black border-r-black active:border-t-black active:border-l-black active:border-b-white active:border-r-white"
+              onClick={handleScrape}
+              disabled={isDownloading}
+            >
+              {isDownloading ? 'SCRAPING...' : 'SCRAPE'}
+            </button>
+          )}
+
+          <div className="min-w-0 flex-1">
+            <div className="text-xs font-mono font-bold text-theme-primary truncate" title={filename}>
+              {filename.split(/[\\/]/).pop()}
+            </div>
+          </div>
+        </div>
+
+        {localUrl && (
+          <div className="flex items-center gap-3 mt-1">
+            {/* Visualizer bars */}
+            <div className="flex gap-1 items-end h-8 bg-black/60 border-4 border-t-black border-l-black border-b-theme-secondary border-r-theme-secondary w-24 shrink-0 px-1.5 py-0.5">
+              {barHeights.map((height, i) => (
+                <div
+                  key={i}
+                  className="flex-1 bg-theme-primary transition-all duration-100"
+                  style={{ height: `${height}%` }}
+                />
+              ))}
+            </div>
+            
+            {/* Volume slider */}
+            <div className="flex-1 flex items-center gap-1.5">
+              <span className="text-[10px] font-mono text-theme-primary">VOL</span>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={volume}
+                onChange={(e) => setVolume(parseFloat(e.target.value))}
+                className="w-full accent-[var(--theme-primary)] h-1 bg-black/50"
+                data-testid="volume-slider"
+              />
+            </div>
+          </div>
+        )}
+
+        {downloadError && (
+          <div className="text-[9px] font-mono leading-tight text-red-400 mt-1">
+            ⚠ {downloadError}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div data-testid="sid-player" className={`w-full rounded-theme-lg border border-theme-outline bg-theme-surface flex flex-col ${compact ? 'gap-2 p-3' : 'gap-3 p-4'}`}>
       <div className={`flex max-w-full items-center justify-between font-mono ${compact ? 'text-xs' : 'text-sm'}`}>

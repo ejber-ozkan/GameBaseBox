@@ -17,7 +17,12 @@ export function ThemeDecorator({ children }: ThemeDecoratorProps) {
       className="min-h-screen w-screen flex flex-col bg-theme-secondary p-4 sm:p-6 md:p-8 box-border transition-colors duration-250 relative"
       data-testid="theme-decorator-outer-border"
     >
-      <div className="flex-1 flex flex-col overflow-hidden bg-theme-background relative">
+      <div
+        className="flex-1 flex flex-col overflow-hidden relative isolate"
+        style={{
+          backgroundColor: theme.id === 'c64-edition' ? 'transparent' : 'var(--theme-background)'
+        }}
+      >
         {children}
       </div>
     </div>

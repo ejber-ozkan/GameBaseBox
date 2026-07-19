@@ -76,20 +76,21 @@ export function DetailView({ game, onBack }: DetailViewProps) {
   const detailConfig = useMemo(() => {
     const isArcade = theme.id === 'arcade-void';
     const isCyberpunk = theme.id === 'cyberpunk-crt';
+    const isC64 = theme.id === 'c64-edition';
     const canPlayEmbedded = supportsEmbeddedEmulation(settings.activePlatformId);
     
     const config = {
       'favorite':          { down: 'play' },
-      'play':              { up: 'favorite', right: 'media-boxfront', down: canPlayEmbedded ? 'play-web' : (isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions') },
-      'play-web':          { up: 'play', left: 'media-boxfront', down: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions' },
+      'play':              { up: 'favorite', right: 'media-boxfront', down: canPlayEmbedded ? 'play-web' : (isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions') },
+      'play-web':          { up: 'play', left: 'media-boxfront', down: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions' },
       'media-gameplay':    { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },
       'media-titlescreen': { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },
       'media-videosna':    { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },
-      'media-boxfront':    { up: 'favorite', left: 'media-gameplay', right: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'media-extras' },
+      'media-boxfront':    { up: 'favorite', left: 'media-gameplay', right: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'media-extras' },
       
-      'media-extras':      { up: 'media-gameplay', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'extras-docs' },
-      'extras-docs':       { up: 'media-extras', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'extras-media' },
-      'extras-media':      { up: 'extras-docs', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions' },
+      'media-extras':      { up: 'media-gameplay', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'extras-docs' },
+      'extras-docs':       { up: 'media-extras', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'extras-media' },
+      'extras-media':      { up: 'extras-docs', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions' },
       
       'screenshot':        { left: 'media-gameplay', down: showSoundtrack ? 'sid' : undefined },
     } as NavigationConfig;
@@ -100,6 +101,16 @@ export function DetailView({ game, onBack }: DetailViewProps) {
       }
       config['sidebar-tabs'] = { up: showSoundtrack ? 'sid' : (canPlayEmbedded ? 'play-web' : 'play'), left: 'media-gameplay', down: 'sidebar-content' };
       config['sidebar-content'] = { up: 'sidebar-tabs', left: 'media-gameplay' };
+    } else if (isC64) {
+      config['play'] = { up: 'favorite', right: 'media-gameplay', down: canPlayEmbedded ? 'play-web' : (showSoundtrack ? 'sid' : 'sidebar-tabs') };
+      if (canPlayEmbedded) {
+        config['play-web'] = { up: 'play', right: 'media-gameplay', down: showSoundtrack ? 'sid' : 'sidebar-tabs' };
+      }
+      if (showSoundtrack) {
+        config['sid'] = { up: 'media-gameplay', left: 'play', down: 'sidebar-tabs' };
+      }
+      config['sidebar-tabs'] = { up: showSoundtrack ? 'sid' : 'media-gameplay', left: 'play', down: 'sidebar-content' };
+      config['sidebar-content'] = { up: 'sidebar-tabs', left: 'play' };
     } else if (isCyberpunk) {
       config['play'] = { up: 'favorite', right: canPlayEmbedded ? 'play-web' : 'sidebar-tabs', down: 'media-gameplay' };
       if (canPlayEmbedded) {

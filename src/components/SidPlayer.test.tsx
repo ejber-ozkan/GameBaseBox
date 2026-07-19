@@ -22,9 +22,11 @@ vi.mock('../contexts/SettingsContext', () => ({
   })
 }));
 
+let mockThemeId = 'default';
+
 vi.mock('../contexts/ThemeContext', () => ({
   useTheme: () => ({
-    theme: { id: 'c64-edition' },
+    theme: { id: mockThemeId },
     setTheme: vi.fn(),
     availableThemes: []
   })
@@ -178,6 +180,36 @@ describe('SidPlayer Component', () => {
 
     await waitFor(() => {
       expect(screen.getByText('STOPPED')).not.toBeNull();
+    });
+  });
+
+  describe('C64 Theme Render Block', () => {
+    beforeEach(() => {
+      mockThemeId = 'c64-edition';
+    });
+
+    afterEach(() => {
+      mockThemeId = 'default';
+    });
+
+    test('renders C64-themed labels when theme is c64-edition', () => {
+      render(<SidPlayer filename="test.sid" audioUrl="/audio/test.sid" />);
+      expect(screen.getByText('SOUNDTRACK // C64 SID')).not.toBeNull();
+      expect(screen.getByText('6581 STANDBY')).not.toBeNull();
+    });
+
+    test('toggles to active state and shows visualizer and ACTIVE label', async () => {
+      render(<SidPlayer filename="test.sid" audioUrl="/audio/test.sid" />);
+      const playBtn = screen.getByTestId('play-button');
+
+      await act(async () => {
+        fireEvent.click(playBtn);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('6581 ACTIVE')).not.toBeNull();
+        expect(screen.getByText('VOL')).not.toBeNull();
+      });
     });
   });
 });

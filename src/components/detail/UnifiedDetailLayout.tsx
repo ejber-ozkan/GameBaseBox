@@ -19,6 +19,7 @@ import { DetailGameTitle } from './DetailGameTitle';
 import { DetailTitleBanner } from './DetailTitleBanner';
 import type { DetailFullscreenRequest, DetailLayoutProps } from '../DetailView';
 import { useResolvedBoxArtUrl } from '../../hooks/useResolvedBoxArtUrl';
+import { C64ShaderBackground } from './C64ShaderBackground';
 import { useTheme } from '../../contexts/ThemeContext';
 import type { DetailZone } from '../../hooks/useDetailNavigation';
 
@@ -547,6 +548,30 @@ export function UnifiedDetailLayout({
     setActiveSidebarTab(tabs[nextIndex]);
   }, [activeSidebarTab]);
 
+  useEffect(() => {
+    if (!isC64) return;
+
+    const handleFKeys = (e: KeyboardEvent) => {
+      if (document.activeElement?.tagName === 'INPUT') return;
+      if (e.key === 'F1') {
+        e.preventDefault();
+        setActiveSidebarTab('files');
+        nav.setFocusedZone('sidebar-tabs');
+      } else if (e.key === 'F3') {
+        e.preventDefault();
+        setActiveSidebarTab('notes');
+        nav.setFocusedZone('sidebar-tabs');
+      } else if (e.key === 'F5') {
+        e.preventDefault();
+        setActiveSidebarTab('credits');
+        nav.setFocusedZone('sidebar-tabs');
+      }
+    };
+
+    window.addEventListener('keydown', handleFKeys);
+    return () => window.removeEventListener('keydown', handleFKeys);
+  }, [isC64, nav]);
+
   const renderArcadeSidebar = () => {
     return (
       <aside className="flex flex-col min-h-0 h-full shrink-0" style={{ gap: panelGap, width: `${sidebarWidth}px` }}>
@@ -741,6 +766,385 @@ export function UnifiedDetailLayout({
     );
   };
 
+  const renderC64Layout = () => {
+    const loadCommand = `LOAD "${game.name.substring(0, 16).replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()}",8,1`;
+    const publisher = cleanMetadataValue(game.publisher?.name) || 'UNKNOWN';
+    const developer = cleanMetadataValue(game.developer?.name) || 'UNKNOWN';
+    const year = game.year || '----';
+    const genre = [game.parentGenre, game.subGenre].filter(Boolean).join(' / ') || 'GENRE';
+    const metadataStr = `PUBLISHER: ${publisher} _ DEVELOPER: ${developer} // ${year} // ${genre}`;
+    
+    return (
+      <div className="grid h-full min-h-0" style={{ gap: panelGap, gridTemplateRows: `auto minmax(0, 1fr)` }}>
+        
+        {/* Game Title Header (Internal retro monitor bezel header) */}
+        <div className="p-4 border-8 border-t-theme-secondary border-l-theme-secondary border-b-theme-outline-variant border-r-theme-outline-variant bg-[#1f1f1f] flex items-center justify-between shrink-0 select-none">
+          <div className="flex flex-col min-w-0 flex-1 pr-4">
+            <h1 className="font-mono text-2xl font-black text-theme-primary tracking-tighter uppercase leading-none truncate flex items-center gap-2">
+              <span>{game.name}</span>
+              {game.isClassic && <span title="Legendary Classic" className="text-xl">🏆</span>}
+            </h1>
+            <p className="font-mono text-[10px] text-theme-text-muted mt-1.5 uppercase font-bold tracking-wider">{loadCommand}</p>
+            <p className="font-mono text-[10px] text-theme-text mt-2 uppercase font-bold tracking-wide border-t border-theme-outline-variant/30 pt-1.5 truncate">
+              {metadataStr}
+            </p>
+          </div>
+          <div className="flex flex-col items-end gap-1 font-mono shrink-0">
+            <div className="flex items-center gap-1 bg-theme-primary px-2 py-0.5 text-black font-black text-[10px] uppercase font-bold">
+              READY. <span className="theme-cursor-blink"></span>
+            </div>
+            <div className="text-[8px] text-theme-text-muted opacity-70">SYS 64738</div>
+          </div>
+        </div>
+
+        {/* Two-Column Grid */}
+        <div className="grid min-h-0 items-stretch pb-16" style={{ gap: panelGap, gridTemplateColumns: `minmax(0, 1.4fr) 1fr` }}>
+          
+          {/* Left Column (Play buttons + Hero/Extras Viewport) */}
+          <div className="flex flex-col min-h-0" style={{ gap: panelGap }}>
+            {/* Retro Bevel Play Buttons */}
+            <div className="flex gap-4 shrink-0 font-mono">
+              <button
+                type="button"
+                id="play-game-btn"
+                onClick={() => handleLaunchVersion(selectedVersion)}
+                onMouseEnter={() => nav.hoverZone('play')}
+                className={`flex-1 py-3 px-4 flex items-center justify-between transition-all cursor-pointer border-6 text-xs font-bold uppercase ${
+                  nav.isFocused('play')
+                    ? 'bg-theme-tertiary border-t-white border-l-white border-b-black border-r-black text-black font-black'
+                    : 'bg-theme-primary border-t-white border-l-white border-b-[#07006c] border-r-[#07006c] text-[#1100a9]'
+                }`}
+              >
+                <span className="flex items-center gap-1.5">🚀 LAUNCH EMULATOR</span>
+                <span className="text-[9px] opacity-75">{settings.activePlatformId.toUpperCase()}</span>
+              </button>
+
+              {canPlayEmbedded && (
+                <button
+                  type="button"
+                  id="play-browser-btn"
+                  onClick={() => document.getElementById('play-browser-btn-hidden')?.click()}
+                  onMouseEnter={() => nav.hoverZone('play-web')}
+                  className={`flex-1 py-3 px-4 flex items-center justify-between transition-all cursor-pointer border-6 text-xs font-bold uppercase ${
+                    nav.isFocused('play-web')
+                      ? 'bg-theme-tertiary border-t-white border-l-white border-b-black border-r-black text-black font-black'
+                      : 'bg-[#1f1f1f] border-t-theme-primary border-l-theme-primary border-b-black border-r-black text-theme-primary'
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">🎮 PLAY BROWSER</span>
+                  <span className="text-[9px] opacity-75">EMBEDDED</span>
+                </button>
+              )}
+              {/* Hidden plays in default render DOM to link correctly */}
+              <div style={{ display: 'none' }}>
+                <button id="play-browser-btn-hidden" onClick={() => handleLaunchVersion(selectedVersion)} />
+              </div>
+            </div>
+
+            {visibleTab === 'game' ? (
+              /* Hero container */
+              <div className="flex-1 min-h-0 overflow-hidden bg-black relative border-8 border-t-theme-secondary border-l-theme-secondary border-b-theme-outline-variant border-r-theme-outline-variant">
+                {activeMedia === 'videosna' && game.videoSnapFilename ? (
+                  <video
+                    autoPlay
+                    className="h-full w-full object-contain"
+                    loop
+                    muted
+                    playsInline
+                    src={resolveMediaPath('screenshot', game.videoSnapFilename)}
+                  />
+                ) : activeMedia === 'boxfront' ? (
+                  boxArtUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={boxArtUrl}
+                      alt={`${game.name} box art`}
+                      className="h-full w-full object-contain mx-auto"
+                    />
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center font-mono text-xs text-theme-text-muted">NO COVER IMAGE</div>
+                  )
+                ) : (
+                  <ImageSlider
+                    type="screenshot"
+                    filename={activeMedia === 'titlescreen' ? game.titlescreenFilename : game.screenshotFilename}
+                    alt={game.name}
+                    className="h-full w-full object-contain"
+                  />
+                )}
+                
+                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+                  <span className="font-mono text-[10px] text-theme-tertiary uppercase font-bold tracking-wider">
+                    DEVELOPER: {cleanMetadataValue(game.developer?.name) || 'UNKNOWN'}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              /* Extras Viewport */
+              <div
+                onMouseEnter={() => nav.hoverZone('media-extras')}
+                className={`flex-1 min-h-0 overflow-hidden bg-black flex flex-col p-4 border-8 border-t-theme-secondary border-l-theme-secondary border-b-theme-outline-variant border-r-theme-outline-variant ${
+                  nav.isFocused('media-extras') ? 'ring-2 ring-theme-primary' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between border-b-4 border-theme-outline-variant pb-1.5 mb-2 select-none font-mono">
+                  <span className="text-[10px] font-bold text-theme-primary">SYSTEM // EXTRAS & DOCUMENTATION</span>
+                </div>
+                <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar font-mono">
+                  <ExtrasDetail
+                    game={game}
+                    extras={archiveExtras}
+                    visibleCategories={['visual', 'docs', 'media']}
+                    hideEmptyState
+                    enableBigscreenGalleryUX={true}
+                    layoutSpec={detailLayout}
+                    onRegisterBigscreenNavigation={(navigation) => {
+                      extrasNavigationRef.current = navigation;
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right Column (Gallery + Soundtrack + Sidebar tabbed content) */}
+          <div className="flex flex-col min-h-0" style={{ gap: panelGap }}>
+            
+            {/* Gallery Row */}
+            <div className="h-[76px] grid grid-cols-4 gap-2 shrink-0 select-none">
+              {availableMedia.map((mediaItem) => {
+                const zone = ('media-' + mediaItem.id) as DetailZone;
+                const isActive = activeMedia === mediaItem.id;
+                
+                return (
+                  <button
+                    key={mediaItem.id}
+                    type="button"
+                    onClick={() => setSelectedMedia(mediaItem.id)}
+                    onMouseEnter={() => nav.hoverZone(zone)}
+                    className={`h-full overflow-hidden bg-black flex items-center justify-center transition-all cursor-pointer ${
+                      isActive
+                        ? 'border-4 border-theme-tertiary scale-102 ring-2 ring-theme-primary'
+                        : 'border-4 border-theme-outline-variant hover:border-theme-primary/60'
+                    } ${nav.isFocused(zone) ? 'border-4 border-theme-tertiary brightness-110' : ''}`}
+                  >
+                    {mediaItem.id === 'videosna' && game.videoSnapFilename ? (
+                      <div className="text-[9px] font-mono font-bold text-theme-primary leading-none">VIDEO</div>
+                    ) : mediaItem.id === 'boxfront' ? (
+                      boxArtUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={boxArtUrl} alt="Cover preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="text-[9px] font-mono font-bold text-theme-text-muted leading-none">COVER</div>
+                      )
+                    ) : (
+                      <ImageSlider
+                        type="screenshot"
+                        filename={mediaItem.id === 'titlescreen' ? game.titlescreenFilename : game.screenshotFilename}
+                        alt="Gallery preview"
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Soundtrack Module */}
+            {showSoundtrack && (
+              <div onMouseEnter={() => nav.hoverZone('sid')} className={`shrink-0 ${nav.focusCls('sid')}`}>
+                <MusicPlayer platformId={settings.activePlatformId} filename={game.sidFilename} compact={true} />
+              </div>
+            )}
+
+            {/* Consolidated Tabbed Panel */}
+            <div className="flex-1 min-h-0 flex flex-col bg-[#1f1f1f] border-8 border-t-theme-secondary border-l-theme-secondary border-b-theme-outline-variant border-r-theme-outline-variant">
+              {/* Tabs Bar */}
+              <div className="flex border-b-4 border-theme-outline-variant bg-[#131313] shrink-0 select-none">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveSidebarTab('files');
+                    nav.setFocusedZone('sidebar-tabs');
+                  }}
+                  onMouseEnter={() => nav.hoverZone('sidebar-tabs')}
+                  className={`flex-1 py-2 text-[10px] font-mono font-bold uppercase tracking-wider text-center border-r-4 border-theme-outline-variant transition-colors cursor-pointer ${
+                    activeSidebarTab === 'files'
+                      ? 'bg-theme-secondary text-[#131313]'
+                      : 'bg-[#131313] text-theme-primary hover:bg-[#1f1f1f]'
+                  } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'files' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
+                >
+                  [F1] FILES
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveSidebarTab('notes');
+                    nav.setFocusedZone('sidebar-tabs');
+                  }}
+                  onMouseEnter={() => nav.hoverZone('sidebar-tabs')}
+                  className={`flex-1 py-2 text-[10px] font-mono font-bold uppercase tracking-wider text-center border-r-4 border-theme-outline-variant transition-colors cursor-pointer ${
+                    activeSidebarTab === 'notes'
+                      ? 'bg-theme-secondary text-[#131313]'
+                      : 'bg-[#131313] text-theme-primary hover:bg-[#1f1f1f]'
+                  } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'notes' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
+                >
+                  [F3] INFO
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveSidebarTab('credits');
+                    nav.setFocusedZone('sidebar-tabs');
+                  }}
+                  onMouseEnter={() => nav.hoverZone('sidebar-tabs')}
+                  className={`flex-1 py-2 text-[10px] font-mono font-bold uppercase tracking-wider text-center transition-colors cursor-pointer ${
+                    activeSidebarTab === 'credits'
+                      ? 'bg-theme-secondary text-[#131313]'
+                      : 'bg-[#131313] text-theme-primary hover:bg-[#1f1f1f]'
+                  } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'credits' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
+                >
+                  [F5] CREDITS
+                </button>
+              </div>
+
+              {/* Content viewport */}
+              <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-3 font-mono">
+                
+                {/* FILES TAB */}
+                {activeSidebarTab === 'files' && (
+                  <div className="space-y-1.5" id="sidebar-files-container">
+                    {versions.map((version, index) => {
+                      const isSelected = selectedVersionId === version.id;
+                      const isFocused = nav.isFocused('sidebar-content') && focusedFileIndex === index;
+                      
+                      return (
+                        <button
+                          key={version.id}
+                          type="button"
+                          onClick={() => {
+                            if (isSelected) {
+                              void handleLaunchVersion(version);
+                            } else {
+                              selectVersion(version.id);
+                              setFocusedFileIndex(index);
+                              nav.setFocusedZone('sidebar-content');
+                            }
+                          }}
+                          onDoubleClick={() => {
+                            void handleLaunchVersion(version);
+                          }}
+                          onMouseEnter={() => {
+                            setFocusedFileIndex(index);
+                            nav.hoverZone('sidebar-content');
+                          }}
+                          className={`w-full p-2 text-left flex justify-between items-center transition-all cursor-pointer border-4 text-xs ${
+                            isSelected
+                              ? 'bg-theme-secondary-container border-theme-primary text-theme-primary font-bold'
+                              : 'bg-black/25 border-theme-outline-variant text-theme-text-muted hover:border-theme-primary/50 hover:text-theme-text'
+                          } ${
+                            isFocused
+                              ? 'border-theme-tertiary bg-theme-primary/5 scale-[1.01] z-10'
+                              : ''
+                          }`}
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="text-[11px] font-bold truncate">{version.label}</div>
+                            <div className="text-[9px] uppercase tracking-wider text-theme-text-muted truncate mt-0.5">
+                              {version.subtitle}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1 shrink-0 ml-2">
+                            <span className="text-[8px] border border-theme-outline/50 px-1 text-theme-text-muted">
+                              {version.tag}
+                            </span>
+                            {isSelected && (
+                              <span className="text-[8px] bg-theme-tertiary text-black px-1 font-bold">
+                                ACT
+                              </span>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* INFO TAB */}
+                {activeSidebarTab === 'notes' && (
+                  <div className="flex flex-col h-full min-h-0" style={{ gap: panelGap }}>
+                    {/* Technical stats grid */}
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 border-4 border-theme-outline-variant bg-[#131313] p-2 text-[10px]">
+                      <div className="flex justify-between border-b border-theme-outline-variant pb-0.5">
+                        <span className="text-theme-text-muted">PAL/NTSC:</span>
+                        <span className="text-theme-primary font-bold">{(cleanMetadataValue(game.vPalNtsc) || formatVersionLabel(game)).toUpperCase()}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-theme-outline-variant pb-0.5">
+                        <span className="text-theme-text-muted">SIZE:</span>
+                        <span className="text-theme-primary font-bold">{cleanMetadataValue(game.vLength) ? `${game.vLength} BLKS` : 'UNKNOWN'}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-theme-outline-variant pb-0.5">
+                        <span className="text-theme-text-muted">TRAINERS:</span>
+                        <span className="text-theme-primary font-bold">{cleanMetadataValue(game.vTrainers) || '0'}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-theme-outline-variant pb-0.5">
+                        <span className="text-theme-text-muted">LOAD SCR:</span>
+                        <span className="text-theme-primary font-bold">{game.vLoadingScreen ? 'YES' : 'NO'}</span>
+                      </div>
+                      <div className="flex justify-between pb-0.5">
+                        <span className="text-theme-text-muted">HI-SCORE:</span>
+                        <span className="text-theme-primary font-bold">{game.vHighScoreSaver ? 'YES' : 'NO'}</span>
+                      </div>
+                      <div className="flex justify-between pb-0.5">
+                        <span className="text-theme-text-muted">TRUE DRV:</span>
+                        <span className="text-theme-primary font-bold">{game.vTrueDriveEmu ? 'YES' : 'NO'}</span>
+                      </div>
+                    </div>
+                    {/* Notes text */}
+                    <div
+                      ref={sidebarNotesScrollRef}
+                      className="text-theme-text/85 overflow-y-auto custom-scrollbar leading-relaxed text-[11px] select-text flex-1 font-mono uppercase"
+                    >
+                      <p className="text-theme-primary mb-2 font-bold">&gt;&gt; SYSTEM ARCHIVE MEMO:</p>
+                      <p className="uppercase">{archiveNotes}</p>
+                      <div className="mt-4 flex items-center gap-1">
+                        <span className="w-1.5 h-3 bg-theme-primary theme-cursor-blink"></span>
+                        <span className="text-[10px] text-theme-primary">SYSTEM_READY_FOR_BOOT</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* CREDITS TAB */}
+                {activeSidebarTab === 'credits' && (
+                  <div
+                    ref={sidebarCreditsScrollRef}
+                    className="space-y-1 overflow-y-auto custom-scrollbar h-full pr-1"
+                  >
+                    {personnel.length > 0 ? (
+                      personnel.map((entry) => (
+                        <div key={`${entry.label}-${entry.value}`} className="flex justify-between border-b border-theme-outline-variant pb-1.5 text-xs">
+                          <span className="uppercase text-theme-text-muted text-[9px]">{entry.label}</span>
+                          <span className="font-bold text-theme-primary text-[11px] uppercase">{entry.value}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-xs text-theme-text-muted">No credits metadata available.</div>
+                    )}
+                  </div>
+                )}
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    );
+  };
+
   useEffect(() => {
     nav.registerAction('play', () => document.getElementById('play-game-btn')?.click());
     nav.registerAction('play-web', () => document.getElementById('play-browser-btn')?.click());
@@ -761,7 +1165,7 @@ export function UnifiedDetailLayout({
       next: () => cycleTab('next'),
     });
 
-    if (isArcade || isCyberpunk) {
+    if (isArcade || isCyberpunk || isC64) {
       nav.registerAction('sidebar-tabs', () => undefined);
       nav.registerDirectionalOverride('sidebar-tabs', (direction) => {
         if (isCyberpunk) {
@@ -797,6 +1201,13 @@ export function UnifiedDetailLayout({
       });
 
       nav.registerDirectionalOverride('sidebar-content', (direction) => {
+        if (isC64 && visibleTab === 'extras') {
+          if (direction === 'left') {
+            nav.setFocusedZone('media-extras');
+            return true;
+          }
+        }
+
         if (isCyberpunk) {
           if (direction === 'left') {
             if (activeSidebarTab === 'files') {
@@ -864,13 +1275,128 @@ export function UnifiedDetailLayout({
       nav.registerAction('sidebar-content', () => {
         if (activeSidebarTab === 'files' && versions[focusedFileIndex]) {
           const version = versions[focusedFileIndex];
-          if (isCyberpunk && selectedVersionId === version.id) {
+          if ((isCyberpunk || isC64) && selectedVersionId === version.id) {
             void handleLaunchVersion(version);
           } else {
             selectVersion(version.id);
           }
         }
       });
+
+      if (isC64) {
+        availableMedia.forEach((mediaItem, idx) => {
+          const zoneName = `media-${mediaItem.id}` as DetailZone;
+          nav.registerDirectionalOverride(zoneName, (direction) => {
+            if (direction === 'left') {
+              if (idx > 0) {
+                const prevItem = availableMedia[idx - 1];
+                setSelectedMedia(prevItem.id);
+                nav.setFocusedZone(`media-${prevItem.id}` as DetailZone);
+                return true;
+              } else {
+                nav.setFocusedZone('play');
+                return true;
+              }
+            }
+            if (direction === 'right') {
+              if (idx < availableMedia.length - 1) {
+                const nextItem = availableMedia[idx + 1];
+                setSelectedMedia(nextItem.id);
+                nav.setFocusedZone(`media-${nextItem.id}` as DetailZone);
+                return true;
+              } else {
+                if (showSoundtrack) {
+                  nav.setFocusedZone('sid');
+                } else {
+                  nav.setFocusedZone('sidebar-tabs');
+                }
+                return true;
+              }
+            }
+            if (direction === 'down') {
+              if (showSoundtrack) {
+                nav.setFocusedZone('sid');
+              } else {
+                nav.setFocusedZone('sidebar-tabs');
+              }
+              return true;
+            }
+            return false;
+          });
+        });
+
+        nav.registerDirectionalOverride('play', (direction) => {
+          if (direction === 'right') {
+            if (visibleTab === 'extras') {
+              nav.setFocusedZone('media-extras');
+              return true;
+            }
+            if (availableMedia.length > 0) {
+              const activeObj = availableMedia.find(m => m.id === activeMedia) || availableMedia[0];
+              nav.setFocusedZone(`media-${activeObj.id}` as DetailZone);
+              return true;
+            }
+          }
+          if (direction === 'down') {
+            if (visibleTab === 'extras') {
+              nav.setFocusedZone('media-extras');
+              return true;
+            }
+            if (canPlayEmbedded) {
+              nav.setFocusedZone('play-web');
+              return true;
+            } else {
+              if (showSoundtrack) {
+                nav.setFocusedZone('sid');
+              } else {
+                nav.setFocusedZone('sidebar-tabs');
+              }
+              return true;
+            }
+          }
+          return false;
+        });
+
+        nav.registerDirectionalOverride('play-web', (direction) => {
+          if (direction === 'right') {
+            if (visibleTab === 'extras') {
+              nav.setFocusedZone('media-extras');
+              return true;
+            }
+            if (availableMedia.length > 0) {
+              const activeObj = availableMedia.find(m => m.id === activeMedia) || availableMedia[0];
+              nav.setFocusedZone(`media-${activeObj.id}` as DetailZone);
+              return true;
+            }
+          }
+          if (direction === 'down') {
+            if (visibleTab === 'extras') {
+              nav.setFocusedZone('media-extras');
+              return true;
+            }
+            if (showSoundtrack) {
+              nav.setFocusedZone('sid');
+            } else {
+              nav.setFocusedZone('sidebar-tabs');
+            }
+            return true;
+          }
+          return false;
+        });
+
+        nav.registerDirectionalOverride('sid', (direction) => {
+          if (direction === 'left') {
+            if (visibleTab === 'extras') {
+              nav.setFocusedZone('media-extras');
+              return true;
+            } else {
+              nav.setFocusedZone('play');
+              return true;
+            }
+          }
+          return false;
+        });
+      }
     } else {
       nav.registerAction('versions', () => undefined);
       nav.registerDirectionalOverride('versions', (direction) => {
@@ -955,6 +1481,20 @@ export function UnifiedDetailLayout({
     }
 
     nav.registerDirectionalOverride('media-extras', (direction) => {
+      if (isC64) {
+        if (direction === 'up') {
+          nav.setFocusedZone(canPlayEmbedded ? 'play-web' : 'play');
+          return true;
+        }
+        if (direction === 'right') {
+          if (showSoundtrack) {
+            nav.setFocusedZone('sid');
+          } else {
+            nav.setFocusedZone('sidebar-tabs');
+          }
+          return true;
+        }
+      }
       return extrasNavigationRef.current?.move(direction) ?? false;
     });
   }, [
@@ -976,6 +1516,11 @@ export function UnifiedDetailLayout({
     versionIds,
     versionIdsKey,
     versions,
+    isC64,
+    visibleTab,
+    activeMedia,
+    availableMedia,
+    canPlayEmbedded,
   ]);
 
   const bgStyle = useMemo(() => {
@@ -987,12 +1532,13 @@ export function UnifiedDetailLayout({
 
   return (
     <div
-      className="relative h-full min-h-screen overflow-hidden text-theme-text font-sans selection:bg-theme-primary/30 selection:text-theme-text"
+      className="relative isolate h-full min-h-screen overflow-hidden text-theme-text font-sans selection:bg-theme-primary/30 selection:text-theme-text"
       style={{
         background: bgStyle,
-        backgroundColor: 'var(--theme-background)',
+        backgroundColor: isC64 ? 'transparent' : 'var(--theme-background)',
       }}
     >
+      {isC64 && <C64ShaderBackground />}
       {/* Mesh lines for Arcade void, scanlines for Cyberpunk/others */}
       {isArcade && (
         <div
@@ -1564,6 +2110,8 @@ export function UnifiedDetailLayout({
                     </div>
                   </footer>
                 </div>
+              ) : isC64 ? (
+                renderC64Layout()
               ) : (
                 <div
                   className="grid h-full min-h-0"
