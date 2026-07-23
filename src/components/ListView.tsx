@@ -1,6 +1,8 @@
 import { Game } from '../types/game';
 import { useEffect, useRef } from 'react';
 import { getThemeListPresentation } from '../themes/list-presentations';
+import { getC64ViewingPath, getCyberpunkViewingPath } from '../lib/c64-viewing-path';
+
 
 interface ListViewProps {
   games: Game[];
@@ -14,6 +16,8 @@ interface ListViewProps {
   totalGameCount?: number;
   favoriteCount?: number;
   themeId?: string;
+  alphabetLabel?: string;
+  searchInput?: string;
 }
 
 function formatCount(count?: number) {
@@ -32,6 +36,8 @@ export function ListView({
   totalGameCount,
   favoriteCount,
   themeId: providedThemeId,
+  alphabetLabel,
+  searchInput,
 }: ListViewProps) {
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
   const endSentinelRef = useRef<HTMLTableRowElement>(null);
@@ -77,36 +83,50 @@ export function ListView({
       data-list-presentation={presentation.layout}
     >
       {isArcadeVoid && (
-        <div className="theme-panel grid gap-4 rounded-[var(--theme-radius-xl)] p-5 md:grid-cols-[1fr_auto]">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--theme-primary)]">ACTIVE PLATFORM</p>
-            <p className="mt-1 text-2xl font-black text-[var(--theme-text)]">{activePlatformName}</p>
-            <p className="mt-2 text-xs text-[var(--theme-text-muted)]">LEGENDARY CLASSICS · LIST INDEX</p>
+        <div className="sticky top-0 z-30 bg-[var(--theme-background)]/95 py-2 backdrop-blur-sm" data-testid="arcade-void-currently-viewing-container">
+          <div className="theme-panel grid gap-4 rounded-[var(--theme-radius-xl)] p-5 md:grid-cols-[1fr_auto]">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--theme-primary)]">ACTIVE PLATFORM</p>
+              <p className="mt-1 text-2xl font-black text-[var(--theme-text)]">{activePlatformName}</p>
+              <p className="mt-2 text-xs text-[var(--theme-text-muted)] font-mono" data-testid="arcade-void-currently-viewing-path">
+                {getC64ViewingPath(alphabetLabel, searchInput)}
+              </p>
+            </div>
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-1 font-mono text-xs">
+              <div><dt className="text-[var(--theme-text-muted)]">TOTAL ENTRIES</dt><dd className="text-lg text-[var(--theme-secondary)]">{formatCount(totalGameCount)}</dd></div>
+              <div><dt className="text-[var(--theme-text-muted)]">FAVORITES</dt><dd className="text-lg text-[var(--theme-tertiary)]">{formatCount(favoriteCount)}</dd></div>
+            </dl>
           </div>
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-1 font-mono text-xs">
-            <div><dt className="text-[var(--theme-text-muted)]">TOTAL ENTRIES</dt><dd className="text-lg text-[var(--theme-secondary)]">{formatCount(totalGameCount)}</dd></div>
-            <div><dt className="text-[var(--theme-text-muted)]">FAVORITES</dt><dd className="text-lg text-[var(--theme-tertiary)]">{formatCount(favoriteCount)}</dd></div>
-          </dl>
         </div>
       )}
 
       {isC64 && (
-        <div className="grid gap-3 md:grid-cols-[1fr_auto]">
-          <div className="border-4 border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] p-4">
-            <p className="text-xs uppercase text-[var(--theme-text-muted)]">CURRENTLY VIEWING</p>
-            <p className="theme-cursor-blink text-lg font-bold text-[var(--theme-primary)]">DATABASE_ROOT/GAMES/INDEX_A</p>
-          </div>
-          <div className="border-4 border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] px-5 py-3 font-mono">
-            <p className="text-xs uppercase text-[var(--theme-text-muted)]">TOTAL ENTRIES</p>
-            <p className="text-2xl text-[var(--theme-text)]">{formatCount(totalGameCount)}</p>
+        <div className="sticky top-0 z-30 bg-[var(--theme-background)]/95 py-2 backdrop-blur-sm" data-testid="c64-currently-viewing-container">
+          <div className="grid gap-3 md:grid-cols-[1fr_auto]">
+            <div className="border-4 border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] p-4">
+              <p className="text-xs uppercase text-[var(--theme-text-muted)] font-mono">CURRENTLY VIEWING</p>
+              <p className="theme-cursor-blink text-lg font-bold text-[var(--theme-primary)] font-mono">
+                {getC64ViewingPath(alphabetLabel, searchInput)}
+              </p>
+            </div>
+            <div className="border-4 border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] px-5 py-3 font-mono">
+              <p className="text-xs uppercase text-[var(--theme-text-muted)]">TOTAL ENTRIES</p>
+              <p className="text-2xl text-[var(--theme-text)]">{formatCount(totalGameCount)}</p>
+            </div>
           </div>
         </div>
       )}
 
       {isCyberpunk && (
-        <div className="flex items-center justify-between border-b border-[var(--theme-outline-variant)] pb-2 font-mono text-[10px] uppercase tracking-widest">
-          <span className="text-[var(--theme-secondary)]">PATH: ROOT / GAMES / ALL_ENTRIES</span>
-          <span className="text-[var(--theme-text-muted)]">VIEW: LIST_DETAIL</span>
+        <div className="sticky top-0 z-30 bg-[var(--theme-outline-variant)] px-3 py-2 shadow-md" data-testid="cyberpunk-currently-viewing-container">
+          <div className="flex items-center justify-between font-mono text-[20px] font-black uppercase tracking-widest text-black">
+            <span data-testid="cyberpunk-currently-viewing-path">
+              {getCyberpunkViewingPath(alphabetLabel, searchInput)}
+            </span>
+            <span data-testid="cyberpunk-eddies-count">
+              EDDIES_ {formatCount(totalGameCount ?? games.length)}
+            </span>
+          </div>
         </div>
       )}
 

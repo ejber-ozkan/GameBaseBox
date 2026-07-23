@@ -236,7 +236,7 @@ export function PathsSettingsTab({
     );
   };
   return (
-    <div className="flex h-full flex-col justify-between gap-4">
+    <div className="flex flex-col justify-start gap-4">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Left Column: Folders */}
         <div className="flex flex-col gap-4">

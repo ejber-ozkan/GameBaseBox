@@ -40,4 +40,31 @@ describe('LibraryHeader', () => {
 
     expect(screen.getByTestId('c64-search-cursor').classList).toContain('animate-[cursor-blink_1s_steps(1,end)_infinite]');
   });
+
+  it('renders random game button next to total games count and calls onSelectRandomGame on click', () => {
+    const onSelectRandomGame = vi.fn();
+    render(
+      <LibraryHeader
+        activePlatformId="c64"
+        filters={{}}
+        genres={[]}
+        onExit={vi.fn()}
+        onFiltersChange={vi.fn()}
+        onOpenSettings={vi.fn()}
+        onPlatformSelect={vi.fn()}
+        onSearchChange={vi.fn()}
+        onViewModeChange={vi.fn()}
+        searchInput=""
+        subGenres={[]}
+        totalGameCount={100}
+        viewMode="grid"
+        onSelectRandomGame={onSelectRandomGame}
+      />,
+    );
+
+    const randomBtn = screen.getByTestId('random-game-button');
+    expect(randomBtn).toBeTruthy();
+    randomBtn.click();
+    expect(onSelectRandomGame).toHaveBeenCalledOnce();
+  });
 });

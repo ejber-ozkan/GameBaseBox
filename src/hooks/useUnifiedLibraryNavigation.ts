@@ -73,6 +73,7 @@ export interface UseUnifiedLibraryNavigationProps {
   scrollNavigation?: boolean;
   recentlyPlayedIds?: string[];
   onFocusSearchInput?: () => void;
+  onSelectRandomGame?: () => void;
 }
 
 export function useUnifiedLibraryNavigation({
@@ -116,6 +117,7 @@ export function useUnifiedLibraryNavigation({
   scrollNavigation = true,
   recentlyPlayedIds = [],
   onFocusSearchInput,
+  onSelectRandomGame,
 }: UseUnifiedLibraryNavigationProps) {
   const [sectionJumpDirection, setSectionJumpDirection] = useState<SectionJumpDirection>(null);
 
@@ -565,6 +567,9 @@ export function useUnifiedLibraryNavigation({
         }
         if (button === 'X') setViewMode((previous) => (previous === 'grid' ? 'list' : 'grid'));
         if (button === 'START') setViewMode('settings');
+        if (button === 'SELECT' || button === 'RT') {
+          if (onSelectRandomGame) onSelectRandomGame();
+        }
         if (button === 'B') {
           if (selectedGame) handleGameSelect(null); // back out of detail
         }
@@ -631,6 +636,9 @@ export function useUnifiedLibraryNavigation({
           }
         }
         if (button === 'Y') handleKeyDown({ key: 'F' });
+        if (button === 'SELECT' || button === 'RT') {
+          if (onSelectRandomGame) onSelectRandomGame();
+        }
         if (button === 'START' && onShowSettings) onShowSettings();
         if (button === 'B') {
           if (document.activeElement?.tagName === 'INPUT') {

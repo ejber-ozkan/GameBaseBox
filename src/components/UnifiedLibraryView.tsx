@@ -6,7 +6,7 @@ import type { PlatformId } from '../types/platform';
 import type { Settings } from '../contexts/SettingsContext';
 import { useFavorites } from '../hooks/useFavorites';
 import { useInputMode } from '../hooks/useInputMode';
-import { type GameFilters, exitApp } from '../lib/tauri-bridge';
+import { type GameFilters, exitApp, getDbGameCount, getDbGames } from '../lib/tauri-bridge';
 import type { LibraryViewMode } from '../hooks/useLibraryBrowserState';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -40,6 +40,7 @@ import { CyberpunkCrtGrid } from './library/CyberpunkCrtGrid';
 import { useUnifiedLibraryNavigation } from '../hooks/useUnifiedLibraryNavigation';
 import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '../lib/library-backgrounds';
 import { playRotatingUiSoundEffect, playUiSoundEffect, playUiSoundEffectAndWait } from '../lib/ui-sound-effects';
+import { getC64ViewingPath } from '../lib/c64-viewing-path';
 
 export interface BigBoxSessionState {
   activeHeaderItemIndex: number;
@@ -378,6 +379,57 @@ export function UnifiedLibraryView({
     onFiltersChange(nextFilters);
   }, [filters, isSubGenrePickerOpen, onFiltersChange]);
 
+  const handleSelectRandomGame = useCallback(() => {
+    void (async () => {
+      const platformId = settings.activePlatformId || 'c64';
+      const activeCount = settings.isFullscreen
+        ? (bigboxTotalGameCount > 0 ? bigboxTotalGameCount : await getDbGameCount(filters, platformId))
+        : (listGameCount ?? (await getDbGameCount(filters, platformId)));
+
+      if (!activeCount || activeCount <= 0) return;
+
+      const randomOffset = Math.floor(Math.random() * activeCount);
+      const randomGames = await getDbGames(1, randomOffset, filters, platformId);
+      const randomGame = randomGames[0];
+      if (!randomGame) return;
+
+      if (settings.isFullscreen) {
+        const targetRailIndex = navigationRails.findIndex((r) =>
+          r.games.some((g) => g.id === randomGame.id)
+        );
+        if (targetRailIndex >= 0) {
+          const targetRail = navigationRails[targetRailIndex];
+          const gameIndex = targetRail.games.findIndex((g) => g.id === randomGame.id);
+          setActiveRailIndex(targetRailIndex);
+          setRailFocusIndices((prev) => ({ ...prev, [targetRail.id]: Math.max(0, gameIndex) }));
+        } else {
+          handleSelectGame(randomGame);
+        }
+      } else {
+        const existingIndex = games.findIndex((g) => g.id === randomGame.id);
+        if (existingIndex >= 0) {
+          setFocusedIndex(existingIndex);
+        } else {
+          handleSelectGame(randomGame);
+        }
+      }
+
+      void playUiSoundEffect('menu-move-1', 0.4);
+    })();
+  }, [
+    bigboxTotalGameCount,
+    filters,
+    games,
+    handleSelectGame,
+    listGameCount,
+    navigationRails,
+    setActiveRailIndex,
+    setFocusedIndex,
+    setRailFocusIndices,
+    settings.activePlatformId,
+    settings.isFullscreen,
+  ]);
+
   // Bind the Unified library navigation state and focus logic
   const {
     focusHeader,
@@ -442,6 +494,7 @@ export function UnifiedLibraryView({
         (input as HTMLElement).focus();
       }
     },
+    onSelectRandomGame: handleSelectRandomGame,
   });
 
   const { scrollContainerRef, headerRef } = useBigBoxScrollSync({
@@ -511,6 +564,7 @@ export function UnifiedLibraryView({
             onSearchFocus={focusSearch}
             onSetHeaderFocus={focusHeader}
             onShowSettings={() => setViewMode('settings')}
+            onSelectRandomGame={handleSelectRandomGame}
             searchInput={searchInput}
             totalGameCount={bigboxTotalGameCount}
             visibleSubGenres={visibleSubGenres}
@@ -572,6 +626,8 @@ export function UnifiedLibraryView({
                 totalGameCount={bigboxTotalGameCount}
                 favoriteCount={favorites.length}
                 themeId={theme.id}
+                alphabetLabel={filters.letter}
+                searchInput={searchInput}
               />
             </div>
           ) : (
@@ -612,6 +668,8 @@ export function UnifiedLibraryView({
                     onSelectGame={handleSelectGame}
                     recentGames={c64RecentGames}
                     toggleFavorite={toggleFavorite}
+                    searchInput={searchInput}
+                    totalGameCount={bigboxTotalGameCount}
                   />
                 ) : (
                   <CyberpunkCrtGrid
@@ -722,6 +780,7 @@ export function UnifiedLibraryView({
         activePlatformId={settings.activePlatformId}
         totalGameCount={listGameCount}
         viewMode={viewMode}
+        onSelectRandomGame={handleSelectRandomGame}
       />
 
       <div data-library-scroll-container className="no-scrollbar relative z-10 flex-1 overflow-y-auto overflow-x-hidden pl-8 pr-4">
@@ -754,6 +813,8 @@ export function UnifiedLibraryView({
                 onSelectGame={handleSelectGame}
                 recentGames={recentGames}
                 toggleFavorite={toggleFavorite}
+                searchInput={searchInput}
+                totalGameCount={listGameCount}
               />
             ) : (
               <CyberpunkCrtGrid
@@ -854,6 +915,8 @@ export function UnifiedLibraryView({
               totalGameCount={listGameCount}
               favoriteCount={favorites.length}
               themeId={theme.id}
+              alphabetLabel={filters.letter}
+              searchInput={searchInput}
             />
           </>
         )}

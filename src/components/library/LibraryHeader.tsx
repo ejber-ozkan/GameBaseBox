@@ -22,6 +22,7 @@ interface LibraryHeaderProps {
   activePlatformId: PlatformId;
   totalGameCount?: number;
   viewMode: LibraryViewMode;
+  onSelectRandomGame?: () => void;
 }
 
 export function LibraryHeader({
@@ -38,6 +39,7 @@ export function LibraryHeader({
   activePlatformId,
   totalGameCount,
   viewMode,
+  onSelectRandomGame,
 }: LibraryHeaderProps) {
   const [isSubGenrePickerOpen, setIsSubGenrePickerOpen] = useState(false);
   const isC64Edition = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'c64-edition';
@@ -64,8 +66,23 @@ export function LibraryHeader({
           <div className="flex items-center gap-3">
             <PlatformSwitcher activePlatformId={activePlatformId} onPlatformSelect={onPlatformSelect} />
             {totalGameCount !== undefined ? (
-              <div className="whitespace-nowrap rounded-lg border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-[var(--theme-text-muted)]">
-                {new Intl.NumberFormat('en-GB').format(totalGameCount)} Games
+              <div className="flex items-center gap-2">
+                <div className="whitespace-nowrap rounded-lg border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-[var(--theme-text-muted)]">
+                  {new Intl.NumberFormat('en-GB').format(totalGameCount)} Games
+                </div>
+                {onSelectRandomGame && (
+                  <button
+                    onClick={onSelectRandomGame}
+                    title="Random Game (Select / R)"
+                    aria-label="Select random game"
+                    data-testid="random-game-button"
+                    className={`flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] text-sm font-bold text-[var(--theme-primary)] transition-all hover:scale-105 hover:border-[var(--theme-primary)] hover:bg-[var(--theme-primary-container)] hover:text-[var(--theme-text)] hover:shadow-[0_0_12px_var(--theme-primary)] ${
+                      isC64Edition ? 'font-mono border-2' : ''
+                    }`}
+                  >
+                    🎲
+                  </button>
+                )}
               </div>
             ) : null}
           </div>

@@ -59,7 +59,7 @@ describe('ListView', () => {
 
   it.each([
     ['arcade-void', 'ACTIVE PLATFORM'],
-    ['c64-edition', 'DATABASE_ROOT/GAMES/INDEX_A'],
+    ['c64-edition', 'LIST INDEX_ALL'],
     ['cyberpunk-crt', 'SYSTEM_DIAGNOSTICS'],
   ])('uses the %s list presenter while retaining the shared game data contract', (themeId, presenterLabel) => {
     document.documentElement.setAttribute('data-theme', themeId);
@@ -96,14 +96,25 @@ describe('ListView', () => {
     expect(getAllByText('NOT_AVAILABLE')).toHaveLength(3);
   });
 
-  it('updates its presenter when the persisted theme selection changes', () => {
+  it('updates its presenter when the persisted theme selection changes and reflects alphabetLabel/searchInput', () => {
     document.documentElement.setAttribute('data-theme', 'arcade-void');
-    const { getByText, rerender } = render(
-      <ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} themeId="arcade-void" />,
+    const { getByText, getByTestId, rerender } = render(
+      <ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} themeId="arcade-void" alphabetLabel="M" searchInput="mario" />,
     );
 
-    rerender(<ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} themeId="c64-edition" />);
+    expect(getByTestId('arcade-void-currently-viewing-container').classList).toContain('sticky');
+    expect(getByTestId('arcade-void-currently-viewing-path').textContent).toBe('LIST INDEX_M SEARCH: MARIO');
 
-    expect(getByText('DATABASE_ROOT/GAMES/INDEX_A')).toBeTruthy();
+    rerender(<ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} themeId="c64-edition" alphabetLabel="M" searchInput="mario" />);
+
+    expect(getByText('LIST INDEX_M SEARCH: MARIO')).toBeTruthy();
+
+    rerender(<ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} themeId="cyberpunk-crt" alphabetLabel="M" searchInput="mario" totalGameCount={42891} />);
+
+    expect(getByTestId('cyberpunk-currently-viewing-container').classList).toContain('sticky');
+    expect(getByTestId('cyberpunk-currently-viewing-container').classList).toContain('bg-[var(--theme-outline-variant)]');
+    expect(getByTestId('cyberpunk-currently-viewing-path').textContent).toBe('LIST_ INDEX_M SEARCH: MARIO');
+    expect(getByTestId('cyberpunk-eddies-count').textContent).toBe('EDDIES_ 42,891');
   });
 });
+

@@ -17,7 +17,7 @@ export function DisplaySettingsTab({
   const { theme } = useTheme();
 
   return (
-    <div className="flex h-full flex-col justify-between gap-4">
+    <div className="flex flex-col justify-start gap-4">
       {/* Card 1: Fullscreen Mode */}
       <div className={`settings-card p-5 ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme-xl border'} border-theme-outline-variant bg-theme-surface/30 ${isFocused(0) ? 'settings-card-focused' : ''}`}>
         <label className="group flex cursor-pointer items-center justify-between">

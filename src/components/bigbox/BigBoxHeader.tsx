@@ -23,9 +23,16 @@ interface BigBoxHeaderProps {
   onPlatformSelect: (platformId: PlatformId) => void;
   onJumpToRail: (railId: string) => void;
   onSearchChange: (value: string) => void;
+  onExit: () => void;
+  onFiltersChange: (filters: GameFilters) => void;
+  onOpenSubGenrePicker: () => void;
+  onPlatformSelect: (platformId: PlatformId) => void;
+  onJumpToRail: (railId: string) => void;
+  onSearchChange: (value: string) => void;
   onSearchFocus: () => void;
   onSetHeaderFocus: (row: number, index: number) => void;
   onShowSettings: () => void;
+  onSelectRandomGame?: () => void;
   searchInput: string;
   totalGameCount: number;
   visibleSubGenres: string[];
@@ -50,6 +57,7 @@ export function BigBoxHeader({
   onSearchFocus,
   onSetHeaderFocus,
   onShowSettings,
+  onSelectRandomGame,
   searchInput,
   totalGameCount,
   visibleSubGenres,
@@ -112,7 +120,7 @@ export function BigBoxHeader({
           <div className="mx-1 h-8 w-px bg-[var(--theme-outline-variant)]"></div>
 
           {showPlatformSwitcher ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <PlatformSwitcher
                 activePlatformId={activePlatformId}
                 isFocused={platformFocused}
@@ -121,8 +129,23 @@ export function BigBoxHeader({
                 onMouseEnter={() => onSetHeaderFocus(0, 1)}
                 onPlatformSelect={onPlatformSelect}
               />
-              <div className={`shrink-0 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.2em] ${headerLabelClass}`}>
-                {totalGameCount} {isFiltered ? 'GAMES FOUND' : 'GAMES AVAILABLE'}
+              <div className="flex items-center gap-2">
+                <div className={`shrink-0 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.2em] ${headerLabelClass}`}>
+                  {totalGameCount} {isFiltered ? 'GAMES FOUND' : 'GAMES AVAILABLE'}
+                </div>
+                {onSelectRandomGame && (
+                  <button
+                    onClick={onSelectRandomGame}
+                    title="Random Game (Select / R)"
+                    aria-label="Select random game"
+                    data-testid="random-game-button-bigbox"
+                    className={`flex h-7 w-7 items-center justify-center rounded-lg border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] text-xs font-bold text-[var(--theme-primary)] transition-all hover:scale-105 hover:border-[var(--theme-primary)] hover:bg-[var(--theme-primary-container)] hover:text-[var(--theme-text)] hover:shadow-[0_0_12px_var(--theme-primary)] ${
+                      isC64Edition ? 'font-mono border-2' : ''
+                    }`}
+                  >
+                    🎲
+                  </button>
+                )}
               </div>
             </div>
           ) : null}

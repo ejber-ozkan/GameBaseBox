@@ -236,4 +236,23 @@ describe('C64EditionGrid', () => {
 
     expect(onEndReached).toHaveBeenCalledOnce();
   });
+
+  it('does not render the sticky viewing panel in grid view (scoped to list view)', () => {
+    render(
+      <C64EditionGrid
+        alphabetLabel="M"
+        searchInput="mario"
+        totalGameCount={1234}
+        games={[mockGames[0]]}
+        favoriteGames={[]}
+        isFavorite={() => false}
+        onSelectGame={vi.fn()}
+        recentGames={[]}
+        classicGames={[]}
+        toggleFavorite={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByTestId('c64-currently-viewing-container')).toBeNull();
+  });
 });
