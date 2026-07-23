@@ -419,5 +419,23 @@ describe('SettingsView platform emulator settings', () => {
     expect(screen.queryByText(/Fullscreen Mode/)).toBeNull();
     expect(screen.getByText(/Application Theme/)).toBeTruthy();
   });
+
+  test('shows C64 raster lines toggle only when C64 Edition theme is active', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentTheme = c64Theme;
+
+    renderSettings();
+
+    expect(screen.getByText(/C64 Background Raster Lines/)).toBeTruthy();
+  });
+
+  test('hides C64 raster lines toggle when non-C64 Edition theme is active', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentTheme = mockTheme;
+
+    renderSettings();
+
+    expect(screen.queryByText(/C64 Background Raster Lines/)).toBeNull();
+  });
 });
 

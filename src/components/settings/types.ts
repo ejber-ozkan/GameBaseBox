@@ -106,6 +106,7 @@ export type EditableSettings = Pick<
   | 'mouseHoverSelection'
   | 'scrollNavigation'
   | 'menuSoundEffects'
+  | 'c64RasterLines'
   | 'bigBoxAnimateVertical'
   | 'activePlatformId'
   | 'platformSettings'
@@ -135,6 +136,7 @@ export function getEditableSettings(settings: Settings): EditableSettings {
     mouseHoverSelection: settings.mouseHoverSelection,
     scrollNavigation: settings.scrollNavigation,
     menuSoundEffects: settings.menuSoundEffects,
+    c64RasterLines: settings.c64RasterLines ?? true,
     bigBoxAnimateVertical: settings.bigBoxAnimateVertical,
     activePlatformId: settings.activePlatformId,
     platformSettings: settings.platformSettings,

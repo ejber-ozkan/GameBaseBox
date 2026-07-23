@@ -4,7 +4,7 @@ import { getGameExtras, launchEmulator } from '../../lib/tauri-bridge';
 import { useSettings } from '../../contexts/SettingsContext';
 import { cleanMetadataValue, getGameStudios } from '../../lib/game-display';
 import type { Extra, Game } from '../../types/game';
-import { buildLaunchRequest } from '../../lib/platform-launch';
+import { buildLaunchRequest, buildPlatformAssetPath } from '../../lib/platform-launch';
 import type { PlatformId } from '../../types/platform';
 import { groupExtras } from '../../lib/extras';
 import { isLaunchableExtra } from '../../lib/extras';
@@ -15,6 +15,7 @@ import { MusicianPhoto } from '../MusicianPhoto';
 import { MusicPlayer } from '../MusicPlayer';
 import { StatusRow } from '../StatusRow';
 import { PlayButton } from '../themes/PlayButton';
+import { WasmPlayer } from '../WasmPlayer';
 import { DetailGameTitle } from './DetailGameTitle';
 import { DetailTitleBanner } from './DetailTitleBanner';
 import type { DetailFullscreenRequest, DetailLayoutProps } from '../DetailView';
@@ -506,10 +507,24 @@ export function UnifiedDetailLayout({
     (value) => !heroMeta.some((chip) => chip.toLowerCase() === value.toLowerCase()),
   );
 
+  const [showWasm, setShowWasm] = useState(false);
+
   const selectVersion = useCallback((versionId: string) => {
     setSelectedVersionId(versionId);
     persistSelectedVersion(game.id, versionId);
   }, [game.id]);
+
+  const handlePlayWeb = useCallback(() => {
+    const romRelativePath = selectedVersion?.relativePath || game.filename || game.gameFilename || '';
+    if (!romRelativePath) return;
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('game-launch'));
+    }
+
+    markAsPlayed(game.id.toString());
+    setShowWasm(true);
+  }, [game, selectedVersion, markAsPlayed]);
 
   const handleLaunchVersion = useCallback(async (version: LaunchVersionOption) => {
     if (!version.relativePath) return;
@@ -848,7 +863,7 @@ export function UnifiedDetailLayout({
               )}
               {/* Hidden plays in default render DOM to link correctly */}
               <div style={{ display: 'none' }}>
-                <button id="play-browser-btn-hidden" onClick={() => handleLaunchVersion(selectedVersion)} />
+                <button id="play-browser-btn-hidden" onClick={handlePlayWeb} />
               </div>
             </div>
 
@@ -1549,7 +1564,7 @@ export function UnifiedDetailLayout({
         backgroundColor: isC64 ? 'transparent' : 'var(--theme-background)',
       }}
     >
-      {isC64 && <C64ShaderBackground />}
+      {isC64 && settings.c64RasterLines !== false && <C64ShaderBackground />}
       {/* Mesh lines for Arcade void, scanlines for Cyberpunk/others */}
       {isArcade && (
         <div
@@ -2605,6 +2620,17 @@ export function UnifiedDetailLayout({
           {detailLayout.debugLabel}
         </div>
       ) : null}
+
+      {showWasm && (
+        <WasmPlayer
+          romPath={buildPlatformAssetPath(
+            settings,
+            selectedVersion?.source ?? 'roms',
+            selectedVersion?.relativePath || game.filename || game.gameFilename || ''
+          )}
+          onClose={() => setShowWasm(false)}
+        />
+      )}
     </div>
   );
 }

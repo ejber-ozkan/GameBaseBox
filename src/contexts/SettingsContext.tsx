@@ -47,6 +47,7 @@ export interface Settings {
   mouseHoverSelection: boolean;
   scrollNavigation: boolean;
   menuSoundEffects: boolean;
+  c64RasterLines: boolean;
   bigBoxAnimateVertical: boolean;
   confirmFullscreenExit: boolean;
   lastBigBoxRailId: string | null;
@@ -110,6 +111,7 @@ const defaultSettings: Settings = {
   mouseHoverSelection: true,
   scrollNavigation: true,
   menuSoundEffects: true,
+  c64RasterLines: true,
   bigBoxAnimateVertical: true,
   confirmFullscreenExit: true,
   lastBigBoxRailId: null,

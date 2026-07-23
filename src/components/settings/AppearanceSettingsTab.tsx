@@ -17,7 +17,7 @@ export function AppearanceSettingsTab({
   const { theme, setTheme, availableThemes } = useTheme();
 
   return (
-    <div className="flex h-full flex-col justify-between gap-4">
+    <div className="flex flex-col justify-start gap-4">
       {/* Theme Picker */}
       <div className={`settings-card p-5 ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme-xl border'} border-theme-outline-variant bg-theme-surface/30 ${[0, 1, 2].some(isFocused) ? 'settings-card-focused' : ''}`}>
         <div className="text-xs font-bold uppercase tracking-[0.22em] text-theme-primary">Application Theme</div>
@@ -79,6 +79,28 @@ export function AppearanceSettingsTab({
           />
         </label>
       </div>
+
+      {/* Card 4: C64 Raster Lines Toggle (only when C64 Edition theme is selected) */}
+      {theme.id === 'c64-edition' && (
+        <div className={`settings-card p-5 ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme-xl border'} border-theme-outline-variant bg-theme-surface/30 ${isFocused(4) ? 'settings-card-focused' : ''}`}>
+          <label className="group flex cursor-pointer items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-theme-text">📺 C64 Background Raster Lines</div>
+              <div className="mt-1 max-w-xl text-[10px] text-theme-text-muted leading-relaxed">
+                Show animated background &apos;raster&apos; loading colour lines when C64 Edition theme is active.
+              </div>
+            </div>
+            <ThemedToggle
+              label="C64 Background Raster Lines"
+              checked={draft.c64RasterLines ?? true}
+              onChange={() => setField('c64RasterLines', !(draft.c64RasterLines ?? true))}
+              onMouseEnter={() => isMouseMode && onMouseFocus(4)}
+              focusClassName="focus-idx-4"
+              focused={isFocused(4)}
+            />
+          </label>
+        </div>
+      )}
     </div>
   );
 }

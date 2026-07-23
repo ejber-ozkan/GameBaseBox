@@ -17,7 +17,7 @@ export function MediaSettingsTab({
   const { theme } = useTheme();
 
   return (
-    <div className="flex h-full flex-col justify-start gap-6">
+    <div className="flex flex-col justify-start gap-4">
       {/* Title */}
       <div className="text-xs font-bold uppercase tracking-widest text-theme-text-muted font-mono">
         Screenshot & Media Gallery
