@@ -308,4 +308,44 @@ describe('DatabaseSetupView', () => {
     expect(screen.getByPlaceholderText('Select Music folder')).toBeTruthy();
     expect(screen.queryByPlaceholderText('Select Photos folder')).toBeNull();
   });
+
+  it('displays warning dialog when Build Database is pressed without a Games folder', () => {
+    const onImport = vi.fn();
+    const emptyGamesFolders: PlatformFolderSettings = {
+      ...vic20Folders,
+      gamesPath: '',
+    };
+
+    renderWithProviders(
+      <DatabaseSetupView
+        dbPath="vic20"
+        error={null}
+        folderSettings={emptyGamesFolders}
+        importResult={null}
+        isImporting={false}
+        mdbPath="E:/VIC20/Commodore VIC-20.mdb"
+        onBrowse={vi.fn()}
+        onBrowseFolder={vi.fn()}
+        onFolderChange={vi.fn()}
+        onImport={onImport}
+        platformName="Commodore VIC-20"
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Build Database' }));
+
+    expect(onImport).not.toHaveBeenCalled();
+    expect(screen.getByText('No Games Folder Selected')).toBeTruthy();
+    expect(screen.getByText(/no games will be launchable/)).toBeTruthy();
+
+    // Click Go Back
+    fireEvent.click(screen.getByRole('button', { name: /Go Back/ }));
+    expect(screen.queryByText('No Games Folder Selected')).toBeNull();
+    expect(onImport).not.toHaveBeenCalled();
+
+    // Open again and click Proceed Anyway
+    fireEvent.click(screen.getByRole('button', { name: 'Build Database' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Proceed Anyway' }));
+    expect(onImport).toHaveBeenCalledOnce();
+  });
 });

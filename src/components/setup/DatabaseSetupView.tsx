@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import type { PlatformFolderSettings } from '@/types/platform';
@@ -92,6 +92,26 @@ export function DatabaseSetupView({
     }
   }, [selectedPlatformId, setTheme, theme.id]);
 
+  const [showGamesWarning, setShowGamesWarning] = useState(false);
+
+  const handleBuildDatabaseClick = () => {
+    const gamesPath = folderSettings?.gamesPath;
+    if (!gamesPath || gamesPath.trim() === '') {
+      setShowGamesWarning(true);
+    } else {
+      onImport();
+    }
+  };
+
+  const handleProceedWarning = () => {
+    setShowGamesWarning(false);
+    onImport();
+  };
+
+  const handleGoBackWarning = () => {
+    setShowGamesWarning(false);
+  };
+
   const allFolderKeys: RequiredPlatformFolderKey[] = [
     'extrasPath',
     'gamesPath',
@@ -109,7 +129,7 @@ export function DatabaseSetupView({
   const showPlatformPicker = platformOptions.length > 1 && selectedPlatformId && onPlatformSelect;
 
   return (
-    <main className="min-h-screen bg-theme-background px-6 py-10 text-theme-text font-sans transition-colors duration-250 flex items-center justify-center">
+    <main className="min-h-screen bg-theme-background px-6 py-10 text-theme-text font-sans transition-colors duration-250 flex items-center justify-center relative">
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl w-full items-center justify-center">
         <div 
           className={`w-full max-w-4xl p-8 md:p-12 transition-all duration-250 ${
@@ -210,7 +230,7 @@ export function DatabaseSetupView({
                 </button>
                 <button
                   type="button"
-                  onClick={onImport}
+                  onClick={handleBuildDatabaseClick}
                   disabled={isImporting || !mdbPath}
                   className="rounded-theme-md border border-theme-secondary bg-theme-secondary/20 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-theme-text transition-all hover:bg-theme-secondary/30 disabled:cursor-not-allowed disabled:opacity-45"
                   style={{
@@ -338,6 +358,53 @@ export function DatabaseSetupView({
           </div>
         </div>
       </div>
+
+      {showGamesWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div
+            className={`w-full max-w-md p-6 md:p-8 transition-all duration-250 ${
+              theme.effects.steppedBorders
+                ? 'border-4 border-amber-500 bg-theme-surface rounded-theme-xl'
+                : 'theme-panel rounded-theme-xl border border-amber-500/40 shadow-[0_25px_80px_rgba(0,0,0,0.8)]'
+            }`}
+            style={{
+              backgroundColor: theme.id === 'c64-edition' ? theme.colors.primaryContainer : undefined,
+            }}
+          >
+            <div className="flex items-center gap-3 text-amber-400 font-black uppercase text-xs tracking-[0.2em] mb-2">
+              <svg className="w-5 h-5 fill-current shrink-0" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span>Folder Warning</span>
+            </div>
+
+            <h2 className="text-xl font-black text-theme-text mt-1">
+              No Games Folder Selected
+            </h2>
+
+            <p className="mt-4 text-sm leading-7 text-theme-text-muted">
+              You haven&apos;t selected a <span className="font-bold text-theme-text">Games</span> folder for <span className="font-bold text-theme-primary">{platformName}</span>. Without a Games folder, you will be able to search and browse the database metadata, but <span className="font-bold text-amber-400">no games will be launchable</span>!
+            </p>
+
+            <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
+              <button
+                type="button"
+                onClick={handleGoBackWarning}
+                className="rounded-theme-md border border-theme-primary bg-theme-primary px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-theme-background transition-all hover:opacity-90"
+              >
+                Go Back &amp; Add Games Folder
+              </button>
+              <button
+                type="button"
+                onClick={handleProceedWarning}
+                className="rounded-theme-md border border-theme-outline/30 bg-theme-surface/50 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted hover:text-theme-text transition-all hover:bg-theme-surface"
+              >
+                Proceed Anyway
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
