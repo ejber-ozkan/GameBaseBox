@@ -10,14 +10,8 @@ describe('platform manifest', () => {
     expect(normalizePlatformManifestId('Commodore VIC-20')).toBe('vic20');
   });
 
-  test('defines Atari 800 extras as an import requirement', () => {
-    expect(getRequiredPlatformFolderKeys('atari800')).toEqual([
-      'gamesPath',
-      'musicPath',
-      'photosPath',
-      'screenshotsPath',
-      'extrasPath',
-    ]);
+  test('returns empty required folder keys array when all folder selections are optional', () => {
+    expect(getRequiredPlatformFolderKeys('atari800')).toEqual([]);
   });
 
   test('makes the desktop launch providers explicit per platform', () => {

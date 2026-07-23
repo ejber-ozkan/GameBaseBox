@@ -92,7 +92,20 @@ export function DatabaseSetupView({
     }
   }, [selectedPlatformId, setTheme, theme.id]);
 
-  const hasRequiredFolders = requiredFolderKeys.length > 0 && folderSettings;
+  const allFolderKeys: RequiredPlatformFolderKey[] = [
+    'extrasPath',
+    'gamesPath',
+    'screenshotsPath',
+    'musicPath',
+    'photosPath',
+  ];
+  const displayFolderKeys =
+    requiredFolderKeys && requiredFolderKeys.length > 0
+      ? requiredFolderKeys
+      : folderSettings
+      ? allFolderKeys.filter((key) => key in folderSettings && folderSettings[key] !== undefined)
+      : [];
+  const hasFoldersToDisplay = displayFolderKeys.length > 0 && folderSettings;
   const showPlatformPicker = platformOptions.length > 1 && selectedPlatformId && onPlatformSelect;
 
   return (
@@ -168,15 +181,15 @@ export function DatabaseSetupView({
           <div className="grid gap-6 lg:grid-cols-[1.25fr_0.9fr]">
             <section 
               className="p-6 border border-theme-outline/20 bg-theme-surface/10 rounded-theme-lg"
-              style={{
-                borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
-              }}
+              style={{ borderWidth: theme.effects.steppedBorders ? '2px' : '1px' }}
             >
               <div className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
                 Source File
               </div>
               <div className="border border-theme-outline/20 bg-theme-surface/30 p-4 rounded-theme-md">
-                <div className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">Selected MDB</div>
+                <div className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">
+                  Selected MDB
+                </div>
                 <div className="mt-2 break-all text-sm leading-7 text-theme-text font-bold">
                   {mdbPath || 'No MDB selected yet'}
                 </div>
@@ -189,7 +202,8 @@ export function DatabaseSetupView({
                   disabled={isImporting}
                   className="rounded-theme-md border border-theme-primary bg-theme-primary/10 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-theme-primary transition-all hover:bg-theme-primary/20 disabled:cursor-not-allowed disabled:opacity-45"
                   style={{
-                    borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
+                    borderWidth: theme.effects.steppedBorders ? '2px' : '1px',
+                    borderColor: theme.colors.primary
                   }}
                 >
                   Choose MDB
@@ -242,12 +256,12 @@ export function DatabaseSetupView({
                 </div>
               ) : null}
 
-              {hasRequiredFolders ? (
+              {hasFoldersToDisplay ? (
                 <div className="mt-7 space-y-4">
                   <div className="text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
-                    Platform Folders
+                    Platform Folders (Optional)
                   </div>
-                  {requiredFolderKeys.map((folderKey) => (
+                  {displayFolderKeys.map((folderKey) => (
                     <label key={folderKey} className="block">
                       <span className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">
                         {folderLabels[folderKey]}
@@ -255,7 +269,7 @@ export function DatabaseSetupView({
                       <div className="mt-2 flex gap-3">
                         <input
                           type="text"
-                          value={folderSettings[folderKey]}
+                          value={folderSettings[folderKey] || ''}
                           onChange={(event) => onFolderChange?.(folderKey, event.target.value)}
                           disabled={isImporting}
                           className="min-w-0 flex-1 rounded-theme-md border border-theme-outline/20 bg-theme-surface/30 px-4 py-3 text-sm text-theme-text outline-none transition-all placeholder:text-theme-text-muted/40 focus:border-theme-primary disabled:cursor-not-allowed disabled:opacity-45"
