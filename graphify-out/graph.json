@@ -66,7 +66,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "package",
-      "community": 66,
+      "community": 30,
       "norm_label": "package.json"
     },
     {
@@ -76,7 +76,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "package_name",
-      "community": 66,
+      "community": 30,
       "norm_label": "name"
     },
     {
@@ -86,7 +86,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "package_version",
-      "community": 66,
+      "community": 30,
       "norm_label": "version"
     },
     {
@@ -96,7 +96,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "package_private",
-      "community": 66,
+      "community": 30,
       "norm_label": "private"
     },
     {
@@ -286,7 +286,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "package_engines",
-      "community": 66,
+      "community": 30,
       "norm_label": "engines"
     },
     {
@@ -296,7 +296,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "package_engines_node",
-      "community": 66,
+      "community": 30,
       "norm_label": "node"
     },
     {
@@ -306,7 +306,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "package_overrides",
-      "community": 66,
+      "community": 30,
       "norm_label": "overrides"
     },
     {
@@ -316,7 +316,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "package_overrides_esbuild",
-      "community": 66,
+      "community": 30,
       "norm_label": "esbuild"
     },
     {
@@ -326,7 +326,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "package_overrides_postcss",
-      "community": 66,
+      "community": 30,
       "norm_label": "postcss"
     },
     {
@@ -4016,20 +4016,20 @@
       "norm_label": "validate_platform_import_request()"
     },
     {
-      "label": "required_folder()",
+      "label": "folder_by_type()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L174",
+      "source_location": "L176",
       "_origin": "ast",
-      "id": "commands_setup_required_folder",
+      "id": "commands_setup_folder_by_type",
       "community": 6,
-      "norm_label": "required_folder()"
+      "norm_label": "folder_by_type()"
     },
     {
       "label": "PlatformFolderSettings",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L174",
+      "source_location": "L176",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_platformfoldersettings",
       "community": 6,
@@ -4039,7 +4039,7 @@
       "label": "validate_existing_folder()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L189",
+      "source_location": "L191",
       "_origin": "ast",
       "id": "commands_setup_validate_existing_folder",
       "community": 6,
@@ -4049,7 +4049,7 @@
       "label": "reject_obvious_wrong_platform_mdb()",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L202",
+      "source_location": "L204",
       "_origin": "ast",
       "id": "commands_setup_reject_obvious_wrong_platform_mdb",
       "community": 6,
@@ -4059,7 +4059,7 @@
       "label": "Path",
       "file_type": "code",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L202",
+      "source_location": "L204",
       "_origin": "ast",
       "id": "src_tauri_src_commands_setup_rs_path",
       "community": 6,
@@ -5379,7 +5379,7 @@
       "label": "rebuild_search_index()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L648",
+      "source_location": "L656",
       "_origin": "ast",
       "id": "src_database_rebuild_search_index",
       "community": 4,
@@ -5389,7 +5389,7 @@
       "label": "ensure_query_support_objects()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L654",
+      "source_location": "L662",
       "_origin": "ast",
       "id": "src_database_ensure_query_support_objects",
       "community": 4,
@@ -5399,7 +5399,7 @@
       "label": "init_database()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L664",
+      "source_location": "L672",
       "_origin": "ast",
       "id": "src_database_init_database",
       "community": 4,
@@ -5409,7 +5409,7 @@
       "label": "is_database_ready()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L671",
+      "source_location": "L679",
       "_origin": "ast",
       "id": "src_database_is_database_ready",
       "community": 4,
@@ -5419,7 +5419,7 @@
       "label": "validate_identifier()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L690",
+      "source_location": "L698",
       "_origin": "ast",
       "id": "src_database_validate_identifier",
       "community": 4,
@@ -5429,7 +5429,7 @@
       "label": "sanitize_identifier()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L702",
+      "source_location": "L710",
       "_origin": "ast",
       "id": "src_database_sanitize_identifier",
       "community": 4,
@@ -5439,7 +5439,7 @@
       "label": "quote_identifier()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L714",
+      "source_location": "L722",
       "_origin": "ast",
       "id": "src_database_quote_identifier",
       "community": 4,
@@ -5449,7 +5449,7 @@
       "label": "list_csv_files()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L719",
+      "source_location": "L727",
       "_origin": "ast",
       "id": "src_database_list_csv_files",
       "community": 4,
@@ -5459,7 +5459,7 @@
       "label": "Path",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L719",
+      "source_location": "L727",
       "_origin": "ast",
       "id": "src_tauri_src_database_rs_path",
       "community": 4,
@@ -5469,7 +5469,7 @@
       "label": "import_single_csv_table()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L729",
+      "source_location": "L737",
       "_origin": "ast",
       "id": "src_database_import_single_csv_table",
       "community": 4,
@@ -5479,7 +5479,7 @@
       "label": "normalize_record_values()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L806",
+      "source_location": "L814",
       "_origin": "ast",
       "id": "src_database_normalize_record_values",
       "community": 4,
@@ -5489,7 +5489,7 @@
       "label": "read_csv_record()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L812",
+      "source_location": "L820",
       "_origin": "ast",
       "id": "src_database_read_csv_record",
       "community": 4,
@@ -5499,7 +5499,7 @@
       "label": "R",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L812",
+      "source_location": "L820",
       "_origin": "ast",
       "id": "r",
       "community": 4,
@@ -5509,7 +5509,7 @@
       "label": "csv_record_has_unclosed_quotes()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L840",
+      "source_location": "L848",
       "_origin": "ast",
       "id": "src_database_csv_record_has_unclosed_quotes",
       "community": 4,
@@ -5519,7 +5519,7 @@
       "label": "parse_csv_line()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L860",
+      "source_location": "L868",
       "_origin": "ast",
       "id": "src_database_parse_csv_line",
       "community": 4,
@@ -5529,7 +5529,7 @@
       "label": "create_export_directory()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L897",
+      "source_location": "L905",
       "_origin": "ast",
       "id": "src_database_create_export_directory",
       "community": 4,
@@ -5539,7 +5539,7 @@
       "label": "write_embedded_export_script()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L912",
+      "source_location": "L920",
       "_origin": "ast",
       "id": "src_database_write_embedded_export_script",
       "community": 4,
@@ -5549,7 +5549,7 @@
       "label": "powershell_32_path()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L918",
+      "source_location": "L926",
       "_origin": "ast",
       "id": "src_database_powershell_32_path",
       "community": 4,
@@ -5559,7 +5559,7 @@
       "label": "export_mdb_to_csv()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L928",
+      "source_location": "L936",
       "_origin": "ast",
       "id": "src_database_export_mdb_to_csv",
       "community": 4,
@@ -5569,7 +5569,7 @@
       "label": "sqlite_sidecar_paths()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L968",
+      "source_location": "L976",
       "_origin": "ast",
       "id": "src_database_sqlite_sidecar_paths",
       "community": 4,
@@ -5579,7 +5579,7 @@
       "label": "remove_sqlite_artifacts()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L977",
+      "source_location": "L985",
       "_origin": "ast",
       "id": "src_database_remove_sqlite_artifacts",
       "community": 4,
@@ -5589,7 +5589,7 @@
       "label": "create_import_temp_db_path()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L987",
+      "source_location": "L995",
       "_origin": "ast",
       "id": "src_database_create_import_temp_db_path",
       "community": 4,
@@ -5599,7 +5599,7 @@
       "label": "table_exists_in_schema()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L999",
+      "source_location": "L1007",
       "_origin": "ast",
       "id": "src_database_table_exists_in_schema",
       "community": 4,
@@ -5609,7 +5609,7 @@
       "label": "importable_table_names()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1017",
+      "source_location": "L1025",
       "_origin": "ast",
       "id": "src_database_importable_table_names",
       "community": 4,
@@ -5619,7 +5619,7 @@
       "label": "ensure_schema_table_platform_column()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1042",
+      "source_location": "L1050",
       "_origin": "ast",
       "id": "src_database_ensure_schema_table_platform_column",
       "community": 4,
@@ -5629,7 +5629,7 @@
       "label": "ensure_imported_table_columns()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1072",
+      "source_location": "L1080",
       "_origin": "ast",
       "id": "src_database_ensure_imported_table_columns",
       "community": 4,
@@ -5639,7 +5639,7 @@
       "label": "ensure_live_table_matches_import()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1117",
+      "source_location": "L1125",
       "_origin": "ast",
       "id": "src_database_ensure_live_table_matches_import",
       "community": 4,
@@ -5649,7 +5649,7 @@
       "label": "merge_imported_table()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1154",
+      "source_location": "L1162",
       "_origin": "ast",
       "id": "src_database_merge_imported_table",
       "community": 4,
@@ -5659,7 +5659,7 @@
       "label": "platform_display_name()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1198",
+      "source_location": "L1206",
       "_origin": "ast",
       "id": "src_database_platform_display_name",
       "community": 4,
@@ -5669,7 +5669,7 @@
       "label": "refresh_platform_libraries()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1210",
+      "source_location": "L1218",
       "_origin": "ast",
       "id": "src_database_refresh_platform_libraries",
       "community": 4,
@@ -5679,7 +5679,7 @@
       "label": "merge_imported_database()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1269",
+      "source_location": "L1277",
       "_origin": "ast",
       "id": "src_database_merge_imported_database",
       "community": 4,
@@ -5689,7 +5689,7 @@
       "label": "import_csv_directory_to_sqlite()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1316",
+      "source_location": "L1324",
       "_origin": "ast",
       "id": "src_database_import_csv_directory_to_sqlite",
       "community": 4,
@@ -5699,7 +5699,7 @@
       "label": "import_csv_directory_to_sqlite_with_cancellation()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1323",
+      "source_location": "L1331",
       "_origin": "ast",
       "id": "src_database_import_csv_directory_to_sqlite_with_cancellation",
       "community": 4,
@@ -5709,7 +5709,7 @@
       "label": "F",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1323",
+      "source_location": "L1331",
       "_origin": "ast",
       "id": "src_tauri_src_database_rs_f",
       "community": 4,
@@ -5719,7 +5719,7 @@
       "label": "cleanup_export_directory()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1380",
+      "source_location": "L1388",
       "_origin": "ast",
       "id": "src_database_cleanup_export_directory",
       "community": 4,
@@ -5729,7 +5729,7 @@
       "label": "import_mdb_to_sqlite()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1384",
+      "source_location": "L1392",
       "_origin": "ast",
       "id": "src_database_import_mdb_to_sqlite",
       "community": 4,
@@ -5739,7 +5739,7 @@
       "label": "DatabaseImportResult",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1384",
+      "source_location": "L1392",
       "_origin": "ast",
       "id": "src_tauri_src_database_rs_databaseimportresult",
       "community": 4,
@@ -5749,7 +5749,7 @@
       "label": "import_mdb_to_sqlite_for_platform()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1388",
+      "source_location": "L1396",
       "_origin": "ast",
       "id": "src_database_import_mdb_to_sqlite_for_platform",
       "community": 4,
@@ -5759,7 +5759,7 @@
       "label": "import_mdb_to_sqlite_for_platform_with_cancellation()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1395",
+      "source_location": "L1403",
       "_origin": "ast",
       "id": "src_database_import_mdb_to_sqlite_for_platform_with_cancellation",
       "community": 4,
@@ -5769,7 +5769,7 @@
       "label": "init_secure_table()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1436",
+      "source_location": "L1444",
       "_origin": "ast",
       "id": "src_database_init_secure_table",
       "community": 4,
@@ -5779,7 +5779,7 @@
       "label": "test_init_secure_table()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1448",
+      "source_location": "L1456",
       "_origin": "ast",
       "id": "src_database_test_init_secure_table",
       "community": 4,
@@ -5789,7 +5789,7 @@
       "label": "test_get_db_path_prefers_environment_variable()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1464",
+      "source_location": "L1472",
       "_origin": "ast",
       "id": "src_database_test_get_db_path_prefers_environment_variable",
       "community": 4,
@@ -5799,7 +5799,7 @@
       "label": "test_platform_db_helpers_default_to_c64_and_validate_platforms()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1470",
+      "source_location": "L1478",
       "_origin": "ast",
       "id": "src_database_test_platform_db_helpers_default_to_c64_and_validate_platforms",
       "community": 4,
@@ -5809,7 +5809,7 @@
       "label": "test_get_db_path_falls_back_to_local_files()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1493",
+      "source_location": "L1501",
       "_origin": "ast",
       "id": "src_database_test_get_db_path_falls_back_to_local_files",
       "community": 4,
@@ -5819,7 +5819,7 @@
       "label": "test_init_database_creates_cover_index_and_query_indexes()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1521",
+      "source_location": "L1529",
       "_origin": "ast",
       "id": "src_database_test_init_database_creates_cover_index_and_query_indexes",
       "community": 4,
@@ -5829,7 +5829,7 @@
       "label": "test_init_database_refreshes_stale_support_indexes()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1602",
+      "source_location": "L1610",
       "_origin": "ast",
       "id": "src_database_test_init_database_refreshes_stale_support_indexes",
       "community": 4,
@@ -5839,7 +5839,7 @@
       "label": "test_is_database_ready_returns_false_without_base_tables()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1707",
+      "source_location": "L1715",
       "_origin": "ast",
       "id": "src_database_test_is_database_ready_returns_false_without_base_tables",
       "community": 4,
@@ -5849,7 +5849,7 @@
       "label": "test_import_csv_directory_to_sqlite_builds_ready_database()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1716",
+      "source_location": "L1724",
       "_origin": "ast",
       "id": "src_database_test_import_csv_directory_to_sqlite_builds_ready_database",
       "community": 4,
@@ -5859,7 +5859,7 @@
       "label": "test_import_csv_directory_to_sqlite_preserves_requested_platform_scope()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1756",
+      "source_location": "L1764",
       "_origin": "ast",
       "id": "src_database_test_import_csv_directory_to_sqlite_preserves_requested_platform_scope",
       "community": 4,
@@ -5869,7 +5869,7 @@
       "label": "test_import_csv_directory_to_sqlite_merges_platforms_without_replacing_existing_library()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1814",
+      "source_location": "L1822",
       "_origin": "ast",
       "id": "src_database_test_import_csv_directory_to_sqlite_merges_platforms_without_replacing_existing_library",
       "community": 4,
@@ -5879,7 +5879,7 @@
       "label": "test_parse_csv_line_handles_quotes_and_commas()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1926",
+      "source_location": "L1934",
       "_origin": "ast",
       "id": "src_database_test_parse_csv_line_handles_quotes_and_commas",
       "community": 4,
@@ -5889,7 +5889,7 @@
       "label": "test_import_single_csv_table_preserves_multiline_quoted_fields()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1939",
+      "source_location": "L1947",
       "_origin": "ast",
       "id": "src_database_test_import_single_csv_table_preserves_multiline_quoted_fields",
       "community": 4,
@@ -5899,7 +5899,7 @@
       "label": "test_import_single_csv_table_sanitizes_table_name()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L1976",
+      "source_location": "L1984",
       "_origin": "ast",
       "id": "src_database_test_import_single_csv_table_sanitizes_table_name",
       "community": 4,
@@ -5909,7 +5909,7 @@
       "label": "test_import_csv_directory_to_sqlite_is_atomic_on_failure()",
       "file_type": "code",
       "source_file": "src-tauri/src/database.rs",
-      "source_location": "L2012",
+      "source_location": "L2020",
       "_origin": "ast",
       "id": "src_database_test_import_csv_directory_to_sqlite_is_atomic_on_failure",
       "community": 4,
@@ -6946,10 +6946,20 @@
       "norm_label": "getrequiredplatformfolderkeys()"
     },
     {
-      "label": "LibraryApp()",
+      "label": "ImportedLibraryContent()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
       "source_location": "L47",
+      "_origin": "ast",
+      "id": "app_page_importedlibrarycontent",
+      "community": 2,
+      "norm_label": "importedlibrarycontent()"
+    },
+    {
+      "label": "LibraryApp()",
+      "file_type": "code",
+      "source_file": "src/app/page.tsx",
+      "source_location": "L220",
       "_origin": "ast",
       "id": "app_page_libraryapp",
       "community": 2,
@@ -6959,7 +6969,7 @@
       "label": "Home()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L296",
+      "source_location": "L299",
       "_origin": "ast",
       "id": "app_page_home",
       "community": 2,
@@ -7032,7 +7042,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_bigboxtilemedia",
-      "community": 37,
+      "community": 38,
       "norm_label": "bigboxtilemedia.tsx"
     },
     {
@@ -7042,7 +7052,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_bigboxtilemediaprops",
-      "community": 37,
+      "community": 38,
       "norm_label": "bigboxtilemediaprops"
     },
     {
@@ -7052,7 +7062,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_screenshot_cache",
-      "community": 37,
+      "community": 38,
       "norm_label": "screenshot_cache"
     },
     {
@@ -7062,7 +7072,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_cover_cache",
-      "community": 37,
+      "community": 38,
       "norm_label": "cover_cache"
     },
     {
@@ -7072,7 +7082,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_normalizepath",
-      "community": 37,
+      "community": 38,
       "norm_label": "normalizepath()"
     },
     {
@@ -7082,7 +7092,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "components_bigboxtilemedia_getscreenshoturls",
-      "community": 37,
+      "community": 38,
       "norm_label": "getscreenshoturls()"
     },
     {
@@ -7132,7 +7142,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "components_bigboxview_bigboxsessionstate",
-      "community": 2,
+      "community": 34,
       "norm_label": "bigboxsessionstate"
     },
     {
@@ -7142,7 +7152,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "components_bigboxview_getc64navigationrails",
-      "community": 80,
+      "community": 34,
       "norm_label": "getc64navigationrails()"
     },
     {
@@ -7232,7 +7242,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_detailview",
-      "community": 34,
+      "community": 23,
       "norm_label": "detailview.tsx"
     },
     {
@@ -7242,7 +7252,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "components_detailview_detailviewprops",
-      "community": 22,
+      "community": 23,
       "norm_label": "detailviewprops"
     },
     {
@@ -7252,7 +7262,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "components_detailview_detaillayoutprops",
-      "community": 71,
+      "community": 38,
       "norm_label": "detaillayoutprops"
     },
     {
@@ -7262,7 +7272,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_detailview_detailfullscreenmedia",
-      "community": 34,
+      "community": 23,
       "norm_label": "detailfullscreenmedia"
     },
     {
@@ -7282,7 +7292,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "components_detailview_detailcache",
-      "community": 34,
+      "community": 23,
       "norm_label": "detailcache"
     },
     {
@@ -7292,7 +7302,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "components_detailview_cleardetailcache",
-      "community": 34,
+      "community": 23,
       "norm_label": "cleardetailcache()"
     },
     {
@@ -7302,7 +7312,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "components_detailview_getcachedgamedetail",
-      "community": 89,
+      "community": 23,
       "norm_label": "getcachedgamedetail()"
     },
     {
@@ -7312,7 +7322,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "components_detailview_detailview",
-      "community": 34,
+      "community": 23,
       "norm_label": "detailview()"
     },
     {
@@ -7322,7 +7332,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_extrasdetail",
-      "community": 60,
+      "community": 13,
       "norm_label": "extrasdetail.tsx"
     },
     {
@@ -7332,7 +7342,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasdetailprops",
-      "community": 60,
+      "community": 13,
       "norm_label": "extrasdetailprops"
     },
     {
@@ -7342,7 +7352,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_extrasdetail_extrasbigscreennavigation",
-      "community": 60,
+      "community": 13,
       "norm_label": "extrasbigscreennavigation"
     },
     {
@@ -7362,7 +7372,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_gridview",
-      "community": 80,
+      "community": 2,
       "norm_label": "gridview.tsx"
     },
     {
@@ -7372,7 +7382,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_gridview_gridviewprops",
-      "community": 80,
+      "community": 2,
       "norm_label": "gridviewprops"
     },
     {
@@ -7382,7 +7392,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_gridview_gridview",
-      "community": 80,
+      "community": 2,
       "norm_label": "gridview()"
     },
     {
@@ -7499,7 +7509,7 @@
       "label": "ListViewProps",
       "file_type": "code",
       "source_file": "src/components/ListView.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "_origin": "ast",
       "id": "components_listview_listviewprops",
       "community": 80,
@@ -7509,7 +7519,7 @@
       "label": "formatCount()",
       "file_type": "code",
       "source_file": "src/components/ListView.tsx",
-      "source_location": "L22",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "components_listview_formatcount",
       "community": 80,
@@ -7519,7 +7529,7 @@
       "label": "ListView()",
       "file_type": "code",
       "source_file": "src/components/ListView.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "components_listview_listview",
       "community": 80,
@@ -7532,7 +7542,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_musicplayer",
-      "community": 81,
+      "community": 71,
       "norm_label": "musicplayer.tsx"
     },
     {
@@ -7542,7 +7552,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_musicplayer_musicplayerprops",
-      "community": 81,
+      "community": 71,
       "norm_label": "musicplayerprops"
     },
     {
@@ -7552,7 +7562,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_musicplayer_musicplayer",
-      "community": 81,
+      "community": 71,
       "norm_label": "musicplayer()"
     },
     {
@@ -7582,7 +7592,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_musicianphoto_musicianphoto",
-      "community": 71,
+      "community": 0,
       "norm_label": "musicianphoto()"
     },
     {
@@ -7702,7 +7712,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_scrapebutton",
-      "community": 22,
+      "community": 80,
       "norm_label": "scrapebutton.tsx"
     },
     {
@@ -7712,7 +7722,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "components_scrapebutton_scrapebuttonprops",
-      "community": 22,
+      "community": 80,
       "norm_label": "scrapebuttonprops"
     },
     {
@@ -7722,7 +7732,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_scrapebutton_scrapebutton",
-      "community": 22,
+      "community": 80,
       "norm_label": "scrapebutton()"
     },
     {
@@ -7772,7 +7782,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_sidplayer",
-      "community": 81,
+      "community": 71,
       "norm_label": "sidplayer.tsx"
     },
     {
@@ -7782,7 +7792,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_sidplayer_sidplayerruntime",
-      "community": 81,
+      "community": 71,
       "norm_label": "sidplayerruntime"
     },
     {
@@ -7792,7 +7802,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_sidplayer_sidruntimeconstructor",
-      "community": 81,
+      "community": 71,
       "norm_label": "sidruntimeconstructor"
     },
     {
@@ -7802,7 +7812,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "components_sidplayer_window",
-      "community": 81,
+      "community": 71,
       "norm_label": "window"
     },
     {
@@ -7812,7 +7822,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "components_sidplayer_sidplayerprops",
-      "community": 81,
+      "community": 71,
       "norm_label": "sidplayerprops"
     },
     {
@@ -7822,7 +7832,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_sidplayer_sidplayer",
-      "community": 87,
+      "community": 71,
       "norm_label": "sidplayer()"
     },
     {
@@ -7862,7 +7872,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_subgenrepickermodal",
-      "community": 23,
+      "community": 34,
       "norm_label": "subgenrepickermodal.tsx"
     },
     {
@@ -7872,7 +7882,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodalprops",
-      "community": 23,
+      "community": 34,
       "norm_label": "subgenrepickermodalprops"
     },
     {
@@ -7882,7 +7892,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_subgenrepickermodal_subgenrepickermodal",
-      "community": 23,
+      "community": 34,
       "norm_label": "subgenrepickermodal()"
     },
     {
@@ -7922,7 +7932,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_uisoundruntime",
-      "community": 75,
+      "community": 9,
       "norm_label": "uisoundruntime.tsx"
     },
     {
@@ -7932,7 +7942,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_uisoundruntime_error_sounds",
-      "community": 75,
+      "community": 9,
       "norm_label": "error_sounds"
     },
     {
@@ -7942,7 +7952,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_uisoundruntime_uisoundruntime",
-      "community": 75,
+      "community": 9,
       "norm_label": "uisoundruntime()"
     },
     {
@@ -7952,7 +7962,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_unifiedlibraryview",
-      "community": 80,
+      "community": 34,
       "norm_label": "unifiedlibraryview.tsx"
     },
     {
@@ -7962,7 +7972,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "components_unifiedlibraryview_bigboxsessionstate",
-      "community": 80,
+      "community": 34,
       "norm_label": "bigboxsessionstate"
     },
     {
@@ -7976,10 +7986,20 @@
       "norm_label": "unifiedlibraryviewprops"
     },
     {
+      "label": "getGameLetter()",
+      "file_type": "code",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L90",
+      "_origin": "ast",
+      "id": "components_unifiedlibraryview_getgameletter",
+      "community": 34,
+      "norm_label": "getgameletter()"
+    },
+    {
       "label": "UnifiedLibraryView()",
       "file_type": "code",
       "source_file": "src/components/UnifiedLibraryView.tsx",
-      "source_location": "L89",
+      "source_location": "L99",
       "_origin": "ast",
       "id": "components_unifiedlibraryview_unifiedlibraryview",
       "community": 34,
@@ -7989,10 +8009,10 @@
       "label": "getVisibleSubGenresHelper()",
       "file_type": "code",
       "source_file": "src/components/UnifiedLibraryView.tsx",
-      "source_location": "L929",
+      "source_location": "L994",
       "_origin": "ast",
       "id": "components_unifiedlibraryview_getvisiblesubgenreshelper",
-      "community": 80,
+      "community": 34,
       "norm_label": "getvisiblesubgenreshelper()"
     },
     {
@@ -8002,7 +8022,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_wasmplayer",
-      "community": 60,
+      "community": 34,
       "norm_label": "wasmplayer.tsx"
     },
     {
@@ -8012,7 +8032,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_wasmplayer_wasmplayerprops",
-      "community": 60,
+      "community": 34,
       "norm_label": "wasmplayerprops"
     },
     {
@@ -8022,7 +8042,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_wasmplayer_wasmplayer",
-      "community": 60,
+      "community": 34,
       "norm_label": "wasmplayer()"
     },
     {
@@ -8102,7 +8122,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bigbox_bigboxfooter",
-      "community": 80,
+      "community": 34,
       "norm_label": "bigboxfooter.tsx"
     },
     {
@@ -8112,7 +8132,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "bigbox_bigboxfooter_bigboxfooter",
-      "community": 80,
+      "community": 34,
       "norm_label": "bigboxfooter()"
     },
     {
@@ -8142,7 +8162,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "bigbox_bigboxheader_bigboxheader",
-      "community": 22,
+      "community": 34,
       "norm_label": "bigboxheader()"
     },
     {
@@ -8592,7 +8612,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "extras_visualextrasbrowser",
-      "community": 23,
+      "community": 13,
       "norm_label": "visualextrasbrowser.tsx"
     },
     {
@@ -8602,7 +8622,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "extras_visualextrasbrowser_visualextrasbrowser",
-      "community": 23,
+      "community": 13,
       "norm_label": "visualextrasbrowser()"
     },
     {
@@ -8752,7 +8772,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "library_libraryheader_libraryheader",
-      "community": 80,
+      "community": 34,
       "norm_label": "libraryheader()"
     },
     {
@@ -8762,7 +8782,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "library_windowgamelistsection",
-      "community": 2,
+      "community": 80,
       "norm_label": "windowgamelistsection.tsx"
     },
     {
@@ -8772,7 +8792,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "library_windowgamelistsection_windowlibrarysection",
-      "community": 2,
+      "community": 80,
       "norm_label": "windowlibrarysection"
     },
     {
@@ -8782,7 +8802,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "library_windowgamelistsection_windowgamelistsectionprops",
-      "community": 2,
+      "community": 80,
       "norm_label": "windowgamelistsectionprops"
     },
     {
@@ -8792,7 +8812,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "library_windowgamelistsection_windowgamelistsection",
-      "community": 2,
+      "community": 80,
       "norm_label": "windowgamelistsection()"
     },
     {
@@ -8842,7 +8862,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "settings_aboutsettingstab",
-      "community": 57,
+      "community": 87,
       "norm_label": "aboutsettingstab.tsx"
     },
     {
@@ -8852,7 +8872,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "settings_aboutsettingstab_aboutsettingstabprops",
-      "community": 57,
+      "community": 87,
       "norm_label": "aboutsettingstabprops"
     },
     {
@@ -8922,7 +8942,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "settings_contentsettingstab_contentsettingstab",
-      "community": 57,
+      "community": 87,
       "norm_label": "contentsettingstab()"
     },
     {
@@ -9042,7 +9062,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "settings_pathssettingstab",
-      "community": 72,
+      "community": 87,
       "norm_label": "pathssettingstab.tsx"
     },
     {
@@ -9062,7 +9082,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "settings_pathssettingstab_pathrowprops",
-      "community": 72,
+      "community": 87,
       "norm_label": "pathrowprops"
     },
     {
@@ -9072,7 +9092,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "settings_pathssettingstab_pathrow",
-      "community": 72,
+      "community": 87,
       "norm_label": "pathrow()"
     },
     {
@@ -9092,7 +9112,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "settings_scraperssettingstab",
-      "community": 57,
+      "community": 87,
       "norm_label": "scraperssettingstab.tsx"
     },
     {
@@ -9152,7 +9172,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "settings_types",
-      "community": 57,
+      "community": 87,
       "norm_label": "types.ts"
     },
     {
@@ -9162,7 +9182,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "settings_types_settingstabid",
-      "community": 57,
+      "community": 87,
       "norm_label": "settingstabid"
     },
     {
@@ -9172,7 +9192,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "settings_types_settingstaboption",
-      "community": 57,
+      "community": 87,
       "norm_label": "settingstaboption"
     },
     {
@@ -9182,7 +9202,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "settings_types_static_settings_tabs",
-      "community": 57,
+      "community": 87,
       "norm_label": "static_settings_tabs"
     },
     {
@@ -9192,7 +9212,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "settings_types_getplatformpathstabid",
-      "community": 57,
+      "community": 87,
       "norm_label": "getplatformpathstabid()"
     },
     {
@@ -9212,7 +9232,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "settings_types_getsettingstabs",
-      "community": 57,
+      "community": 87,
       "norm_label": "getsettingstabs()"
     },
     {
@@ -9242,7 +9262,7 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "settings_types_geteditablesettings",
-      "community": 57,
+      "community": 87,
       "norm_label": "geteditablesettings()"
     },
     {
@@ -9312,7 +9332,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "setup_databasesetupview_databasesetupview",
-      "community": 87,
+      "community": 2,
       "norm_label": "databasesetupview()"
     },
     {
@@ -9422,7 +9442,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "window_windoweddetaillayout_windoweddetaillayoutprops",
-      "community": 71,
+      "community": 38,
       "norm_label": "windoweddetaillayoutprops"
     },
     {
@@ -9552,7 +9572,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "contexts_settingscontext_migrateplatformsettings",
-      "community": 72,
+      "community": 31,
       "norm_label": "migrateplatformsettings()"
     },
     {
@@ -9609,10 +9629,10 @@
       "label": "useSettings()",
       "file_type": "code",
       "source_file": "src/contexts/SettingsContext.tsx",
-      "source_location": "L619",
+      "source_location": "L626",
       "_origin": "ast",
       "id": "contexts_settingscontext_usesettings",
-      "community": 34,
+      "community": 2,
       "norm_label": "usesettings()"
     },
     {
@@ -9672,7 +9692,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "data_mockgames",
-      "community": 89,
+      "community": 96,
       "norm_label": "mockgames.ts"
     },
     {
@@ -9682,7 +9702,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "data_mockgames_mockgames",
-      "community": 89,
+      "community": 96,
       "norm_label": "mockgames"
     },
     {
@@ -9942,7 +9962,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation",
-      "community": 34,
+      "community": 23,
       "norm_label": "usedetailnavigation.ts"
     },
     {
@@ -9962,7 +9982,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_direction",
-      "community": 34,
+      "community": 23,
       "norm_label": "direction"
     },
     {
@@ -9972,7 +9992,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_navigationconfig",
-      "community": 34,
+      "community": 23,
       "norm_label": "navigationconfig"
     },
     {
@@ -9992,7 +10012,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_detailnavprops",
-      "community": 34,
+      "community": 23,
       "norm_label": "detailnavprops"
     },
     {
@@ -10002,7 +10022,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "hooks_usedetailnavigation_usedetailnavigation",
-      "community": 34,
+      "community": 23,
       "norm_label": "usedetailnavigation()"
     },
     {
@@ -10012,7 +10032,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usefavorites",
-      "community": 34,
+      "community": 2,
       "norm_label": "usefavorites.ts"
     },
     {
@@ -10022,7 +10042,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "hooks_usefavorites_loadfavorites",
-      "community": 34,
+      "community": 2,
       "norm_label": "loadfavorites()"
     },
     {
@@ -10032,7 +10052,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "hooks_usefavorites_usefavorites",
-      "community": 34,
+      "community": 2,
       "norm_label": "usefavorites()"
     },
     {
@@ -10042,7 +10062,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics",
-      "community": 38,
+      "community": 7,
       "norm_label": "usefullscreenlayoutmetrics.ts"
     },
     {
@@ -10052,7 +10072,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedfullscreendensity",
-      "community": 38,
+      "community": 7,
       "norm_label": "resolvedfullscreendensity"
     },
     {
@@ -10062,7 +10082,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_viewportsnapshot",
-      "community": 38,
+      "community": 7,
       "norm_label": "viewportsnapshot"
     },
     {
@@ -10082,7 +10102,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_default_viewport",
-      "community": 38,
+      "community": 7,
       "norm_label": "default_viewport"
     },
     {
@@ -10092,7 +10112,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_clamp",
-      "community": 38,
+      "community": 7,
       "norm_label": "clamp()"
     },
     {
@@ -10102,7 +10122,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_round",
-      "community": 38,
+      "community": 7,
       "norm_label": "round()"
     },
     {
@@ -10112,7 +10132,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_getviewportsnapshot",
-      "community": 38,
+      "community": 7,
       "norm_label": "getviewportsnapshot()"
     },
     {
@@ -10122,7 +10142,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_resolvedensitymode",
-      "community": 38,
+      "community": 7,
       "norm_label": "resolvedensitymode()"
     },
     {
@@ -10132,7 +10152,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "hooks_usefullscreenlayoutmetrics_buildfullscreenlayoutmetrics",
-      "community": 38,
+      "community": 7,
       "norm_label": "buildfullscreenlayoutmetrics()"
     },
     {
@@ -10282,7 +10302,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate_getlibraryrefreshtoken",
-      "community": 22,
+      "community": 2,
       "norm_label": "getlibraryrefreshtoken()"
     },
     {
@@ -10292,7 +10312,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "hooks_uselibrarybrowserstate_uselibrarybrowserstate",
-      "community": 22,
+      "community": 2,
       "norm_label": "uselibrarybrowserstate()"
     },
     {
@@ -10402,7 +10422,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usepopupopensound",
-      "community": 9,
+      "community": 23,
       "norm_label": "usepopupopensound.ts"
     },
     {
@@ -10412,7 +10432,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "hooks_usepopupopensound_popup_sounds",
-      "community": 9,
+      "community": 23,
       "norm_label": "popup_sounds"
     },
     {
@@ -10432,7 +10452,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl",
-      "community": 71,
+      "community": 37,
       "norm_label": "useresolvedboxarturl.ts"
     },
     {
@@ -10442,7 +10462,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_cover_art_url_cache",
-      "community": 71,
+      "community": 37,
       "norm_label": "cover_art_url_cache"
     },
     {
@@ -10452,7 +10472,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_normalizepath",
-      "community": 71,
+      "community": 37,
       "norm_label": "normalizepath()"
     },
     {
@@ -10472,7 +10492,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "hooks_useresolvedboxarturl_resolvedboxartgame",
-      "community": 71,
+      "community": 37,
       "norm_label": "resolvedboxartgame"
     },
     {
@@ -10552,7 +10572,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usewindowlibraryshelves",
-      "community": 22,
+      "community": 2,
       "norm_label": "usewindowlibraryshelves.ts"
     },
     {
@@ -10562,7 +10582,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "hooks_usewindowlibraryshelves_usewindowlibraryshelvesprops",
-      "community": 22,
+      "community": 2,
       "norm_label": "usewindowlibraryshelvesprops"
     },
     {
@@ -10594,6 +10614,16 @@
       "id": "lib_c64_viewing_path_getc64viewingpath",
       "community": 80,
       "norm_label": "getc64viewingpath()"
+    },
+    {
+      "label": "getCyberpunkViewingPath()",
+      "file_type": "code",
+      "source_file": "src/lib/c64-viewing-path.ts",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "lib_c64_viewing_path_getcyberpunkviewingpath",
+      "community": 80,
+      "norm_label": "getcyberpunkviewingpath()"
     },
     {
       "label": "detail-layout.ts",
@@ -10632,7 +10662,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "lib_detail_layout_detaillayoutspec",
-      "community": 38,
+      "community": 13,
       "norm_label": "detaillayoutspec"
     },
     {
@@ -10822,7 +10852,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "lib_extras_extragroup",
-      "community": 60,
+      "community": 13,
       "norm_label": "extragroup"
     },
     {
@@ -11082,7 +11112,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_library_backgrounds",
-      "community": 2,
+      "community": 34,
       "norm_label": "library-backgrounds.ts"
     },
     {
@@ -11092,7 +11122,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_library_backgrounds_libraryviewmode",
-      "community": 2,
+      "community": 34,
       "norm_label": "libraryviewmode"
     },
     {
@@ -11102,7 +11132,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "lib_library_backgrounds_platform_background_pools",
-      "community": 2,
+      "community": 34,
       "norm_label": "platform_background_pools"
     },
     {
@@ -11112,7 +11142,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "lib_library_backgrounds_background_pool",
-      "community": 2,
+      "community": 34,
       "norm_label": "background_pool"
     },
     {
@@ -11122,7 +11152,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "lib_library_backgrounds_getlibrarybackgroundforplatform",
-      "community": 2,
+      "community": 34,
       "norm_label": "getlibrarybackgroundforplatform()"
     },
     {
@@ -11132,7 +11162,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "lib_library_backgrounds_getlibrarybackgroundpoolforplatform",
-      "community": 2,
+      "community": 34,
       "norm_label": "getlibrarybackgroundpoolforplatform()"
     },
     {
@@ -11142,7 +11172,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "lib_library_backgrounds_getlibrarybackgroundpool",
-      "community": 2,
+      "community": 34,
       "norm_label": "getlibrarybackgroundpool()"
     },
     {
@@ -11152,7 +11182,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "lib_library_backgrounds_resolvelibrarybackground",
-      "community": 2,
+      "community": 34,
       "norm_label": "resolvelibrarybackground()"
     },
     {
@@ -11262,7 +11292,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_platform_capabilities",
-      "community": 72,
+      "community": 31,
       "norm_label": "platform-capabilities.ts"
     },
     {
@@ -11272,7 +11302,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_platform_capabilities_platform_emulator_profiles",
-      "community": 72,
+      "community": 60,
       "norm_label": "platform_emulator_profiles"
     },
     {
@@ -11282,7 +11312,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "lib_platform_capabilities_platform_profiles",
-      "community": 72,
+      "community": 87,
       "norm_label": "platform_profiles"
     },
     {
@@ -11302,7 +11332,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "lib_platform_capabilities_embedded_emulation_platform_ids",
-      "community": 72,
+      "community": 31,
       "norm_label": "embedded_emulation_platform_ids"
     },
     {
@@ -11312,7 +11342,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "lib_platform_capabilities_getplatformprofile",
-      "community": 72,
+      "community": 31,
       "norm_label": "getplatformprofile()"
     },
     {
@@ -11332,7 +11362,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "lib_platform_capabilities_isplatformid",
-      "community": 72,
+      "community": 31,
       "norm_label": "isplatformid()"
     },
     {
@@ -11342,7 +11372,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformlibrarystatus",
-      "community": 72,
+      "community": 31,
       "norm_label": "createdefaultplatformlibrarystatus()"
     },
     {
@@ -11352,7 +11382,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformfolders",
-      "community": 72,
+      "community": 31,
       "norm_label": "createdefaultplatformfolders()"
     },
     {
@@ -11362,7 +11392,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformnavigation",
-      "community": 72,
+      "community": 31,
       "norm_label": "createdefaultplatformnavigation()"
     },
     {
@@ -11372,7 +11402,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettings",
-      "community": 72,
+      "community": 31,
       "norm_label": "createdefaultplatformsettings()"
     },
     {
@@ -11382,7 +11412,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "lib_platform_capabilities_createdefaultplatformsettingsmap",
-      "community": 72,
+      "community": 31,
       "norm_label": "createdefaultplatformsettingsmap()"
     },
     {
@@ -11392,7 +11422,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasmusiccapability",
-      "community": 72,
+      "community": 31,
       "norm_label": "hasmusiccapability()"
     },
     {
@@ -11402,7 +11432,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasphotoscapability",
-      "community": 72,
+      "community": 31,
       "norm_label": "hasphotoscapability()"
     },
     {
@@ -11412,7 +11442,7 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasscreenshotscapability",
-      "community": 72,
+      "community": 31,
       "norm_label": "hasscreenshotscapability()"
     },
     {
@@ -11422,7 +11452,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasextrascapability",
-      "community": 72,
+      "community": 31,
       "norm_label": "hasextrascapability()"
     },
     {
@@ -11432,7 +11462,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "lib_platform_capabilities_hasvideoscapability",
-      "community": 72,
+      "community": 31,
       "norm_label": "hasvideoscapability()"
     },
     {
@@ -11462,7 +11492,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "lib_platform_launch_platformlaunchsettings",
-      "community": 22,
+      "community": 60,
       "norm_label": "platformlaunchsettings"
     },
     {
@@ -12232,7 +12262,7 @@
       "source_location": "L490",
       "_origin": "ast",
       "id": "lib_tauri_bridge_readfilebytes",
-      "community": 60,
+      "community": 37,
       "norm_label": "readfilebytes()"
     },
     {
@@ -12362,7 +12392,7 @@
       "source_location": "L685",
       "_origin": "ast",
       "id": "lib_tauri_bridge_exitapp",
-      "community": 17,
+      "community": 96,
       "norm_label": "exitapp()"
     },
     {
@@ -12442,7 +12472,7 @@
       "source_location": "L785",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getgameextras",
-      "community": 89,
+      "community": 96,
       "norm_label": "getgameextras()"
     },
     {
@@ -12462,7 +12492,7 @@
       "source_location": "L931",
       "_origin": "ast",
       "id": "lib_tauri_bridge_getdbgamedetail",
-      "community": 89,
+      "community": 96,
       "norm_label": "getdbgamedetail()"
     },
     {
@@ -12932,7 +12962,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "types_game",
-      "community": 89,
+      "community": 80,
       "norm_label": "game.ts"
     },
     {
@@ -12942,7 +12972,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "types_game_developer",
-      "community": 89,
+      "community": 80,
       "norm_label": "developer"
     },
     {
@@ -12952,7 +12982,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "types_game_publisher",
-      "community": 89,
+      "community": 80,
       "norm_label": "publisher"
     },
     {
@@ -12962,7 +12992,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "types_game_musician",
-      "community": 89,
+      "community": 80,
       "norm_label": "musician"
     },
     {
@@ -12972,7 +13002,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "types_game_extra",
-      "community": 60,
+      "community": 13,
       "norm_label": "extra"
     },
     {
@@ -12982,7 +13012,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "types_game_game",
-      "community": 22,
+      "community": 80,
       "norm_label": "game"
     },
     {
@@ -12992,7 +13022,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "types_game_gamedetail",
-      "community": 89,
+      "community": 80,
       "norm_label": "gamedetail"
     },
     {
@@ -13162,7 +13192,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils_sorting",
-      "community": 22,
+      "community": 80,
       "norm_label": "sorting.ts"
     },
     {
@@ -13172,7 +13202,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "utils_sorting_sortdirection",
-      "community": 22,
+      "community": 80,
       "norm_label": "sortdirection"
     },
     {
@@ -13182,7 +13212,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "utils_sorting_sortgames",
-      "community": 22,
+      "community": 80,
       "norm_label": "sortgames()"
     },
     {
@@ -25776,6 +25806,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/setup.rs",
+      "source_location": "L176",
+      "weight": 1.0,
+      "source": "commands_setup",
+      "target": "commands_setup_folder_by_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src-tauri/src/commands/setup.rs",
       "source_location": "L18",
       "weight": 1,
       "confidence_score": 1,
@@ -25851,16 +25891,6 @@
       "confidence_score": 1,
       "source": "commands_setup",
       "target": "commands_setup_request_platform_import_cancellation"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L174",
-      "weight": 1,
-      "confidence_score": 1,
-      "source": "commands_setup",
-      "target": "commands_setup_required_folder"
     },
     {
       "relation": "contains",
@@ -26029,17 +26059,6 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L174",
-      "weight": 1,
-      "context": "return_type",
-      "confidence_score": 1,
-      "source": "commands_setup_required_folder",
-      "target": "src_tauri_src_commands_setup_rs_result"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "src-tauri/src/commands/setup.rs",
       "source_location": "L102",
       "weight": 1,
       "context": "return_type",
@@ -26155,17 +26174,6 @@
       "context": "generic_arg",
       "confidence_score": 1,
       "source": "commands_setup_reject_obvious_wrong_platform_mdb",
-      "target": "src_tauri_src_commands_setup_rs_string"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L174",
-      "weight": 1,
-      "context": "generic_arg",
-      "confidence_score": 1,
-      "source": "commands_setup_required_folder",
       "target": "src_tauri_src_commands_setup_rs_string"
     },
     {
@@ -26470,22 +26478,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L92",
-      "weight": 1,
-      "confidence_score": 1,
+      "source_location": "L167",
+      "weight": 1.0,
       "source": "commands_setup_validate_platform_import_request",
-      "target": "commands_setup_reject_obvious_wrong_platform_mdb"
+      "target": "commands_setup_folder_by_type",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L167",
+      "source_location": "L92",
       "weight": 1,
       "confidence_score": 1,
       "source": "commands_setup_validate_platform_import_request",
-      "target": "commands_setup_required_folder"
+      "target": "commands_setup_reject_obvious_wrong_platform_mdb"
     },
     {
       "relation": "calls",
@@ -26579,12 +26587,12 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "src-tauri/src/commands/setup.rs",
-      "source_location": "L174",
-      "weight": 1,
+      "source_location": "L176",
+      "weight": 1.0,
       "context": "parameter_type",
-      "confidence_score": 1,
-      "source": "commands_setup_required_folder",
-      "target": "src_tauri_src_commands_setup_rs_platformfoldersettings"
+      "source": "commands_setup_folder_by_type",
+      "target": "src_tauri_src_commands_setup_rs_platformfoldersettings",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -35129,6 +35137,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.tsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "app_page",
+      "target": "app_page_importedlibrarycontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
       "source_location": "L37",
       "weight": 1,
       "confidence_score": 1,
@@ -35969,6 +35987,61 @@
       "confidence_score": 1,
       "source": "app_page_libraryapp",
       "target": "app_page_getrequiredplatformfolderkeys"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/page.tsx",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "app_page_importedlibrarycontent",
+      "target": "contexts_settingscontext_usesettings"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/page.tsx",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "app_page_importedlibrarycontent",
+      "target": "hooks_usefavorites_usefavorites"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/page.tsx",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "app_page_importedlibrarycontent",
+      "target": "hooks_useinputmode_useinputmode"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/page.tsx",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "app_page_importedlibrarycontent",
+      "target": "hooks_uselibrarybrowserstate_uselibrarybrowserstate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/page.tsx",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "app_page_importedlibrarycontent",
+      "target": "hooks_usewindowlibraryshelves_usewindowlibraryshelves"
     },
     {
       "relation": "calls",
@@ -39095,6 +39168,17 @@
       "target": "lib_c64_viewing_path_getc64viewingpath"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ListView.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_listview",
+      "target": "lib_c64_viewing_path_getcyberpunkviewingpath",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -39181,6 +39265,17 @@
       "weight": 1.0,
       "source": "components_listview_listview",
       "target": "lib_c64_viewing_path_getc64viewingpath"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/ListView.tsx",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "components_listview_listview",
+      "target": "lib_c64_viewing_path_getcyberpunkviewingpath"
     },
     {
       "relation": "calls",
@@ -40958,6 +41053,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/UnifiedLibraryView.tsx",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "components_unifiedlibraryview",
+      "target": "components_unifiedlibraryview_getgameletter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L863",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -41288,9 +41393,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_tauri_bridge_getdbgamecount",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_getdbgamecount"
     },
     {
       "relation": "imports",
@@ -41299,9 +41404,9 @@
       "source_file": "src/components/UnifiedLibraryView.tsx",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_unifiedlibraryview",
-      "target": "lib_tauri_bridge_getdbgames",
-      "confidence_score": 1.0
+      "target": "lib_tauri_bridge_getdbgames"
     },
     {
       "relation": "imports_from",
@@ -46547,6 +46652,17 @@
       "confidence": "EXTRACTED",
       "source_file": "src/contexts/SettingsContext.tsx",
       "source_location": "L4",
+      "weight": 1.0,
+      "source": "contexts_settingscontext",
+      "target": "lib_tauri_bridge_getsupportedplatforms",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/contexts/SettingsContext.tsx",
+      "source_location": "L4",
       "weight": 1,
       "confidence_score": 1,
       "source": "contexts_settingscontext",
@@ -49387,6 +49503,27 @@
       "confidence_score": 1.0,
       "source": "lib_c64_viewing_path",
       "target": "lib_c64_viewing_path_getc64viewingpath"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/c64-viewing-path.ts",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "lib_c64_viewing_path",
+      "target": "lib_c64_viewing_path_getcyberpunkviewingpath",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/c64-viewing-path.ts",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "lib_c64_viewing_path_getcyberpunkviewingpath",
+      "target": "lib_c64_viewing_path_getc64viewingpath",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -57819,5 +57956,5 @@
       "source_file": "GB64_Modern_Frontend_Requirements.md"
     }
   ],
-  "built_at_commit": "1409a3bb6b4b09b939891037d1223c2dedf7ae85"
+  "built_at_commit": "76bf384edcb9b04ba8410ad7a5eb5f29d736e871"
 }
