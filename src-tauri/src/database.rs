@@ -632,6 +632,14 @@ fn ensure_search_index(conn: &Connection) -> Result<(), String> {
     )
     .map_err(|e| e.to_string())?;
 
+    let index_count: i64 = conn
+        .query_row("SELECT COUNT(*) FROM GameSearchIndex", [], |row| row.get(0))
+        .unwrap_or(0);
+
+    if index_count > 0 {
+        return Ok(());
+    }
+
     conn.execute("DELETE FROM GameSearchIndex", [])
         .map_err(|e| e.to_string())?;
     conn.execute(FTS_INDEX_POPULATE_SQL, [])

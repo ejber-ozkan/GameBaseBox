@@ -84,16 +84,13 @@ export function DatabaseSetupView({
   const { settings } = useSettings();
   const { theme, setTheme } = useTheme();
 
-  // Temporarily apply the selected platform's theme on mount/dropdown change, and restore on unmount.
+  // Temporarily apply the selected platform's theme on mount/dropdown change.
   useEffect(() => {
     const setupThemeId = getThemeIdForPlatform(selectedPlatformId);
-    setTheme(setupThemeId, false);
-
-    return () => {
-      const globalThemeId = settings.themeId || 'arcade-void';
-      setTheme(globalThemeId, false);
-    };
-  }, [selectedPlatformId, setTheme, settings.themeId]);
+    if (theme.id !== setupThemeId) {
+      setTheme(setupThemeId, false);
+    }
+  }, [selectedPlatformId, setTheme, theme.id]);
 
   const hasRequiredFolders = requiredFolderKeys.length > 0 && folderSettings;
   const showPlatformPicker = platformOptions.length > 1 && selectedPlatformId && onPlatformSelect;

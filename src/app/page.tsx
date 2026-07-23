@@ -44,7 +44,7 @@ function getRequiredPlatformFolderKeys(platformId: keyof typeof PLATFORM_PROFILE
   return getManifestRequiredPlatformFolderKeys(platformId) as SetupFolderKey[];
 }
 
-function LibraryApp() {
+function ImportedLibraryContent() {
   const { settings, updateSettings, setActivePlatform } = useSettings();
   const { favorites } = useFavorites();
   const { onGamepadInput } = useInputMode();
@@ -80,15 +80,6 @@ function LibraryApp() {
     filters,
     recentlyPlayedIds: settings.recentlyPlayedIds,
     searchInput,
-  });
-  const activePlatform = PLATFORM_PROFILES[settings.activePlatformId];
-  const activePlatformSettings = settings.platformSettings[settings.activePlatformId];
-  const platformImport = usePlatformImport({
-    platformName: activePlatform.displayName,
-    platformId: settings.activePlatformId,
-    platformSettings: settings.platformSettings,
-    requiredFolderKeys: getRequiredPlatformFolderKeys(settings.activePlatformId),
-    updateSettings,
   });
 
   useEffect(() => {
@@ -138,73 +129,6 @@ function LibraryApp() {
     previousFullscreenRef.current = settings.isFullscreen;
   }, [settings.isFullscreen]);
 
-  const handleBrowsePlatformMdb = useCallback(async () => {
-    const selected = await openMdbFileDialog();
-    if (!selected) {
-      return;
-    }
-
-    platformImport.setMdbPath(selected);
-  }, [platformImport]);
-
-  const handlePlatformFolderChange = useCallback((
-    folderKey: SetupFolderKey,
-    value: string,
-  ) => {
-    platformImport.setFolder(folderKey, value);
-  }, [platformImport]);
-
-  const handleBrowsePlatformFolder = useCallback(async (
-    folderKey: SetupFolderKey,
-  ) => {
-    const selected = await openDirectoryDialog();
-    if (!selected) {
-      return;
-    }
-    handlePlatformFolderChange(folderKey, selected);
-  }, [handlePlatformFolderChange]);
-
-  const handlePlatformImport = useCallback(async () => {
-    await platformImport.importPlatform();
-  }, [platformImport]);
-
-  if (activePlatformSettings.library.importStatus !== 'imported') {
-    return (
-      <>
-        {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <DatabaseSetupView
-          dbPath={activePlatformSettings.library.sqliteScope}
-          error={platformImport.job.error ?? `${activePlatform.displayName} has not been imported yet.`}
-          folderSettings={activePlatformSettings.folders}
-          importProgress={platformImport.job.status === 'running' ? platformImport.job.progress : null}
-          importResult={platformImport.job.result}
-          isImporting={platformImport.job.status === 'running'}
-          mdbPath={activePlatformSettings.library.sourceMdbPath ?? ''}
-          platformAliases={getPlatformAliases(settings.activePlatformId)}
-          platformName={activePlatform.displayName}
-          platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
-            id: platform.id,
-            displayName: platform.displayName,
-            importStatus: settings.platformSettings[platform.id].library.importStatus,
-          }))}
-          requiredFolderKeys={getRequiredPlatformFolderKeys(settings.activePlatformId)}
-          selectedPlatformId={settings.activePlatformId}
-          onBrowse={handleBrowsePlatformMdb}
-          onBrowseFolder={handleBrowsePlatformFolder}
-          onCancelImport={() => void platformImport.cancelImport()}
-          onFolderChange={handlePlatformFolderChange}
-          onPlatformSelect={(platformId) => {
-            if (platformId in PLATFORM_PROFILES) {
-              setActivePlatform(platformId as keyof typeof PLATFORM_PROFILES);
-              platformImport.reset();
-            }
-          }}
-          onImport={handlePlatformImport}
-        />
-      </>
-    );
-  }
-
   const handleBackFromSettings = async () => {
     await playUiSoundEffectAndWait('close-detail-1', 0.52);
     setViewMode('grid');
@@ -223,10 +147,8 @@ function LibraryApp() {
           <SettingsView onBack={handleBackFromSettings} onOpenTigerHeli={openTigerHeliFromSettings} />
         </main>
       </>
-    )
+    );
   }
-
-
 
   if (selectedGame) {
     return (
@@ -293,6 +215,85 @@ function LibraryApp() {
   );
 }
 
+function LibraryApp() {
+  const { settings, updateSettings, setActivePlatform } = useSettings();
+  const activePlatform = PLATFORM_PROFILES[settings.activePlatformId];
+  const activePlatformSettings = settings.platformSettings[settings.activePlatformId];
+  const platformImport = usePlatformImport({
+    platformName: activePlatform.displayName,
+    platformId: settings.activePlatformId,
+    platformSettings: settings.platformSettings,
+    requiredFolderKeys: getRequiredPlatformFolderKeys(settings.activePlatformId),
+    updateSettings,
+  });
+
+  const handleBrowsePlatformMdb = useCallback(async () => {
+    const selected = await openMdbFileDialog();
+    if (!selected) {
+      return;
+    }
+
+    platformImport.setMdbPath(selected);
+  }, [platformImport]);
+
+  const handlePlatformFolderChange = useCallback((
+    folderKey: SetupFolderKey,
+    value: string,
+  ) => {
+    platformImport.setFolder(folderKey, value);
+  }, [platformImport]);
+
+  const handleBrowsePlatformFolder = useCallback(async (
+    folderKey: SetupFolderKey,
+  ) => {
+    const selected = await openDirectoryDialog();
+    if (!selected) {
+      return;
+    }
+    handlePlatformFolderChange(folderKey, selected);
+  }, [handlePlatformFolderChange]);
+
+  const handlePlatformImport = useCallback(async () => {
+    await platformImport.importPlatform();
+  }, [platformImport]);
+
+  if (activePlatformSettings.library.importStatus !== 'imported') {
+    return (
+      <DatabaseSetupView
+        dbPath={activePlatformSettings.library.sqliteScope}
+        error={platformImport.job.error ?? `${activePlatform.displayName} has not been imported yet.`}
+        folderSettings={activePlatformSettings.folders}
+        importProgress={platformImport.job.status === 'running' ? platformImport.job.progress : null}
+        importResult={platformImport.job.result}
+        isImporting={platformImport.job.status === 'running'}
+        mdbPath={activePlatformSettings.library.sourceMdbPath ?? ''}
+        platformAliases={getPlatformAliases(settings.activePlatformId)}
+        platformName={activePlatform.displayName}
+        platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
+          id: platform.id,
+          displayName: platform.displayName,
+          importStatus: settings.platformSettings[platform.id].library.importStatus,
+        }))}
+        requiredFolderKeys={getRequiredPlatformFolderKeys(settings.activePlatformId)}
+        selectedPlatformId={settings.activePlatformId}
+        onBrowse={handleBrowsePlatformMdb}
+        onBrowseFolder={handleBrowsePlatformFolder}
+        onCancelImport={() => void platformImport.cancelImport()}
+        onFolderChange={handlePlatformFolderChange}
+        onPlatformSelect={(platformId) => {
+          if (platformId in PLATFORM_PROFILES) {
+            setActivePlatform(platformId as keyof typeof PLATFORM_PROFILES);
+            platformImport.reset();
+          }
+        }}
+        onImport={handlePlatformImport}
+      />
+    );
+  }
+
+  return <ImportedLibraryContent />;
+}
+
 export default function Home() {
   const { settings, updateSettings, setActivePlatform } = useSettings();
   const [bootstrapStatus, setBootstrapStatus] = useState<{
@@ -301,24 +302,19 @@ export default function Home() {
     reason: string | null;
   } | null>(null);
   const [isCheckingSetup, setIsCheckingSetup] = useState(true);
-  const [setupPlatformId, setSetupPlatformId] = useState<PlatformId>(settings.activePlatformId);
-  const [setupPlatformSettings, setSetupPlatformSettings] = useState<Record<PlatformId, PlatformSettings>>(
-    settings.platformSettings,
-  );
   const [setupError, setSetupError] = useState<string | null>(null);
-  const activeSetupPlatform = PLATFORM_PROFILES[setupPlatformId];
-  const activeSetupPlatformSettings = setupPlatformSettings[setupPlatformId];
+
+  const activeSetupPlatform = PLATFORM_PROFILES[settings.activePlatformId];
+  const activeSetupPlatformSettings = settings.platformSettings[settings.activePlatformId];
   const setupPlatformImport = usePlatformImport({
     platformName: activeSetupPlatform.displayName,
-    platformId: setupPlatformId,
-    platformSettings: setupPlatformSettings,
-    requiredFolderKeys: getRequiredPlatformFolderKeys(setupPlatformId),
-    setPlatformSettings: setSetupPlatformSettings,
+    platformId: settings.activePlatformId,
+    platformSettings: settings.platformSettings,
+    requiredFolderKeys: getRequiredPlatformFolderKeys(settings.activePlatformId),
     updateSettings,
   });
 
   const refreshBootstrapStatus = useCallback(async () => {
-    setIsCheckingSetup(true);
     try {
       const status = await getDatabaseBootstrapStatus();
       setBootstrapStatus({
@@ -402,25 +398,23 @@ export default function Home() {
         importResult={setupPlatformImport.job.result}
         isImporting={setupPlatformImport.job.status === 'running'}
         mdbPath={activeSetupPlatformSettings.library.sourceMdbPath ?? ''}
-        platformAliases={getPlatformAliases(setupPlatformId)}
+        platformAliases={getPlatformAliases(settings.activePlatformId)}
         platformName={activeSetupPlatform.displayName}
         platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
           id: platform.id,
           displayName: platform.displayName,
-          importStatus: setupPlatformSettings[platform.id].library.importStatus,
+          importStatus: settings.platformSettings[platform.id].library.importStatus,
         }))}
         folderSettings={activeSetupPlatformSettings.folders}
-        requiredFolderKeys={getRequiredPlatformFolderKeys(setupPlatformId)}
-        selectedPlatformId={setupPlatformId}
+        requiredFolderKeys={getRequiredPlatformFolderKeys(settings.activePlatformId)}
+        selectedPlatformId={settings.activePlatformId}
         onBrowse={handleBrowseSetupMdb}
         onBrowseFolder={handleBrowseSetupFolder}
         onCancelImport={() => void setupPlatformImport.cancelImport()}
         onFolderChange={handleSetupFolderChange}
         onPlatformSelect={(platformId) => {
           if (platformId in PLATFORM_PROFILES) {
-            const nextPlatformId = platformId as PlatformId;
-            setSetupPlatformId(nextPlatformId);
-            setActivePlatform(nextPlatformId);
+            setActivePlatform(platformId as PlatformId);
             setSetupError(null);
             setupPlatformImport.reset();
           }

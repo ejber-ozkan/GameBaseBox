@@ -111,9 +111,18 @@ describe('Home first-run setup', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     isInsideSetupStateUpdater = false;
-    mockUpdateSettings.mockImplementation(() => {
+    mockUpdateSettings.mockImplementation((next: Partial<Settings>) => {
       if (isInsideSetupStateUpdater) {
         throw new Error('updateSettings called from inside setup state updater');
+      }
+      if (next) {
+        mockSettings = {
+          ...mockSettings,
+          ...next,
+          platformSettings: next.platformSettings
+            ? { ...mockSettings.platformSettings, ...next.platformSettings }
+            : mockSettings.platformSettings,
+        };
       }
     });
     mockSettings = {
