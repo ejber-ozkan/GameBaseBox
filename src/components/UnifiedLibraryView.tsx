@@ -65,6 +65,7 @@ interface UnifiedLibraryViewProps {
 
   // Windowed Data
   games: Game[];
+  setGames?: React.Dispatch<React.SetStateAction<Game[]>>;
   focusedIndex: number;
   setFocusedIndex: React.Dispatch<React.SetStateAction<number>>;
   loadNextPage: () => void;
@@ -86,6 +87,15 @@ interface UnifiedLibraryViewProps {
   onRequestExit?: (snapshot: { dontAskAgain: boolean; focusedGameId: string | null; railId: string | null }) => void;
 }
 
+function getGameLetter(name?: string): string {
+  if (!name) return '#';
+  const firstChar = name.trim().charAt(0).toUpperCase();
+  if (firstChar >= 'A' && firstChar <= 'Z') {
+    return firstChar;
+  }
+  return '#';
+}
+
 export function UnifiedLibraryView({
   settings,
   updateSettings,
@@ -98,6 +108,7 @@ export function UnifiedLibraryView({
   searchInput,
   onSearchChange,
   games,
+  setGames,
   focusedIndex,
   setFocusedIndex,
   loadNextPage,
@@ -394,37 +405,91 @@ export function UnifiedLibraryView({
       if (!randomGame) return;
 
       if (settings.isFullscreen) {
-        const targetRailIndex = navigationRails.findIndex((r) =>
+        let targetRailIndex = navigationRails.findIndex((r) =>
           r.games.some((g) => g.id === randomGame.id)
         );
-        if (targetRailIndex >= 0) {
-          const targetRail = navigationRails[targetRailIndex];
-          const gameIndex = targetRail.games.findIndex((g) => g.id === randomGame.id);
-          setActiveRailIndex(targetRailIndex);
-          setRailFocusIndices((prev) => ({ ...prev, [targetRail.id]: Math.max(0, gameIndex) }));
-        } else {
-          handleSelectGame(randomGame);
+
+        let targetRail = targetRailIndex >= 0 ? navigationRails[targetRailIndex] : null;
+
+        if (!targetRail) {
+          const letter = getGameLetter(randomGame.name);
+          const letterRailId = `alpha-${letter}`;
+          targetRailIndex = navigationRails.findIndex(
+            (r) => r.id === letterRailId || (r.letter && r.letter.toUpperCase() === letter)
+          );
+          if (targetRailIndex >= 0) {
+            targetRail = navigationRails[targetRailIndex];
+            if (!targetRail.games.some((g) => g.id === randomGame.id)) {
+              const letterGames = await getDbGames(
+                1000,
+                0,
+                {
+                  ...filters,
+                  letter: targetRail.letter || letter,
+                  searchQuery: searchInput || undefined,
+                },
+                platformId,
+              );
+              targetRail.games = letterGames;
+            }
+          }
         }
+
+        if (targetRailIndex >= 0 && targetRail) {
+          const gameIndex = targetRail.games.findIndex((g) => g.id === randomGame.id);
+          const resolvedIndex = Math.max(0, gameIndex);
+          setActiveRailIndex(targetRailIndex);
+          setRailFocusIndices((prev) => ({ ...prev, [targetRail.id]: resolvedIndex }));
+
+          if (onSessionChange) {
+            onSessionChange({
+              activeHeaderItemIndex,
+              activeHeaderRow,
+              activeRailIndex: targetRailIndex,
+              focusedGameId: randomGame.id.toString(),
+              railFocusIndices: { ...railFocusIndices, [targetRail.id]: resolvedIndex },
+              railId: targetRail.id,
+            });
+          }
+        }
+
+        handleSelectGame(randomGame);
       } else {
         const existingIndex = games.findIndex((g) => g.id === randomGame.id);
         if (existingIndex >= 0) {
           setFocusedIndex(existingIndex);
         } else {
-          handleSelectGame(randomGame);
+          const loadedGames = await getDbGames(randomOffset + 120, 0, filters, platformId);
+          if (loadedGames.length > 0) {
+            if (setGames) {
+              setGames(loadedGames);
+            }
+            const targetIndex = loadedGames.findIndex((g) => g.id === randomGame.id);
+            if (targetIndex >= 0) {
+              setFocusedIndex(targetIndex);
+            }
+          }
         }
+        handleSelectGame(randomGame);
       }
 
       void playUiSoundEffect('menu-move-1', 0.4);
     })();
   }, [
+    activeHeaderItemIndex,
+    activeHeaderRow,
     bigboxTotalGameCount,
     filters,
     games,
     handleSelectGame,
     listGameCount,
     navigationRails,
+    onSessionChange,
+    railFocusIndices,
+    searchInput,
     setActiveRailIndex,
     setFocusedIndex,
+    setGames,
     setRailFocusIndices,
     settings.activePlatformId,
     settings.isFullscreen,

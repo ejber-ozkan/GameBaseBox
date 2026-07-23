@@ -271,6 +271,7 @@ export function useLibraryBrowserState() {
     selectedGame,
     setFilters,
     setFocusedIndex,
+    setGames,
     setSearchInput,
     setSelectedGame,
     setViewMode,

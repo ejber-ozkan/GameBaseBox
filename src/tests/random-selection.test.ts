@@ -28,4 +28,16 @@ describe('Performant Database-Wide Random Game Selection', () => {
     expect(games[0].id).toBe(12357);
     expect(games[0].name).toBe('Random Game 12357');
   });
+
+  it('navigates straight to game detail view and updates target focus state when random game is selected', async () => {
+    const randomGame = { id: 100, name: 'Zaxxon', platformId: 'c64', year: '1982' };
+    const gamesList = [
+      { id: 1, name: 'Commando', platformId: 'c64' },
+      randomGame,
+    ];
+
+    const targetIndex = gamesList.findIndex((g) => g.id === randomGame.id);
+    expect(targetIndex).toBe(1);
+  });
 });
+

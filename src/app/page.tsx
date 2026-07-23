@@ -53,6 +53,7 @@ function ImportedLibraryContent() {
     effectiveFilters: filters,
     focusedIndex,
     games,
+    setGames,
     handleGameSelect,
     handleSort,
     loadNextPage,
@@ -176,6 +177,7 @@ function ImportedLibraryContent() {
         searchInput={searchInput}
         onSearchChange={setSearchInput}
         games={games}
+        setGames={setGames}
         focusedIndex={focusedIndex}
         setFocusedIndex={setFocusedIndex}
         loadNextPage={loadNextPage}
