@@ -382,17 +382,17 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-theme-background text-theme-text font-sans select-none">
       <div
-        className={`sticky top-0 z-10 flex items-center justify-between border-b ${
+        className={`sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 border-b ${
           theme.effects.steppedBorders ? 'border-theme-outline border-b-4' : 'border-theme-outline-variant'
         } bg-theme-surface shadow-lg shrink-0 ${
-          isFullscreenLayout ? 'px-8 py-5 xl:px-12' : 'p-4'
+          isFullscreenLayout ? 'px-8 py-5 xl:px-12' : 'px-4 py-3'
         }`}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <button
             onClick={onBack}
             onMouseEnter={() => isMouseMode && (setNavZone('header'), setFocusedIdx(0))}
-            className={`px-4 py-2 text-sm font-medium uppercase tracking-wider transition-colors ${
+            className={`px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium uppercase tracking-wider transition-colors ${
               theme.effects.steppedBorders ? 'border-2 border-theme-outline' : 'rounded-theme border border-theme-outline-variant'
             } ${
               navZone === 'header' && focusedIdx === 0
@@ -400,15 +400,16 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
                 : 'bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
             }`}
           >
-            ← Back to Library
+            <span className="hidden sm:inline">← Back to Library</span>
+            <span className="sm:hidden">← Back</span>
           </button>
-          <h2 className="ml-4 text-xl font-black uppercase tracking-widest text-theme-text">⚙ Settings</h2>
+          <h2 className="text-base sm:text-xl font-black uppercase tracking-widest text-theme-text truncate">⚙ Settings</h2>
         </div>
 
         <button
           onClick={handleSave}
           onMouseEnter={() => isMouseMode && (setNavZone('header'), setFocusedIdx(1))}
-          className={`px-6 py-2 text-sm font-bold uppercase tracking-widest shadow-lg transition ${
+          className={`px-4 py-1.5 sm:px-6 sm:py-2 text-xs sm:text-sm font-bold uppercase tracking-widest shadow-lg transition ${
             theme.effects.steppedBorders ? 'border-2 border-theme-outline' : 'rounded-theme'
           } ${
             navZone === 'header' && focusedIdx === 1
@@ -416,7 +417,8 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
               : 'bg-theme-primary-container text-theme-primary border border-theme-primary/30 hover:bg-theme-primary/20'
           }`}
         >
-          Save Configuration
+          <span className="hidden sm:inline">Save Configuration</span>
+          <span className="sm:hidden">Save</span>
         </button>
       </div>
 
@@ -432,7 +434,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
             isFullscreenLayout ? 'w-[320px] pr-4 2xl:w-[360px]' : 'w-64 pr-2'
           }`}
         >
-          <div className="flex flex-col gap-2 overflow-y-auto max-h-[75vh]">
+          <div className="flex flex-1 flex-col gap-2 overflow-y-auto min-h-0">
             <div className="mb-2 px-2 text-xs font-bold uppercase tracking-widest text-theme-text-muted">
               Configuration Categories
             </div>
@@ -477,7 +479,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
         </div>
 
         <div
-          className={`relative flex flex-1 flex-col overflow-y-auto shadow-2xl theme-panel ${
+          className={`relative flex flex-1 flex-col overflow-hidden shadow-2xl theme-panel ${
             theme.effects.steppedBorders ? 'stepped-border' : 'rounded-theme-xl border border-theme-outline-variant'
           } bg-theme-surface/15 ${
             isFullscreenLayout ? 'min-w-0' : ''

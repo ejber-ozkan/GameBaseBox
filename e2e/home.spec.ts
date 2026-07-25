@@ -28,11 +28,12 @@ test('bigbox keyboard navigation opens the focused game from fullscreen mode', a
   // search control; Enter opening the focused game is the shared behavior.
   if (testInfo.project.name === 'chromium') {
     await expect(page.getByPlaceholder('QUICK SEARCH')).toBeVisible();
+    await page.getByPlaceholder('QUICK SEARCH').blur();
   }
 
+  await expect(page.getByText('Archon: The Light and the Dark').first()).toBeVisible();
   await page.keyboard.press('Enter');
 
-  await expect(page.getByText('Archon: The Light and the Dark').first()).toBeVisible();
   if (testInfo.project.name === 'chromium') {
     await expect(page.getByTestId('detail-view')).toBeVisible();
   }

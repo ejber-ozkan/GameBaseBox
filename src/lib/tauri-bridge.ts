@@ -635,7 +635,16 @@ export async function getSupportedPlatforms(): Promise<SupportedPlatformProfile[
       id: platform.id,
       displayName: platform.displayName,
       status: platform.status,
-      importStatus: platform.importStatus,
+      importStatus: (() => {
+        if (typeof window === 'undefined') return platform.importStatus;
+        try {
+          const raw = window.localStorage.getItem('gb64_settings');
+          const parsed = raw ? JSON.parse(raw) : null;
+          return parsed?.platformSettings?.[platform.id]?.library?.importStatus ?? platform.importStatus;
+        } catch {
+          return platform.importStatus;
+        }
+      })(),
       defaultEmulatorProfileId: platform.defaultEmulatorProfileId,
       supportedEmulatorProfileIds: platform.supportedEmulatorProfileIds,
       capabilities: {

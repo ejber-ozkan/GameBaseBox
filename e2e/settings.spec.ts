@@ -11,9 +11,12 @@ test.describe('Settings Management', () => {
 
     await page.getByRole('button', { name: /C64 Platform Paths/i }).click();
     const extrasFolderInput = page.getByText('Extras folder').locator('..').getByRole('textbox');
+    await extrasFolderInput.scrollIntoViewIfNeeded();
     await extrasFolderInput.fill('/tmp/gb64-e2e-extras');
 
-    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    const saveButton = page.getByRole('button', { name: /Save/i });
+    await saveButton.scrollIntoViewIfNeeded();
+    await saveButton.click();
     await expect(page.getByText('GBBox')).toBeVisible();
 
     await page.reload();
@@ -21,6 +24,8 @@ test.describe('Settings Management', () => {
 
     await page.getByTitle('Settings').click();
     await page.getByRole('button', { name: /C64 Platform Paths/i }).click();
-    await expect(page.getByText('Extras folder').locator('..').getByRole('textbox')).toHaveValue('/tmp/gb64-e2e-extras');
+    const reloadedInput = page.getByText('Extras folder').locator('..').getByRole('textbox');
+    await reloadedInput.scrollIntoViewIfNeeded();
+    await expect(reloadedInput).toHaveValue('/tmp/gb64-e2e-extras');
   });
 });
