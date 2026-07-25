@@ -505,6 +505,7 @@ export function useUnifiedLibraryNavigation({
       }
     }
   }, [
+    isControllerKeyboardOpen,
     isFullscreen,
     viewMode,
     setViewMode,

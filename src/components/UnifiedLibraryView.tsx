@@ -40,7 +40,6 @@ import { CyberpunkCrtGrid } from './library/CyberpunkCrtGrid';
 import { useUnifiedLibraryNavigation } from '../hooks/useUnifiedLibraryNavigation';
 import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '../lib/library-backgrounds';
 import { playRotatingUiSoundEffect, playUiSoundEffect, playUiSoundEffectAndWait } from '../lib/ui-sound-effects';
-import { getC64ViewingPath } from '../lib/c64-viewing-path';
 
 export interface BigBoxSessionState {
   activeHeaderItemIndex: number;

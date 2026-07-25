@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ImageSlider } from '../ImageSlider';
 import type { Game } from '../../types/game';
-import { getC64ViewingPath } from '../../lib/c64-viewing-path';
 
 interface C64EditionGridProps {
   activeAlphabetRailId?: string | null;
@@ -121,7 +120,6 @@ export function C64EditionGrid({
   gridColumns,
   recentGames,
   searchInput,
-  totalGameCount,
   onSelectGame,
   isFavorite,
   toggleFavorite,
@@ -145,7 +143,6 @@ export function C64EditionGrid({
   }, [onEndReached]);
 
   const librarySections = alphabetSections ?? [{ id: 'c64-library', label: alphabetLabel ?? 'LIBRARY', games }];
-  const pathText = getC64ViewingPath(alphabetLabel, searchInput);
 
   const isSearching = Boolean(searchInput?.trim() && searchInput.trim().length >= 2);
 

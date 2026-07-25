@@ -1,11 +1,10 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
-import { getPlatformImportStatus, getSupportedPlatforms, getSecureSetting, saveSecureSetting, clearMediaCache } from '../lib/tauri-bridge';
+import { getSupportedPlatforms, getSecureSetting, saveSecureSetting, clearMediaCache } from '../lib/tauri-bridge';
 import {
   createDefaultPlatformSettingsMap,
   isPlatformId,
-  SUPPORTED_PLATFORMS,
 } from '../lib/platform-capabilities';
 import type {
   PlatformId,

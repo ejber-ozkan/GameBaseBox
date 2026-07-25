@@ -81,7 +81,7 @@ export function DatabaseSetupView({
   onFolderChange,
   onImport,
 }: DatabaseSetupViewProps) {
-  const { settings } = useSettings();
+  useSettings();
   const { theme, setTheme } = useTheme();
 
   // Temporarily apply the selected platform's theme on mount/dropdown change.

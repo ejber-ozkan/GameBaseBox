@@ -28,7 +28,7 @@ import {
   getPlatformAliases,
   getRequiredPlatformFolderKeys as getManifestRequiredPlatformFolderKeys,
 } from '@/lib/platform-manifest';
-import type { PlatformFolderSettings, PlatformId, PlatformSettings } from '@/types/platform';
+import type { PlatformFolderSettings, PlatformId } from '@/types/platform';
 import {
   playRotatingUiSoundEffectAndWait,
   playUiSoundEffect,
