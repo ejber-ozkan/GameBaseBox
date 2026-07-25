@@ -558,6 +558,15 @@ export async function openFileDialog(): Promise<string | null> {
   return invoke<string | null>('open_file_dialog');
 }
 
+/** Opens the native OS file picker for a RetroArch core. */
+export async function openRetroArchCoreFileDialog(): Promise<string | null> {
+  if (!isTauri()) {
+    console.warn('[tauri-bridge] openRetroArchCoreFileDialog: not in Tauri');
+    return null;
+  }
+  return invoke<string | null>('open_retroarch_core_file_dialog');
+}
+
 export async function openMdbFileDialog(): Promise<string | null> {
   if (!isTauri()) {
     console.warn('[tauri-bridge] openMdbFileDialog: not in Tauri');

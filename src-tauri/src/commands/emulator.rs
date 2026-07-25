@@ -80,6 +80,7 @@ fn launch_extensions_for_platform(platform_id: Option<&str>) -> &'static [&'stat
         Some("zxspectrum") => &["tzx", "tap", "z80", "sna", "szx", "trd", "dsk"],
         Some("bbcmicro") => &["ssd", "dsd", "adl", "adf", "uef", "rom", "bin"],
         Some("amiga") => &["adf", "adz", "dms", "ipf", "lha", "hdf", "hdz"],
+        Some("atarist") => &["st"],
         _ => &["d64", "g64", "t64", "tap", "prg", "crt", "nib"],
     }
 }
@@ -1240,6 +1241,77 @@ mod tests {
 
         let result = launch_emulator(request).await.unwrap();
         assert!(result.success);
+    }
+
+    #[tokio::test]
+    async fn test_launch_emulator_atarist_retroarch_zip_creates_m3u_for_multiple_st_disks() {
+        let temp_dir = std::env::temp_dir();
+        let existing_launch_dirs = std::fs::read_dir(&temp_dir)
+            .unwrap()
+            .filter_map(Result::ok)
+            .map(|entry| entry.path())
+            .collect::<std::collections::HashSet<_>>();
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "retroarch.exe"
+        } else {
+            "retroarch"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let core_path = dir.path().join("hatari_libretro.dll");
+        std::fs::write(&core_path, b"core").unwrap();
+
+        let zip_path = dir.path().join("leander.zip");
+        write_zip(
+            &zip_path,
+            &[
+                ("Leander Disk 1.st", b"disk1"),
+                ("Leander Disk 2.st", b"disk2"),
+            ],
+        );
+
+        let result = launch_emulator(LaunchRequest {
+            platform_id: Some("atarist".to_string()),
+            emulator_profile_id: Some("retroarch-atarist".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            rom_path: zip_path.to_string_lossy().to_string(),
+            core_path: Some(core_path.to_string_lossy().to_string()),
+            ..Default::default()
+        })
+        .await
+        .unwrap();
+
+        assert!(result.success);
+        let launch_dir = std::fs::read_dir(temp_dir)
+            .unwrap()
+            .filter_map(Result::ok)
+            .map(|entry| entry.path())
+            .find(|path| {
+                !existing_launch_dirs.contains(path)
+                    && path.is_dir()
+                    && path
+                        .file_name()
+                        .is_some_and(|name| name.to_string_lossy().starts_with("GBBoxTemp-"))
+            })
+            .unwrap();
+        let m3u_path = launch_dir.join("Leander Disk 1.m3u");
+        assert_eq!(
+            std::fs::read_to_string(&m3u_path).unwrap(),
+            format!(
+                "{}\n{}\n",
+                launch_dir
+                    .join("leander")
+                    .join("Leander Disk 1.st")
+                    .to_string_lossy(),
+                m3u_path
+                    .parent()
+                    .unwrap()
+                    .join("leander")
+                    .join("Leander Disk 2.st")
+                    .to_string_lossy()
+            )
+        );
     }
 
     #[tokio::test]

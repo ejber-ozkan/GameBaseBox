@@ -9,6 +9,7 @@ interface PathsSettingsTabProps extends ContentNavProps {
   platformId: PlatformId;
   onBrowseDirectory: () => Promise<string | null>;
   onBrowseFile: () => Promise<string | null>;
+  onBrowseRetroArchCore: () => Promise<string | null>;
 }
 
 interface PathRowProps extends ContentNavProps {
@@ -76,6 +77,7 @@ export function PathsSettingsTab({
   platformId,
   onBrowseDirectory,
   onBrowseFile,
+  onBrowseRetroArchCore,
   isMouseMode,
   onMouseFocus,
   isFocused,
@@ -135,7 +137,7 @@ export function PathsSettingsTab({
   };
 
   const browsePlatformCore = async (profileId: string) => {
-    const chosen = await onBrowseFile();
+    const chosen = await onBrowseRetroArchCore();
     if (chosen) {
       setPlatformCorePath(profileId, chosen);
       if (profileId === 'retroarch-c64' && platformId === draft.activePlatformId) setField('retroarchCorePath', chosen);

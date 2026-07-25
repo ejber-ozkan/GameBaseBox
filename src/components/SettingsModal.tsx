@@ -5,7 +5,7 @@ import { useSettings } from '../contexts/SettingsContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useGamepad } from '../hooks/useGamepad';
 import { useInputMode } from '../hooks/useInputMode';
-import { openDirectoryDialog, openFileDialog, isTauri } from '../lib/tauri-bridge';
+import { openDirectoryDialog, openFileDialog, openRetroArchCoreFileDialog, isTauri } from '../lib/tauri-bridge';
 import { playUiSoundEffect } from '../lib/ui-sound-effects';
 import { AboutSettingsTab } from './settings/AboutSettingsTab';
 import { AppearanceSettingsTab } from './settings/AppearanceSettingsTab';
@@ -85,6 +85,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
   const browseDirectory = useCallback(async () => openDirectoryDialog(), []);
 
   const browseFile = useCallback(async () => openFileDialog(), []);
+  const browseRetroArchCore = useCallback(async () => openRetroArchCoreFileDialog(), []);
 
   // Reset focus to top-leftmost element inside the content when active tab changes
   useEffect(() => {
@@ -512,6 +513,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
                 platformId={activePlatformPathsId}
                 onBrowseDirectory={browseDirectory}
                 onBrowseFile={browseFile}
+                onBrowseRetroArchCore={browseRetroArchCore}
                 {...contentNavProps}
               />
             )}

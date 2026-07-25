@@ -2,6 +2,16 @@ use tauri::Manager;
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_shell::ShellExt;
 
+fn retroarch_core_file_extensions() -> &'static [&'static str] {
+    if cfg!(target_os = "windows") {
+        &["dll"]
+    } else if cfg!(target_os = "macos") {
+        &["dylib"]
+    } else {
+        &["so"]
+    }
+}
+
 #[tauri::command]
 pub fn is_debug_mode_command() -> bool {
     crate::is_debug_mode()
@@ -17,7 +27,6 @@ pub fn log_debug_message_command(message: String) {
         }
     }
 }
-
 
 #[tauri::command]
 pub async fn open_directory_dialog(app: tauri::AppHandle) -> Option<String> {
@@ -44,6 +53,16 @@ pub async fn open_file_dialog(app: tauri::AppHandle) -> Option<String> {
 }
 
 #[tauri::command]
+pub async fn open_retroarch_core_file_dialog(app: tauri::AppHandle) -> Option<String> {
+    app.dialog()
+        .file()
+        .add_filter("RetroArch Cores", retroarch_core_file_extensions())
+        .add_filter("All Files", &["*"])
+        .blocking_pick_file()
+        .map(|p| p.to_string())
+}
+
+#[tauri::command]
 pub fn allow_asset_path(app: tauri::AppHandle, path: String) -> Result<(), String> {
     let asset_path = std::path::Path::new(&path);
     let parent = asset_path
@@ -58,7 +77,10 @@ pub fn allow_asset_path(app: tauri::AppHandle, path: String) -> Result<(), Strin
         })?;
 
     if crate::is_debug_mode() {
-        log::info!("[DEBUG] allow_asset_path: granting scope for \"{}\"", parent.display());
+        log::info!(
+            "[DEBUG] allow_asset_path: granting scope for \"{}\"",
+            parent.display()
+        );
     }
 
     app.asset_protocol_scope()
@@ -66,7 +88,11 @@ pub fn allow_asset_path(app: tauri::AppHandle, path: String) -> Result<(), Strin
         .map_err(|error| {
             let msg = error.to_string();
             if crate::is_debug_mode() {
-                log::warn!("[DEBUG] allow_asset_path: scope grant failed for \"{}\": {}", parent.display(), msg);
+                log::warn!(
+                    "[DEBUG] allow_asset_path: scope grant failed for \"{}\": {}",
+                    parent.display(),
+                    msg
+                );
             }
             msg
         })
@@ -197,6 +223,19 @@ mod tests {
     use std::fs::File;
     use tempfile::tempdir;
 
+    #[test]
+    fn test_retroarch_core_file_extensions_match_the_current_platform() {
+        let expected_extension = if cfg!(target_os = "windows") {
+            "dll"
+        } else if cfg!(target_os = "macos") {
+            "dylib"
+        } else {
+            "so"
+        };
+
+        assert_eq!(retroarch_core_file_extensions(), &[expected_extension]);
+    }
+
     // -------------------------------------------------------------------------
     // validate_open_path — happy paths
     // -------------------------------------------------------------------------
@@ -225,7 +264,11 @@ mod tests {
         let res = validate_open_path("/non/existent/gbbox/extras/manual.pdf");
         assert!(res.is_err());
         let msg = res.unwrap_err();
-        assert!(msg.contains("does not exist"), "unexpected message: {}", msg);
+        assert!(
+            msg.contains("does not exist"),
+            "unexpected message: {}",
+            msg
+        );
     }
 
     #[test]

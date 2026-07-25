@@ -57,9 +57,8 @@ extern "system" {
 
 pub fn init_debug_mode() {
     // Check CLI args for --debug / -d / --verbose / -v
-    let from_args = std::env::args().any(|arg| {
-        arg == "--debug" || arg == "-d" || arg == "--verbose" || arg == "-v"
-    });
+    let from_args = std::env::args()
+        .any(|arg| arg == "--debug" || arg == "-d" || arg == "--verbose" || arg == "-v");
     // Also honour the GAMEBASEBOX_DEBUG environment variable (set by the debug launch scripts).
     // This is simpler than fighting tauri-dev's argument-forwarding quirks.
     let from_env = std::env::var("GAMEBASEBOX_DEBUG")
@@ -82,7 +81,11 @@ pub fn init_debug_mode() {
             }
         }
 
-        let source = if from_env { "GAMEBASEBOX_DEBUG env var" } else { "CLI flag" };
+        let source = if from_env {
+            "GAMEBASEBOX_DEBUG env var"
+        } else {
+            "CLI flag"
+        };
         println!("[DEBUG] Debug logging enabled via {}.", source);
     }
 }
@@ -129,6 +132,7 @@ pub fn run() {
             commands::video::download_archive_extra_video,
             commands::system::open_directory_dialog,
             commands::system::open_file_dialog,
+            commands::system::open_retroarch_core_file_dialog,
             commands::system::allow_asset_path,
             commands::system::open_path_with_system_default,
             commands::system::exit_app,
