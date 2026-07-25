@@ -65,13 +65,14 @@ gb64.sqlite.bk
 /.agent
 /.agents
 /.specify/
-/AGENTS.md
 /CLAUDE.md
 /skills-lock.json
 /plans/
 /.claude/
 /.codex
 handover-*.md
+design_brief.md
+AGENTS.md
 
 # One-off scripts and test logs
 /check_*.py
@@ -102,3 +103,5 @@ graphify-out/.graphify_root
 # Internal technical review working document
 /docs/technical-review-and-ios-feasibility-2026-07-10.md
 
+
+stitch_import/

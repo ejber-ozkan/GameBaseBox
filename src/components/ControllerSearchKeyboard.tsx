@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useMemo, useState } from 'react';
+import { startTransition, useCallback, useEffect, useMemo, useState } from 'react';
 import { useGamepad } from '../hooks/useGamepad';
 import { usePopupOpenSound } from '../hooks/usePopupOpenSound';
 
@@ -107,7 +107,7 @@ export function ControllerSearchKeyboard({
     [selectedCol, selectedRow],
   );
 
-  const applyKey = (key: KeyboardKey) => {
+  const applyKey = useCallback((key: KeyboardKey) => {
     if (key.action === 'close') {
       onClose();
       return;
@@ -115,7 +115,73 @@ export function ControllerSearchKeyboard({
 
     const nextValue = updateSearchValue(searchInput, key);
     startTransition(() => onSearchChange(nextValue));
-  };
+  }, [onClose, onSearchChange, searchInput]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleWindowKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        onClose();
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        event.stopPropagation();
+        setSelectedCol((current) => Math.max(current - 1, 0));
+        return;
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        event.stopPropagation();
+        setSelectedCol((current) => Math.min(current + 1, KEYBOARD_ROWS[selectedRow].length - 1));
+        return;
+      }
+
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        event.stopPropagation();
+        setSelectedRow((current) => {
+          const nextRow = Math.max(current - 1, 0);
+          setSelectedCol((previous) => Math.min(previous, KEYBOARD_ROWS[nextRow].length - 1));
+          return nextRow;
+        });
+        return;
+      }
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        event.stopPropagation();
+        setSelectedRow((current) => {
+          const nextRow = Math.min(current + 1, KEYBOARD_ROWS.length - 1);
+          setSelectedCol((previous) => Math.min(previous, KEYBOARD_ROWS[nextRow].length - 1));
+          return nextRow;
+        });
+        return;
+      }
+
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        applyKey(selectedKey);
+        return;
+      }
+
+      if (event.key === 'Backspace') {
+        event.preventDefault();
+        event.stopPropagation();
+        applyKey({ id: 'backspace', label: 'Backspace', action: 'backspace' });
+        return;
+      }
+    };
+
+    window.addEventListener('keydown', handleWindowKeyDown, { capture: true });
+    return () => window.removeEventListener('keydown', handleWindowKeyDown, { capture: true });
+  }, [applyKey, isOpen, onClose, selectedKey, selectedRow]);
 
   useGamepad({
     onButtonDown: (button) => {

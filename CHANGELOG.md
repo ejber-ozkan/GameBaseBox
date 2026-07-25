@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-19
+
+### Added
+- Added Dynamic Modular Themes Engine featuring three distinct retro designs: **Arcade Void**, **Cyberpunk CRT**, and **C64 Edition** using CSS custom properties injection, Tailwind v4 theme variables, and custom slot decorator overlays.
+- Added persistent appearance settings theme selector to save user visual preferences across sessions.
+- Added C64 physical F1-F7 keyboard quick-navigation shortcut bindings (F-key easter egg) for tab transitions.
+- Added WebGL-based retro visual enhancements: high-performance randomly rotating shader backgrounds, raster-loader stripe animations, and blinking C64 cursor blocks.
+- Added 2D spatial keyboard and gamepad navigation support within Settings Modal inputs, checkboxes, and sliders.
+- Added Chrome DevTools CDP loopback debugging on port `127.0.0.1:9222` for Tauri WebView inspection during development.
+
+### Changed
+- Unified the library view interface by merging separate windowed and fullscreen BigBox components into a single `UnifiedLibraryView` component.
+- Consolidated navigation calculations under `useUnifiedLibraryNavigation`, blending keyboard traversal with controller gamepad input mapping.
+- Redesigned the Settings Modal tabs and category layouts with themed aesthetic consistency.
+- Redesigned the Game Detail View into a unified, responsive bento-box grid that scales gracefully between 720p, 1080p, 1440p, and 4K screens.
+- Enhanced Extras detail view with sidebar layout support, custom soundtrack (SID/SAP) player styles, and automatic chip music silence on game launching.
+- Bumped package, Tauri, Cargo, and root version metadata to `0.6.0`.
+
+### Fixed
+- Fixed layout resizing issues on vertical letter selectors and Cyberpunk CRT grid elements.
+- Fixed parent directory missing errors in Extras detail view by falling back to showing an unavailable status message instead of throwing errors.
+- Fixed type-safety errors and React Hook dependencies (restoring a clean ESLint baseline).
+
 ## [0.5.4] - 2026-07-15
 
 ### Added

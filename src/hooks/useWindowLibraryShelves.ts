@@ -27,7 +27,7 @@ export function useWindowLibraryShelves({
     let isCancelled = false;
 
     async function loadShelves() {
-      const searchQuery = searchInput.trim() || undefined;
+      const searchQuery = searchInput.trim().length >= 2 ? searchInput.trim() : undefined;
 
       const recentQuery = recentlyPlayedIds.length > 0
         ? getDbGames(24, 0, {

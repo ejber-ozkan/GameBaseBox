@@ -20,4 +20,18 @@ describe('PlatformSwitcher', () => {
 
     expect(onPlatformSelect).toHaveBeenCalledWith('atari800');
   });
+
+  test('uses the shared theme-aware selector shell', () => {
+    render(
+      <PlatformSwitcher
+        activePlatformId="c64"
+        onPlatformSelect={vi.fn()}
+      />,
+    );
+
+    const shell = screen.getByTestId('platform-switcher');
+    expect(shell.className).toContain('bg-[var(--theme-primary-container)]');
+    expect(shell.className).toContain('border-[var(--theme-primary)]');
+    expect(screen.getByLabelText('Active platform').className).toContain('bg-[var(--theme-background)]');
+  });
 });

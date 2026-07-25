@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
-import { getPlatformImportStatus, getSecureSetting, saveSecureSetting, clearMediaCache } from '../lib/tauri-bridge';
+import { getPlatformImportStatus, getSupportedPlatforms, getSecureSetting, saveSecureSetting, clearMediaCache } from '../lib/tauri-bridge';
 import {
   createDefaultPlatformSettingsMap,
   isPlatformId,
@@ -47,6 +47,7 @@ export interface Settings {
   mouseHoverSelection: boolean;
   scrollNavigation: boolean;
   menuSoundEffects: boolean;
+  c64RasterLines: boolean;
   bigBoxAnimateVertical: boolean;
   confirmFullscreenExit: boolean;
   lastBigBoxRailId: string | null;
@@ -54,6 +55,7 @@ export interface Settings {
   activePlatformId: PlatformId;
   lastUsedPlatformId: PlatformId | null;
   platformSettings: Record<PlatformId, PlatformSettings>;
+  themeId: string;
 }
 
 interface SettingsContextType {
@@ -109,6 +111,7 @@ const defaultSettings: Settings = {
   mouseHoverSelection: true,
   scrollNavigation: true,
   menuSoundEffects: true,
+  c64RasterLines: true,
   bigBoxAnimateVertical: true,
   confirmFullscreenExit: true,
   lastBigBoxRailId: null,
@@ -116,6 +119,7 @@ const defaultSettings: Settings = {
   activePlatformId: 'c64',
   lastUsedPlatformId: 'c64',
   platformSettings: defaultPlatformSettings,
+  themeId: 'arcade-void',
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -257,12 +261,12 @@ function resolveStartupPlatformId(
   requestedPlatformId: PlatformId,
   platformSettings: Record<PlatformId, PlatformSettings>,
 ): PlatformId {
-  if (platformSettings[requestedPlatformId]?.library.importStatus === 'imported') {
+  if (requestedPlatformId in platformSettings) {
     return requestedPlatformId;
   }
 
   return (Object.keys(platformSettings) as PlatformId[])
-    .find((platformId) => platformSettings[platformId].library.importStatus === 'imported') ?? requestedPlatformId;
+    .find((platformId) => platformSettings[platformId].library.importStatus === 'imported') ?? 'c64';
 }
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
@@ -329,10 +333,17 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         : 'c64';
 
       let platformSettings = migratePlatformSettings(combinedSettings, Boolean(sanitizedLocal.platformSettings));
-      const platformStatuses = await Promise.all(
-        SUPPORTED_PLATFORMS.map((platform) => getPlatformImportStatus(platform.id)),
-      );
-      platformSettings = applyPlatformImportStatuses(platformSettings, platformStatuses);
+      try {
+        const supported = await getSupportedPlatforms();
+        const platformStatuses = supported.map((p) => ({
+          platformId: p.id,
+          importStatus: p.importStatus,
+          gameCount: 0,
+        }));
+        platformSettings = applyPlatformImportStatuses(platformSettings, platformStatuses);
+      } catch (err) {
+        console.error('Error fetching platform statuses on init:', err);
+      }
       const startupPlatformId = resolveStartupPlatformId(activePlatformId, platformSettings);
 
       (Object.keys(platformSettings) as PlatformId[]).forEach((platformId) => {

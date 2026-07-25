@@ -6,7 +6,9 @@ import {
   convertExtraVideo,
   downloadArchiveExtraVideo,
   getAssetUrl,
+  isDebugMode,
   listenExtraVideoDownloadProgress,
+  logDebugMessage,
   openFile,
   resolveExtraVideo,
   type ExtraVideoDownloadProgress,
@@ -77,6 +79,7 @@ export function ResolvedExtraMedia({
   className: string;
 }) {
   const [url, setUrl] = useState('');
+  const [fallbackText, setFallbackText] = useState('No Image');
   const [videoFailedPath, setVideoFailedPath] = useState<string | null>(null);
   const [videoResolution, setVideoResolution] = useState<ExtraVideoResolution | null>(null);
   const [videoAction, setVideoAction] = useState<'convert' | 'download' | null>(null);
@@ -101,14 +104,31 @@ export function ResolvedExtraMedia({
         if (!cancelled) setVideoMessage(String(error));
       });
     } else {
-      getAssetUrl(buildExtraAssetPath(extrasPath, extra.path)).then((assetUrl) => {
-        if (!cancelled) setUrl(assetUrl);
-      });
+      getAssetUrl(buildExtraAssetPath(extrasPath, extra.path))
+        .then((assetUrl) => {
+          if (!cancelled) {
+            setUrl(assetUrl);
+            setFallbackText('No Image');
+          }
+        })
+        .catch((error) => {
+          if (!cancelled) {
+            const errorStr = String(error);
+            if (errorStr.includes('Asset parent directory does not exist')) {
+              setFallbackText('unavailable');
+            }
+            isDebugMode().then((debug) => {
+              if (debug) {
+                logDebugMessage(`[DEBUG WARNING] ResolvedExtraMedia: Failed to resolve asset parent directory for "${extra.name}": ${errorStr}`);
+              }
+            });
+          }
+        });
     }
     return () => {
       cancelled = true;
     };
-  }, [extra.path, extrasPath, isVideo, loadVideo]);
+  }, [extra.path, extrasPath, isVideo, loadVideo, extra.name]);
 
   useEffect(() => () => {
     if (successTimer.current) clearTimeout(successTimer.current);
@@ -305,6 +325,7 @@ export function ResolvedExtraMedia({
     <ImageWithFallback
       src={url}
       alt={extra.name}
+      fallbackText={fallbackText}
       fit={fit}
       className={className}
     />

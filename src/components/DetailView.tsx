@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Game, GameDetail } from '../types/game';
 import { getDbGameDetail } from '../lib/tauri-bridge';
-import { NeonArchiveDetailLayout } from './themes/neon-archive/NeonArchiveDetailLayout';
+import { UnifiedDetailLayout } from './detail/UnifiedDetailLayout';
 import { PLATFORM_PROFILES } from '../lib/platform-capabilities';
 import { ImageSlider } from './ImageSlider';
 import { ImageWithFallback } from './ImageWithFallback';
@@ -12,7 +12,9 @@ import { useInputMode } from '../hooks/useInputMode';
 import { useGamepad } from '../hooks/useGamepad';
 import { useFavorites } from '../hooks/useFavorites';
 import { useSettings } from '../contexts/SettingsContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { usePopupOpenSound } from '../hooks/usePopupOpenSound';
+import { supportsEmbeddedEmulation } from '../lib/platform-capabilities';
 import { FullscreenLayoutMetrics, useFullscreenLayoutMetrics } from '../hooks/useFullscreenLayoutMetrics';
 
 interface DetailViewProps {
@@ -36,19 +38,6 @@ export type DetailFullscreenMedia =
 
 export type DetailFullscreenRequest = string | DetailFullscreenMedia | null;
 
-const DETAIL_CONFIG: NavigationConfig = {
-  'favorite':          { down: 'play' },
-  'play':              { up: 'favorite', right: 'media-boxfront', down: 'play-web' },
-  'play-web':          { up: 'play', left: 'media-boxfront', down: 'versions' },
-  'media-gameplay':    { up: 'favorite', right: 'media-boxfront', down: 'versions' },
-  'media-titlescreen': { up: 'favorite', right: 'media-boxfront', down: 'versions' },
-  'media-videosna':    { up: 'favorite', right: 'media-boxfront', down: 'versions' },
-  'media-boxfront':    { up: 'favorite', left: 'media-gameplay', right: 'versions', down: 'versions' },
-  'media-extras':      { up: 'media-boxfront', left: 'play-web', right: 'sid' },
-  'versions':          { up: 'play-web', left: 'media-boxfront', down: 'sid' },
-  'sid':               { up: 'versions', left: 'media-boxfront' },
-  'screenshot':        { left: 'media-boxfront', down: 'sid' },
-};
 
 const detailCache = new Map<string, Promise<GameDetail | null>>();
 
@@ -73,6 +62,7 @@ function getCachedGameDetail(gameId: string, platformId: string) {
 
 export function DetailView({ game, onBack }: DetailViewProps) {
   const { settings } = useSettings();
+  const { theme } = useTheme();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [fullscreenMedia, setFullscreenMedia] = useState<DetailFullscreenMedia | null>(null);
   const [detailedGame, setDetailedGame] = useState<GameDetail | null>(null);
@@ -84,21 +74,67 @@ export function DetailView({ game, onBack }: DetailViewProps) {
   const showSoundtrack = PLATFORM_PROFILES[settings.activePlatformId]?.mediaCapabilities.music !== 'none';
 
   const detailConfig = useMemo(() => {
-    const config = { ...DETAIL_CONFIG } as Partial<typeof DETAIL_CONFIG>;
-    if (!showSoundtrack) {
-      delete config['sid'];
-      if (config['media-extras']?.right === 'sid') {
-        config['media-extras'] = { ...config['media-extras'], right: undefined };
+    const isArcade = theme.id === 'arcade-void';
+    const isCyberpunk = theme.id === 'cyberpunk-crt';
+    const isC64 = theme.id === 'c64-edition';
+    const canPlayEmbedded = supportsEmbeddedEmulation(settings.activePlatformId);
+    
+    const config = {
+      'favorite':          { down: 'play' },
+      'play':              { up: 'favorite', right: 'media-boxfront', down: canPlayEmbedded ? 'play-web' : (isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions') },
+      'play-web':          { up: 'play', left: 'media-boxfront', down: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions' },
+      'media-gameplay':    { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },
+      'media-titlescreen': { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },
+      'media-videosna':    { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },
+      'media-boxfront':    { up: 'favorite', left: 'media-gameplay', right: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'media-extras' },
+      
+      'media-extras':      { up: 'media-gameplay', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'extras-docs' },
+      'extras-docs':       { up: 'media-extras', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions', down: 'extras-media' },
+      'extras-media':      { up: 'extras-docs', left: canPlayEmbedded ? 'play-web' : 'play', right: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions' },
+      
+      'screenshot':        { left: 'media-gameplay', down: showSoundtrack ? 'sid' : undefined },
+    } as NavigationConfig;
+
+    if (isArcade) {
+      if (showSoundtrack) {
+        config['sid'] = { up: canPlayEmbedded ? 'play-web' : 'play', left: 'media-gameplay', down: 'sidebar-tabs' };
       }
-      if (config['versions']?.down === 'sid') {
-        config['versions'] = { ...config['versions'], down: undefined };
+      config['sidebar-tabs'] = { up: showSoundtrack ? 'sid' : (canPlayEmbedded ? 'play-web' : 'play'), left: 'media-gameplay', down: 'sidebar-content' };
+      config['sidebar-content'] = { up: 'sidebar-tabs', left: 'media-gameplay' };
+    } else if (isC64) {
+      config['play'] = { up: 'favorite', right: 'media-gameplay', down: canPlayEmbedded ? 'play-web' : (showSoundtrack ? 'sid' : 'sidebar-tabs') };
+      if (canPlayEmbedded) {
+        config['play-web'] = { up: 'play', right: 'media-gameplay', down: showSoundtrack ? 'sid' : 'sidebar-tabs' };
       }
-      if (config['screenshot']?.down === 'sid') {
-        config['screenshot'] = { ...config['screenshot'], down: undefined };
+      if (showSoundtrack) {
+        config['sid'] = { up: 'media-gameplay', left: 'play', down: 'sidebar-tabs' };
+      }
+      config['sidebar-tabs'] = { up: showSoundtrack ? 'sid' : 'media-gameplay', left: 'play', down: 'sidebar-content' };
+      config['sidebar-content'] = { up: 'sidebar-tabs', left: 'play' };
+    } else if (isCyberpunk) {
+      config['play'] = { up: 'favorite', right: canPlayEmbedded ? 'play-web' : 'sidebar-tabs', down: 'media-gameplay' };
+      if (canPlayEmbedded) {
+        config['play-web'] = { up: 'play', left: 'play', right: 'sidebar-tabs', down: 'media-gameplay' };
+      }
+      config['media-gameplay'] = { up: 'play', right: 'media-boxfront' };
+      config['media-titlescreen'] = { up: 'play', right: 'media-boxfront' };
+      config['media-videosna'] = { up: 'play', right: 'media-boxfront' };
+      config['media-boxfront'] = { up: 'play', left: 'media-gameplay', right: 'sidebar-tabs' };
+
+      config['sidebar-tabs'] = { up: 'play', left: 'media-gameplay', down: 'sidebar-content' };
+      config['sidebar-content'] = { up: 'sidebar-tabs', left: 'media-gameplay', down: showSoundtrack ? 'sid' : undefined };
+      if (showSoundtrack) {
+        config['sid'] = { up: 'sidebar-content', left: 'media-gameplay' };
+      }
+    } else {
+      config['versions'] = { up: canPlayEmbedded ? 'play-web' : 'play', left: 'media-boxfront', down: showSoundtrack ? 'sid' : undefined };
+      if (showSoundtrack) {
+        config['sid'] = { up: 'versions', left: 'media-boxfront' };
       }
     }
+
     return config;
-  }, [showSoundtrack]);
+  }, [showSoundtrack, theme.id, settings.activePlatformId]);
 
   const nav = useDetailNavigation({ onBack, config: detailConfig as NavigationConfig, enabled: !fullscreenMedia });
   const hasBlockingModal = () => typeof document !== 'undefined' && Boolean(document.querySelector('[data-detail-modal="open"]'));
@@ -178,7 +214,7 @@ export function DetailView({ game, onBack }: DetailViewProps) {
   const renderTheme = () => {
     const mergedGame = detailedGame ? { ...game, ...detailedGame } : game;
     return (
-      <NeonArchiveDetailLayout
+      <UnifiedDetailLayout
         key={game.id}
         game={mergedGame}
         onBack={onBack}
@@ -192,7 +228,7 @@ export function DetailView({ game, onBack }: DetailViewProps) {
   };
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full" data-testid="detail-view">
       {renderTheme()}
       
       {fullscreenMedia && (

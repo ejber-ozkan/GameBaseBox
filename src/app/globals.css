@@ -12,8 +12,24 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Segoe UI", "Trebuchet MS", Arial, Helvetica, sans-serif;
-  --font-mono: "Cascadia Mono", "Consolas", "Liberation Mono", "Courier New", monospace;
+  --font-sans: var(--theme-font-sans, "Segoe UI", "Trebuchet MS", Arial, Helvetica, sans-serif);
+  --font-mono: var(--theme-font-mono, "Cascadia Mono", "Consolas", "Liberation Mono", "Courier New", monospace);
+
+  --color-theme-primary: var(--theme-primary);
+  --color-theme-primary-container: var(--theme-primary-container);
+  --color-theme-secondary: var(--theme-secondary);
+  --color-theme-tertiary: var(--theme-tertiary);
+  --color-theme-surface: var(--theme-surface);
+  --color-theme-background: var(--theme-background);
+  --color-theme-outline: var(--theme-outline);
+  --color-theme-outline-variant: var(--theme-outline-variant);
+  --color-theme-text: var(--theme-text);
+  --color-theme-text-muted: var(--theme-text-muted);
+
+  --radius-theme-sm: var(--theme-radius-sm, 0px);
+  --radius-theme-md: var(--theme-radius-md, 0px);
+  --radius-theme-lg: var(--theme-radius-lg, 0px);
+  --radius-theme-xl: var(--theme-radius-xl, 0px);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,9 +40,142 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--theme-background, var(--background));
+  color: var(--theme-text, var(--foreground));
+  font-family: var(--font-sans);
+}
+
+/* Theme effects helper classes */
+.scanlines-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  background-size: 100% 3px;
+}
+
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.theme-cursor-blink::after {
+  content: "█";
+  margin-left: 0.25em;
+  color: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+  animation: cursor-blink 0.8s infinite step-start;
+}
+
+.stepped-border {
+  border: 4px solid var(--theme-outline, currentColor);
+  border-radius: 0px !important;
+}
+
+/* Glassmorphism panel support with solid fallback */
+.theme-panel {
+  transition: background-color 0.25s ease, border-color 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+html[data-theme-glass="true"] .theme-panel {
+  background-color: rgba(20, 26, 33, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme-glass="false"] .theme-panel,
+html:not([data-theme-glass]) .theme-panel {
+  background-color: var(--theme-surface);
+  border: 1px solid var(--theme-outline-variant);
+}
+
+/*
+ * Shared BigBox markup receives the same list presenter selected by ListView.
+ * New themes add one entry in themes/list-presentations.ts, then target its
+ * data-list-presentation value here; no rail or navigation fork is required.
+ */
+.bigbox-list-surface[data-list-presentation="arcade-dashboard"] [data-rail-anchor] {
+  text-shadow: 0 0 18px color-mix(in srgb, var(--theme-primary) 42%, transparent);
+}
+
+.bigbox-list-surface[data-list-presentation="cyberpunk-terminal"] [data-rail-anchor] {
+  border-bottom: 1px solid var(--theme-primary);
+  padding-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.bigbox-list-surface[data-list-presentation="cyberpunk-terminal"] [data-rail-anchor] h2::before {
+  content: "// ";
+  color: var(--theme-secondary);
+}
+
+/* Cyberpunk CRT grid: shared windowed and BigBox hardware-shell treatment. */
+.cyberpunk-crt-header {
+  border-bottom: 2px solid var(--theme-primary) !important;
+  box-shadow: 2px 2px 0 var(--theme-primary), -1px 0 0 var(--theme-tertiary) !important;
+}
+
+.cyberpunk-crt-header,
+.cyberpunk-crt-header button,
+.cyberpunk-crt-header input {
+  border-radius: 0 !important;
+  font-family: var(--theme-font-mono, monospace);
+}
+
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar {
+  border-right: 2px solid var(--theme-primary);
+  background: color-mix(in srgb, var(--theme-surface) 94%, black);
+}
+
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar button {
+  color: var(--theme-text-muted);
+}
+
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar button:hover,
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar button:focus-visible {
+  background: color-mix(in srgb, var(--theme-primary) 20%, transparent);
+  color: var(--theme-primary);
+  outline: 1px solid var(--theme-primary);
+}
+
+html[data-theme="cyberpunk-crt"] .alphabet-jump-bar button.text-blue-400 {
+  color: #0a0a0c;
+  background: var(--theme-primary);
+}
+
+html[data-theme="c64-edition"] .alphabet-jump-bar {
+  border-right: 4px solid var(--theme-outline-variant);
+  background: var(--theme-surface);
+}
+
+html[data-theme="c64-edition"] .alphabet-jump-bar button {
+  color: var(--theme-text-muted);
+}
+
+html[data-theme="c64-edition"] .alphabet-jump-bar button:hover,
+html[data-theme="c64-edition"] .alphabet-jump-bar button:focus-visible {
+  background: var(--theme-primary);
+  color: #131313;
+}
+
+html[data-theme="c64-edition"] .alphabet-jump-bar button.text-blue-400 {
+  color: #131313;
+  background: var(--theme-primary);
+}
+
+.bigbox-list-surface[data-list-presentation="c64-workspace"] [data-rail-anchor] {
+  border: 4px solid var(--theme-outline-variant);
+  background: var(--theme-surface);
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
 }
 
 .custom-scrollbar-hidden, .no-scrollbar {
@@ -80,4 +229,36 @@ body {
 
 .app-launch-splash-image {
   animation: app-launch-splash-image 5s ease-in-out forwards;
+}
+
+.noise-bg {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+}
+
+/* Focus state styling per theme */
+.settings-card {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Arcade Void: Yellow glow and yellow border */
+html[data-theme="arcade-void"] .settings-card-focused {
+  box-shadow: 0 0 22px color-mix(in srgb, var(--theme-secondary) 50%, transparent);
+  border-color: var(--theme-secondary) !important;
+}
+
+/* Cyberpunk CRT: Hazard Orange / Warning Red flat offset shadow and border */
+html[data-theme="cyberpunk-crt"] .settings-card-focused {
+  box-shadow: 3px 3px 0 var(--theme-primary);
+  border-color: var(--theme-primary) !important;
+}
+
+/* C64 Edition (Breadbox 64): Inverse color block */
+html[data-theme="c64-edition"] .settings-card-focused {
+  border-color: var(--theme-outline) !important;
+  background-color: var(--theme-primary) !important;
+  color: var(--theme-background) !important;
+}
+html[data-theme="c64-edition"] .settings-card-focused * {
+  color: var(--theme-background) !important;
 }

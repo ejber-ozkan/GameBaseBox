@@ -5,26 +5,20 @@ import { flushSync } from 'react-dom';
 import {
   exitApp,
   getDatabaseBootstrapStatus,
+  getDbGameCount,
   getGenres,
   getSubGenres,
   openDirectoryDialog,
   openMdbFileDialog,
 } from '@/lib/tauri-bridge';
 import { useSettings } from '@/contexts/SettingsContext';
-import { GridView } from '@/components/GridView';
-import { ListView } from '@/components/ListView';
 import { DetailView } from '@/components/DetailView';
 import { SettingsView } from '@/components/SettingsModal';
-import { AlphabetJumpBar } from '@/components/AlphabetJumpBar';
 import { useInputMode } from '@/hooks/useInputMode';
-import { BigBoxView } from '@/components/BigBoxView';
-import type { BigBoxSessionState } from '@/components/BigBoxView';
+import { UnifiedLibraryView } from '@/components/UnifiedLibraryView';
+import type { BigBoxSessionState } from '@/components/UnifiedLibraryView';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useLibraryBrowserState } from '@/hooks/useLibraryBrowserState';
-import { useLibraryShellInput } from '@/hooks/useLibraryShellInput';
-import { LibraryHeader } from '@/components/library/LibraryHeader';
-import { WindowGameShelf } from '@/components/library/WindowGameShelf';
-import { WindowGameListSection } from '@/components/library/WindowGameListSection';
 import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
 import { useWindowLibraryShelves } from '@/hooks/useWindowLibraryShelves';
@@ -34,7 +28,6 @@ import {
   getPlatformAliases,
   getRequiredPlatformFolderKeys as getManifestRequiredPlatformFolderKeys,
 } from '@/lib/platform-manifest';
-import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '@/lib/library-backgrounds';
 import type { PlatformFolderSettings, PlatformId, PlatformSettings } from '@/types/platform';
 import {
   playRotatingUiSoundEffectAndWait,
@@ -51,19 +44,19 @@ function getRequiredPlatformFolderKeys(platformId: keyof typeof PLATFORM_PROFILE
   return getManifestRequiredPlatformFolderKeys(platformId) as SetupFolderKey[];
 }
 
-function LibraryApp() {
+function ImportedLibraryContent() {
   const { settings, updateSettings, setActivePlatform } = useSettings();
-  const { favorites, isFavorite } = useFavorites();
-  const { isMouseMode, onGamepadInput, showMouse } = useInputMode();
+  const { favorites } = useFavorites();
+  const { onGamepadInput } = useInputMode();
   const {
     closeDetail,
     effectiveFilters: filters,
     focusedIndex,
     games,
+    setGames,
     handleGameSelect,
     handleSort,
     loadNextPage,
-    mounted,
     openTigerHeliFromSettings,
     persistWindowSize,
     searchInput,
@@ -79,8 +72,8 @@ function LibraryApp() {
   const [genres, setGenres] = useState<string[]>([]);
   const [subGenres, setSubGenres] = useState<string[]>([]);
   const [showLaunchSplash, setShowLaunchSplash] = useState(true);
+  const [listGameCount, setListGameCount] = useState<number | undefined>(undefined);
   const [bigBoxSession, setBigBoxSession] = useState<BigBoxSessionState | null>(null);
-  const [libraryBackgroundSeed] = useState(() => Math.floor(Math.random() * 1000));
   const previousFullscreenRef = useRef(settings.isFullscreen);
   const { classicGames, favoriteGames, recentGames } = useWindowLibraryShelves({
     activePlatformId: settings.activePlatformId,
@@ -89,25 +82,20 @@ function LibraryApp() {
     recentlyPlayedIds: settings.recentlyPlayedIds,
     searchInput,
   });
-  const activePlatform = PLATFORM_PROFILES[settings.activePlatformId];
-  const activePlatformSettings = settings.platformSettings[settings.activePlatformId];
-  const platformImport = usePlatformImport({
-    platformName: activePlatform.displayName,
-    platformId: settings.activePlatformId,
-    platformSettings: settings.platformSettings,
-    requiredFolderKeys: getRequiredPlatformFolderKeys(settings.activePlatformId),
-    updateSettings,
-  });
-  const libraryViewBackgroundMode = viewMode === 'list' ? 'list' : 'grid';
-  const libraryBackgroundImage = resolveLibraryBackground(
-    settings.activePlatformId,
-    libraryViewBackgroundMode,
-    libraryBackgroundSeed,
-  );
 
   useEffect(() => {
     void getGenres(settings.activePlatformId).then(setGenres);
   }, [settings.activePlatformId]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void getDbGameCount(filters, settings.activePlatformId).then((count) => {
+      if (!cancelled) setListGameCount(count);
+    });
+
+    return () => { cancelled = true; };
+  }, [filters, settings.activePlatformId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -142,27 +130,103 @@ function LibraryApp() {
     previousFullscreenRef.current = settings.isFullscreen;
   }, [settings.isFullscreen]);
 
-  useLibraryShellInput({
-    closeDetail,
-    filters,
-    focusedIndex,
-    games,
-    handleGameSelect,
-    onGamepadInput,
-    persistWindowSize,
-    selectedGame,
-    setFilters,
-    setFocusedIndex,
-    setSearchInput,
-    setViewMode,
-    settings: {
-      isFullscreen: settings.isFullscreen,
-      recentlyPlayedIds: settings.recentlyPlayedIds,
-      scrollNavigation: settings.scrollNavigation,
-    },
-    toggleFocusedFavorite,
+  const handleBackFromSettings = async () => {
+    await playUiSoundEffectAndWait('close-detail-1', 0.52);
+    setViewMode('grid');
+  };
+
+  const handleBackFromDetail = async () => {
+    await playUiSoundEffectAndWait('close-detail-1', 0.52);
+    closeDetail();
+  };
+
+  if (viewMode === 'settings') {
+    return (
+      <>
+        {showLaunchSplash ? <AppLaunchSplash /> : null}
+        <main className="min-h-screen bg-theme-background text-theme-text font-sans selection:bg-theme-primary/30 flex flex-col">
+          <SettingsView onBack={handleBackFromSettings} onOpenTigerHeli={openTigerHeliFromSettings} />
+        </main>
+      </>
+    );
+  }
+
+  if (selectedGame) {
+    return (
+      <>
+        {showLaunchSplash ? <AppLaunchSplash /> : null}
+        <main className="min-h-screen bg-[var(--theme-background)] text-[var(--theme-text)] font-sans selection:bg-[var(--theme-primary-container)]">
+          <DetailView game={selectedGame} onBack={handleBackFromDetail} />
+        </main>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {showLaunchSplash ? <AppLaunchSplash /> : null}
+      <UnifiedLibraryView
+        settings={settings}
+        updateSettings={updateSettings}
+        onSelectGame={handleGameSelect}
+        onPlatformSelect={setActivePlatform}
+        filters={filters}
+        onFiltersChange={setFilters}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        searchInput={searchInput}
+        onSearchChange={setSearchInput}
+        games={games}
+        setGames={setGames}
+        focusedIndex={focusedIndex}
+        setFocusedIndex={setFocusedIndex}
+        loadNextPage={loadNextPage}
+        handleSort={handleSort}
+        shelfRef={shelfRef}
+        toggleFocusedFavorite={toggleFocusedFavorite}
+        onGamepadInput={onGamepadInput}
+        recentGames={recentGames}
+        favoriteGames={favoriteGames}
+        classicGames={classicGames}
+        genres={genres}
+        subGenres={subGenres}
+        listGameCount={listGameCount}
+        persistWindowSize={persistWindowSize}
+        sessionState={bigBoxSession}
+        onSessionChange={setBigBoxSession}
+        onRequestExit={({ dontAskAgain, focusedGameId, railId }) => {
+          flushSync(() => {
+            updateSettings({
+              confirmFullscreenExit: !dontAskAgain,
+              lastBigBoxGameId: focusedGameId,
+              lastBigBoxRailId: railId,
+            });
+          });
+          void (async () => {
+            await playRotatingUiSoundEffectAndWait('bigbox-close', [
+              'close-app-1',
+              'close-app-2',
+              'close-app-3',
+              'close-app-4',
+            ], 0.7);
+            void exitApp();
+          })();
+        }}
+      />
+    </>
+  );
+}
+
+function LibraryApp() {
+  const { settings, updateSettings, setActivePlatform } = useSettings();
+  const activePlatform = PLATFORM_PROFILES[settings.activePlatformId];
+  const activePlatformSettings = settings.platformSettings[settings.activePlatformId];
+  const platformImport = usePlatformImport({
+    platformName: activePlatform.displayName,
+    platformId: settings.activePlatformId,
+    platformSettings: settings.platformSettings,
+    requiredFolderKeys: getRequiredPlatformFolderKeys(settings.activePlatformId),
     updateSettings,
-    viewMode,
   });
 
   const handleBrowsePlatformMdb = useCallback(async () => {
@@ -197,235 +261,39 @@ function LibraryApp() {
 
   if (activePlatformSettings.library.importStatus !== 'imported') {
     return (
-      <>
-        {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <DatabaseSetupView
-          dbPath={activePlatformSettings.library.sqliteScope}
-          error={platformImport.job.error ?? `${activePlatform.displayName} has not been imported yet.`}
-          folderSettings={activePlatformSettings.folders}
-          importProgress={platformImport.job.status === 'running' ? platformImport.job.progress : null}
-          importResult={platformImport.job.result}
-          isImporting={platformImport.job.status === 'running'}
-          mdbPath={activePlatformSettings.library.sourceMdbPath ?? ''}
-          platformAliases={getPlatformAliases(settings.activePlatformId)}
-          platformName={activePlatform.displayName}
-          platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
-            id: platform.id,
-            displayName: platform.displayName,
-            importStatus: settings.platformSettings[platform.id].library.importStatus,
-          }))}
-          requiredFolderKeys={getRequiredPlatformFolderKeys(settings.activePlatformId)}
-          selectedPlatformId={settings.activePlatformId}
-          onBrowse={handleBrowsePlatformMdb}
-          onBrowseFolder={handleBrowsePlatformFolder}
-          onCancelImport={() => void platformImport.cancelImport()}
-          onFolderChange={handlePlatformFolderChange}
-          onPlatformSelect={(platformId) => {
-            if (platformId in PLATFORM_PROFILES) {
-              setActivePlatform(platformId as keyof typeof PLATFORM_PROFILES);
-              platformImport.reset();
-            }
-          }}
-          onImport={handlePlatformImport}
-        />
-      </>
+      <DatabaseSetupView
+        dbPath={activePlatformSettings.library.sqliteScope}
+        error={platformImport.job.error ?? `${activePlatform.displayName} has not been imported yet.`}
+        folderSettings={activePlatformSettings.folders}
+        importProgress={platformImport.job.status === 'running' ? platformImport.job.progress : null}
+        importResult={platformImport.job.result}
+        isImporting={platformImport.job.status === 'running'}
+        mdbPath={activePlatformSettings.library.sourceMdbPath ?? ''}
+        platformAliases={getPlatformAliases(settings.activePlatformId)}
+        platformName={activePlatform.displayName}
+        platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
+          id: platform.id,
+          displayName: platform.displayName,
+          importStatus: settings.platformSettings[platform.id].library.importStatus,
+        }))}
+        requiredFolderKeys={getRequiredPlatformFolderKeys(settings.activePlatformId)}
+        selectedPlatformId={settings.activePlatformId}
+        onBrowse={handleBrowsePlatformMdb}
+        onBrowseFolder={handleBrowsePlatformFolder}
+        onCancelImport={() => void platformImport.cancelImport()}
+        onFolderChange={handlePlatformFolderChange}
+        onPlatformSelect={(platformId) => {
+          if (platformId in PLATFORM_PROFILES) {
+            setActivePlatform(platformId as keyof typeof PLATFORM_PROFILES);
+            platformImport.reset();
+          }
+        }}
+        onImport={handlePlatformImport}
+      />
     );
   }
 
-  const handleBackFromSettings = async () => {
-    await playUiSoundEffectAndWait('close-detail-1', 0.52);
-    setViewMode('grid');
-  };
-
-  const handleBackFromDetail = async () => {
-    await playUiSoundEffectAndWait('close-detail-1', 0.52);
-    closeDetail();
-  };
-
-  if (viewMode === 'settings') {
-    return (
-      <>
-        {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <main className="min-h-screen bg-gray-950 text-white font-sans selection:bg-blue-600/50 flex flex-col">
-          <SettingsView onBack={handleBackFromSettings} onOpenTigerHeli={openTigerHeliFromSettings} />
-        </main>
-      </>
-    )
-  }
-
-
-
-  if (selectedGame) {
-    return (
-      <>
-        {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <main className="min-h-screen bg-gray-900 text-white font-sans selection:bg-blue-600/50">
-          <DetailView game={selectedGame} onBack={handleBackFromDetail} />
-        </main>
-      </>
-    );
-  }
-
-  if (settings.isFullscreen) {
-    return (
-      <>
-        {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <BigBoxView 
-          settings={settings}
-          onSelectGame={handleGameSelect}
-          sessionState={bigBoxSession}
-          onSessionChange={setBigBoxSession}
-          onRequestExit={({ dontAskAgain, focusedGameId, railId }) => {
-            flushSync(() => {
-              updateSettings({
-                confirmFullscreenExit: !dontAskAgain,
-                lastBigBoxGameId: focusedGameId,
-                lastBigBoxRailId: railId,
-              });
-            });
-            void (async () => {
-              await playRotatingUiSoundEffectAndWait('bigbox-close', [
-                'close-app-1',
-                'close-app-2',
-                'close-app-3',
-                'close-app-4',
-              ], 0.7);
-              void exitApp();
-            })();
-          }}
-          searchInput={searchInput}
-          onSearchChange={setSearchInput}
-          onShowSettings={() => setViewMode('settings')}
-          onPlatformSelect={setActivePlatform}
-          filters={filters}
-          onFiltersChange={setFilters}
-        />
-      </>
-    );
-  }
-
-  return (
-    <>
-      {showLaunchSplash ? <AppLaunchSplash /> : null}
-      <main className={`h-screen overflow-hidden bg-gray-900 text-white flex flex-col font-sans transition-all ${
-        settings.isFullscreen && !showMouse ? 'cursor-none' : ''
-      }`}>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat saturate-[0.85] contrast-[1.08]"
-          style={{
-            backgroundImage: `url('${libraryBackgroundImage}')`,
-            opacity: LIBRARY_BACKGROUND_OPACITY,
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(180deg,rgba(17,24,39,0.58),rgba(17,24,39,0.84)_52%,rgba(17,24,39,0.94))]"
-        />
-        <LibraryHeader
-          filters={filters}
-          genres={genres}
-          onExit={exitApp}
-          onFiltersChange={setFilters}
-          onOpenSettings={() => setViewMode('settings')}
-          onPlatformSelect={setActivePlatform}
-          onSearchChange={setSearchInput}
-          subGenres={subGenres}
-          onViewModeChange={setViewMode}
-          searchInput={searchInput}
-          activePlatformId={settings.activePlatformId}
-          viewMode={viewMode}
-        />
-
-        <div data-library-scroll-container className="no-scrollbar relative z-10 flex-1 overflow-auto pl-8 pr-4">
-          <AlphabetJumpBar 
-            activeLetter={filters.letter} 
-            onLetterSelect={(l) => {
-              setFilters(prev => ({ ...prev, letter: prev.letter === l ? undefined : l, searchQuery: undefined }));
-              setSearchInput(''); // Clear search box when browsing by letter
-            }} 
-          />
-          
-          {viewMode === 'grid' ? (
-            <>
-              {mounted && (
-                <WindowGameShelf
-                  games={recentGames}
-                  isFavorite={isFavorite}
-                  isMouseMode={isMouseMode}
-                  onFocusChange={() => {}}
-                  onSelectGame={handleGameSelect}
-                  subtitle="Your latest launches, kept near the top for quick return trips."
-                  shelfRef={shelfRef}
-                  title="Recent Games"
-                />
-              )}
-
-              <WindowGameShelf
-                games={favoriteGames}
-                isFavorite={isFavorite}
-                isMouseMode={isMouseMode}
-                onFocusChange={() => {}}
-                onSelectGame={handleGameSelect}
-                subtitle="Pinned titles from your personal shortlist."
-                title="Your Favorites"
-              />
-
-              <WindowGameShelf
-                games={classicGames}
-                isFavorite={isFavorite}
-                isMouseMode={isMouseMode}
-                onFocusChange={() => {}}
-                onSelectGame={handleGameSelect}
-                subtitle="Essential GB64 staples surfaced in the windowed library too."
-                title="🏆 Legendary Classics 🏆"
-              />
-
-              <GridView 
-                games={games} 
-                onSelectGame={handleGameSelect} 
-                focusedIndex={focusedIndex >= 0 ? focusedIndex : -1} 
-                onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
-                onEndReached={loadNextPage}
-              />
-            </>
-          ) : (
-            <>
-              {mounted && (
-                <WindowGameListSection
-                  games={recentGames}
-                  isFavorite={isFavorite}
-                  onSelectGame={handleGameSelect}
-                  title="Recent Games"
-                />
-              )}
-              <WindowGameListSection
-                games={favoriteGames}
-                isFavorite={isFavorite}
-                onSelectGame={handleGameSelect}
-                title="Your Favorites"
-              />
-              <WindowGameListSection
-                games={classicGames}
-                isFavorite={isFavorite}
-                onSelectGame={handleGameSelect}
-                title="🏆 Legendary Classics 🏆"
-              />
-              <ListView 
-                games={games} 
-                onSelectGame={handleGameSelect} 
-                onSort={handleSort} 
-                focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
-                onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
-                isFavorite={isFavorite}
-                onEndReached={loadNextPage}
-              />
-            </>
-          )}
-        </div>
-      </main>
-    </>
-  );
+  return <ImportedLibraryContent />;
 }
 
 export default function Home() {
@@ -436,24 +304,19 @@ export default function Home() {
     reason: string | null;
   } | null>(null);
   const [isCheckingSetup, setIsCheckingSetup] = useState(true);
-  const [setupPlatformId, setSetupPlatformId] = useState<PlatformId>(settings.activePlatformId);
-  const [setupPlatformSettings, setSetupPlatformSettings] = useState<Record<PlatformId, PlatformSettings>>(
-    settings.platformSettings,
-  );
   const [setupError, setSetupError] = useState<string | null>(null);
-  const activeSetupPlatform = PLATFORM_PROFILES[setupPlatformId];
-  const activeSetupPlatformSettings = setupPlatformSettings[setupPlatformId];
+
+  const activeSetupPlatform = PLATFORM_PROFILES[settings.activePlatformId];
+  const activeSetupPlatformSettings = settings.platformSettings[settings.activePlatformId];
   const setupPlatformImport = usePlatformImport({
     platformName: activeSetupPlatform.displayName,
-    platformId: setupPlatformId,
-    platformSettings: setupPlatformSettings,
-    requiredFolderKeys: getRequiredPlatformFolderKeys(setupPlatformId),
-    setPlatformSettings: setSetupPlatformSettings,
+    platformId: settings.activePlatformId,
+    platformSettings: settings.platformSettings,
+    requiredFolderKeys: getRequiredPlatformFolderKeys(settings.activePlatformId),
     updateSettings,
   });
 
   const refreshBootstrapStatus = useCallback(async () => {
-    setIsCheckingSetup(true);
     try {
       const status = await getDatabaseBootstrapStatus();
       setBootstrapStatus({
@@ -470,7 +333,7 @@ export default function Home() {
         ready: false,
         reason: null,
       });
-      setSetupError(error instanceof Error ? error.message : 'Unable to verify database setup.');
+      setSetupError(typeof error === 'string' ? error : (error instanceof Error ? error.message : 'Unable to verify database setup.'));
     } finally {
       setIsCheckingSetup(false);
     }
@@ -537,25 +400,23 @@ export default function Home() {
         importResult={setupPlatformImport.job.result}
         isImporting={setupPlatformImport.job.status === 'running'}
         mdbPath={activeSetupPlatformSettings.library.sourceMdbPath ?? ''}
-        platformAliases={getPlatformAliases(setupPlatformId)}
+        platformAliases={getPlatformAliases(settings.activePlatformId)}
         platformName={activeSetupPlatform.displayName}
         platformOptions={SUPPORTED_PLATFORMS.map((platform) => ({
           id: platform.id,
           displayName: platform.displayName,
-          importStatus: setupPlatformSettings[platform.id].library.importStatus,
+          importStatus: settings.platformSettings[platform.id].library.importStatus,
         }))}
         folderSettings={activeSetupPlatformSettings.folders}
-        requiredFolderKeys={getRequiredPlatformFolderKeys(setupPlatformId)}
-        selectedPlatformId={setupPlatformId}
+        requiredFolderKeys={getRequiredPlatformFolderKeys(settings.activePlatformId)}
+        selectedPlatformId={settings.activePlatformId}
         onBrowse={handleBrowseSetupMdb}
         onBrowseFolder={handleBrowseSetupFolder}
         onCancelImport={() => void setupPlatformImport.cancelImport()}
         onFolderChange={handleSetupFolderChange}
         onPlatformSelect={(platformId) => {
           if (platformId in PLATFORM_PROFILES) {
-            const nextPlatformId = platformId as PlatformId;
-            setSetupPlatformId(nextPlatformId);
-            setActivePlatform(nextPlatformId);
+            setActivePlatform(platformId as PlatformId);
             setSetupError(null);
             setupPlatformImport.reset();
           }

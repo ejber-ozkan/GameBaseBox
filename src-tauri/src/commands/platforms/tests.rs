@@ -38,6 +38,10 @@ async fn test_get_supported_platforms_includes_atari800_capabilities() {
 
 #[tokio::test(flavor = "current_thread")]
 async fn test_get_supported_platforms_includes_importable_atari2600_capabilities() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
     let platforms = get_supported_platforms().await.unwrap();
     let atari2600 = platforms
         .iter()
@@ -59,6 +63,10 @@ async fn test_get_supported_platforms_includes_importable_atari2600_capabilities
 
 #[tokio::test(flavor = "current_thread")]
 async fn test_get_supported_platforms_includes_zxspectrum_capabilities() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
     let platforms = get_supported_platforms().await.unwrap();
     let zxspectrum = platforms
         .iter()
@@ -95,6 +103,10 @@ async fn test_get_supported_platforms_includes_zxspectrum_capabilities() {
 
 #[tokio::test(flavor = "current_thread")]
 async fn test_get_supported_platforms_includes_bbc_micro_capabilities() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
     let platforms = get_supported_platforms().await.unwrap();
     let bbc = platforms
         .iter()
@@ -129,6 +141,10 @@ async fn test_get_supported_platforms_includes_bbc_micro_capabilities() {
 
 #[tokio::test(flavor = "current_thread")]
 async fn test_get_supported_platforms_includes_amiga_capabilities() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
     let platforms = get_supported_platforms().await.unwrap();
     let amiga = platforms
         .iter()
@@ -195,6 +211,10 @@ async fn test_get_supported_platforms_uses_persisted_import_status() {
 
 #[tokio::test(flavor = "current_thread")]
 async fn test_get_supported_platforms_includes_atari_st_capabilities() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
     let platforms = get_supported_platforms().await.unwrap();
     let atari_st = platforms
         .iter()
@@ -230,6 +250,10 @@ async fn test_get_supported_platforms_includes_atari_st_capabilities() {
 
 #[tokio::test(flavor = "current_thread")]
 async fn test_get_supported_platforms_includes_vic20_capabilities() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
     let platforms = get_supported_platforms().await.unwrap();
     let vic20 = platforms
         .iter()
@@ -261,6 +285,10 @@ async fn test_get_supported_platforms_includes_vic20_capabilities() {
 
 #[tokio::test(flavor = "current_thread")]
 async fn test_active_platform_defaults_to_c64() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
     let active = get_active_platform().await.unwrap();
 
     assert_eq!(active.active_platform_id, "c64");
@@ -270,6 +298,10 @@ async fn test_active_platform_defaults_to_c64() {
 
 #[tokio::test(flavor = "current_thread")]
 async fn test_set_active_platform_routes_unimported_atari800_to_import() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
     let response = set_active_platform("atari800".to_string()).await.unwrap();
 
     assert_eq!(response.active_platform_id, "atari800");

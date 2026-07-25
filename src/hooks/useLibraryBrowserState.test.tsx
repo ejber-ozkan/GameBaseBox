@@ -1,4 +1,4 @@
-﻿import { act, renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
 import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
@@ -144,6 +144,36 @@ describe('useLibraryBrowserState', () => {
     expect(result.current.filters.letter).toBeUndefined();
     expect(result.current.filters.genre).toBeUndefined();
     expect(result.current.filters.subGenre).toBeUndefined();
+  });
+
+  it('does not set searchQuery or clear filters when search input has fewer than 2 characters', async () => {
+    const { result } = renderHook(() => useLibraryBrowserState());
+
+    await waitFor(() => {
+      expect(result.current.games).toHaveLength(mockGames.length);
+    });
+
+    vi.useFakeTimers();
+
+    act(() => {
+      result.current.setFilters({
+        letter: 'A',
+        genre: 'Action',
+        subGenre: 'Puzzle',
+      });
+      result.current.setSearchInput('C');
+    });
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(400);
+    });
+
+    vi.useRealTimers();
+
+    expect(result.current.filters.searchQuery).toBeUndefined();
+    expect(result.current.filters.letter).toBe('A');
+    expect(result.current.filters.genre).toBe('Action');
+    expect(result.current.filters.subGenre).toBe('Puzzle');
   });
 
   it('restores focus to the selected game index when closing the detail view', async () => {

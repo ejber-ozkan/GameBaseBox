@@ -163,26 +163,28 @@ pub(super) fn validate_platform_import_request(
         reject_obvious_wrong_platform_mdb(mdb_path)?;
     }
 
-    for folder_type in crate::platform_manifest::required_folder_types(&platform_id)? {
-        let (label, folder_path) = required_folder(&request.folder_settings, &folder_type, &platform_id)?;
-        validate_existing_folder(label, folder_path)?;
+    for folder_type in ["games", "music", "photos", "screenshots", "extras"] {
+        let (label, folder_path) = folder_by_type(&request.folder_settings, folder_type, &platform_id);
+        if !folder_path.trim().is_empty() {
+            validate_existing_folder(label, folder_path)?;
+        }
     }
 
     Ok(())
 }
 
-fn required_folder<'a>(
+fn folder_by_type<'a>(
     settings: &'a crate::models::PlatformFolderSettings,
     folder_type: &str,
     platform_id: &str,
-) -> Result<(&'static str, &'a str), String> {
+) -> (&'static str, &'a str) {
     match folder_type {
-        "games" => Ok(("Games", &settings.games_path)),
-        "music" => Ok(("Music", &settings.music_path)),
-        "photos" => Ok((if platform_id == "zxspectrum" { "Musician Photos" } else { "Photos" }, &settings.photos_path)),
-        "screenshots" => Ok(("Screenshots", &settings.screenshots_path)),
-        "extras" => Ok(("Extras", &settings.extras_path)),
-        _ => Err(format!("Unsupported required folder type: {folder_type}")),
+        "games" => ("Games", &settings.games_path),
+        "music" => ("Music", &settings.music_path),
+        "photos" => (if platform_id == "zxspectrum" { "Musician Photos" } else { "Photos" }, &settings.photos_path),
+        "screenshots" => ("Screenshots", &settings.screenshots_path),
+        "extras" => ("Extras", &settings.extras_path),
+        _ => ("Folder", ""),
     }
 }
 

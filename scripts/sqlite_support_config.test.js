@@ -2,14 +2,8 @@ import { describe, expect, test } from 'vitest';
 import { getPlatformImportConfig } from './sqlite_support_config.js';
 
 describe('sqlite_support_config', () => {
-  test('requires Atari 800 extras consistently with the application setup flow', () => {
-    expect(getPlatformImportConfig('atari800').requiredFolders).toEqual([
-      'gamesPath',
-      'musicPath',
-      'photosPath',
-      'screenshotsPath',
-      'extrasPath',
-    ]);
+  test('has empty requiredFolders array for Atari 800 consistent with optional folders setup flow', () => {
+    expect(getPlatformImportConfig('atari800').requiredFolders).toEqual([]);
   });
 
   test('defines ZX Spectrum GameBaseZX and SpeccyMania import defaults', () => {
@@ -21,13 +15,7 @@ describe('sqlite_support_config', () => {
       'E:\\Backups\\RETRO-BACKUPS\\ZXSpectrum\\Sinclair ZX Spectrum v6\\Sinclair ZX Spectrum v6.mdb',
     );
     expect(config.aliases).toEqual(expect.arrayContaining(['GameBaseZX', 'SpeccyMania']));
-    expect(config.requiredFolders).toEqual([
-      'extrasPath',
-      'gamesPath',
-      'screenshotsPath',
-      'photosPath',
-      'musicPath',
-    ]);
+    expect(config.requiredFolders).toEqual([]);
     expect(config.musicExtensions).toEqual(['.ay']);
     expect(config.launchExtensions).toEqual(expect.arrayContaining(['.tzx', '.tap', '.z80', '.sna']));
   });
@@ -37,7 +25,7 @@ describe('sqlite_support_config', () => {
 
     expect(config.displayName).toBe('Atari ST');
     expect(config.sourceMdbName).toBe('Atari ST.mdb');
-    expect(config.requiredFolders).toEqual(['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath']);
+    expect(config.requiredFolders).toEqual([]);
     expect(config.musicExtensions).toEqual([]);
     expect(config.launchExtensions).toEqual(expect.arrayContaining(['.st', '.msa', '.stx', '.dim']));
   });
@@ -48,7 +36,7 @@ describe('sqlite_support_config', () => {
     expect(config.displayName).toBe('Commodore VIC-20');
     expect(config.sourceMdbName).toBe('Vic20_v03.mdb');
     expect(config.aliases).toEqual(['VIC-20', 'VIC 20', 'Commodore VIC-20', 'Commodore VIC 20', 'GameBase VIC-20']);
-    expect(config.requiredFolders).toEqual(['extrasPath', 'gamesPath', 'screenshotsPath', 'musicPath']);
+    expect(config.requiredFolders).toEqual([]);
     expect(config.musicExtensions).toEqual([]);
     expect(config.launchExtensions).toEqual(expect.arrayContaining(['.d64', '.t64', '.tap', '.prg', '.crt']));
   });

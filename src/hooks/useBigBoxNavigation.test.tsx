@@ -1,4 +1,4 @@
-﻿import { act, renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
 import type { BigBoxRailCategory } from './useBigBoxLibraryData';
@@ -146,6 +146,72 @@ describe('useBigBoxNavigation', () => {
 
     expect(props.onLetterJump).toHaveBeenCalledOnce();
     expect(props.setActiveRailIndex).toHaveBeenCalledWith(2);
+  });
+
+  it('jumps to the matching letter in the C64 library when that is the only alphabet rail', () => {
+    const archon = { ...mockGames[0], name: 'Archon' };
+    const boulderDash = { ...mockGames[1], name: 'Boulder Dash' };
+    const props = createProps({
+      activeHeaderItemIndex: 2,
+      activeHeaderRow: 2,
+      railFocusIndices: { 'c64-library': 0 },
+      rails: [{ id: 'c64-library', title: 'Library', games: [archon, boulderDash], type: 'alphabet' }],
+    });
+
+    renderHook(() => useBigBoxNavigation(props));
+
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+
+    expect(props.onLetterJump).toHaveBeenCalledOnce();
+    expect(props.setActiveRailIndex).toHaveBeenCalledWith(0);
+    expect(props.setRailFocusIndices).toHaveBeenCalledWith(expect.any(Function));
+    expect(props.setRailFocusIndices.mock.calls[0]?.[0]({ 'c64-library': 0 })).toEqual({ 'c64-library': 1 });
+  });
+
+  it('moves the right bumper past empty C64 letter sections and focuses the first game', () => {
+    const props = createProps({
+      activeRailIndex: 0,
+      usesRailGridNavigation: true,
+      railFocusIndices: { classics: 2, 'alpha-#': 0, 'alpha-A': 4 },
+      rails: [
+        { id: 'classics', title: 'Classics', games: [mockGames[0]], type: 'classics' },
+        { id: 'alpha-#', title: '0-9 & Symbols', games: [], type: 'alphabet', letter: '#' },
+        { id: 'alpha-A', title: 'Letter A', games: [mockGames[1]], type: 'alphabet', letter: 'A' },
+      ],
+    });
+
+    renderHook(() => useBigBoxNavigation(props));
+
+    act(() => {
+      getLatestGamepadHandler()('RB');
+    });
+
+    expect(props.setActiveRailIndex).toHaveBeenCalledWith(2);
+    expect(props.setRailFocusIndices.mock.calls[0]?.[0]({ classics: 2, 'alpha-#': 0, 'alpha-A': 4 })).toEqual({ classics: 2, 'alpha-#': 0, 'alpha-A': 0 });
+  });
+
+  it('moves the left bumper to the previous non-empty C64 letter section and focuses its first game', () => {
+    const props = createProps({
+      activeRailIndex: 2,
+      usesRailGridNavigation: true,
+      railFocusIndices: { classics: 2, 'alpha-#': 0, 'alpha-A': 4 },
+      rails: [
+        { id: 'classics', title: 'Classics', games: [mockGames[0]], type: 'classics' },
+        { id: 'alpha-#', title: '0-9 & Symbols', games: [], type: 'alphabet', letter: '#' },
+        { id: 'alpha-A', title: 'Letter A', games: [mockGames[1]], type: 'alphabet', letter: 'A' },
+      ],
+    });
+
+    renderHook(() => useBigBoxNavigation(props));
+
+    act(() => {
+      getLatestGamepadHandler()('LB');
+    });
+
+    expect(props.setActiveRailIndex).toHaveBeenCalledWith(0);
+    expect(props.setRailFocusIndices.mock.calls[0]?.[0]({ classics: 2, 'alpha-#': 0, 'alpha-A': 4 })).toEqual({ classics: 0, 'alpha-#': 0, 'alpha-A': 4 });
   });
 
   it('toggles favorite on the focused game when gamepad Y is pressed', () => {

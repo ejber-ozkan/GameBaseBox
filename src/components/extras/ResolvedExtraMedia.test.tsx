@@ -6,6 +6,8 @@ import { ResolvedExtraMedia } from './ResolvedExtraMedia';
 
 const mockResolveExtraVideo = vi.fn();
 const mockGetAssetUrl = vi.fn();
+const mockIsDebugMode = vi.fn();
+const mockLogDebugMessage = vi.fn();
 const mockOpenFile = vi.fn();
 const mockConvertExtraVideo = vi.fn();
 const mockDownloadArchiveExtraVideo = vi.fn();
@@ -22,6 +24,8 @@ let downloadProgressListener: ((progress: {
 vi.mock('../../lib/tauri-bridge', () => ({
   resolveExtraVideo: (...args: unknown[]) => mockResolveExtraVideo(...args),
   getAssetUrl: (...args: unknown[]) => mockGetAssetUrl(...args),
+  isDebugMode: () => mockIsDebugMode(),
+  logDebugMessage: (...args: unknown[]) => mockLogDebugMessage(...args),
   openFile: (...args: unknown[]) => mockOpenFile(...args),
   convertExtraVideo: (...args: unknown[]) => mockConvertExtraVideo(...args),
   downloadArchiveExtraVideo: (...args: unknown[]) => mockDownloadArchiveExtraVideo(...args),
@@ -44,6 +48,8 @@ describe('ResolvedExtraMedia video compatibility', () => {
       return vi.fn();
     });
     mockGetAssetUrl.mockImplementation(async (path: string) => `asset://${path}`);
+    mockIsDebugMode.mockResolvedValue(false);
+    mockLogDebugMessage.mockResolvedValue(undefined);
     mockOpenFile.mockResolvedValue(undefined);
     mockConvertExtraVideo.mockResolvedValue({
       path: 'E:/Extras/Videos/C64GVA319-Rambo.mp4',
@@ -311,5 +317,65 @@ describe('ResolvedExtraMedia video compatibility', () => {
 
     await screen.findByText(/video file is not available locally/i);
     expect(screen.queryByRole('button', { name: /download compatible MP4/i })).toBeNull();
+  });
+});
+
+describe('ResolvedExtraMedia non-video compatibility', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('displays "unavailable" fallback when getAssetUrl fails due to missing parent directory', async () => {
+    const imageExtra: Extra = {
+      id: 'image-1',
+      name: 'Cover image',
+      path: 'Magcover/Golden_Disk_64/Golden_Disk_64_(1994-01).jpg',
+      type: 'Magcover',
+    };
+
+    mockGetAssetUrl.mockRejectedValue(
+      new Error('Asset parent directory does not exist: E:/Backups/RETRO-BACKUPS/C64/gb64v19/Games/Extras/Magcover/Golden_Disk_64/Golden_Disk_64_(1994-01).jpg')
+    );
+    mockIsDebugMode.mockResolvedValue(false);
+
+    render(
+      <ResolvedExtraMedia
+        extra={imageExtra}
+        extrasPath="E:/Backups/RETRO-BACKUPS/C64/gb64v19/Games/Extras"
+        className="media"
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('unavailable')).not.toBeNull();
+    });
+  });
+
+  it('sends the error to the webview debug log when debug mode is enabled', async () => {
+    const imageExtra: Extra = {
+      id: 'image-1',
+      name: 'Cover image',
+      path: 'Magcover/Golden_Disk_64/Golden_Disk_64_(1994-01).jpg',
+      type: 'Magcover',
+    };
+
+    mockIsDebugMode.mockResolvedValue(true);
+    mockGetAssetUrl.mockRejectedValue(
+      new Error('Asset parent directory does not exist: E:/Backups/RETRO-BACKUPS/C64/gb64v19/Games/Extras/Magcover/Golden_Disk_64/Golden_Disk_64_(1994-01).jpg')
+    );
+
+    render(
+      <ResolvedExtraMedia
+        extra={imageExtra}
+        extrasPath="E:/Backups/RETRO-BACKUPS/C64/gb64v19/Games/Extras"
+        className="media"
+      />
+    );
+
+    await waitFor(() => {
+      expect(mockLogDebugMessage).toHaveBeenCalledWith(
+        expect.stringContaining('Failed to resolve asset parent directory')
+      );
+    });
   });
 });

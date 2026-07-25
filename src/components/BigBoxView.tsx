@@ -8,10 +8,13 @@ import { useInputMode } from '../hooks/useInputMode';
 import { GameFilters } from '../lib/tauri-bridge';
 import { BigBoxHeader } from './bigbox/BigBoxHeader';
 import { BigBoxAlphabetRail } from './bigbox/BigBoxAlphabetRail';
+import { getThemeListPresentation } from '../themes/list-presentations';
 import { BigBoxFooter } from './bigbox/BigBoxFooter';
+import { C64EditionGrid } from './library/C64EditionGrid';
+import { CyberpunkCrtGrid } from './library/CyberpunkCrtGrid';
 import { BigBoxExitPrompt } from './bigbox/BigBoxExitPrompt';
 import { HorizontalRail } from './HorizontalRail';
-import { useBigBoxLibraryData } from '../hooks/useBigBoxLibraryData';
+import { useBigBoxLibraryData, type BigBoxRailCategory } from '../hooks/useBigBoxLibraryData';
 import { useBigBoxNavigation } from '../hooks/useBigBoxNavigation';
 import { useBigBoxScrollSync } from '../hooks/useBigBoxScrollSync';
 import { ControllerSearchKeyboard } from './ControllerSearchKeyboard';
@@ -46,6 +49,29 @@ export interface BigBoxSessionState {
   railId: string | null;
 }
 
+export function getC64NavigationRails(rails: BigBoxRailCategory[], flatGames: Game[]): BigBoxRailCategory[] {
+  const gamesByLetter = new Map<string, Game[]>();
+  for (let i = 0; i < flatGames.length; i++) {
+    const game = flatGames[i];
+    const firstChar = game.name.trim().charAt(0).toUpperCase();
+    const letter = /[A-Z]/.test(firstChar) ? firstChar : '#';
+    let list = gamesByLetter.get(letter);
+    if (!list) {
+      list = [];
+      gamesByLetter.set(letter, list);
+    }
+    list.push(game);
+  }
+
+  return rails.map((rail) => {
+    if (rail.type !== 'alphabet' || !rail.letter) {
+      return rail;
+    }
+
+    return { ...rail, games: gamesByLetter.get(rail.letter) ?? [] };
+  });
+}
+
 export function BigBoxView({
   settings,
   onSelectGame,
@@ -60,7 +86,7 @@ export function BigBoxView({
   onFiltersChange,
 }: BigBoxViewProps) {
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
-  const { isMouseMode, onGamepadInput } = useInputMode();
+  const { onGamepadInput, showMouse } = useInputMode();
   const [activeRailIndex, setActiveRailIndex] = useState(sessionState?.activeRailIndex ?? 0);
   const [activeHeaderRow, setActiveHeaderRow] = useState(sessionState?.activeHeaderRow ?? 0);
   const [activeHeaderItemIndex, setActiveHeaderItemIndex] = useState(sessionState?.activeHeaderItemIndex ?? 0);
@@ -72,21 +98,34 @@ export function BigBoxView({
   const classicTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const layout = useFullscreenLayoutMetrics();
   const bigBoxBackground = resolveLibraryBackground(settings.activePlatformId, 'grid', 0);
+  const isC64Edition = getThemeListPresentation(
+    typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
+  ).id === 'c64-edition';
+  const isCyberpunkCrt = getThemeListPresentation(
+    typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
+  ).id === 'cyberpunk-crt';
+  const usesRailGridNavigation = isC64Edition || isCyberpunkCrt;
 
-  const { genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
+  const { flatGames, genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
     activeRailIndex,
     activePlatformId: settings.activePlatformId,
     favorites,
     filters,
     recentlyPlayedIds: settings.recentlyPlayedIds,
     searchInput,
+    loadFlatLibrary: usesRailGridNavigation,
   });
 
-  const currentRail = activeRailIndex >= 0 ? rails[activeRailIndex] : null;
+  const navigationRails = useMemo(
+    () => usesRailGridNavigation ? getC64NavigationRails(rails, flatGames) : rails,
+    [flatGames, rails, usesRailGridNavigation],
+  );
+  const currentRail = activeRailIndex >= 0 ? navigationRails[activeRailIndex] : null;
   const currentFocusedIndex = currentRail ? (railFocusIndices[currentRail.id] ?? 0) : 0;
   const currentFocusedGame = currentRail?.games[currentFocusedIndex] ?? null;
   const isInteractionOverlayOpen = isControllerKeyboardOpen || isExitPromptOpen || isSubGenrePickerOpen;
-  const isShowingFilteredCount = Boolean(searchInput.trim() || filters.genre || filters.subGenre);
+  const activeSearch = searchInput.trim().length >= 2 ? searchInput.trim() : '';
+  const isShowingFilteredCount = Boolean(activeSearch || filters.genre || filters.subGenre);
   const { hasOverflow, visibleSubGenres } = useMemo(
     () => getVisibleSubGenres(subGenres, filters.subGenre, layout.maxVisibleSubGenres),
     [filters.subGenre, layout.maxVisibleSubGenres, subGenres],
@@ -143,7 +182,7 @@ export function BigBoxView({
   }, []);
 
   useEffect(() => {
-    if (hasRestoredPosition || rails.length === 0 || searchInput.trim()) {
+    if (hasRestoredPosition || navigationRails.length === 0 || (searchInput.trim().length >= 2)) {
       return;
     }
 
@@ -156,7 +195,7 @@ export function BigBoxView({
         return;
       }
 
-      const targetRailIndex = rails.findIndex((rail) => rail.id === targetRailId);
+      const targetRailIndex = navigationRails.findIndex((rail) => rail.id === targetRailId);
       if (targetRailIndex === -1) {
         setHasRestoredPosition(true);
         return;
@@ -164,7 +203,7 @@ export function BigBoxView({
 
       setActiveRailIndex(targetRailIndex);
 
-      const targetRail = rails[targetRailIndex];
+      const targetRail = navigationRails[targetRailIndex];
       if (!targetGameId) {
         setHasRestoredPosition(true);
         return;
@@ -176,19 +215,15 @@ export function BigBoxView({
 
       if (gameIndex >= 0) {
         setRailFocusIndices((previous) => ({ ...previous, [targetRail.id]: gameIndex }));
-        setHasRestoredPosition(true);
-        return;
       }
 
-      if (targetRail.type !== 'alphabet' || targetRail.games.length > 0) {
-        setHasRestoredPosition(true);
-      }
+      setHasRestoredPosition(true);
     });
 
     return () => window.cancelAnimationFrame(frameId);
   }, [
     hasRestoredPosition,
-    rails,
+    navigationRails,
     searchInput,
     sessionState?.focusedGameId,
     sessionState?.railId,
@@ -332,8 +367,9 @@ export function BigBoxView({
     onSelectGame: handleSelectGame,
     onShowSettings,
     platformSwitcherEnabled: showPlatformSwitcher,
+    usesRailGridNavigation,
     railFocusIndices,
-    rails,
+    rails: navigationRails,
     setActiveHeaderItemIndex,
     setActiveHeaderRow,
     setActiveRailIndex,
@@ -351,9 +387,23 @@ export function BigBoxView({
     sectionJumpDirection,
   });
 
+  const listPresentation = getThemeListPresentation(
+    typeof document === 'undefined' ? undefined : document.documentElement.dataset.theme,
+  );
+  const c64RecentGames = rails.find((rail) => rail.id === 'recent')?.games ?? [];
+  const c64FavoriteGames = rails.find((rail) => rail.id === 'favorites')?.games ?? [];
+  const c64ClassicGames = rails.find((rail) => rail.id === 'classics')?.games ?? [];
+
   return (
     <div 
-      className="fixed inset-0 bg-[#0a0a0f]/80 text-white flex flex-col overflow-hidden select-none"
+      className={`bigbox-list-surface fixed inset-0 flex flex-col overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] select-none ${
+        !showMouse ? 'cursor-none' : ''
+      } ${
+        isC64Edition ? 'border-[24px] border-[var(--theme-secondary)]' : ''
+      }`}
+      data-list-presentation={listPresentation.layout}
+      data-bigbox-rail-style={listPresentation.bigBox.railStyle}
+      data-c64-presentation={isC64Edition ? 'monitor' : undefined}
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
@@ -362,12 +412,6 @@ export function BigBoxView({
         className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat saturate-[0.9] contrast-[1.05]"
         style={{ backgroundImage: `url('${bigBoxBackground}')`, opacity: LIBRARY_BACKGROUND_OPACITY }}
       />
-      {/* Cinematic Background Blur */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-         <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-blue-900/10 blur-[100px] animate-pulse"></div>
-         <div className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] bg-purple-900/10 blur-[100px]"></div>
-      </div>
-
       {/* Top Bar - Fixed */}
       <header ref={headerRef}>
         <BigBoxHeader
@@ -378,6 +422,7 @@ export function BigBoxView({
           filters={filters}
           genres={genres}
           hasOverflowSubGenres={hasOverflow}
+          isFiltered={isShowingFilteredCount}
           layout={layout}
           onExit={openExitPrompt}
           onFiltersChange={handleFiltersChange}
@@ -392,6 +437,7 @@ export function BigBoxView({
           onSetHeaderFocus={focusHeader}
           onShowSettings={onShowSettings}
           searchInput={searchInput}
+          totalGameCount={totalGameCount}
           visibleSubGenres={visibleSubGenres}
         />
       </header>
@@ -440,7 +486,7 @@ export function BigBoxView({
       <div className="z-10 flex-1 overflow-hidden">
         <main
           ref={scrollContainerRef}
-          className="no-scrollbar h-full overflow-y-auto scroll-smooth pb-[100vh]"
+          className="no-scrollbar h-full overflow-y-auto overflow-x-hidden scroll-smooth pb-[100vh]"
           style={{
             width: 'calc(100% + 28px)',
             paddingRight: '28px',
@@ -451,9 +497,55 @@ export function BigBoxView({
         >
           {loading ? (
             <div className="h-[60vh] flex flex-col items-center justify-center gap-4">
-               <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
-               <div className="text-blue-400 font-bold uppercase tracking-widest animate-pulse">Scanning Library...</div>
+               <div className="h-12 w-12 rounded-full border-4 border-[var(--theme-outline-variant)] border-t-[var(--theme-primary)] animate-spin"></div>
+               <div className="font-bold uppercase tracking-widest text-[var(--theme-primary)] animate-pulse">Scanning Library...</div>
             </div>
+          ) : usesRailGridNavigation ? (
+            isC64Edition ? (
+            <C64EditionGrid
+              activeAlphabetRailId={currentRail?.type === 'alphabet' ? currentRail.id : null}
+              alphabetLabel={filters.letter}
+              alphabetSections={navigationRails
+                .filter((rail) => rail.type === 'alphabet')
+                .map((rail) => ({ id: rail.id, label: rail.letter ?? rail.title, games: rail.games }))}
+              classicGames={c64ClassicGames}
+              favoriteGames={c64FavoriteGames}
+              focusedGameId={currentFocusedGame?.id.toString()}
+              focusedIndex={currentFocusedIndex}
+              focusedRailId={currentRail?.id}
+              gridColumns={layout.gridColumns}
+              games={flatGames}
+              isFavorite={isFavorite}
+              onFocusSectionItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
+              onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
+              onSelectGame={handleSelectGame}
+              recentGames={c64RecentGames}
+              toggleFavorite={toggleFavorite}
+              searchInput={searchInput}
+            />
+            ) : (
+              <CyberpunkCrtGrid
+                activeAlphabetRailId={currentRail?.type === 'alphabet' ? currentRail.id : null}
+                alphabetLabel={filters.letter}
+                alphabetSections={navigationRails
+                  .filter((rail) => rail.type === 'alphabet')
+                  .map((rail) => ({ id: rail.id, label: rail.letter ?? rail.title, games: rail.games }))}
+                classicGames={c64ClassicGames}
+                favoriteGames={c64FavoriteGames}
+                focusedGameId={currentFocusedGame?.id.toString()}
+                focusedIndex={currentFocusedIndex}
+                focusedRailId={currentRail?.id}
+                games={flatGames}
+                gridColumns={layout.gridColumns}
+                isFavorite={isFavorite}
+                onFocusSectionItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
+                onFocusRailItem={(railId, index) => focusRailItem(navigationRails.findIndex((rail) => rail.id === railId), railId, index)}
+                onSelectGame={handleSelectGame}
+                recentGames={c64RecentGames}
+                toggleFavorite={toggleFavorite}
+                searchInput={searchInput}
+              />
+            )
           ) : (
             rails.map((rail, idx) => {
               const isActive = idx === activeRailIndex;
@@ -466,7 +558,6 @@ export function BigBoxView({
                     focusedIdx={focusedIdx}
                     isActive={isActive}
                     isFavorite={isFavorite}
-                    isMouseMode={isMouseMode}
                     layout={layout}
                     onFocus={(gameIndex) => focusRailItem(idx, rail.id, gameIndex)}
                     onSelectGame={(gameId) => {
@@ -481,18 +572,17 @@ export function BigBoxView({
               }
 
               return (
-                <div key={rail.id} className="scroll-mt-[340px]">
+                <div key={rail.id} data-rail-id={rail.id} className="scroll-mt-[340px]">
                   <HorizontalRail
                     title={rail.title}
                     games={rail.games}
                     onSelectGame={handleSelectGame}
                     focusedIndex={focusedIdx}
                     isActive={isActive}
-                    isMouseFocusEnabled={isMouseMode}
                     onFocusChange={(fIdx) => focusRailItem(idx, rail.id, fIdx)}
                     isFavorite={isFavorite}
                     layout={layout}
-                    tileScale={rail.scale}
+                    tileScale={listPresentation.id === 'arcade-void' ? rail.scale : undefined}
                     loop={rail.games.length > 6}
                   />
                 </div>
@@ -503,7 +593,7 @@ export function BigBoxView({
       </div>
 
       {/* Bottom Status Bar */}
-      <BigBoxFooter isFiltered={isShowingFilteredCount} totalGameCount={totalGameCount} />
+      <BigBoxFooter context="grid" />
     </div>
   );
 }

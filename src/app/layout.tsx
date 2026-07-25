@@ -7,6 +7,8 @@ export const metadata: Metadata = {
 };
 
 import { SettingsProvider } from '@/contexts/SettingsContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { ThemeDecorator } from '@/components/ThemeDecorator';
 import { UiSoundRuntime } from '@/components/UiSoundRuntime';
 
 export default function RootLayout({
@@ -21,8 +23,12 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <SettingsProvider>
-          <UiSoundRuntime />
-          {children}
+          <ThemeProvider>
+            <ThemeDecorator>
+              <UiSoundRuntime />
+              {children}
+            </ThemeDecorator>
+          </ThemeProvider>
         </SettingsProvider>
       </body>
     </html>

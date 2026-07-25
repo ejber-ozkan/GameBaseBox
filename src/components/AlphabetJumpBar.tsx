@@ -9,7 +9,7 @@ const LETTERS = ['#', ...Array.from({ length: 26 }, (_, i) => String.fromCharCod
 
 export function AlphabetJumpBar({ onLetterSelect, activeLetter }: AlphabetJumpBarProps) {
   return (
-    <div className="fixed left-0 top-16 bottom-0 w-8 bg-gray-950/90 backdrop-blur-md border-r border-gray-800/50 flex flex-col items-center justify-start gap-1 py-4 z-40 custom-scrollbar-hidden overflow-y-auto">
+    <div className="alphabet-jump-bar fixed left-0 top-16 bottom-0 z-40 flex w-8 flex-col items-center justify-start gap-1 overflow-y-auto border-r border-gray-800/50 bg-gray-950/90 py-4 backdrop-blur-md custom-scrollbar-hidden">
       {LETTERS.map((letter) => (
         <button
           key={letter}

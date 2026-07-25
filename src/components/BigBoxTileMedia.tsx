@@ -106,14 +106,14 @@ export function BigBoxTileMedia({ enabled = true, game, className = '' }: BigBox
 
   useEffect(() => {
     if (!enabled) return;
-    if (slides.length <= 1) return;
+    if (!settings.imageCycling || slides.length <= 1) return;
 
     const timer = window.setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, 3000);
 
     return () => window.clearInterval(timer);
-  }, [enabled, slides]);
+  }, [enabled, slides, settings.imageCycling]);
 
   const activeSlide = enabled ? (slides[currentIndex] ?? null) : null;
   const showLoading = enabled && isLoading;

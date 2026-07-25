@@ -41,22 +41,22 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
   }, [onEndReached]);
 
   return (
-    <div ref={containerRef} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
+    <div ref={containerRef} className="grid grid-cols-2 gap-4 rounded-[var(--theme-radius-xl)] bg-[var(--theme-background)] p-4 md:grid-cols-4 lg:grid-cols-6">
       {games.map((game, index) => {
         const isFocused = focusedIndex === index;
         return (
         <div
           key={`${game.id}-${index}`}
-          className={`p-2 rounded-lg cursor-pointer transition-all border shadow-lg flex flex-col ${
+          className={`flex cursor-pointer flex-col rounded-[var(--theme-radius-lg)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] p-2 shadow-lg transition-all ${
             isFocused 
-              ? 'bg-blue-900/60 scale-105 border-blue-400 ring-2 ring-blue-500 shadow-blue-900/50' 
-              : 'bg-gray-800 hover:bg-gray-700 hover:scale-105 border-gray-600'
+              ? 'scale-105 border-[var(--theme-primary)] bg-[var(--theme-primary-container)] ring-2 ring-[var(--theme-primary)]'
+              : 'hover:scale-105 hover:border-[var(--theme-outline)] hover:bg-[var(--theme-primary-container)]'
           }`}
           onClick={() => onSelectGame(game)}
           onMouseEnter={() => onFocusChange?.(index)}
           style={{ contentVisibility: 'auto', containIntrinsicSize: '0 230px' }}
         >
-          <div className="aspect-[1.6] bg-gray-950 mb-2 flex overflow-hidden rounded border border-white/5">
+          <div className="mb-2 flex aspect-[1.6] overflow-hidden rounded-[var(--theme-radius-sm)] border border-[var(--theme-outline-variant)] bg-[var(--theme-background)]">
             <ImageSlider 
               defer
               type="screenshot"
@@ -67,7 +67,7 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
           </div>
           <div className="mt-auto">
              <div className="flex justify-between items-start">
-               <div className="text-sm font-semibold truncate text-gray-100 flex-1 pr-2" title={game.name}>
+               <div className="flex-1 truncate pr-2 text-sm font-semibold text-[var(--theme-text)]" title={game.name}>
                    {game.name}
                </div>
                <button 
@@ -78,7 +78,7 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
                  {isFavorite(game.id.toString()) ? '❤️' : '🤍'}
                </button>
              </div>
-              <div className="text-xs text-gray-400">
+              <div className="text-xs text-[var(--theme-text-muted)]">
                   {game.year || 'Unknown Year'}
               </div>
            </div>

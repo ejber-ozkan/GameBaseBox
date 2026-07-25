@@ -69,6 +69,10 @@ GameBase database (`.mdb`) files, ROMs, screenshots, music, extras, and other me
 
 ![BigBox home rails](docs/images/bigbox-home-rails.png)
 
+### BigBox Rails (C64 Edition Theme)
+
+![BigBox home rails - C64 Edition](docs/images/c64theme-home-rails.png)
+
 ### BigBox Letter Jump
 
 ![BigBox scroll by letter](docs/images/bigbox-scroll-letter.png)
@@ -76,6 +80,18 @@ GameBase database (`.mdb`) files, ROMs, screenshots, music, extras, and other me
 ### Detail View: Gallery
 
 ![Detail view gallery tab](docs/images/detail-gallery.png)
+
+### Detail View: Gallery (C64 Edition Theme)
+
+![Detail view gallery - C64 Edition](docs/images/c64theme-detail-gallery.png)
+
+### Detail View: Gallery (Cyberpunk CRT Theme)
+
+![Detail view gallery - Cyberpunk CRT](docs/images/cyberpunk-detail-gallery.png)
+
+### Detail View: Gallery (Arcade Void Theme)
+
+![Detail view gallery - Arcade Void](docs/images/void-detail-gallery.png)
 
 ### Detail View: Extras Gallery
 
@@ -313,7 +329,7 @@ Temporary extraction and launch playlists are generated outside your source libr
 
 ## Release Notes
 
-See [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_0.5.4.md](RELEASE_NOTES_0.5.4.md), [RELEASE_NOTES_0.5.3.md](RELEASE_NOTES_0.5.3.md), [RELEASE_NOTES_0.5.2.md](RELEASE_NOTES_0.5.2.md), [RELEASE_NOTES_0.5.1.md](RELEASE_NOTES_0.5.1.md), [RELEASE_NOTES_0.5.0.md](RELEASE_NOTES_0.5.0.md), [RELEASE_NOTES_0.4.1.md](RELEASE_NOTES_0.4.1.md), [RELEASE_NOTES_0.4.0.md](RELEASE_NOTES_0.4.0.md), [RELEASE_NOTES_0.3.1.md](RELEASE_NOTES_0.3.1.md), [RELEASE_NOTES_0.3.0.md](RELEASE_NOTES_0.3.0.md), [RELEASE_NOTES_0.2.0.md](RELEASE_NOTES_0.2.0.md), and [RELEASE_NOTES_0.1.0.md](RELEASE_NOTES_0.1.0.md) for GBBox release notes.
+See [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_0.6.0.md](RELEASE_NOTES_0.6.0.md), [RELEASE_NOTES_0.5.4.md](RELEASE_NOTES_0.5.4.md), [RELEASE_NOTES_0.5.3.md](RELEASE_NOTES_0.5.3.md), [RELEASE_NOTES_0.5.2.md](RELEASE_NOTES_0.5.2.md), [RELEASE_NOTES_0.5.1.md](RELEASE_NOTES_0.5.1.md), [RELEASE_NOTES_0.5.0.md](RELEASE_NOTES_0.5.0.md), [RELEASE_NOTES_0.4.1.md](RELEASE_NOTES_0.4.1.md), [RELEASE_NOTES_0.4.0.md](RELEASE_NOTES_0.4.0.md), [RELEASE_NOTES_0.3.1.md](RELEASE_NOTES_0.3.1.md), [RELEASE_NOTES_0.3.0.md](RELEASE_NOTES_0.3.0.md), [RELEASE_NOTES_0.2.0.md](RELEASE_NOTES_0.2.0.md), and [RELEASE_NOTES_0.1.0.md](RELEASE_NOTES_0.1.0.md) for GBBox release notes.
 
 ## Skills used to build this
 

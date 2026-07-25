@@ -28,6 +28,7 @@ export function useBigBoxScrollSync({
   const headerRef = useRef<HTMLElement>(null);
   const lastEscTime = useRef<number>(0);
   const lastRail = useRef(activeRailIndex);
+  const lastViewportRailId = useRef<string | null>(null);
 
   const getHeaderHeight = useCallback(() => {
     return headerRef.current?.offsetHeight ?? HEADER_HEIGHT_FALLBACK;
@@ -49,7 +50,7 @@ export function useBigBoxScrollSync({
     });
   }, [getHeaderHeight]);
 
-  const scrollAlphabetTileToCenterBand = useCallback((tile: HTMLElement) => {
+  const scrollAlphabetTileToCenterBand = useCallback((tile: HTMLElement, force = false) => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
@@ -69,7 +70,7 @@ export function useBigBoxScrollSync({
     const bandBottom = visibleTop + visibleHeight * 0.75;
     const tileCenter = tileRect.top + tileRect.height / 2;
 
-    if (tileCenter >= bandTop && tileCenter <= bandBottom) {
+    if (!force && tileCenter >= bandTop && tileCenter <= bandBottom) {
       return;
     }
 
@@ -104,30 +105,40 @@ export function useBigBoxScrollSync({
     }
 
     if (activeRailIndex === -1) {
+      lastViewportRailId.current = null;
       onSectionJumpHandled();
       scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
-    const railElement = scrollContainerRef.current.children[activeRailIndex] as HTMLElement | undefined;
-    if (!railElement) {
+    const railElement = currentRailId
+      ? scrollContainerRef.current.querySelector(`[data-rail-id="${currentRailId}"]`) as HTMLElement | null
+      : null;
+    const fallbackRailElement = scrollContainerRef.current.children[activeRailIndex] as HTMLElement | undefined;
+    const resolvedRailElement = railElement ?? fallbackRailElement;
+    if (!resolvedRailElement) {
       return;
     }
 
-    const anchorElement = railElement.querySelector('[data-rail-anchor]') as HTMLElement | null;
-    const gridElement = railElement.querySelector('.grid');
+    const anchorElement = resolvedRailElement.querySelector('[data-rail-anchor]') as HTMLElement | null;
+    const gridElement = resolvedRailElement.querySelector('.grid');
     const tile = gridElement?.children[currentFocusedIndex] as HTMLElement | undefined;
 
+    const shouldScrollViewport = lastViewportRailId.current !== currentRailId || sectionJumpDirection !== null;
+
     if (tile && currentRailType === 'alphabet') {
-      scrollAlphabetTileToCenterBand(tile);
-    } else {
-      scrollElementBelowHeader(anchorElement ?? railElement);
+      scrollAlphabetTileToCenterBand(tile, sectionJumpDirection !== null);
+    } else if (shouldScrollViewport) {
+      scrollElementBelowHeader(anchorElement ?? resolvedRailElement);
     }
+
+    lastViewportRailId.current = currentRailId;
 
     onSectionJumpHandled();
   }, [
     activeRailIndex,
     currentFocusedIndex,
+    currentRailId,
     currentRailType,
     onSectionJumpHandled,
     scrollAlphabetTileToCenterBand,
@@ -144,8 +155,11 @@ export function useBigBoxScrollSync({
 
     const headerHeight = getHeaderHeight();
     const containerRect = scrollContainerRef.current.getBoundingClientRect();
-    const railElement = scrollContainerRef.current.children[activeRailIndex] as HTMLElement | undefined;
-    const gridElement = railElement?.querySelector('.grid');
+    const railElement = currentRailId
+      ? scrollContainerRef.current.querySelector(`[data-rail-id="${currentRailId}"]`) as HTMLElement | null
+      : null;
+    const fallbackRailElement = scrollContainerRef.current.children[activeRailIndex] as HTMLElement | undefined;
+    const gridElement = (railElement ?? fallbackRailElement)?.querySelector('.grid');
     const tile = gridElement?.children[currentFocusedIndex] as HTMLElement | undefined;
 
     if (!tile) return;

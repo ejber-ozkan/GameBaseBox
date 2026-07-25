@@ -160,8 +160,10 @@ export function useLibraryBrowserState() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setFilters((previous) => {
-        const nextFilters = { ...previous, searchQuery: searchInput || undefined };
-        if (searchInput.trim()) {
+        const trimmed = searchInput.trim();
+        const searchQuery = trimmed.length >= 2 ? searchInput : undefined;
+        const nextFilters = { ...previous, searchQuery };
+        if (searchQuery) {
           nextFilters.letter = undefined;
           nextFilters.genre = undefined;
           nextFilters.subGenre = undefined;
@@ -271,6 +273,7 @@ export function useLibraryBrowserState() {
     selectedGame,
     setFilters,
     setFocusedIndex,
+    setGames,
     setSearchInput,
     setSelectedGame,
     setViewMode,

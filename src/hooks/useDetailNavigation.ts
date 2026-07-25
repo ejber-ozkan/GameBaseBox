@@ -17,7 +17,11 @@ export type DetailZone =
   | 'media-titlescreen'
   | 'media-videosna'
   | 'media-boxfront'
-  | 'media-extras';
+  | 'media-extras'
+  | 'extras-docs'
+  | 'extras-media'
+  | 'sidebar-tabs'
+  | 'sidebar-content';
 
 type Direction = 'up' | 'down' | 'left' | 'right';
 
@@ -239,7 +243,7 @@ export function useDetailNavigation({ onBack, initialZone = 'play', config, enab
 
   const focusCls = useCallback((zone: DetailZone): string =>
     focusedZone === zone
-      ? 'ring-4 ring-yellow-400 ring-offset-2 ring-offset-gray-900 z-50 relative brightness-125 shadow-[0_0_25px_rgba(250,204,21,0.9)] scale-105'
+      ? 'ring-4 ring-[var(--theme-tertiary)] ring-offset-2 ring-offset-[var(--theme-background)] z-50 relative brightness-125 shadow-[0_0_25px_var(--theme-tertiary)] scale-105 transition-all'
       : ''
   , [focusedZone]);
 

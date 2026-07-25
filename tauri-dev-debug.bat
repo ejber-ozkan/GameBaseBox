@@ -4,6 +4,10 @@ setlocal enabledelayedexpansion
 :: Enable GBBox debug logging in the backend (checked by init_debug_mode in lib.rs)
 set GAMEBASEBOX_DEBUG=1
 
+:: Expose the Tauri WebView DevTools protocol locally for runtime inspection.
+:: This is loopback-only and exists only while the development app is running.
+set "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-address=127.0.0.1 --remote-debugging-port=9222"
+
 :: Ensure Cargo/Rust binaries added by Rustup are available in this shell session
 set PATH=%USERPROFILE%\.cargo\bin;%PATH%
 
@@ -19,18 +23,26 @@ echo [GBBox] Using Rust:
 rustc --version
 cargo --version
 
-:: Check if port 3000 is listening
-netstat -ano | find "LISTENING" | find ":3000" > nul
+powershell.exe -NoProfile -NonInteractive -Command "$ErrorActionPreference = 'Stop'; $response = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:3000/' -TimeoutSec 2; if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 400) { exit 0 } else { exit 1 }" > nul 2>&1
 if errorlevel 1 (
-    echo [GBBox] Frontend port 3000 not detected.
+    netstat -ano | find "LISTENING" | find ":3000" > nul
+    if not errorlevel 1 (
+        echo [GBBox] ERROR: A process is listening on port 3000 but is not serving the frontend.
+        echo [GBBox] Close the stale frontend process, then run this launcher again.
+        exit /b 1
+    )
+
+    echo [GBBox] Frontend is not running.
     echo [GBBox] Launching 'npm run dev' in a separate window...
     start "GBBox-Frontend" cmd /c "npm run dev"
-
-    echo [GBBox] Waiting 5 seconds for server to initialize...
-    timeout /t 5 /nobreak > nul
-) else (
-    echo [GBBox] Frontend already running on port 3000.
 )
 
-echo [GBBox] Starting Tauri in debug mode (GAMEBASEBOX_DEBUG=1)...
+powershell.exe -NoProfile -NonInteractive -Command "$ErrorActionPreference = 'Stop'; for ($attempt = 1; $attempt -le 30; $attempt++) { try { $response = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:3000/' -TimeoutSec 2; if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 400) { exit 0 } } catch {}; Start-Sleep -Seconds 1 }; exit 1" > nul 2>&1
+if errorlevel 1 (
+    echo [GBBox] ERROR: Frontend did not become ready at http://127.0.0.1:3000 within 30 seconds.
+    exit /b 1
+)
+
+echo [GBBox] Starting Tauri in debug mode (GAMEBASEBOX_DEBUG=1; WebView debug: 127.0.0.1:9222)...
 npx tauri dev --no-dev-server-wait --config tauri.dev-override.json
+exit /b %errorlevel%

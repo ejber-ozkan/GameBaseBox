@@ -46,4 +46,75 @@ describe('ListView', () => {
 
     expect(onEndReached).toHaveBeenCalledOnce();
   });
+
+  it('uses theme variables for the table surface, text, and focused rows', () => {
+    const { container, getByText } = render(
+      <ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} focusedIndex={0} />,
+    );
+
+    expect(container.querySelector('[data-testid="theme-list-view"]')).toBeTruthy();
+    expect(getByText(mockGames[0].name).closest('tr')?.classList).toContain('bg-[var(--theme-primary-container)]');
+    expect(getByText(mockGames[0].name).closest('td')?.classList).toContain('text-[var(--theme-text)]');
+  });
+
+  it.each([
+    ['arcade-void', 'ACTIVE PLATFORM'],
+    ['c64-edition', 'LIST INDEX_ALL'],
+    ['cyberpunk-crt', 'SYSTEM_DIAGNOSTICS'],
+  ])('uses the %s list presenter while retaining the shared game data contract', (themeId, presenterLabel) => {
+    document.documentElement.setAttribute('data-theme', themeId);
+
+    const { getAllByText, getByText, getByRole } = render(
+      <ListView
+        games={[mockGames[0]]}
+        onSelectGame={vi.fn()}
+        onSort={vi.fn()}
+        focusedIndex={0}
+        activePlatformName="Commodore 64"
+        totalGameCount={42891}
+        favoriteCount={128}
+      />,
+    );
+
+    expect(getByText(presenterLabel)).toBeTruthy();
+    expect(getByRole('columnheader', { name: '#' })).toBeTruthy();
+    expect(getByRole('columnheader', { name: 'System' })).toBeTruthy();
+    expect(getByText('0001')).toBeTruthy();
+    expect(getAllByText('Commodore 64').length).toBeGreaterThan(0);
+    expect(getByText('42,891')).toBeTruthy();
+    if (themeId !== 'c64-edition') expect(getByText('128')).toBeTruthy();
+    expect(getByText(mockGames[0].name).closest('tr')?.getAttribute('data-focused')).toBe('true');
+  });
+
+  it('labels unavailable diagnostics rather than inventing values', () => {
+    document.documentElement.setAttribute('data-theme', 'cyberpunk-crt');
+
+    const { getAllByText } = render(
+      <ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} activePlatformName="Commodore 64" />,
+    );
+
+    expect(getAllByText('NOT_AVAILABLE')).toHaveLength(3);
+  });
+
+  it('updates its presenter when the persisted theme selection changes and reflects alphabetLabel/searchInput', () => {
+    document.documentElement.setAttribute('data-theme', 'arcade-void');
+    const { getByText, getByTestId, rerender } = render(
+      <ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} themeId="arcade-void" alphabetLabel="M" searchInput="mario" />,
+    );
+
+    expect(getByTestId('arcade-void-currently-viewing-container').classList).toContain('sticky');
+    expect(getByTestId('arcade-void-currently-viewing-path').textContent).toBe('LIST INDEX_M SEARCH: MARIO');
+
+    rerender(<ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} themeId="c64-edition" alphabetLabel="M" searchInput="mario" />);
+
+    expect(getByText('LIST INDEX_M SEARCH: MARIO')).toBeTruthy();
+
+    rerender(<ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} themeId="cyberpunk-crt" alphabetLabel="M" searchInput="mario" totalGameCount={42891} />);
+
+    expect(getByTestId('cyberpunk-currently-viewing-container').classList).toContain('sticky');
+    expect(getByTestId('cyberpunk-currently-viewing-container').classList).toContain('bg-[var(--theme-outline-variant)]');
+    expect(getByTestId('cyberpunk-currently-viewing-path').textContent).toBe('LIST_ INDEX_M SEARCH: MARIO');
+    expect(getByTestId('cyberpunk-eddies-count').textContent).toBe('EDDIES_ 42,891');
+  });
 });
+

@@ -23,6 +23,7 @@ interface UseBigBoxLibraryDataProps {
   filters: GameFilters;
   recentlyPlayedIds: Settings['recentlyPlayedIds'];
   searchInput: string;
+  loadFlatLibrary?: boolean;
 }
 
 const LETTER_RAIL_LOAD_DELAY_MS = 450;
@@ -57,6 +58,11 @@ export function sortRecentGames(games: Game[], recentlyPlayedIds: readonly strin
     .filter((game): game is Game => Boolean(game));
 }
 
+/** @internal Exported for unit testing */
+export function getFlatLibraryLoadLimit(totalGameCount: number, loadFlatLibrary: boolean) {
+  return loadFlatLibrary ? totalGameCount : 0;
+}
+
 export function useBigBoxLibraryData({
   activeRailIndex,
   activePlatformId,
@@ -64,12 +70,14 @@ export function useBigBoxLibraryData({
   filters,
   recentlyPlayedIds,
   searchInput,
+  loadFlatLibrary = false,
 }: UseBigBoxLibraryDataProps) {
   const [genres, setGenres] = useState<string[]>([]);
   const [subGenres, setSubGenres] = useState<string[]>([]);
   const [recentGames, setRecentGames] = useState<Game[]>([]);
   const [favoriteGames, setFavoriteGames] = useState<Game[]>([]);
   const [classicGames, setClassicGames] = useState<Game[]>([]);
+  const [flatGames, setFlatGames] = useState<Game[]>([]);
   const [alphabetRails, setAlphabetRails] = useState<BigBoxRailCategory[]>([]);
   const [totalGameCount, setTotalGameCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -100,7 +108,7 @@ export function useBigBoxLibraryData({
     async function initData() {
       setLoading(true);
       try {
-        const query = searchInput || undefined;
+        const query = searchInput.trim().length >= 2 ? searchInput : undefined;
         const libraryFilters = { ...filters, searchQuery: query };
         const gameCountPromise = getDbGameCount(libraryFilters, activePlatformId);
 
@@ -144,7 +152,11 @@ export function useBigBoxLibraryData({
           ]);
         }
 
-        setTotalGameCount(await gameCountPromise);
+        const gameCount = await gameCountPromise;
+        setTotalGameCount(gameCount);
+        setFlatGames(loadFlatLibrary
+          ? await getDbGames(getFlatLibraryLoadLimit(gameCount, true), 0, libraryFilters, activePlatformId)
+          : []);
       } catch (error) {
         console.error('BigBox init error:', error);
       } finally {
@@ -153,17 +165,18 @@ export function useBigBoxLibraryData({
     }
 
     void initData();
-  }, [activePlatformId, favorites, filters, recentlyPlayedIds, searchInput]);
+  }, [activePlatformId, favorites, filters, loadFlatLibrary, recentlyPlayedIds, searchInput]);
 
   const rails = useMemo<BigBoxRailCategory[]>(() => {
-    if (searchInput) {
+    const activeSearch = searchInput.trim().length >= 2 ? searchInput : undefined;
+    if (activeSearch) {
       return [...alphabetRails];
     }
 
     const nextRails: BigBoxRailCategory[] = [];
     if (recentGames.length > 0) nextRails.push({ id: 'recent', title: 'Recent Games', games: recentGames, type: 'recent', scale: 'large' });
-    if (favoriteGames.length > 0) nextRails.push({ id: 'favorites', title: 'Your Favorites', games: favoriteGames, type: 'favorites' });
-    if (classicGames.length > 0) nextRails.push({ id: 'classics', title: '🏆 Legendary Classics 🏆', games: classicGames, type: 'classics' });
+    if (favoriteGames.length > 0) nextRails.push({ id: 'favorites', title: 'Your Favorites', games: favoriteGames, type: 'favorites', scale: 'large' });
+    if (classicGames.length > 0) nextRails.push({ id: 'classics', title: '🏆 Legendary Classics 🏆', games: classicGames, type: 'classics', scale: 'large' });
     nextRails.push(...alphabetRails);
     return nextRails;
   }, [alphabetRails, classicGames, favoriteGames, recentGames, searchInput]);
@@ -207,7 +220,7 @@ export function useBigBoxLibraryData({
           const games = await getDbGames(LETTER_RAIL_PAGE_SIZE, 0, {
             ...filters,
             letter: currentRail.letter,
-            searchQuery: searchInput || undefined,
+            searchQuery: searchInput.trim().length >= 2 ? searchInput : undefined,
           }, activePlatformId);
 
           if (cancelled || activeLetterRequestRef.current !== requestId) {
@@ -244,6 +257,7 @@ export function useBigBoxLibraryData({
 
   return {
     genres,
+    flatGames,
     loading,
     rails,
     subGenres,

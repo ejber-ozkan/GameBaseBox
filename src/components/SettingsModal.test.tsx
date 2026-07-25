@@ -5,6 +5,92 @@ import type { Settings } from '../contexts/SettingsContext';
 import { SettingsView } from './SettingsModal';
 
 const updateSettings = vi.fn();
+const setTheme = vi.fn();
+
+const mockTheme = {
+  id: 'arcade-void',
+  displayName: 'Arcade Void & Neon Acrylic',
+  colors: {
+    primary: '#8aebff',
+    primaryContainer: '#0e3038',
+    secondary: '#a855f7',
+    tertiary: '#eab308',
+    surface: '#141A21',
+    background: '#0a0c10',
+    outline: '#1f2937',
+    outlineVariant: '#374151',
+    text: '#ffffff',
+    textMuted: '#9ca3af',
+  },
+  typography: {
+    sans: '"Manrope", "Inter", sans-serif',
+    mono: '"Space Grotesk", monospace',
+  },
+  borderRadius: {
+    sm: '0.125rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    xl: '0.75rem',
+  },
+  effects: {
+    scanlines: false,
+    outerBorder: false,
+    ambientGlow: true,
+    steppedBorders: false,
+    blinkingCursor: false,
+    glassmorphism: true,
+  },
+};
+
+const c64Theme = {
+  id: 'c64-edition',
+  displayName: 'C64 Edition',
+  colors: {
+    primary: '#c0c1ff',
+    primaryContainer: '#352879',
+    secondary: '#7074c1',
+    tertiary: '#e0a060',
+    surface: '#131313',
+    background: '#131313',
+    outline: '#7074c1',
+    outlineVariant: '#352879',
+    text: '#c0c1ff',
+    textMuted: '#7074c1',
+  },
+  typography: {
+    sans: '"Space Mono", monospace',
+    mono: '"Space Mono", monospace',
+  },
+  borderRadius: {
+    sm: '0px',
+    md: '0px',
+    lg: '0px',
+    xl: '0px',
+  },
+  effects: {
+    scanlines: false,
+    outerBorder: true,
+    ambientGlow: false,
+    steppedBorders: true,
+    blinkingCursor: true,
+  },
+};
+
+const cyberpunkTheme = {
+  ...mockTheme,
+  id: 'cyberpunk-crt',
+  displayName: 'Cyberpunk CRT',
+};
+
+let currentTheme = mockTheme;
+
+vi.mock('../contexts/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: currentTheme,
+    setTheme,
+    availableThemes: [mockTheme, cyberpunkTheme, c64Theme],
+  }),
+}));
 
 vi.mock('../contexts/SettingsContext', () => ({
   useSettings: () => ({
@@ -130,6 +216,17 @@ function openSettingsTab(label: string) {
 describe('SettingsView platform emulator settings', () => {
   beforeEach(() => {
     updateSettings.mockClear();
+    setTheme.mockClear();
+    currentTheme = mockTheme;
+  });
+
+  test('selects and persists a built-in theme from Appearance settings', () => {
+    renderSettings();
+
+    const cyberpunkThemeButton = screen.getByRole('button', { name: 'Cyberpunk CRT' });
+    fireEvent.click(cyberpunkThemeButton);
+
+    expect(setTheme).toHaveBeenCalledWith('cyberpunk-crt');
   });
 
   test('shows one platform paths tab for each imported platform', () => {
@@ -263,4 +360,82 @@ describe('SettingsView platform emulator settings', () => {
       }),
     }));
   });
+
+  test('renders themed classes and key hints in C64 theme', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentTheme = c64Theme;
+
+    renderSettings();
+
+    // Check F-key hints are present on the category labels
+    expect(screen.getByText(/Theme & UI \[F1\]/)).toBeTruthy();
+    expect(screen.getByText(/Display & Video \[F3\]/)).toBeTruthy();
+    expect(screen.getByText(/Media & Gallery \[F5\]/)).toBeTruthy();
+    expect(screen.getByText(/Input & Interaction \[F7\]/)).toBeTruthy();
+  });
+
+  test('does not show C64 key hints in other themes', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentTheme = mockTheme;
+
+    renderSettings();
+
+    // Check F-key hints are not present
+    expect(screen.queryByText(/Theme & UI \[F1\]/)).toBeNull();
+    expect(screen.getByText(/Theme & UI/)).toBeTruthy();
+  });
+
+  test('C64 F-Keys switch tabs when c64 theme is active', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentTheme = c64Theme;
+
+    renderSettings();
+
+    // Initially active tab is appearance, press F3 to switch to display tab
+    fireEvent.keyDown(window, { key: 'F3' });
+
+    // Verify display tab content is shown
+    expect(screen.getByText(/Fullscreen Mode/)).toBeTruthy();
+
+    // Press F1 to switch back to appearance
+    fireEvent.keyDown(window, { key: 'F1' });
+    expect(screen.getByText(/Application Theme/)).toBeTruthy();
+
+    // Press F5 to switch to media tab
+    fireEvent.keyDown(window, { key: 'F5' });
+    expect(screen.getByText(/Cycle Multiple Images/)).toBeTruthy();
+  });
+
+  test('F-Keys do not switch tabs when theme is not C64', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentTheme = mockTheme;
+
+    renderSettings();
+
+    // Press F3
+    fireEvent.keyDown(window, { key: 'F3' });
+
+    // Verify it remains on appearance tab and doesn't show Display tab content
+    expect(screen.queryByText(/Fullscreen Mode/)).toBeNull();
+    expect(screen.getByText(/Application Theme/)).toBeTruthy();
+  });
+
+  test('shows C64 raster lines toggle only when C64 Edition theme is active', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentTheme = c64Theme;
+
+    renderSettings();
+
+    expect(screen.getByText(/C64 Background Raster Lines/)).toBeTruthy();
+  });
+
+  test('hides C64 raster lines toggle when non-C64 Edition theme is active', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentTheme = mockTheme;
+
+    renderSettings();
+
+    expect(screen.queryByText(/C64 Background Raster Lines/)).toBeNull();
+  });
 });
+

@@ -22,6 +22,16 @@ vi.mock('../contexts/SettingsContext', () => ({
   })
 }));
 
+let mockThemeId = 'default';
+
+vi.mock('../contexts/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: { id: mockThemeId },
+    setTheme: vi.fn(),
+    availableThemes: []
+  })
+}));
+
 // Mock tauri-bridge
 vi.mock('../lib/tauri-bridge', () => ({
   downloadMediaAsset: vi.fn(),
@@ -147,6 +157,59 @@ describe('SidPlayer Component', () => {
         filename,
       );
       expect(screen.getByTestId('play-button')).not.toBeNull();
+    });
+  });
+
+  test('stops playback when game-launch event is dispatched', async () => {
+    render(<SidPlayer filename="test.sid" audioUrl="/audio/test.sid" />);
+    const playBtn = screen.getByTestId('play-button');
+
+    // Click play
+    await act(async () => {
+      fireEvent.click(playBtn);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('PLAYING')).not.toBeNull();
+    });
+
+    // Dispatch game-launch event
+    await act(async () => {
+      window.dispatchEvent(new CustomEvent('game-launch'));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('STOPPED')).not.toBeNull();
+    });
+  });
+
+  describe('C64 Theme Render Block', () => {
+    beforeEach(() => {
+      mockThemeId = 'c64-edition';
+    });
+
+    afterEach(() => {
+      mockThemeId = 'default';
+    });
+
+    test('renders C64-themed labels when theme is c64-edition', () => {
+      render(<SidPlayer filename="test.sid" audioUrl="/audio/test.sid" />);
+      expect(screen.getByText('SOUNDTRACK // C64 SID')).not.toBeNull();
+      expect(screen.getByText('6581 STANDBY')).not.toBeNull();
+    });
+
+    test('toggles to active state and shows visualizer and ACTIVE label', async () => {
+      render(<SidPlayer filename="test.sid" audioUrl="/audio/test.sid" />);
+      const playBtn = screen.getByTestId('play-button');
+
+      await act(async () => {
+        fireEvent.click(playBtn);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('6581 ACTIVE')).not.toBeNull();
+        expect(screen.getByText('VOL')).not.toBeNull();
+      });
     });
   });
 });

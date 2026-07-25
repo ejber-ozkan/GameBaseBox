@@ -15,6 +15,8 @@ const STANDARD_MAP: GamepadButtonMap = {
   4: 'LB',     // L1
   5: 'RB',     // R1
   6: 'LT',     // L2 / Left trigger
+  7: 'RT',     // R2 / Right trigger
+  8: 'SELECT', // Select / Back / View
   9: 'START',  // Menu/Start
   12: 'UP',    // D-pad Up
   13: 'DOWN',  // D-pad Down

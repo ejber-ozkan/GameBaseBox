@@ -47,10 +47,11 @@ export function useInputMode() {
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      // Ignore first movement if it's identical to last pos (browser jitter or init)
+      // A real movement is an explicit request to return to mouse control.
       if (!hasMovedRef.current) {
         lastMousePosRef.current = { x: e.clientX, y: e.clientY };
         hasMovedRef.current = true;
+        setMode(true);
         return;
       }
 
@@ -64,7 +65,7 @@ export function useInputMode() {
       else resetIdleTimer();
     };
     const onKeyDown = () => {
-      if (isMouseModeRef.current) setMode(false);
+      setMode(false);
     };
     const onMouseDown = () => {
       if (!isMouseModeRef.current) setMode(true);
@@ -95,7 +96,7 @@ export function useInputMode() {
 
   // Also flip mode when gamepad button fires (gamepads don't trigger keydown)
   const onGamepadInput = useCallback(() => {
-    if (isMouseModeRef.current) setMode(false);
+    setMode(false);
   }, [setMode]);
 
   return { isMouseMode, isMouseModeRef, onGamepadInput, showMouse };
