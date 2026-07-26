@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-07-26
+
+### Added
+- Added Phase 1 Multi-Platform Embedded WebAssembly Emulation for Atari 2600 (`stella2014`), ZX Spectrum (`fuse`), Commodore VIC-20 (`vice_xvic`), and Commodore 64 (`vice_x64`).
+- Added dynamic platform ID, core, and system dispatch inside `<WasmPlayer>` and `public/emulator.html`.
+- Added windowed mode `EMULATOR_CLOSED` postMessage exit event handler and global `Escape` key shortcut in `<WasmPlayer>`.
+- Added interactive `✕ Exit Game [ESC]` overlay button for windowed WASM emulation.
+
+### Changed
+- Updated `platform-manifest.json` setting `inAppEmulation: true` for `atari2600`, `zxspectrum`, `vic20`, and `c64`.
+- Explicitly routed Atari 800 computer media to native desktop launchers (Altirra / RetroArch) for complete disk image (`.atr`, `.xex`) compatibility.
+- Bumped package, Tauri, Cargo, and root version metadata to `0.6.1`.
+
 ## [0.6.0] - 2026-07-19
 
 ### Added
