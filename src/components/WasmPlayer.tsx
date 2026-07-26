@@ -12,12 +12,12 @@ interface WasmPlayerProps {
   core?: string;
 }
 
-const PLATFORM_CORE_MAP: Record<string, { core: string; system: string }> = {
+const PLATFORM_CORE_MAP: Record<string, { core: string; system: string; biosUrl?: string }> = {
   c64: { core: 'vice_x64', system: 'c64' },
   atari2600: { core: 'stella2014', system: 'atari2600' },
   zxspectrum: { core: 'fuse', system: 'zxspectrum' },
   vic20: { core: 'vice_xvic', system: 'vic20' },
-  atari800: { core: 'a5200', system: 'atari5200' },
+  atari800: { core: 'a5200', system: 'atari5200', biosUrl: '/emulator/data/bios/atari800/bios.zip' },
 };
 
 export function WasmPlayer({ romPath, onClose, platformId = 'c64', core: customCore }: WasmPlayerProps) {
@@ -29,11 +29,33 @@ export function WasmPlayer({ romPath, onClose, platformId = 'c64', core: customC
   const mapping = PLATFORM_CORE_MAP[platformId] || { core: customCore || 'vice_x64', system: platformId };
   const targetCore = customCore || mapping.core;
   const targetSystem = mapping.system;
+  const targetBiosUrl = mapping.biosUrl;
+
+  useEffect(() => {
+    function handleMessage(e: MessageEvent) {
+      if (e.data && e.data.type === 'EMULATOR_CLOSED') {
+        console.log('[WasmPlayer] Received EMULATOR_CLOSED signal. Closing player.');
+        onClose();
+      }
+    }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        console.log('[WasmPlayer] Escape key pressed. Closing player.');
+        onClose();
+      }
+    }
+    window.addEventListener('message', handleMessage);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
   useEffect(() => {
     async function init() {
       try {
-        console.log('[WasmPlayer] Reading bytes for:', romPath, 'Platform:', platformId, 'Core:', targetCore);
+        console.log('[WasmPlayer] Reading bytes for:', romPath, 'Platform:', platformId, 'Core:', targetCore, 'Bios:', targetBiosUrl);
         const bytes = await readFileBytes(romPath);
         console.log('[WasmPlayer] Bytes read, length:', bytes.length);
         setLoadingStatus('Initializing WASM Emulator...');
@@ -47,6 +69,7 @@ export function WasmPlayer({ romPath, onClose, platformId = 'c64', core: customC
               type: 'START_EMULATOR',
               core: targetCore,
               system: targetSystem,
+              biosUrl: targetBiosUrl,
               fileData: bytes,
               fileName: romPath.split(/[/\\]/).pop() || 'game.zip'
             }, '*');
@@ -66,16 +89,17 @@ export function WasmPlayer({ romPath, onClose, platformId = 'c64', core: customC
       }
     }
     init();
-  }, [romPath, platformId, targetCore, targetSystem]);
+  }, [romPath, platformId, targetCore, targetSystem, targetBiosUrl]);
 
   const content = (
     <div className={`fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center transition-all ${!showMouse ? 'cursor-none' : ''}`}>
       <div className="w-full h-full relative group">
         <button 
           onClick={onClose}
-          className={`absolute top-4 right-4 z-[10000] px-4 py-2 bg-red-600/80 hover:bg-red-500 text-white rounded font-bold shadow-lg transition-all ${showMouse ? 'opacity-0 group-hover:opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className="absolute top-4 right-4 z-[10000] px-4 py-2 bg-red-600/90 hover:bg-red-500 text-white rounded font-bold shadow-xl transition-all opacity-80 hover:opacity-100 group-hover:opacity-100 cursor-pointer flex items-center gap-2"
+          title="Exit Emulator (ESC)"
         >
-          Exit Game [B]
+          <span>✕ Exit Game [ESC]</span>
         </button>
         {error ? (
           <div className="text-white p-8 text-center bg-red-900/50 w-full h-full flex items-center justify-center">

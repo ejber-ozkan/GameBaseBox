@@ -34,8 +34,8 @@
     console.log('[WASM-Iframe] Ready for signal...');
     window.addEventListener('message', function(e) {
       if (e.data && e.data.type === 'START_EMULATOR') {
-        console.log('[WASM-Iframe] Received ROM data:', e.data.fileName);
-        startEmulator(e.data.core, e.data.fileData, e.data.fileName, e.data.system);
+        console.log('[WASM-Iframe] Received ROM data:', e.data.fileName, 'Core:', e.data.core);
+        startEmulator(e.data.core, e.data.fileData, e.data.fileName, e.data.system, e.data.biosUrl);
       }
     });
 
@@ -44,7 +44,7 @@
       document.getElementById('loading').innerText = 'Fatal Emulator Error: ' + msg;
     };
 
-    function startEmulator(core, fileData, fileName, system) {
+    function startEmulator(core, fileData, fileName, system, biosUrl) {
       if (window.__EMULATOR_STARTED__) {
         console.warn('[WASM-Iframe] Blocked double-init attempt');
         return;
@@ -52,13 +52,16 @@
       window.__EMULATOR_STARTED__ = true;
 
       try {
-        console.log('[WASM-Iframe] Initializing Local Core:', core, 'System:', system);
+        console.log('[WASM-Iframe] Initializing Local Core:', core, 'System:', system, 'Bios:', biosUrl);
         var blob = new Blob([fileData], { type: 'application/octet-stream' });
         var blobUrl = URL.createObjectURL(blob);
 
         window.EJS_player = '#game-container';
         window.EJS_core = core; // e.g. 'vice_x64', 'stella2014', 'fuse', 'vice_xvic', 'a5200'
         window.EJS_system = system || 'c64';
+        if (biosUrl) {
+          window.EJS_biosUrl = biosUrl;
+        }
         window.EJS_gameName = fileName;
         window.EJS_gameID = fileName.replace(/[^a-z0-9]/gi, '_');
         window.EJS_color = '#000000';
@@ -69,10 +72,25 @@
         window.EJS_gameUrl = blobUrl;
         window.EJS_DEBUG_XX = true;
 
+        window.EJS_onExit = function() {
+          console.log('[WASM-Iframe] EmulatorJS exited. Notifying parent window...');
+          try {
+            window.parent.postMessage({ type: 'EMULATOR_CLOSED' }, '*');
+          } catch (err) {}
+        };
+
         window.EJS_ready = function() {
           console.log('[WASM-Iframe] Local Emulator Ready!');
           var loader = document.getElementById('loading');
           if (loader) loader.style.display = 'none';
+          if (window.EJS_emulator) {
+            window.EJS_emulator.on('exit', function() {
+              console.log('[WASM-Iframe] EJS exit event fired.');
+              try {
+                window.parent.postMessage({ type: 'EMULATOR_CLOSED' }, '*');
+              } catch (err) {}
+            });
+          }
         };
 
         window.EJS_onGameStart = function() {
