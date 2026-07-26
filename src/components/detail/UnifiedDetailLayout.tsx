@@ -2629,7 +2629,7 @@ export function UnifiedDetailLayout({
             selectedVersion?.source ?? 'roms',
             selectedVersion?.relativePath || game.filename || game.gameFilename || ''
           )}
-          platformId={platformId}
+          platformId={settings.activePlatformId}
           onClose={() => setShowWasm(false)}
         />
       )}
