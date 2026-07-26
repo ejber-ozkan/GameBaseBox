@@ -140,7 +140,7 @@ describe('platform-capabilities', () => {
   test('keeps in-app emulation flags configured per platform', () => {
     expect(PLATFORM_PROFILES.c64.mediaCapabilities.music).toBe('sid');
     expect(PLATFORM_PROFILES.c64.inAppEmulation).toBe(true);
-    expect(PLATFORM_PROFILES.atari800.inAppEmulation).toBe(false);
+    expect(PLATFORM_PROFILES.atari800.inAppEmulation).toBe(true);
     expect(PLATFORM_PROFILES.atari2600.inAppEmulation).toBe(true);
     expect(PLATFORM_PROFILES.zxspectrum.inAppEmulation).toBe(true);
     expect(PLATFORM_PROFILES.vic20.inAppEmulation).toBe(true);
@@ -151,9 +151,9 @@ describe('platform-capabilities', () => {
   });
 
   test('lists platforms with embedded emulator support explicitly', () => {
-    expect(EMBEDDED_EMULATION_PLATFORM_IDS).toEqual(['c64', 'atari2600', 'zxspectrum', 'vic20']);
+    expect(EMBEDDED_EMULATION_PLATFORM_IDS).toEqual(['c64', 'atari800', 'atari2600', 'zxspectrum', 'vic20']);
     expect(supportsEmbeddedEmulation('c64')).toBe(true);
-    expect(supportsEmbeddedEmulation('atari800')).toBe(false);
+    expect(supportsEmbeddedEmulation('atari800')).toBe(true);
     expect(supportsEmbeddedEmulation('atari2600')).toBe(true);
     expect(supportsEmbeddedEmulation('zxspectrum')).toBe(true);
     expect(supportsEmbeddedEmulation('vic20')).toBe(true);

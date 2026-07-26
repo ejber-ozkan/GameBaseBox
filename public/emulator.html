@@ -103,6 +103,17 @@
           var loader = document.getElementById('loading');
           if (loader) loader.style.display = 'none';
           if (window.EJS_emulator) {
+            if (core === 'a5200' || system === 'atari5200' || system === 'atari800') {
+              try {
+                var opt = 'a5200_system = "800XL (64K)"\natari800_system = "800XL (64K)"\na5200_bios = "ATARIXL.ROM"\natari800_bios = "ATARIXL.ROM"\n';
+                if (window.EJS_emulator.gameManager && window.EJS_emulator.gameManager.writeFile) {
+                  window.EJS_emulator.gameManager.writeFile('/home/web_user/.config/retroarch/retroarch-core-options.cfg', opt);
+                  window.EJS_emulator.gameManager.writeFile('/home/web_user/retroarch/userdata/config/a5200/a5200.opt', opt);
+                }
+              } catch (err) {
+                console.warn('[WASM-Iframe] Core option write notice:', err);
+              }
+            }
             window.EJS_emulator.on('exit', function() {
               console.log('[WASM-Iframe] EJS exit event fired.');
               try {
