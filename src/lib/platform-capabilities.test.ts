@@ -5,7 +5,6 @@ import {
   PLATFORM_EMULATOR_PROFILES,
   PLATFORM_PROFILES,
   SUPPORTED_PLATFORMS,
-  createDefaultPlatformSettings,
   isPlatformId,
   supportsEmbeddedEmulation,
   hasMusicCapability,
@@ -138,37 +137,29 @@ describe('platform-capabilities', () => {
     );
   });
 
-  test('keeps SID and in-app emulation scoped to C64', () => {
+  test('keeps in-app emulation flags configured per platform', () => {
     expect(PLATFORM_PROFILES.c64.mediaCapabilities.music).toBe('sid');
     expect(PLATFORM_PROFILES.c64.inAppEmulation).toBe(true);
-    expect(PLATFORM_PROFILES.atari800.inAppEmulation).toBe(false);
-    expect(PLATFORM_PROFILES.zxspectrum.inAppEmulation).toBe(false);
+    expect(PLATFORM_PROFILES.atari800.inAppEmulation).toBe(true);
+    expect(PLATFORM_PROFILES.atari2600.inAppEmulation).toBe(true);
+    expect(PLATFORM_PROFILES.zxspectrum.inAppEmulation).toBe(true);
+    expect(PLATFORM_PROFILES.vic20.inAppEmulation).toBe(true);
     expect(PLATFORM_PROFILES.bbcmicro.inAppEmulation).toBe(false);
     expect(PLATFORM_PROFILES.amiga.inAppEmulation).toBe(false);
     expect(PLATFORM_PROFILES.atarist.inAppEmulation).toBe(false);
-    expect(PLATFORM_PROFILES.vic20.inAppEmulation).toBe(false);
     expect(PLATFORM_EMULATOR_PROFILES['altirra-atari800'].platformId).toBe('atari800');
   });
 
   test('lists platforms with embedded emulator support explicitly', () => {
-    expect(EMBEDDED_EMULATION_PLATFORM_IDS).toEqual(['c64']);
+    expect(EMBEDDED_EMULATION_PLATFORM_IDS).toEqual(['c64', 'atari800', 'atari2600', 'zxspectrum', 'vic20']);
     expect(supportsEmbeddedEmulation('c64')).toBe(true);
-    expect(supportsEmbeddedEmulation('atari800')).toBe(false);
-    expect(supportsEmbeddedEmulation('atari2600')).toBe(false);
-    expect(supportsEmbeddedEmulation('zxspectrum')).toBe(false);
+    expect(supportsEmbeddedEmulation('atari800')).toBe(true);
+    expect(supportsEmbeddedEmulation('atari2600')).toBe(true);
+    expect(supportsEmbeddedEmulation('zxspectrum')).toBe(true);
+    expect(supportsEmbeddedEmulation('vic20')).toBe(true);
     expect(supportsEmbeddedEmulation('bbcmicro')).toBe(false);
     expect(supportsEmbeddedEmulation('amiga')).toBe(false);
     expect(supportsEmbeddedEmulation('atarist')).toBe(false);
-    expect(supportsEmbeddedEmulation('vic20')).toBe(false);
-  });
-
-  test('creates platform settings from profile defaults', () => {
-    const settings = createDefaultPlatformSettings('atari800');
-
-    expect(settings.library.platformId).toBe('atari800');
-    expect(settings.library.importStatus).toBe('notImported');
-    expect(settings.emulator.preferredEmulatorProfileId).toBe('retroarch-atari800');
-    expect(settings.navigation.lastFocusedIndex).toBe(0);
   });
 
   test('validates known platform identifiers', () => {

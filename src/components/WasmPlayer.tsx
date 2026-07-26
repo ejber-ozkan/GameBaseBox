@@ -8,19 +8,32 @@ import { useInputMode } from '../hooks/useInputMode';
 interface WasmPlayerProps {
   romPath: string;
   onClose: () => void;
+  platformId?: string;
   core?: string;
 }
 
-export function WasmPlayer({ romPath, onClose, core = 'vice_x64' }: WasmPlayerProps) {
+const PLATFORM_CORE_MAP: Record<string, { core: string; system: string }> = {
+  c64: { core: 'vice_x64', system: 'c64' },
+  atari2600: { core: 'stella2014', system: 'atari2600' },
+  zxspectrum: { core: 'fuse', system: 'zxspectrum' },
+  vic20: { core: 'vice_xvic', system: 'vic20' },
+  atari800: { core: 'a5200', system: 'atari5200' },
+};
+
+export function WasmPlayer({ romPath, onClose, platformId = 'c64', core: customCore }: WasmPlayerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [loadingStatus, setLoadingStatus] = useState<string>('Reading ROM file...');
   const { showMouse } = useInputMode();
 
+  const mapping = PLATFORM_CORE_MAP[platformId] || { core: customCore || 'vice_x64', system: platformId };
+  const targetCore = customCore || mapping.core;
+  const targetSystem = mapping.system;
+
   useEffect(() => {
     async function init() {
       try {
-        console.log('[WasmPlayer] Reading bytes for:', romPath);
+        console.log('[WasmPlayer] Reading bytes for:', romPath, 'Platform:', platformId, 'Core:', targetCore);
         const bytes = await readFileBytes(romPath);
         console.log('[WasmPlayer] Bytes read, length:', bytes.length);
         setLoadingStatus('Initializing WASM Emulator...');
@@ -32,7 +45,8 @@ export function WasmPlayer({ romPath, onClose, core = 'vice_x64' }: WasmPlayerPr
             setLoadingStatus('Streaming data to emulator core...');
             iframeRef.current.contentWindow.postMessage({
               type: 'START_EMULATOR',
-              core: core,
+              core: targetCore,
+              system: targetSystem,
               fileData: bytes,
               fileName: romPath.split(/[/\\]/).pop() || 'game.zip'
             }, '*');
@@ -52,7 +66,7 @@ export function WasmPlayer({ romPath, onClose, core = 'vice_x64' }: WasmPlayerPr
       }
     }
     init();
-  }, [romPath, core]);
+  }, [romPath, platformId, targetCore, targetSystem]);
 
   const content = (
     <div className={`fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center transition-all ${!showMouse ? 'cursor-none' : ''}`}>

@@ -1,4 +1,4 @@
-﻿import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultPlatformSettingsMap } from '../../lib/platform-capabilities';
 import type { Settings } from '../../contexts/SettingsContext';
@@ -91,8 +91,16 @@ describe('PlayButton platform launch requests', () => {
     expect(screen.getByRole('button', { name: /play embedded/i })).toBeTruthy();
   });
 
-  it('hides the embedded play button for Atari 800', () => {
+  it('shows the embedded play button for Atari 800', () => {
     currentSettings = makeSettings('atari800');
+
+    render(<PlayButton game={mockGames[0]} />);
+
+    expect(screen.getByRole('button', { name: /play embedded/i })).toBeTruthy();
+  });
+
+  it('hides the embedded play button for Amiga (non-embedded platform in Phase 1)', () => {
+    currentSettings = makeSettings('amiga');
 
     render(<PlayButton game={mockGames[0]} />);
 

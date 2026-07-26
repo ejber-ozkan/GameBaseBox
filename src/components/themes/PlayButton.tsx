@@ -226,6 +226,7 @@ export function PlayButton({ game, launchTarget, nav, compact = false }: PlayBut
       {showWasm && canPlayEmbedded && (
         <WasmPlayer
           romPath={romPath}
+          platformId={settings.activePlatformId}
           onClose={() => setShowWasm(false)}
         />
       )}

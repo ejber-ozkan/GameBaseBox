@@ -35,7 +35,7 @@
     window.addEventListener('message', function(e) {
       if (e.data && e.data.type === 'START_EMULATOR') {
         console.log('[WASM-Iframe] Received ROM data:', e.data.fileName);
-        startEmulator(e.data.core, e.data.fileData, e.data.fileName);
+        startEmulator(e.data.core, e.data.fileData, e.data.fileName, e.data.system);
       }
     });
 
@@ -44,7 +44,7 @@
       document.getElementById('loading').innerText = 'Fatal Emulator Error: ' + msg;
     };
 
-    function startEmulator(core, fileData, fileName) {
+    function startEmulator(core, fileData, fileName, system) {
       if (window.__EMULATOR_STARTED__) {
         console.warn('[WASM-Iframe] Blocked double-init attempt');
         return;
@@ -52,13 +52,13 @@
       window.__EMULATOR_STARTED__ = true;
 
       try {
-        console.log('[WASM-Iframe] Initializing Local Core:', core);
+        console.log('[WASM-Iframe] Initializing Local Core:', core, 'System:', system);
         var blob = new Blob([fileData], { type: 'application/octet-stream' });
         var blobUrl = URL.createObjectURL(blob);
 
         window.EJS_player = '#game-container';
-        window.EJS_core = core; // 'vice_x64sc'
-        window.EJS_system = 'c64';
+        window.EJS_core = core; // e.g. 'vice_x64', 'stella2014', 'fuse', 'vice_xvic', 'a5200'
+        window.EJS_system = system || 'c64';
         window.EJS_gameName = fileName;
         window.EJS_gameID = fileName.replace(/[^a-z0-9]/gi, '_');
         window.EJS_color = '#000000';
