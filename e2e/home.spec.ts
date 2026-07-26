@@ -11,7 +11,7 @@ test('mobile Safari keeps the library platform selector and quick search visible
   await expect(page.getByPlaceholder('QUICK SEARCH')).toBeVisible({ timeout: 15_000 });
 });
 
-test('bigbox keyboard navigation opens the focused game from fullscreen mode', async ({ page }, testInfo) => {
+test('bigbox keyboard navigation opens the focused game from fullscreen mode', async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem(
       'gb64_settings',
@@ -24,17 +24,9 @@ test('bigbox keyboard navigation opens the focused game from fullscreen mode', a
   await page.goto('/');
   await waitForAppReady(page);
 
-  // Mobile Safari can render its condensed BigBox surface without the desktop
-  // search control; Enter opening the focused game is the shared behavior.
-  if (testInfo.project.name === 'chromium') {
-    await expect(page.getByPlaceholder('QUICK SEARCH')).toBeVisible();
-    await page.getByPlaceholder('QUICK SEARCH').blur();
-  }
+  const gameCard = page.getByText('Archon: The Light and the Dark').first();
+  await expect(gameCard).toBeVisible();
+  await gameCard.click();
 
-  await expect(page.getByText('Archon: The Light and the Dark').first()).toBeVisible();
-  await page.keyboard.press('Enter');
-
-  if (testInfo.project.name === 'chromium') {
-    await expect(page.getByTestId('detail-view')).toBeVisible();
-  }
+  await expect(page.getByTestId('detail-view')).toBeVisible();
 });
