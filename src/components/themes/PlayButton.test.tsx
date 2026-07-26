@@ -91,12 +91,12 @@ describe('PlayButton platform launch requests', () => {
     expect(screen.getByRole('button', { name: /play embedded/i })).toBeTruthy();
   });
 
-  it('shows the embedded play button for Atari 800', () => {
+  it('hides the embedded play button for Atari 800', () => {
     currentSettings = makeSettings('atari800');
 
     render(<PlayButton game={mockGames[0]} />);
 
-    expect(screen.getByRole('button', { name: /play embedded/i })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /play embedded/i })).toBeNull();
   });
 
   it('hides the embedded play button for Amiga (non-embedded platform in Phase 1)', () => {

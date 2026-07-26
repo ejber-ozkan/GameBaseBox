@@ -17,7 +17,6 @@ const PLATFORM_CORE_MAP: Record<string, { core: string; system: string; biosUrl?
   atari2600: { core: 'stella2014', system: 'atari2600' },
   zxspectrum: { core: 'fuse', system: 'zxspectrum' },
   vic20: { core: 'vice_xvic', system: 'vic20' },
-  atari800: { core: 'a5200', system: 'atari5200', biosUrl: '/emulator/data/bios/atari800/bios.zip' },
 };
 
 export function WasmPlayer({ romPath, onClose, platformId = 'c64', core: customCore }: WasmPlayerProps) {
