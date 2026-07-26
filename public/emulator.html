@@ -62,6 +62,25 @@
         if (biosUrl) {
           window.EJS_biosUrl = biosUrl;
         }
+
+        if (core === 'a5200' || system === 'atari5200' || system === 'atari800') {
+          window.EJS_externalFiles = {
+            'ATARIXL.ROM': '/emulator/data/bios/atari800/ATARIXL.ROM',
+            'ATARIOSB.ROM': '/emulator/data/bios/atari800/ATARIOSB.ROM',
+            'ATARIBAS.ROM': '/emulator/data/bios/atari800/ATARIBAS.ROM',
+            'system/ATARIXL.ROM': '/emulator/data/bios/atari800/ATARIXL.ROM',
+            'system/ATARIOSB.ROM': '/emulator/data/bios/atari800/ATARIOSB.ROM',
+            'system/ATARIBAS.ROM': '/emulator/data/bios/atari800/ATARIBAS.ROM',
+          };
+          window.EJS_defaultOptions = {
+            'a5200_system': '800XL (64K)',
+            'atari800_system': '800XL (64K)',
+            'a5200_bios': 'ATARIXL.ROM',
+            'atari800_bios': 'ATARIXL.ROM',
+            'a5200_ram': '64K',
+          };
+        }
+
         window.EJS_gameName = fileName;
         window.EJS_gameID = fileName.replace(/[^a-z0-9]/gi, '_');
         window.EJS_color = '#000000';

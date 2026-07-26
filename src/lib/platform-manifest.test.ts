@@ -16,7 +16,7 @@ describe('platform manifest', () => {
 
   test('makes the desktop launch providers explicit per platform', () => {
     expect(getPlatformLaunchCapabilities('c64', 'desktop')).toEqual(['external', 'embedded']);
-    expect(getPlatformLaunchCapabilities('atari800', 'desktop')).toEqual(['external', 'embedded']);
+    expect(getPlatformLaunchCapabilities('atari800', 'desktop')).toEqual(['external']);
     expect(getPlatformLaunchCapabilities('amiga', 'desktop')).toEqual(['external']);
   });
 });
