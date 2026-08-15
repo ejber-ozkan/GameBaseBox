@@ -3,6 +3,7 @@ import { PLATFORM_EMULATOR_PROFILES, PLATFORM_PROFILES } from '../../lib/platfor
 import type { PlatformFolderSettings, PlatformFolderType, PlatformId } from '../../types/platform';
 import { useTheme } from '../../contexts/ThemeContext';
 
+
 interface PathsSettingsTabProps extends ContentNavProps {
   draft: EditableSettings;
   setField: <K extends keyof EditableSettings>(key: K, value: EditableSettings[K]) => void;
@@ -94,15 +95,20 @@ export function PathsSettingsTab({
   const isAmiga = platformId === 'amiga';
   const isAtariSt = platformId === 'atarist';
   const isVic20 = platformId === 'vic20';
+  const isAmstradCpc = platformId === 'amstradcpc';
+  const isApple2Gs = platformId === 'apple2gs';
+  const isPet = platformId === 'pet';
+  const isC128 = platformId === 'c128';
+  const isAtari5200 = platformId === 'atari5200';
+  const isAtari7800 = platformId === 'atari7800';
   const supportedEmulatorProfileIds = platformProfile.supportedEmulatorProfileIds;
   const preferredEmulatorProfileId =
     platformEmulatorSettings.preferredEmulatorProfileId || platformProfile.defaultEmulatorProfileId;
   const preferredC64Emulator = preferredEmulatorProfileId === 'retroarch-c64' ? 'retroarch' : 'vice';
   const hasFolderType = (folderType: PlatformFolderType) => platformProfile.folderTypes.includes(folderType);
 
-  const { theme } = useTheme();
-
   const setPlatformFolders = (folders: PlatformFolderSettings) => {
+
     setField('platformSettings', {
       ...draft.platformSettings,
       [platformId]: {
@@ -110,7 +116,6 @@ export function PathsSettingsTab({
         folders,
       },
     });
-
   };
 
   const setPlatformFolder = (field: keyof PlatformFolderSettings, value: string) => {
@@ -237,6 +242,7 @@ export function PathsSettingsTab({
       </div>
     );
   };
+
   return (
     <div className="flex flex-col justify-start gap-4">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -289,13 +295,13 @@ export function PathsSettingsTab({
           )}
           {hasFolderType('photos') && (
             <PathRow
-              label={isC64 || isZxSpectrum ? 'Photos (Musicians) folder' : 'Photos folder'}
+              label={isC64 || isZxSpectrum || isAmstradCpc ? 'Photos (Musicians) folder' : 'Photos folder'}
               value={platformFolders.photosPath}
               onChange={(value) => setPlatformFolder('photosPath', value)}
               placeholder={
                 isC64
                   ? 'e.g. D:/GB64/Photos'
-                  : isZxSpectrum
+                  : isZxSpectrum || isAmstradCpc
                     ? `Select ${platformProfile.displayName} musician photos folder`
                     : `Select ${platformProfile.displayName} photos folder`
               }
@@ -336,80 +342,43 @@ export function PathsSettingsTab({
               <div className={`space-y-3 transition-opacity ${preferredC64Emulator !== 'vice' ? 'opacity-50' : ''}`}>
                 <PathRow
                   label="VICE Executable (x64sc.exe)"
-                  value={platformEmulatorSettings.executablePaths['vice-c64'] ?? draft.emulatorPath}
-                  onChange={(value) => {
-                    setPlatformExecutablePath('vice-c64', value);
-                    if (platformId === draft.activePlatformId) setField('emulatorPath', value);
-                  }}
+                  value={platformEmulatorSettings.executablePaths['vice-c64'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('vice-c64', value)}
                   placeholder="e.g. C:/VICE/x64sc.exe"
                   inputIndex={12}
+                  browseIndex={13}
+                  onBrowse={() => void browsePlatformExecutable('vice-c64')}
                   isMouseMode={isMouseMode}
                   onMouseFocus={onMouseFocus}
                   isFocused={isFocused}
                 />
-                <button
-                  onClick={() => void browsePlatformExecutable('vice-c64')}
-                  onMouseEnter={() => isMouseMode && onMouseFocus(13)}
-                  className={`focus-idx-13 px-3 py-2 text-xs transition ${
-                    isFocused(13)
-                      ? 'bg-theme-primary text-theme-surface border border-theme-primary'
-                      : 'border border-theme-outline-variant bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
-                  } ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme'}`}
-                >
-                  Browse for VICE (x64sc)...
-                </button>
               </div>
 
               <div className={`space-y-3 transition-opacity ${preferredC64Emulator !== 'retroarch' ? 'opacity-50' : ''}`}>
                 <PathRow
                   label="RetroArch Executable (retroarch.exe)"
-                  value={platformEmulatorSettings.executablePaths['retroarch-c64'] ?? draft.retroarchPath}
-                  onChange={(value) => {
-                    setPlatformExecutablePath('retroarch-c64', value);
-                    if (platformId === draft.activePlatformId) setField('retroarchPath', value);
-                  }}
+                  value={platformEmulatorSettings.executablePaths['retroarch-c64'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('retroarch-c64', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
                   inputIndex={14}
+                  browseIndex={15}
+                  onBrowse={() => void browsePlatformExecutable('retroarch-c64')}
                   isMouseMode={isMouseMode}
                   onMouseFocus={onMouseFocus}
                   isFocused={isFocused}
                 />
-                <button
-                  onClick={() => void browsePlatformExecutable('retroarch-c64')}
-                  onMouseEnter={() => isMouseMode && onMouseFocus(15)}
-                  className={`focus-idx-15 px-3 py-2 text-xs transition ${
-                    isFocused(15)
-                      ? 'bg-theme-primary text-theme-surface border border-theme-primary'
-                      : 'border border-theme-outline-variant bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
-                  } ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme'}`}
-                >
-                  Browse for RetroArch...
-                </button>
-
                 <PathRow
-                  label="RetroArch Core (e.g. vice_x64sc_libretro.dll)"
-                  value={platformEmulatorSettings.corePaths['retroarch-c64'] ?? draft.retroarchCorePath}
-                  onChange={(value) => {
-                    setPlatformCorePath('retroarch-c64', value);
-                    if (platformId === draft.activePlatformId) setField('retroarchCorePath', value);
-                  }}
+                  label="RetroArch C64 Core"
+                  value={platformEmulatorSettings.corePaths['retroarch-c64'] ?? ''}
+                  onChange={(value) => setPlatformCorePath('retroarch-c64', value)}
                   placeholder="e.g. C:/RetroArch/cores/vice_x64sc_libretro.dll"
                   inputIndex={16}
+                  browseIndex={17}
+                  onBrowse={() => void browsePlatformCore('retroarch-c64')}
                   isMouseMode={isMouseMode}
                   onMouseFocus={onMouseFocus}
                   isFocused={isFocused}
                 />
-                <button
-                  onClick={() => void browsePlatformCore('retroarch-c64')}
-                  onMouseEnter={() => isMouseMode && onMouseFocus(17)}
-                  className={`focus-idx-17 px-3 py-2 text-xs transition ${
-                    isFocused(17)
-                      ? 'bg-theme-primary text-theme-surface border border-theme-primary'
-                      : 'border border-theme-outline-variant bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
-                  } ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme'}`}
-                >
-                  Browse for Core DLL/SO...
-                </button>
               </div>
             </div>
           )}
@@ -417,6 +386,7 @@ export function PathsSettingsTab({
           {isAtari800 && (
             <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
               {renderEmulatorSelector(10)}
+
               <div
                 className={`space-y-3 transition-opacity ${
                   preferredEmulatorProfileId !== 'retroarch-atari800' ? 'opacity-50' : ''
@@ -447,6 +417,7 @@ export function PathsSettingsTab({
                   isFocused={isFocused}
                 />
               </div>
+
               <div
                 className={`space-y-3 transition-opacity ${
                   preferredEmulatorProfileId !== 'altirra-atari800' ? 'opacity-50' : ''
@@ -470,7 +441,12 @@ export function PathsSettingsTab({
 
           {isAtari2600 && (
             <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
-              <div className="space-y-3">
+              {renderEmulatorSelector(10)}
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'retroarch-atari2600' ? 'opacity-50' : ''
+                }`}
+              >
                 <PathRow
                   label="RetroArch Executable (retroarch.exe)"
                   value={platformEmulatorSettings.executablePaths['retroarch-atari2600'] ?? ''}
@@ -541,7 +517,7 @@ export function PathsSettingsTab({
                   label="Spectaculator Executable"
                   value={platformEmulatorSettings.executablePaths['spectaculator-zxspectrum'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('spectaculator-zxspectrum', value)}
-                  placeholder="e.g. C:/Program Files/Spectaculator/Spectaculator.exe"
+                  placeholder="e.g. C:/Spectaculator/Spectaculator.exe"
                   inputIndex={16}
                   browseIndex={17}
                   onBrowse={() => void browsePlatformExecutable('spectaculator-zxspectrum')}
@@ -577,7 +553,7 @@ export function PathsSettingsTab({
                   label="RetroArch BBC Micro Core"
                   value={platformEmulatorSettings.corePaths['retroarch-bbcmicro'] ?? ''}
                   onChange={(value) => setPlatformCorePath('retroarch-bbcmicro', value)}
-                  placeholder="e.g. C:/RetroArch/cores/beetle_bbc_libretro.dll"
+                  placeholder="e.g. C:/RetroArch/cores/b-em_libretro.dll"
                   inputIndex={14}
                   browseIndex={15}
                   onBrowse={() => void browsePlatformCore('retroarch-bbcmicro')}
@@ -786,6 +762,313 @@ export function PathsSettingsTab({
               </div>
             </div>
           )}
+
+          {isAmstradCpc && (
+            <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
+              {renderEmulatorSelector(10)}
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'retroarch-amstradcpc' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="RetroArch Executable (retroarch.exe)"
+                  value={platformEmulatorSettings.executablePaths['retroarch-amstradcpc'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('retroarch-amstradcpc', value)}
+                  placeholder="e.g. C:/RetroArch/retroarch.exe"
+                  inputIndex={12}
+                  browseIndex={13}
+                  onBrowse={() => void browsePlatformExecutable('retroarch-amstradcpc')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+                <PathRow
+                  label="RetroArch Amstrad CPC Core"
+                  value={platformEmulatorSettings.corePaths['retroarch-amstradcpc'] ?? ''}
+                  onChange={(value) => setPlatformCorePath('retroarch-amstradcpc', value)}
+                  placeholder="e.g. C:/RetroArch/cores/cap32_libretro.dll"
+                  inputIndex={14}
+                  browseIndex={15}
+                  onBrowse={() => void browsePlatformCore('retroarch-amstradcpc')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'cpce-amstradcpc' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="Caprice32 / CPC++ Executable"
+                  value={platformEmulatorSettings.executablePaths['cpce-amstradcpc'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('cpce-amstradcpc', value)}
+                  placeholder="e.g. C:/Caprice32/cap32.exe or WinAPE.exe"
+                  inputIndex={16}
+                  browseIndex={17}
+                  onBrowse={() => void browsePlatformExecutable('cpce-amstradcpc')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+            </div>
+          )}
+
+          {isApple2Gs && (
+            <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
+              {renderEmulatorSelector(10)}
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'retroarch-apple2gs' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="RetroArch Executable (retroarch.exe)"
+                  value={platformEmulatorSettings.executablePaths['retroarch-apple2gs'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('retroarch-apple2gs', value)}
+                  placeholder="e.g. C:/RetroArch/retroarch.exe"
+                  inputIndex={12}
+                  browseIndex={13}
+                  onBrowse={() => void browsePlatformExecutable('retroarch-apple2gs')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+                <PathRow
+                  label="RetroArch Apple 2GS Core"
+                  value={platformEmulatorSettings.corePaths['retroarch-apple2gs'] ?? ''}
+                  onChange={(value) => setPlatformCorePath('retroarch-apple2gs', value)}
+                  placeholder="e.g. C:/RetroArch/cores/mame_libretro.dll"
+                  inputIndex={14}
+                  browseIndex={15}
+                  onBrowse={() => void browsePlatformCore('retroarch-apple2gs')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'kegs-apple2gs' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="KEGS Executable"
+                  value={platformEmulatorSettings.executablePaths['kegs-apple2gs'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('kegs-apple2gs', value)}
+                  placeholder="e.g. C:/KEGS/kegs32.exe"
+                  inputIndex={16}
+                  browseIndex={17}
+                  onBrowse={() => void browsePlatformExecutable('kegs-apple2gs')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+            </div>
+          )}
+
+          {isPet && (
+            <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
+              {renderEmulatorSelector(10)}
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'vice-pet' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="VICE PET Executable (xpet.exe)"
+                  value={platformEmulatorSettings.executablePaths['vice-pet'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('vice-pet', value)}
+                  placeholder="e.g. C:/VICE/xpet.exe"
+                  inputIndex={12}
+                  browseIndex={13}
+                  onBrowse={() => void browsePlatformExecutable('vice-pet')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'retroarch-pet' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="RetroArch Executable (retroarch.exe)"
+                  value={platformEmulatorSettings.executablePaths['retroarch-pet'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('retroarch-pet', value)}
+                  placeholder="e.g. C:/RetroArch/retroarch.exe"
+                  inputIndex={14}
+                  browseIndex={15}
+                  onBrowse={() => void browsePlatformExecutable('retroarch-pet')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+                <PathRow
+                  label="RetroArch PET Core"
+                  value={platformEmulatorSettings.corePaths['retroarch-pet'] ?? ''}
+                  onChange={(value) => setPlatformCorePath('retroarch-pet', value)}
+                  placeholder="e.g. C:/RetroArch/cores/vice_xpet_libretro.dll"
+                  inputIndex={16}
+                  browseIndex={17}
+                  onBrowse={() => void browsePlatformCore('retroarch-pet')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+            </div>
+          )}
+
+          {isAtari5200 && (
+            <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
+              {renderEmulatorSelector(10)}
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'retroarch-atari5200' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="RetroArch Executable (retroarch.exe)"
+                  value={platformEmulatorSettings.executablePaths['retroarch-atari5200'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('retroarch-atari5200', value)}
+                  placeholder="e.g. C:/RetroArch/retroarch.exe"
+                  inputIndex={12}
+                  browseIndex={13}
+                  onBrowse={() => void browsePlatformExecutable('retroarch-atari5200')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+                <PathRow
+                  label="RetroArch Atari 5200 Core"
+                  value={platformEmulatorSettings.corePaths['retroarch-atari5200'] ?? ''}
+                  onChange={(value) => setPlatformCorePath('retroarch-atari5200', value)}
+                  placeholder="e.g. C:/RetroArch/cores/a5200_libretro.dll"
+                  inputIndex={14}
+                  browseIndex={15}
+                  onBrowse={() => void browsePlatformCore('retroarch-atari5200')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'altirra-atari5200' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="Altirra Executable (Altirra64.exe)"
+                  value={platformEmulatorSettings.executablePaths['altirra-atari5200'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('altirra-atari5200', value)}
+                  placeholder="e.g. C:/Altirra/Altirra64.exe"
+                  inputIndex={16}
+                  browseIndex={17}
+                  onBrowse={() => void browsePlatformExecutable('altirra-atari5200')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+            </div>
+          )}
+
+          {isC128 && (
+            <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
+              {renderEmulatorSelector(10)}
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'vice-c128' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="VICE C128 Executable (x128.exe)"
+                  value={platformEmulatorSettings.executablePaths['vice-c128'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('vice-c128', value)}
+                  placeholder="e.g. C:/VICE/x128.exe"
+                  inputIndex={12}
+                  browseIndex={13}
+                  onBrowse={() => void browsePlatformExecutable('vice-c128')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'retroarch-c128' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="RetroArch Executable (retroarch.exe)"
+                  value={platformEmulatorSettings.executablePaths['retroarch-c128'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('retroarch-c128', value)}
+                  placeholder="e.g. C:/RetroArch/retroarch.exe"
+                  inputIndex={14}
+                  browseIndex={15}
+                  onBrowse={() => void browsePlatformExecutable('retroarch-c128')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+                <PathRow
+                  label="RetroArch C128 Core"
+                  value={platformEmulatorSettings.corePaths['retroarch-c128'] ?? ''}
+                  onChange={(value) => setPlatformCorePath('retroarch-c128', value)}
+                  placeholder="e.g. C:/RetroArch/cores/vice_x128_libretro.dll"
+                  inputIndex={16}
+                  browseIndex={17}
+                  onBrowse={() => void browsePlatformCore('retroarch-c128')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+            </div>
+          )}
+
+          {isAtari7800 && (
+            <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
+              {renderEmulatorSelector(10)}
+              <div
+                className={`space-y-3 transition-opacity ${
+                  preferredEmulatorProfileId !== 'retroarch-atari7800' ? 'opacity-50' : ''
+                }`}
+              >
+                <PathRow
+                  label="RetroArch Executable (retroarch.exe)"
+                  value={platformEmulatorSettings.executablePaths['retroarch-atari7800'] ?? ''}
+                  onChange={(value) => setPlatformExecutablePath('retroarch-atari7800', value)}
+                  placeholder="e.g. C:/RetroArch/retroarch.exe"
+                  inputIndex={12}
+                  browseIndex={13}
+                  onBrowse={() => void browsePlatformExecutable('retroarch-atari7800')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+                <PathRow
+                  label="RetroArch Atari 7800 Core"
+                  value={platformEmulatorSettings.corePaths['retroarch-atari7800'] ?? ''}
+                  onChange={(value) => setPlatformCorePath('retroarch-atari7800', value)}
+                  placeholder="e.g. C:/RetroArch/cores/prosystem_libretro.dll"
+                  inputIndex={14}
+                  browseIndex={15}
+                  onBrowse={() => void browsePlatformCore('retroarch-atari7800')}
+                  isMouseMode={isMouseMode}
+                  onMouseFocus={onMouseFocus}
+                  isFocused={isFocused}
+                />
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
       <p className="text-[10px] text-theme-text-muted mt-auto pt-2">

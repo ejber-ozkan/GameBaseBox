@@ -4,7 +4,32 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-08-15
+
+### Added
+- Added support for 6 new GameBase platforms:
+  - **Commodore 128** (`c128`, GameBase C128 with SID music, VICE x128 / RetroArch emulator profiles).
+  - **Amstrad CPC** (`amstradcpc`, AmstradMania v7+ with AY chip music, Caprice32 / CPC++ / RetroArch emulator profiles).
+  - **Apple 2GS** (`apple2gs`, archive.org GameBase collection with KEGS / RetroArch emulator profiles).
+  - **Commodore PET** (`pet`, PET GameBase v3.1 with VICE xpet / RetroArch emulator profiles).
+  - **Atari 5200** (`atari5200`, Atari 5200 GameBase with Altirra / RetroArch desktop profiles).
+  - **Atari 7800** (`atari7800`, Atari 7800 GameBase with ProSystem RetroArch desktop profile).
+- Updated **Commodore VIC-20** (`vic20`, GameBase VIC-20 v4.0+) metadata, aliases, and launcher support.
+- Enhanced Active Platform dropdowns in BigBox and Windowed modes:
+  - Grouped and listed all imported GameBases first.
+  - Clearly marked unimported GameBases in option text with `(Not Imported)`.
+- Added platform-specific background wallpapers for all new platforms in `docs/images/backgrounds/` and `public/docs/images/backgrounds/` with dynamic background pool selection.
+- Added dedicated platform path and emulator configuration controls in the Settings Modal for all new platforms.
+
+### Fixed
+- Fixed Atari 5200 and Atari 7800 attempting embedded WASM emulation and falling back to the C64 core; routed cleanly to desktop emulators (Altirra / RetroArch).
+
+### Changed
+- Bumped package, Tauri, Cargo, and root version metadata to `0.6.2`.
+
+
 ## [0.6.1] - 2026-07-26
+
 
 ### Added
 - Added Phase 1 Multi-Platform Embedded WebAssembly Emulation for Atari 2600 (`stella2014`), ZX Spectrum (`fuse`), Commodore VIC-20 (`vice_xvic`), and Commodore 64 (`vice_x64`).

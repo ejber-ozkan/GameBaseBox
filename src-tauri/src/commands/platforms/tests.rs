@@ -284,6 +284,42 @@ async fn test_get_supported_platforms_includes_vic20_capabilities() {
 }
 
 #[tokio::test(flavor = "current_thread")]
+async fn test_get_supported_platforms_includes_new_gamebase_platforms() {
+    let temp_db = NamedTempFile::new().unwrap();
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let _env = DbEnvGuard::set(&db_path);
+
+    let platforms = get_supported_platforms().await.unwrap();
+    
+    let amstrad = platforms.iter().find(|p| p.id == "amstradcpc").expect("Amstrad CPC profile should exist");
+    assert_eq!(amstrad.display_name, "Amstrad CPC");
+    assert_eq!(amstrad.capabilities.music, "ay");
+    assert!(amstrad.capabilities.photos);
+
+    let apple2gs = platforms.iter().find(|p| p.id == "apple2gs").expect("Apple 2GS profile should exist");
+    assert_eq!(apple2gs.display_name, "Apple 2GS");
+
+    let pet = platforms.iter().find(|p| p.id == "pet").expect("PET profile should exist");
+    assert_eq!(pet.display_name, "Commodore PET");
+    assert_eq!(pet.default_emulator_profile_id, "vice-pet");
+
+    let c128 = platforms.iter().find(|p| p.id == "c128").expect("C128 profile should exist");
+    assert_eq!(c128.display_name, "Commodore 128");
+    assert_eq!(c128.default_emulator_profile_id, "vice-c128");
+    assert_eq!(c128.capabilities.music, "sid");
+    assert!(!c128.capabilities.in_app_emulation);
+
+    let atari5200 = platforms.iter().find(|p| p.id == "atari5200").expect("Atari 5200 profile should exist");
+    assert_eq!(atari5200.display_name, "Atari 5200");
+    assert!(!atari5200.capabilities.in_app_emulation);
+
+    let atari7800 = platforms.iter().find(|p| p.id == "atari7800").expect("Atari 7800 profile should exist");
+    assert_eq!(atari7800.display_name, "Atari 7800");
+    assert!(!atari7800.capabilities.in_app_emulation);
+}
+
+
+#[tokio::test(flavor = "current_thread")]
 async fn test_active_platform_defaults_to_c64() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();

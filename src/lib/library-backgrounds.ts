@@ -37,8 +37,29 @@ const PLATFORM_BACKGROUND_POOLS: Partial<Record<PlatformId, readonly string[]>> 
   ],
   vic20: [
     `${BACKGROUND_BASE_PATH}/Commodore-VIC-20_1.jpg`,
+    `${BACKGROUND_BASE_PATH}/Commodore-VIC-20-FL.jpg`,
+  ],
+  amstradcpc: [
+    `${BACKGROUND_BASE_PATH}/Amstrad_CPC464.jpg`,
+  ],
+  apple2gs: [
+    `${BACKGROUND_BASE_PATH}/Apple_II-IMG_7064.jpg`,
+  ],
+  pet: [
+    `${BACKGROUND_BASE_PATH}/Commodore_PET_2001_Series-IMG_0448b.jpg`,
+  ],
+  atari5200: [
+    `${BACKGROUND_BASE_PATH}/Atari-5200-4-Port-wController-L.jpg`,
+  ],
+  atari7800: [
+    `${BACKGROUND_BASE_PATH}/Atari-7800-wControl-Pad-L.jpg`,
+  ],
+  c128: [
+    `${BACKGROUND_BASE_PATH}/Commodore-128.jpg`,
   ],
 };
+
+
 
 const BACKGROUND_POOL = Object.values(PLATFORM_BACKGROUND_POOLS).flat();
 

@@ -25,6 +25,12 @@ describe('platform-capabilities', () => {
       'amiga',
       'atarist',
       'vic20',
+      'amstradcpc',
+      'apple2gs',
+      'pet',
+      'c128',
+      'atari5200',
+      'atari7800',
     ]);
   });
 
@@ -68,7 +74,7 @@ describe('platform-capabilities', () => {
     expect(zxspectrum.supportedEmulatorProfileIds).toEqual(['retroarch-zxspectrum', 'spectaculator-zxspectrum']);
     expect(PLATFORM_EMULATOR_PROFILES['spectaculator-zxspectrum'].displayName).toBe('Spectaculator');
     expect(zxspectrum.launchExtensions).toEqual(
-      expect.arrayContaining(['.tzx', '.tap', '.z80', '.sna', '.trd', '.dsk', '.zip']),
+      expect.arrayContaining(['.tzx', '.tap', '.z80', '.sna', '.szx', '.trd', '.dsk', '.zip']),
     );
   });
 
@@ -84,7 +90,7 @@ describe('platform-capabilities', () => {
     expect(bbcMicro.supportedEmulatorProfileIds).toEqual(['retroarch-bbcmicro', 'beebem-bbcmicro']);
     expect(PLATFORM_EMULATOR_PROFILES['beebem-bbcmicro'].displayName).toBe('BeebEm');
     expect(bbcMicro.launchExtensions).toEqual(
-      expect.arrayContaining(['.ssd', '.dsd', '.uef', '.rom', '.zip', '.7z']),
+      expect.arrayContaining(['.ssd', '.dsd', '.uef', '.rom', '.bin', '.zip', '.7z']),
     );
   });
 
@@ -110,8 +116,6 @@ describe('platform-capabilities', () => {
     expect(atariSt.displayName).toBe('Atari ST');
     expect(atariSt.status).toBe('available');
     expect(atariSt.importStatus).toBe('notImported');
-    expect(atariSt.folderTypes).toEqual(['extras', 'games', 'screenshots', 'music']);
-    expect(atariSt.mediaCapabilities.music).toBe('generic');
     expect(atariSt.defaultEmulatorProfileId).toBe('retroarch-atarist');
     expect(atariSt.supportedEmulatorProfileIds).toEqual(['retroarch-atarist', 'steem-atarist', 'hatari-atarist']);
     expect(PLATFORM_EMULATOR_PROFILES['steem-atarist'].displayName).toBe('STeem');
@@ -137,6 +141,80 @@ describe('platform-capabilities', () => {
     );
   });
 
+  test('defines Amstrad CPC GameBase import folders and emulator capabilities', () => {
+    const amstrad = PLATFORM_PROFILES.amstradcpc;
+
+    expect(amstrad.displayName).toBe('Amstrad CPC');
+    expect(amstrad.status).toBe('available');
+    expect(amstrad.importStatus).toBe('notImported');
+    expect(amstrad.folderTypes).toEqual(['extras', 'games', 'screenshots', 'photos', 'music']);
+    expect(amstrad.mediaCapabilities.music).toBe('ay');
+    expect(amstrad.mediaCapabilities.photos).toBe(true);
+    expect(amstrad.defaultEmulatorProfileId).toBe('retroarch-amstradcpc');
+    expect(amstrad.supportedEmulatorProfileIds).toEqual(['retroarch-amstradcpc', 'cpce-amstradcpc']);
+    expect(amstrad.launchExtensions).toEqual(
+      expect.arrayContaining(['.dsk', '.cpr', '.sna', '.cdt', '.tap', '.bin', '.zip', '.7z']),
+    );
+  });
+
+  test('defines Apple 2GS GameBase import folders and emulator capabilities', () => {
+    const apple2gs = PLATFORM_PROFILES.apple2gs;
+
+    expect(apple2gs.displayName).toBe('Apple 2GS');
+    expect(apple2gs.status).toBe('available');
+    expect(apple2gs.importStatus).toBe('notImported');
+    expect(apple2gs.folderTypes).toEqual(['extras', 'games', 'screenshots', 'photos', 'music']);
+    expect(apple2gs.defaultEmulatorProfileId).toBe('retroarch-apple2gs');
+    expect(apple2gs.supportedEmulatorProfileIds).toEqual(['retroarch-apple2gs', 'kegs-apple2gs']);
+    expect(apple2gs.launchExtensions).toEqual(
+      expect.arrayContaining(['.2mg', '.dsk', '.po', '.woz', '.nib', '.zip', '.7z']),
+    );
+  });
+
+  test('defines Commodore PET GameBase import folders and emulator capabilities', () => {
+    const pet = PLATFORM_PROFILES.pet;
+
+    expect(pet.displayName).toBe('Commodore PET');
+    expect(pet.status).toBe('available');
+    expect(pet.importStatus).toBe('notImported');
+    expect(pet.folderTypes).toEqual(['extras', 'games', 'screenshots', 'music']);
+    expect(pet.defaultEmulatorProfileId).toBe('vice-pet');
+    expect(pet.supportedEmulatorProfileIds).toEqual(['vice-pet', 'retroarch-pet']);
+    expect(pet.launchExtensions).toEqual(
+      expect.arrayContaining(['.prg', '.tap', '.d64', '.t64', '.zip', '.7z']),
+    );
+  });
+
+  test('defines Commodore 128 GameBase import folders and emulator capabilities', () => {
+    const c128 = PLATFORM_PROFILES.c128;
+
+    expect(c128.displayName).toBe('Commodore 128');
+    expect(c128.status).toBe('available');
+    expect(c128.importStatus).toBe('notImported');
+    expect(c128.inAppEmulation).toBe(false);
+    expect(c128.folderTypes).toEqual(['extras', 'games', 'screenshots', 'music', 'photos']);
+    expect(c128.mediaCapabilities.music).toBe('sid');
+    expect(c128.defaultEmulatorProfileId).toBe('vice-c128');
+    expect(c128.supportedEmulatorProfileIds).toEqual(['vice-c128', 'retroarch-c128']);
+    expect(c128.launchExtensions).toEqual(
+      expect.arrayContaining(['.d64', '.d71', '.d81', '.prg', '.t64', '.tap', '.zip', '.7z']),
+    );
+  });
+
+  test('defines Atari 5200 and Atari 7800 GameBase capabilities', () => {
+    const atari5200 = PLATFORM_PROFILES.atari5200;
+    expect(atari5200.displayName).toBe('Atari 5200');
+    expect(atari5200.inAppEmulation).toBe(false);
+    expect(atari5200.folderTypes).toEqual(['extras', 'games', 'screenshots', 'photos']);
+    expect(atari5200.supportedEmulatorProfileIds).toEqual(['retroarch-atari5200', 'altirra-atari5200']);
+
+    const atari7800 = PLATFORM_PROFILES.atari7800;
+    expect(atari7800.displayName).toBe('Atari 7800');
+    expect(atari7800.inAppEmulation).toBe(false);
+    expect(atari7800.folderTypes).toEqual(['extras', 'games', 'screenshots']);
+    expect(atari7800.supportedEmulatorProfileIds).toEqual(['retroarch-atari7800']);
+  });
+
   test('keeps in-app emulation flags configured per platform', () => {
     expect(PLATFORM_PROFILES.c64.mediaCapabilities.music).toBe('sid');
     expect(PLATFORM_PROFILES.c64.inAppEmulation).toBe(true);
@@ -144,9 +222,15 @@ describe('platform-capabilities', () => {
     expect(PLATFORM_PROFILES.atari2600.inAppEmulation).toBe(true);
     expect(PLATFORM_PROFILES.zxspectrum.inAppEmulation).toBe(true);
     expect(PLATFORM_PROFILES.vic20.inAppEmulation).toBe(true);
+    expect(PLATFORM_PROFILES.atari5200.inAppEmulation).toBe(false);
+    expect(PLATFORM_PROFILES.atari7800.inAppEmulation).toBe(false);
     expect(PLATFORM_PROFILES.bbcmicro.inAppEmulation).toBe(false);
     expect(PLATFORM_PROFILES.amiga.inAppEmulation).toBe(false);
     expect(PLATFORM_PROFILES.atarist.inAppEmulation).toBe(false);
+    expect(PLATFORM_PROFILES.amstradcpc.inAppEmulation).toBe(false);
+    expect(PLATFORM_PROFILES.apple2gs.inAppEmulation).toBe(false);
+    expect(PLATFORM_PROFILES.pet.inAppEmulation).toBe(false);
+    expect(PLATFORM_PROFILES.c128.inAppEmulation).toBe(false);
     expect(PLATFORM_EMULATOR_PROFILES['altirra-atari800'].platformId).toBe('atari800');
   });
 
@@ -157,9 +241,15 @@ describe('platform-capabilities', () => {
     expect(supportsEmbeddedEmulation('atari2600')).toBe(true);
     expect(supportsEmbeddedEmulation('zxspectrum')).toBe(true);
     expect(supportsEmbeddedEmulation('vic20')).toBe(true);
+    expect(supportsEmbeddedEmulation('atari5200')).toBe(false);
+    expect(supportsEmbeddedEmulation('atari7800')).toBe(false);
     expect(supportsEmbeddedEmulation('bbcmicro')).toBe(false);
     expect(supportsEmbeddedEmulation('amiga')).toBe(false);
     expect(supportsEmbeddedEmulation('atarist')).toBe(false);
+    expect(supportsEmbeddedEmulation('amstradcpc')).toBe(false);
+    expect(supportsEmbeddedEmulation('apple2gs')).toBe(false);
+    expect(supportsEmbeddedEmulation('pet')).toBe(false);
+    expect(supportsEmbeddedEmulation('c128')).toBe(false);
   });
 
   test('validates known platform identifiers', () => {
@@ -170,10 +260,15 @@ describe('platform-capabilities', () => {
     expect(isPlatformId('amiga')).toBe(true);
     expect(isPlatformId('atarist')).toBe(true);
     expect(isPlatformId('vic20')).toBe(true);
+    expect(isPlatformId('amstradcpc')).toBe(true);
+    expect(isPlatformId('apple2gs')).toBe(true);
+    expect(isPlatformId('pet')).toBe(true);
+    expect(isPlatformId('c128')).toBe(true);
+    expect(isPlatformId('atari5200')).toBe(true);
+    expect(isPlatformId('atari7800')).toBe(true);
   });
 
   test('validates platform capability query helpers', () => {
-
     expect(hasMusicCapability('c64')).toBe(true);
     expect(hasMusicCapability('atari800')).toBe(true);
     expect(hasMusicCapability('atari2600')).toBe(false);
@@ -182,6 +277,12 @@ describe('platform-capabilities', () => {
     expect(hasMusicCapability('amiga')).toBe(true);
     expect(hasMusicCapability('atarist')).toBe(true);
     expect(hasMusicCapability('vic20')).toBe(true);
+    expect(hasMusicCapability('amstradcpc')).toBe(true);
+    expect(hasMusicCapability('apple2gs')).toBe(true);
+    expect(hasMusicCapability('pet')).toBe(false);
+    expect(hasMusicCapability('c128')).toBe(true);
+    expect(hasMusicCapability('atari5200')).toBe(false);
+    expect(hasMusicCapability('atari7800')).toBe(false);
 
     expect(hasPhotosCapability('c64')).toBe(true);
     expect(hasPhotosCapability('atari800')).toBe(true);
@@ -191,6 +292,12 @@ describe('platform-capabilities', () => {
     expect(hasPhotosCapability('amiga')).toBe(false);
     expect(hasPhotosCapability('atarist')).toBe(false);
     expect(hasPhotosCapability('vic20')).toBe(false);
+    expect(hasPhotosCapability('amstradcpc')).toBe(true);
+    expect(hasPhotosCapability('apple2gs')).toBe(false);
+    expect(hasPhotosCapability('pet')).toBe(false);
+    expect(hasPhotosCapability('c128')).toBe(true);
+    expect(hasPhotosCapability('atari5200')).toBe(true);
+    expect(hasPhotosCapability('atari7800')).toBe(false);
 
     expect(hasScreenshotsCapability('c64')).toBe(true);
     expect(hasScreenshotsCapability('atari800')).toBe(true);
@@ -200,6 +307,12 @@ describe('platform-capabilities', () => {
     expect(hasScreenshotsCapability('amiga')).toBe(true);
     expect(hasScreenshotsCapability('atarist')).toBe(true);
     expect(hasScreenshotsCapability('vic20')).toBe(true);
+    expect(hasScreenshotsCapability('amstradcpc')).toBe(true);
+    expect(hasScreenshotsCapability('apple2gs')).toBe(true);
+    expect(hasScreenshotsCapability('pet')).toBe(true);
+    expect(hasScreenshotsCapability('c128')).toBe(true);
+    expect(hasScreenshotsCapability('atari5200')).toBe(true);
+    expect(hasScreenshotsCapability('atari7800')).toBe(true);
 
     expect(hasExtrasCapability('c64')).toBe(true);
     expect(hasExtrasCapability('atari800')).toBe(true);
@@ -209,6 +322,12 @@ describe('platform-capabilities', () => {
     expect(hasExtrasCapability('amiga')).toBe(true);
     expect(hasExtrasCapability('atarist')).toBe(true);
     expect(hasExtrasCapability('vic20')).toBe(true);
+    expect(hasExtrasCapability('amstradcpc')).toBe(true);
+    expect(hasExtrasCapability('apple2gs')).toBe(true);
+    expect(hasExtrasCapability('pet')).toBe(true);
+    expect(hasExtrasCapability('c128')).toBe(true);
+    expect(hasExtrasCapability('atari5200')).toBe(true);
+    expect(hasExtrasCapability('atari7800')).toBe(true);
 
     expect(hasVideosCapability('c64')).toBe(true);
     expect(hasVideosCapability('atari800')).toBe(false);
@@ -218,5 +337,11 @@ describe('platform-capabilities', () => {
     expect(hasVideosCapability('amiga')).toBe(false);
     expect(hasVideosCapability('atarist')).toBe(false);
     expect(hasVideosCapability('vic20')).toBe(false);
+    expect(hasVideosCapability('amstradcpc')).toBe(false);
+    expect(hasVideosCapability('apple2gs')).toBe(false);
+    expect(hasVideosCapability('pet')).toBe(false);
+    expect(hasVideosCapability('c128')).toBe(false);
+    expect(hasVideosCapability('atari5200')).toBe(false);
+    expect(hasVideosCapability('atari7800')).toBe(false);
   });
 });

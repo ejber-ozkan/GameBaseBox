@@ -48,26 +48,33 @@ fn platform_display_name(platform_id: Option<&str>) -> &'static str {
     match platform_id {
         Some("atari800") => "Atari 800",
         Some("atari2600") => "Atari 2600",
+        Some("atari5200") => "Atari 5200",
+        Some("atari7800") => "Atari 7800",
         Some("zxspectrum") => "ZX Spectrum",
         Some("bbcmicro") => "Acorn BBC Micro",
         Some("amiga") => "Commodore Amiga",
+        Some("atarist") => "Atari ST",
+        Some("vic20") => "Commodore VIC-20",
+        Some("amstradcpc") => "Amstrad CPC",
+        Some("apple2gs") => "Apple 2GS",
+        Some("pet") => "Commodore PET",
+        Some("c128") => "Commodore 128",
         _ => "C64",
     }
 }
 
 fn emulator_profile_display_name(profile_id: Option<&str>, is_retroarch: bool) -> &'static str {
     match profile_id {
-        Some("altirra-atari800") => "Altirra",
+        Some("altirra-atari800") | Some("altirra-atari5200") => "Altirra",
         Some("spectaculator-zxspectrum") => "Spectaculator",
         Some("beebem-bbcmicro") => "BeebEm",
         Some("winuae-amiga") => "WinUAE / UAE",
-        Some("retroarch-atari800") if is_retroarch => "RetroArch",
-        Some("retroarch-zxspectrum") if is_retroarch => "RetroArch",
-        Some("retroarch-bbcmicro") if is_retroarch => "RetroArch",
-        Some("retroarch-amiga") if is_retroarch => "RetroArch",
-        Some("retroarch-c64") if is_retroarch => "RetroArch",
-        Some("vice-c64") => "VICE",
-        _ if is_retroarch => "RetroArch",
+        Some("steem-atarist") => "STeem",
+        Some("hatari-atarist") => "Hatari",
+        Some("vice-c64") | Some("vice-vic20") | Some("vice-pet") | Some("vice-c128") => "VICE",
+        Some("kegs-apple2gs") => "KEGS",
+        Some("cpce-amstradcpc") => "Caprice32 / CPC++",
+        Some(id) if is_retroarch || id.starts_with("retroarch-") => "RetroArch",
         _ => "emulator",
     }
 }
@@ -77,10 +84,18 @@ fn launch_extensions_for_platform(platform_id: Option<&str>) -> &'static [&'stat
         Some("atari800") => &[
             "atr", "atx", "xfd", "dcm", "cas", "xex", "com", "bin", "car", "rom",
         ],
+        Some("atari2600") => &["a26", "bin", "rom"],
+        Some("atari5200") => &["a52", "bin", "rom", "car"],
+        Some("atari7800") => &["a78", "bin", "rom"],
         Some("zxspectrum") => &["tzx", "tap", "z80", "sna", "szx", "trd", "dsk"],
         Some("bbcmicro") => &["ssd", "dsd", "adl", "adf", "uef", "rom", "bin"],
         Some("amiga") => &["adf", "adz", "dms", "ipf", "lha", "hdf", "hdz"],
-        Some("atarist") => &["st"],
+        Some("atarist") => &["st", "msa", "stx", "dim", "ipf"],
+        Some("vic20") => &["d64", "t64", "tap", "prg", "crt", "a0", "20", "40", "60"],
+        Some("amstradcpc") => &["dsk", "cpr", "sna", "cdt", "tap", "bin"],
+        Some("apple2gs") => &["2mg", "dsk", "po", "woz", "nib"],
+        Some("pet") => &["prg", "tap", "d64", "t64"],
+        Some("c128") => &["d64", "d71", "d81", "t64", "tap", "prg", "crt", "g64", "nib"],
         _ => &["d64", "g64", "t64", "tap", "prg", "crt", "nib"],
     }
 }
@@ -88,15 +103,18 @@ fn launch_extensions_for_platform(platform_id: Option<&str>) -> &'static [&'stat
 fn retroarch_core_not_found_message(platform_id: Option<&str>, core_path: &str) -> String {
     match platform_id {
         Some("atari800") => format!("Atari 800 RetroArch core file not found: {}", core_path),
+        Some("atari2600") => format!("Atari 2600 RetroArch core file not found: {}", core_path),
+        Some("atari5200") => format!("Atari 5200 RetroArch core file not found: {}", core_path),
+        Some("atari7800") => format!("Atari 7800 RetroArch core file not found: {}", core_path),
         Some("zxspectrum") => format!("ZX Spectrum RetroArch core file not found: {}", core_path),
-        Some("bbcmicro") => format!(
-            "Acorn BBC Micro RetroArch core file not found: {}",
-            core_path
-        ),
-        Some("amiga") => format!(
-            "Commodore Amiga RetroArch core file not found: {}",
-            core_path
-        ),
+        Some("bbcmicro") => format!("Acorn BBC Micro RetroArch core file not found: {}", core_path),
+        Some("amiga") => format!("Commodore Amiga RetroArch core file not found: {}", core_path),
+        Some("atarist") => format!("Atari ST RetroArch core file not found: {}", core_path),
+        Some("vic20") => format!("Commodore VIC-20 RetroArch core file not found: {}", core_path),
+        Some("amstradcpc") => format!("Amstrad CPC RetroArch core file not found: {}", core_path),
+        Some("apple2gs") => format!("Apple 2GS RetroArch core file not found: {}", core_path),
+        Some("pet") => format!("Commodore PET RetroArch core file not found: {}", core_path),
+        Some("c128") => format!("Commodore 128 RetroArch core file not found: {}", core_path),
         _ => format!("RetroArch Core file not found: {}", core_path),
     }
 }
@@ -104,18 +122,18 @@ fn retroarch_core_not_found_message(platform_id: Option<&str>, core_path: &str) 
 fn retroarch_core_not_file_message(platform_id: Option<&str>, core_path: &str) -> String {
     match platform_id {
         Some("atari800") => format!("Atari 800 RetroArch core path is not a file: {}", core_path),
-        Some("zxspectrum") => format!(
-            "ZX Spectrum RetroArch core path is not a file: {}",
-            core_path
-        ),
-        Some("bbcmicro") => format!(
-            "Acorn BBC Micro RetroArch core path is not a file: {}",
-            core_path
-        ),
-        Some("amiga") => format!(
-            "Commodore Amiga RetroArch core path is not a file: {}",
-            core_path
-        ),
+        Some("atari2600") => format!("Atari 2600 RetroArch core path is not a file: {}", core_path),
+        Some("atari5200") => format!("Atari 5200 RetroArch core path is not a file: {}", core_path),
+        Some("atari7800") => format!("Atari 7800 RetroArch core path is not a file: {}", core_path),
+        Some("zxspectrum") => format!("ZX Spectrum RetroArch core path is not a file: {}", core_path),
+        Some("bbcmicro") => format!("Acorn BBC Micro RetroArch core path is not a file: {}", core_path),
+        Some("amiga") => format!("Commodore Amiga RetroArch core path is not a file: {}", core_path),
+        Some("atarist") => format!("Atari ST RetroArch core path is not a file: {}", core_path),
+        Some("vic20") => format!("Commodore VIC-20 RetroArch core path is not a file: {}", core_path),
+        Some("amstradcpc") => format!("Amstrad CPC RetroArch core path is not a file: {}", core_path),
+        Some("apple2gs") => format!("Apple 2GS RetroArch core path is not a file: {}", core_path),
+        Some("pet") => format!("Commodore PET RetroArch core path is not a file: {}", core_path),
+        Some("c128") => format!("Commodore 128 RetroArch core path is not a file: {}", core_path),
         _ => format!("RetroArch Core path is not a file: {}", core_path),
     }
 }
@@ -134,8 +152,26 @@ fn is_supported_emulator_profile(platform_id: &str, profile_id: &str) -> bool {
             | ("bbcmicro", "beebem-bbcmicro")
             | ("amiga", "retroarch-amiga")
             | ("amiga", "winuae-amiga")
+            | ("atarist", "retroarch-atarist")
+            | ("atarist", "steem-atarist")
+            | ("atarist", "hatari-atarist")
+            | ("vic20", "retroarch-vic20")
+            | ("vic20", "vice-vic20")
+            | ("amstradcpc", "retroarch-amstradcpc")
+            | ("amstradcpc", "cpce-amstradcpc")
+            | ("apple2gs", "retroarch-apple2gs")
+            | ("apple2gs", "kegs-apple2gs")
+            | ("pet", "vice-pet")
+            | ("pet", "retroarch-pet")
+            | ("c128", "vice-c128")
+            | ("c128", "retroarch-c128")
+            | ("atari5200", "retroarch-atari5200")
+            | ("atari5200", "altirra-atari5200")
+            | ("atari7800", "retroarch-atari7800")
     )
 }
+
+
 
 fn is_retroarch_profile(profile_id: &str) -> bool {
     profile_id.starts_with("retroarch-")
