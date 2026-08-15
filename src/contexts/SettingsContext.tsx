@@ -121,7 +121,11 @@ const defaultSettings: Settings = {
   themeId: 'arcade-void',
 };
 
-const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+export const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+
+export function useOptionalSettings() {
+  return useContext(SettingsContext);
+}
 
 const SECURE_FIELDS = ['emuMoviesPassword', 'screenScraperPassword', 'screenScraperDevPassword', 'theGamesDbApiKey'] as const;
 const LEGACY_PATH_FIELDS = [

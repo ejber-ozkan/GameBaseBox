@@ -1,6 +1,6 @@
 # GBBox
 
-**GameBase Box** is a local-first desktop frontend for GameBase-style retro game libraries. It started life as 64Box for the GameBase64 collection and now supports platform-scoped imports for **Commodore 64, Atari 800, Atari 2600, ZX Spectrum, Acorn BBC Micro, and Commodore Amiga**, with more GameBase platforms coming soon.
+**GameBase Box** is a local-first desktop frontend for GameBase-style retro game libraries. It started life as 64Box for the GameBase64 collection and now supports platform-scoped imports for **Commodore 64, Commodore 128, Commodore VIC-20, Commodore PET, Commodore Amiga, Atari 800, Atari 2600, Atari 5200, Atari 7800, Atari ST, ZX Spectrum, Acorn BBC Micro, Amstrad CPC, and Apple 2GS**.
 
 GitHub Pages: [GameBaseBox](https://ejber-ozkan.github.io/GameBaseBox/)
 
@@ -39,13 +39,22 @@ Install the latest single executable application release and run it, no need to 
 
 | Platform | Status | Notes |
 |----------|--------|-------|
-| Commodore 64 / GameBase64 | Supported | Compatibility baseline with VICE, RetroArch, SID playback, extras, screenshots, and GameBase64 metadata. |
+| Commodore 64 / GameBase64 | Supported | Compatibility baseline with VICE, RetroArch, in-app WASM emulation, SID playback, extras, screenshots, and GameBase64 metadata. |
+| Commodore 128 | Supported | Imports GameBase C128 MDBs with Extras, Games, Screenshots, Musician Photos, and SID music folders. VICE x128 and RetroArch support. |
 | Atari 800 | Supported | Imports Atari 800 v12-compatible GameBase MDBs with Games, Music, Photos, Screenshots, and Extras folders. Supports RetroArch Atari800 and Altirra launch settings. |
-| Atari 2600 | Supported | Imports Atari 2600 GameBase MDBs with Games, Screenshots, and Extras folders. Uses RetroArch/Stella-style launch settings. |
-| ZX Spectrum / GameBaseZX / SpeccyMania | Supported | Imports Sinclair ZX Spectrum v6-compatible GameBase MDBs with Extras, Games, Screenshots, Musician Photos, and Music folders. RetroArch is the default launch profile, with Spectaculator as an external emulator option. `.ay` music files are recognized as ZX Spectrum music media; in-app JavaScript playback still needs evaluation. |
-| Acorn BBC Micro | Supported | Imports BBC Micro GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch is the default launch profile, with BeebEm as the external emulator option. |
-| Commodore Amiga | Supported | Imports Amiga GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch is the default launch profile, with WinUAE on Windows and UAE-style equivalents such as FS-UAE or Amiberry on Linux/macOS. |
-| More GameBase platforms | Coming soon | The platform model is now data-driven so additional GameBase databases can be added without cloning the app. |
+| Atari 2600 | Supported | Imports Atari 2600 GameBase MDBs with in-app WASM emulation, Games, Screenshots, and Extras folders. Uses RetroArch/Stella-style launch settings. |
+| ZX Spectrum / GameBaseZX / SpeccyMania | Supported | Imports Sinclair ZX Spectrum v6-compatible GameBase MDBs with in-app WASM emulation, Extras, Games, Screenshots, Musician Photos, and Music folders. RetroArch and Spectaculator support. `.ay` chip music recognized. |
+| Acorn BBC Micro | Supported | Imports BBC Micro GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch and BeebEm support. |
+| Commodore Amiga | Supported | Imports Amiga GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch and WinUAE / UAE support. |
+| Atari ST | Supported | Imports Atari ST GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch, STeem, and Hatari support. |
+| Commodore VIC-20 | Supported | Imports VIC-20 v4.0+ GameBase MDBs with in-app WASM emulation, Extras, Games, Screenshots, and Music folders. RetroArch and VICE VIC-20 support. |
+| Amstrad CPC / AmstradMania | Supported | Imports Amstrad CPC (AmstradMania v7+) GameBase MDBs with Extras, Games, Screenshots, Photos, and AY music folders. Caprice32 / CPC++ and RetroArch support. |
+| Apple 2GS | Supported | Imports Apple 2GS GameBase MDBs with Extras, Games, Screenshots, Photos, and Music folders. KEGS and RetroArch support. |
+| Commodore PET | Supported | Imports Commodore PET (v3.1+) GameBase MDBs with Extras, Games, and Screenshots folders. VICE xpet and RetroArch support. |
+| Atari 5200 | Supported | Imports Atari 5200 GameBase MDBs with Extras, Games, Screenshots, and Photos folders. Altirra and RetroArch desktop support. |
+| Atari 7800 | Supported | Imports Atari 7800 GameBase MDBs with Extras, Games, and Screenshots folders. RetroArch ProSystem desktop support. |
+
+
 
 GameBase database (`.mdb`) files, ROMs, screenshots, music, extras, and other media are not included. You point GBBox at the databases and local folders you own.
 
@@ -329,7 +338,8 @@ Temporary extraction and launch playlists are generated outside your source libr
 
 ## Release Notes
 
-See [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_0.6.1.md](RELEASE_NOTES_0.6.1.md), [RELEASE_NOTES_0.6.0.md](RELEASE_NOTES_0.6.0.md), [RELEASE_NOTES_0.5.4.md](RELEASE_NOTES_0.5.4.md), [RELEASE_NOTES_0.5.3.md](RELEASE_NOTES_0.5.3.md), [RELEASE_NOTES_0.5.2.md](RELEASE_NOTES_0.5.2.md), [RELEASE_NOTES_0.5.1.md](RELEASE_NOTES_0.5.1.md), [RELEASE_NOTES_0.5.0.md](RELEASE_NOTES_0.5.0.md), [RELEASE_NOTES_0.4.1.md](RELEASE_NOTES_0.4.1.md), [RELEASE_NOTES_0.4.0.md](RELEASE_NOTES_0.4.0.md), [RELEASE_NOTES_0.3.1.md](RELEASE_NOTES_0.3.1.md), [RELEASE_NOTES_0.3.0.md](RELEASE_NOTES_0.3.0.md), [RELEASE_NOTES_0.2.0.md](RELEASE_NOTES_0.2.0.md), and [RELEASE_NOTES_0.1.0.md](RELEASE_NOTES_0.1.0.md) for GBBox release notes.
+See [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_0.6.2.md](RELEASE_NOTES_0.6.2.md), [RELEASE_NOTES_0.6.1.md](RELEASE_NOTES_0.6.1.md), [RELEASE_NOTES_0.6.0.md](RELEASE_NOTES_0.6.0.md), [RELEASE_NOTES_0.5.4.md](RELEASE_NOTES_0.5.4.md), [RELEASE_NOTES_0.5.3.md](RELEASE_NOTES_0.5.3.md), [RELEASE_NOTES_0.5.2.md](RELEASE_NOTES_0.5.2.md), [RELEASE_NOTES_0.5.1.md](RELEASE_NOTES_0.5.1.md), [RELEASE_NOTES_0.5.0.md](RELEASE_NOTES_0.5.0.md), [RELEASE_NOTES_0.4.1.md](RELEASE_NOTES_0.4.1.md), [RELEASE_NOTES_0.4.0.md](RELEASE_NOTES_0.4.0.md), [RELEASE_NOTES_0.3.1.md](RELEASE_NOTES_0.3.1.md), [RELEASE_NOTES_0.3.0.md](RELEASE_NOTES_0.3.0.md), [RELEASE_NOTES_0.2.0.md](RELEASE_NOTES_0.2.0.md), and [RELEASE_NOTES_0.1.0.md](RELEASE_NOTES_0.1.0.md) for GBBox release notes.
+
 
 ## Skills used to build this
 

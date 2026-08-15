@@ -1,4 +1,19 @@
-export type PlatformId = 'c64' | 'atari800' | 'atari2600' | 'zxspectrum' | 'bbcmicro' | 'amiga' | 'atarist' | 'vic20';
+export type PlatformId =
+  | 'c64'
+  | 'atari800'
+  | 'atari2600'
+  | 'zxspectrum'
+  | 'bbcmicro'
+  | 'amiga'
+  | 'atarist'
+  | 'vic20'
+  | 'amstradcpc'
+  | 'apple2gs'
+  | 'pet'
+  | 'atari5200'
+  | 'atari7800'
+  | 'c128';
+
 
 export type PlatformStatus = 'available' | 'planned' | 'disabled';
 export type PlatformImportStatus = 'notImported' | 'importing' | 'imported' | 'failed';

@@ -187,12 +187,38 @@ export function DatabaseSetupView({
                     borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
                   }}
                 >
-                  {platformOptions.map((platform) => (
-                    <option key={platform.id} value={platform.id} className="bg-theme-surface text-theme-text">
-                      {platform.displayName}
-                      {platform.importStatus === 'imported' ? ' (imported)' : ''}
-                    </option>
-                  ))}
+                  {(() => {
+                    const imported = platformOptions.filter((p) => p.importStatus === 'imported');
+                    const unimported = platformOptions.filter((p) => p.importStatus !== 'imported');
+
+                    if (imported.length > 0 && unimported.length > 0) {
+                      return (
+                        <>
+                          <optgroup label="Imported GameBases" className="bg-theme-surface text-theme-text-muted font-bold">
+                            {imported.map((platform) => (
+                              <option key={platform.id} value={platform.id} className="bg-theme-surface text-theme-text font-semibold">
+                                {platform.displayName}
+                              </option>
+                            ))}
+                          </optgroup>
+                          <optgroup label="Not Imported" className="bg-theme-surface text-theme-text-muted font-bold">
+                            {unimported.map((platform) => (
+                              <option key={platform.id} value={platform.id} className="bg-theme-surface text-theme-text font-semibold">
+                                {platform.displayName} (Not Imported)
+                              </option>
+                            ))}
+                          </optgroup>
+                        </>
+                      );
+                    }
+
+                    return [...imported, ...unimported].map((platform) => (
+                      <option key={platform.id} value={platform.id} className="bg-theme-surface text-theme-text">
+                        {platform.displayName}
+                        {platform.importStatus === 'imported' ? '' : ' (Not Imported)'}
+                      </option>
+                    ));
+                  })()}
                 </select>
               </label>
             ) : null}
