@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useGamepad } from '../hooks/useGamepad';
+import { useTranslation } from '../i18n';
 
 interface SubGenrePickerModalProps {
   isOpen: boolean;
@@ -22,8 +23,9 @@ export function SubGenrePickerModal({
   onSelect,
   selectedSubGenre,
   subGenres,
-  title = 'Choose Sub-Genre',
+  title,
 }: SubGenrePickerModalProps) {
+  const { t } = useTranslation();
   const [selectedIndex, setSelectedIndex] = useState(() => {
     const initialIndex = selectedSubGenre ? subGenres.indexOf(selectedSubGenre) : 0;
     return initialIndex >= 0 ? initialIndex : 0;
@@ -132,15 +134,15 @@ export function SubGenrePickerModal({
       <div className="w-full max-w-[1100px] rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(8,12,20,0.98),rgba(6,10,18,0.99))] p-6 shadow-[0_30px_100px_rgba(0,0,0,0.55)]">
         <div className="mb-5 flex items-center justify-between gap-4">
           <div>
-            <div className="text-[11px] font-black uppercase tracking-[0.24em] text-cyan-300/70">Sub-Genres</div>
-            <div className="mt-1 text-2xl font-black tracking-tight text-white">{title}</div>
+            <div className="text-[11px] font-black uppercase tracking-[0.24em] text-cyan-300/70">{t('library.subGenres')}</div>
+            <div className="mt-1 text-2xl font-black tracking-tight text-white">{title || t('library.chooseSubGenre')}</div>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/65 transition-all hover:border-white/20 hover:text-white"
           >
-            Close
+            {t('common.close')}
           </button>
         </div>
 

@@ -66,7 +66,7 @@ export function getSettingsItemCount(tabId: SettingsTabId): number {
 
   switch (tabId) {
     case 'appearance':
-      return 4;
+      return 6;
     case 'display':
       return 14;
     case 'media':
@@ -110,6 +110,7 @@ export type EditableSettings = Pick<
   | 'bigBoxAnimateVertical'
   | 'activePlatformId'
   | 'platformSettings'
+  | 'language'
 >;
 
 export function getEditableSettings(settings: Settings): EditableSettings {
@@ -140,6 +141,7 @@ export function getEditableSettings(settings: Settings): EditableSettings {
     bigBoxAnimateVertical: settings.bigBoxAnimateVertical,
     activePlatformId: settings.activePlatformId,
     platformSettings: settings.platformSettings,
+    language: settings.language || 'system',
   };
 }
 

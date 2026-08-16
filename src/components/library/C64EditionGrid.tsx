@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ImageSlider } from '../ImageSlider';
 import type { Game } from '../../types/game';
+import { useTranslation } from '../../i18n/I18nContext';
 
 interface C64EditionGridProps {
   activeAlphabetRailId?: string | null;
@@ -129,6 +130,7 @@ export function C64EditionGrid({
   onEndReached,
   onFocusRailItem,
 }: C64EditionGridProps) {
+  const { t } = useTranslation();
   const endSentinelRef = useRef<HTMLDivElement>(null);
   const [hoveredRailGameId, setHoveredRailGameId] = useState<string | null>(null);
 
@@ -142,7 +144,7 @@ export function C64EditionGrid({
     return () => observer.disconnect();
   }, [onEndReached]);
 
-  const librarySections = alphabetSections ?? [{ id: 'c64-library', label: alphabetLabel ?? 'LIBRARY', games }];
+  const librarySections = alphabetSections ?? [{ id: 'c64-library', label: alphabetLabel ?? t('navigation.library').toUpperCase(), games }];
 
   const isSearching = Boolean(searchInput?.trim() && searchInput.trim().length >= 2);
 
@@ -150,9 +152,9 @@ export function C64EditionGrid({
     <div className="c64-edition-grid grid gap-8 px-4 pb-24 pt-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)] lg:px-8" data-c64-presentation="monitor" data-testid="c64-edition-grid">
       {!isSearching && (
         <>
-          <C64Rail games={recentGames} focusedGameId={focusedRailId === 'recent' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('recent', gameIndex); }} onSelectGame={onSelectGame} railId="recent" title="RECENT" />
-          <C64Rail games={favoriteGames} focusedGameId={focusedRailId === 'favorites' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('favorites', gameIndex); }} onSelectGame={onSelectGame} railId="favorites" title="FAVOURITES" />
-          <C64Rail games={classicGames} focusedGameId={focusedRailId === 'classics' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('classics', gameIndex); }} onSelectGame={onSelectGame} railId="classics" title="CLASSICS" />
+          <C64Rail games={recentGames} focusedGameId={focusedRailId === 'recent' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('recent', gameIndex); }} onSelectGame={onSelectGame} railId="recent" title={t('library.recentRail')} />
+          <C64Rail games={favoriteGames} focusedGameId={focusedRailId === 'favorites' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('favorites', gameIndex); }} onSelectGame={onSelectGame} railId="favorites" title={t('library.c64FavoriteRail')} />
+          <C64Rail games={classicGames} focusedGameId={focusedRailId === 'classics' ? focusedGameId : hoveredRailGameId} onFocusGame={(gameId, gameIndex) => { setHoveredRailGameId(gameId); if (gameId && gameIndex !== undefined) onFocusRailItem?.('classics', gameIndex); }} onSelectGame={onSelectGame} railId="classics" title={t('library.classicsRail')} />
         </>
       )}
 

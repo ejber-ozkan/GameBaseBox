@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ImageSlider } from '../ImageSlider';
 import type { Game } from '../../types/game';
+import { useTranslation } from '../../i18n/I18nContext';
 
 interface CyberpunkCrtGridProps {
   activeAlphabetRailId?: string | null;
@@ -33,9 +34,10 @@ function getMetadata(game: Game) {
 }
 
 function CtrFocusedTitle({ game }: { game: Game }) {
+  const { t } = useTranslation();
   return (
     <div className="mt-1 flex min-h-12 items-center gap-3 border-t border-[var(--theme-primary)] bg-[var(--theme-primary)] px-3 py-2 text-black" data-testid="cyberpunk-focused-title-strip">
-      <span className="font-mono text-[10px] font-black uppercase tracking-[0.12em]">CURRENTLY_FOCUSED</span>
+      <span className="font-mono text-[10px] font-black uppercase tracking-[0.12em]">{t('library.currentlyFocused').toUpperCase()}</span>
       <span className="min-w-0 truncate font-mono text-sm font-black uppercase tracking-wide">{game.name}</span>
       <span aria-hidden="true" className="ml-auto h-5 w-2 shrink-0 bg-black animate-[cursor-blink_1s_steps(1,end)_infinite]" />
     </div>
@@ -43,6 +45,7 @@ function CtrFocusedTitle({ game }: { game: Game }) {
 }
 
 function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId, title }: Pick<CyberpunkCrtGridProps, 'onSelectGame'> & { focusedGameId?: string | null; games: Game[]; onFocusGame: (gameId: string | null, gameIndex?: number) => void; railId: string; title: string }) {
+  const { t } = useTranslation();
   const railScrollRef = useRef<HTMLDivElement>(null);
 
   const scrollRail = (direction: 'previous' | 'next') => {
@@ -96,7 +99,7 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
                 {focused ? <CtrFocusedTitle game={game} /> : (
                   <div className="mt-1 flex items-center gap-2 px-1 py-1.5 font-mono text-[10px] uppercase tracking-wide">
                     <span className="min-w-0 flex-1 truncate text-[var(--theme-text)]">{game.name}</span>
-                    <span className="shrink-0 text-[var(--theme-secondary)]">RUN</span>
+                    <span className="shrink-0 text-[var(--theme-secondary)]">{t('common.run').toUpperCase()}</span>
                   </div>
                 )}
               </article>
@@ -131,6 +134,7 @@ export function CyberpunkCrtGrid({
   onEndReached,
   onFocusRailItem,
 }: CyberpunkCrtGridProps) {
+  const { t } = useTranslation();
   const endSentinelRef = useRef<HTMLDivElement>(null);
   const [hoveredRailGameId, setHoveredRailGameId] = useState<string | null>(null);
 
@@ -144,7 +148,7 @@ export function CyberpunkCrtGrid({
     return () => observer.disconnect();
   }, [onEndReached]);
 
-  const librarySections = alphabetSections ?? [{ id: 'cyberpunk-library', label: alphabetLabel ?? 'LIBRARY_DATABASE', games }];
+  const librarySections = alphabetSections ?? [{ id: 'cyberpunk-library', label: alphabetLabel ?? t('library.libraryDatabase').toUpperCase(), games }];
 
   const railProps = (railId: string) => ({
     focusedGameId: focusedRailId === railId ? focusedGameId : hoveredRailGameId,
@@ -160,9 +164,9 @@ export function CyberpunkCrtGrid({
     <div className="cyberpunk-crt-grid grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 px-4 pb-24 pt-5 sm:px-6 lg:px-8" data-cyberpunk-presentation="crt-terminal" data-testid="cyberpunk-crt-grid">
       {!isSearching && (
         <>
-          <CyberpunkRail {...railProps('recent')} games={recentGames} onSelectGame={onSelectGame} railId="recent" title="RECENT" />
-          <CyberpunkRail {...railProps('favorites')} games={favoriteGames} onSelectGame={onSelectGame} railId="favorites" title="FAVOURITE" />
-          <CyberpunkRail {...railProps('classics')} games={classicGames} onSelectGame={onSelectGame} railId="classics" title="CLASSICS" />
+          <CyberpunkRail {...railProps('recent')} games={recentGames} onSelectGame={onSelectGame} railId="recent" title={t('library.recentRail')} />
+          <CyberpunkRail {...railProps('favorites')} games={favoriteGames} onSelectGame={onSelectGame} railId="favorites" title={t('library.favoriteRail')} />
+          <CyberpunkRail {...railProps('classics')} games={classicGames} onSelectGame={onSelectGame} railId="classics" title={t('library.classicsRail')} />
         </>
       )}
 
@@ -176,7 +180,7 @@ export function CyberpunkCrtGrid({
             <div className="mb-3 flex items-end gap-3 border-b-2 border-[var(--theme-secondary)] pb-2">
               <span aria-hidden="true" className="h-6 w-1.5 bg-[var(--theme-secondary)] shadow-[2px_0_0_var(--theme-primary)]" />
               <h2 className="font-mono text-base font-black uppercase tracking-tight text-[var(--theme-text)] sm:text-xl">{section.label}</h2>
-              <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)]">DATABASE</span>
+              <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--theme-text-muted)]">{t('library.database').toUpperCase()}</span>
             </div>
             <div
               className="grid min-w-0 w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8"

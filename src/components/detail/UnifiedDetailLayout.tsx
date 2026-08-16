@@ -24,6 +24,7 @@ import { C64ShaderBackground } from './C64ShaderBackground';
 import { useTheme } from '../../contexts/ThemeContext';
 import type { DetailZone } from '../../hooks/useDetailNavigation';
 import { BigBoxFooter } from '../bigbox/BigBoxFooter';
+import { useTranslation } from '../../i18n';
 
 type UnifiedDetailTab = 'game' | 'extras';
 
@@ -321,6 +322,7 @@ export function UnifiedDetailLayout({
   onToggleFavorite,
   fullscreenLayout,
 }: DetailLayoutProps) {
+  const { t } = useTranslation();
   const { settings, resolveMediaPath, markAsPlayed } = useSettings();
   const canPlayEmbedded = supportsEmbeddedEmulation(settings.activePlatformId);
   const { theme } = useTheme();
@@ -374,19 +376,19 @@ export function UnifiedDetailLayout({
   // Gallery view available media selection
   const availableMedia = useMemo(() => {
     const items: Array<{ id: string; label: string; filename: string | null }> = [
-      { id: 'gameplay', label: 'Gameplay', filename: game.screenshotFilename },
+      { id: 'gameplay', label: t('detail.gameplay'), filename: game.screenshotFilename },
     ];
     if (game.titlescreenFilename) {
-      items.push({ id: 'titlescreen', label: 'Title', filename: game.titlescreenFilename });
+      items.push({ id: 'titlescreen', label: t('detail.titleScreen'), filename: game.titlescreenFilename });
     }
     if (game.videoSnapFilename) {
-      items.push({ id: 'videosna', label: 'Video', filename: game.videoSnapFilename });
+      items.push({ id: 'videosna', label: t('detail.video'), filename: game.videoSnapFilename });
     }
     if (showBoxArtPanel) {
-      items.push({ id: 'boxfront', label: 'Box Art', filename: game.boxFrontFilename ?? game.coverPath ?? null });
+      items.push({ id: 'boxfront', label: t('detail.boxArt'), filename: game.boxFrontFilename ?? game.coverPath ?? null });
     }
     return items;
-  }, [game, showBoxArtPanel]);
+  }, [game, showBoxArtPanel, t]);
 
   const [selectedMedia, setSelectedMedia] = useState<string>('gameplay');
   const focusedMedia = nav.focusedZone.replace('media-', '');
@@ -595,7 +597,7 @@ export function UnifiedDetailLayout({
         {showSoundtrack && (
           <section className={panelCls + " shrink-0"}>
             <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(6, panelInnerGap - 8), padding: Math.max(8, panelPadding - 4) }}>
-              <SectionHeading title="Soundtrack Module" />
+              <SectionHeading title={t('detail.soundtrackModule')} />
               {game.musician ? (
                 <div className="flex items-center gap-2">
                   {PLATFORM_PROFILES[settings.activePlatformId]?.mediaCapabilities.photos ? (
@@ -609,7 +611,7 @@ export function UnifiedDetailLayout({
                   <div className="min-w-0">
                     <div className="truncate font-black text-theme-text" style={{ fontSize: `${Math.max(11, (detailLayout?.infoValueFontSize ?? 13) - 1)}px` }}>{game.musician.name}</div>
                     <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-theme-text-muted">
-                      {settings.activePlatformId === 'c64' ? 'SID Composer' : 'Music Composer'}
+                      {settings.activePlatformId === 'c64' ? t('detail.sidComposer') : t('detail.musician')}
                     </div>
                   </div>
                 </div>
@@ -623,12 +625,12 @@ export function UnifiedDetailLayout({
 
         <section className={panelCls + " shrink-0"}>
           <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
-            <SectionHeading title="Version Details" />
+            <SectionHeading title={t('detail.versionDetails')} />
             <div className="grid gap-1.5 mt-2">
-              <InfoRow label="Version By" value={cleanMetadataValue(game.versionBy) ?? 'Unknown'} layout={infoDensity} />
+              <InfoRow label={t('detail.versionBy')} value={cleanMetadataValue(game.versionBy) ?? 'Unknown'} layout={infoDensity} />
               <InfoRow label="PAL/NTSC" value={cleanMetadataValue(game.vPalNtsc) ?? formatVersionLabel(game)} layout={infoDensity} />
-              <InfoRow label="Size" value={cleanMetadataValue(game.vLength) ? `${game.vLength} Blocks` : 'Unknown'} layout={infoDensity} />
-              <InfoRow label="Trainers" value={cleanMetadataValue(game.vTrainers) ?? '0'} layout={infoDensity} />
+              <InfoRow label={t('detail.size')} value={cleanMetadataValue(game.vLength) ? `${game.vLength} ${t('detail.blocks')}` : 'Unknown'} layout={infoDensity} />
+              <InfoRow label={t('detail.trainers')} value={cleanMetadataValue(game.vTrainers) ?? '0'} layout={infoDensity} />
             </div>
             <div
               className="grid rounded-theme-md border border-theme-primary/20 bg-black/20 mt-3"
@@ -639,10 +641,10 @@ export function UnifiedDetailLayout({
                 rowGap: 6,
               }}
             >
-              <StatusRow label="Loading Screen" value={game.vLoadingScreen} />
-              <StatusRow label="High Score Saver" value={game.vHighScoreSaver} />
-              <StatusRow label="Included Docs" value={game.vIncludedDocs} />
-              <StatusRow label="True Drive Emul" value={game.vTrueDriveEmu} />
+              <StatusRow label={t('detail.loadingScreen')} value={game.vLoadingScreen} />
+              <StatusRow label={t('detail.highScoreSaver')} value={game.vHighScoreSaver} />
+              <StatusRow label={t('detail.includedDocs')} value={game.vIncludedDocs} />
+              <StatusRow label={t('detail.trueDriveEmul')} value={game.vTrueDriveEmu} />
             </div>
           </div>
         </section>
@@ -663,7 +665,7 @@ export function UnifiedDetailLayout({
                   : 'bg-black/10 text-theme-text-muted hover:bg-black/20 hover:text-theme-text'
               } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'files' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
             >
-              FILES
+              {t('detail.files').toUpperCase()}
             </button>
             <button
               type="button"
@@ -678,7 +680,7 @@ export function UnifiedDetailLayout({
                   : 'bg-black/10 text-theme-text-muted hover:bg-black/20 hover:text-theme-text'
               } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'notes' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
             >
-              NOTES
+              {t('detail.notes').toUpperCase()}
             </button>
             <button
               type="button"
@@ -693,7 +695,7 @@ export function UnifiedDetailLayout({
                   : 'bg-black/10 text-theme-text-muted hover:bg-black/20 hover:text-theme-text'
               } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'credits' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
             >
-              CREDITS
+              {t('detail.credits').toUpperCase()}
             </button>
           </div>
 
@@ -842,7 +844,7 @@ export function UnifiedDetailLayout({
                     : 'bg-theme-primary border-t-white border-l-white border-b-[#07006c] border-r-[#07006c] text-[#1100a9]'
                 }`}
               >
-                <span className="flex items-center gap-1.5">🚀 LAUNCH EMULATOR</span>
+                <span className="flex items-center gap-1.5">🚀 {t('detail.playGame').toUpperCase()}</span>
                 <span className="text-[9px] opacity-75">{settings.activePlatformId.toUpperCase()}</span>
               </button>
 
@@ -858,7 +860,7 @@ export function UnifiedDetailLayout({
                       : 'bg-[#1f1f1f] border-t-theme-primary border-l-theme-primary border-b-black border-r-black text-theme-primary'
                   }`}
                 >
-                  <span className="flex items-center gap-1.5">🎮 PLAY BROWSER</span>
+                  <span className="flex items-center gap-1.5">🎮 {t('detail.playEmbedded').toUpperCase()}</span>
                   <span className="text-[9px] opacity-75">EMBEDDED</span>
                 </button>
               )}
@@ -902,7 +904,7 @@ export function UnifiedDetailLayout({
                 
                 <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
                   <span className="font-mono text-[10px] text-theme-tertiary uppercase font-bold tracking-wider">
-                    DEVELOPER: {cleanMetadataValue(game.developer?.name) || 'UNKNOWN'}
+                    {t('detail.developer').toUpperCase()}: {cleanMetadataValue(game.developer?.name) || 'UNKNOWN'}
                   </span>
                 </div>
               </div>
@@ -915,7 +917,7 @@ export function UnifiedDetailLayout({
                 }`}
               >
                 <div className="flex items-center justify-between border-b-4 border-theme-outline-variant pb-1.5 mb-2 select-none font-mono">
-                  <span className="text-[10px] font-bold text-theme-primary">SYSTEM // EXTRAS & DOCUMENTATION</span>
+                  <span className="text-[10px] font-bold text-theme-primary">SYSTEM // {t('extras.title').toUpperCase()}</span>
                 </div>
                 <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar font-mono">
                   <ExtrasDetail
@@ -1001,7 +1003,7 @@ export function UnifiedDetailLayout({
                       : 'bg-[#131313] text-theme-primary hover:bg-[#1f1f1f]'
                   } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'files' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
                 >
-                  [F1] FILES
+                  [F1] {t('detail.files').toUpperCase()}
                 </button>
                 <button
                   type="button"
@@ -1016,7 +1018,7 @@ export function UnifiedDetailLayout({
                       : 'bg-[#131313] text-theme-primary hover:bg-[#1f1f1f]'
                   } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'notes' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
                 >
-                  [F3] INFO
+                  [F3] {t('detail.info').toUpperCase()}
                 </button>
                 <button
                   type="button"
@@ -1031,7 +1033,7 @@ export function UnifiedDetailLayout({
                       : 'bg-[#131313] text-theme-primary hover:bg-[#1f1f1f]'
                   } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === 'credits' ? 'outline-none ring-2 ring-inset ring-theme-tertiary' : ''}`}
                 >
-                  [F5] CREDITS
+                  [F5] {t('detail.credits').toUpperCase()}
                 </button>
               </div>
 
@@ -1087,7 +1089,7 @@ export function UnifiedDetailLayout({
                             </span>
                             {isSelected && (
                               <span className="text-[8px] bg-theme-tertiary text-black px-1 font-bold">
-                                ACT
+                                {t('common.active').toUpperCase()}
                               </span>
                             )}
                           </div>
@@ -1613,7 +1615,7 @@ export function UnifiedDetailLayout({
                     onClick={onBack}
                     className={`rounded-theme-xl border border-theme-outline/30 bg-white/[0.04] px-4 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-theme-text/70 transition-colors hover:border-theme-primary/60 hover:text-theme-text`}
                   >
-                    Library
+                    {t('navigation.library')}
                   </button>
                   <div className="hidden h-8 w-px bg-theme-outline/20 md:block" />
                   <div className="flex min-w-0 flex-col">
@@ -1634,7 +1636,7 @@ export function UnifiedDetailLayout({
                 <nav className="ml-auto flex min-w-0 items-center justify-end gap-2 sm:gap-3">
                   {availableTabs.map((tab) => {
                     const active = visibleTab === tab;
-                    const label = tab === 'game' ? 'Game' : 'Extras';
+                    const label = tab === 'game' ? t('detail.info') : t('detail.extras');
                     return (
                       <button
                         key={tab}
@@ -1661,7 +1663,7 @@ export function UnifiedDetailLayout({
                     background: isFavorite ? 'rgba(236, 72, 153, 0.18)' : 'rgba(255,255,255,0.04)',
                     color: isFavorite ? '#f9a8d4' : 'var(--theme-primary)',
                   }}
-                  title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                  title={isFavorite ? t('detail.unfavorite') : t('detail.favorite')}
                 >
                   {isFavorite ? '♥' : '♡'}
                 </button>
@@ -1692,7 +1694,7 @@ export function UnifiedDetailLayout({
                       <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0c] via-transparent to-transparent z-10"></div>
                       <div className="absolute top-4 left-6 z-20 flex flex-col items-start">
                         <div className="bg-[#ff003c] text-black font-mono text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 inline-block mb-2">
-                          NOW LOADING: 0x{game.id.toString(16).toUpperCase()}
+                          {t('detail.nowLoading')}: 0x{game.id.toString(16).toUpperCase()}
                         </div>
                         <h1 className="font-mono text-3xl md:text-4xl uppercase italic text-white font-black tracking-tighter flex items-center gap-2">
                           {game.name} {game.isClassic && <span title="Classic Title">🏆</span>}
@@ -1715,7 +1717,7 @@ export function UnifiedDetailLayout({
                             nav.isFocused('play') ? 'ring-2 ring-[#00f0ff] shadow-[0_0_12px_#00f0ff]' : ''
                           }`}
                         >
-                          ▶ BOOT_GAME
+                          ▶ {t('detail.bootGame')}
                         </button>
                         {canPlayEmbedded && (
                           <button
@@ -1728,7 +1730,7 @@ export function UnifiedDetailLayout({
                               nav.isFocused('play-web') ? 'ring-2 ring-[#00f0ff] shadow-[0_0_12px_#00f0ff]' : ''
                             }`}
                           >
-                            ▶ IMPLANTED_LAUNCH
+                            ▶ {t('detail.implantedLaunch')}
                           </button>
                         )}
                       </div>
@@ -1755,11 +1757,11 @@ export function UnifiedDetailLayout({
                     <div className="w-1/3 border border-[#353437] shadow-[2px_2px_0_0_#ff003c] bg-[#141417] p-4 flex flex-col justify-between relative rounded-none overflow-hidden">
                       <div className="flex justify-between items-start font-mono shrink-0">
                         <div>
-                          <div className="text-[10px] text-theme-text-muted/60">SYSTEM_ID</div>
+                          <div className="text-[10px] text-theme-text-muted/60">{t('detail.systemId')}</div>
                           <div className="font-bold text-[#ffb3b2]">{settings.activePlatformId.toUpperCase()}</div>
                         </div>
                         <div className="text-right">
-                          <div className="text-[10px] text-theme-text-muted/60">REGION</div>
+                          <div className="text-[10px] text-theme-text-muted/60">{t('detail.region')}</div>
                           <div className="font-bold text-[#ffb787]">{(cleanMetadataValue(game.vPalNtsc) || (game.isPal ? 'PAL' : 'NTSC')).toUpperCase()}</div>
                         </div>
                       </div>
@@ -1767,7 +1769,7 @@ export function UnifiedDetailLayout({
                       {/* Main Scrollable details info */}
                       <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar my-2 font-mono text-xs space-y-1.5 pr-1">
                         <div className="flex justify-between border-b border-white/5 pb-1">
-                          <span className="text-theme-text-muted/60">VERSION BY</span>
+                          <span className="text-theme-text-muted/60">{t('detail.versionBy')}</span>
                           <span className="font-bold text-right truncate max-w-[130px]">{cleanMetadataValue(game.versionBy) || 'Unknown'}</span>
                         </div>
                         <div className="flex justify-between border-b border-white/5 pb-1">
@@ -1775,25 +1777,25 @@ export function UnifiedDetailLayout({
                           <span className="font-bold">{cleanMetadataValue(game.vPalNtsc) || (game.isPal ? 'PAL' : 'NTSC')}</span>
                         </div>
                         <div className="flex justify-between border-b border-white/5 pb-1">
-                          <span className="text-theme-text-muted/60">SIZE</span>
-                          <span className="font-bold">{cleanMetadataValue(game.vLength) ? `${game.vLength} Blocks` : '---'}</span>
+                          <span className="text-theme-text-muted/60">{t('detail.size')}</span>
+                          <span className="font-bold">{cleanMetadataValue(game.vLength) ? `${game.vLength} ${t('detail.blocks')}` : '---'}</span>
                         </div>
                         <div className="flex justify-between border-b border-white/5 pb-1">
-                          <span className="text-theme-text-muted/60">TRAINERS</span>
+                          <span className="text-theme-text-muted/60">{t('detail.trainers')}</span>
                           <span className="font-bold">{cleanMetadataValue(game.vTrainers) || '0'}</span>
                         </div>
                         <div className="flex justify-between border-b border-white/5 pb-1">
-                          <span className="text-theme-text-muted/60">RELEASE_YEAR</span>
+                          <span className="text-theme-text-muted/60">{t('detail.releaseYear')}</span>
                           <span className="font-bold">{game.year || '---'}</span>
                         </div>
                         <div className="flex justify-between border-b border-white/5 pb-1">
-                          <span className="text-theme-text-muted/60">DEVELOPER</span>
+                          <span className="text-theme-text-muted/60">{t('detail.developer')}</span>
                           <span className="font-bold text-[#ffb3b2] truncate max-w-[130px]" title={cleanMetadataValue(game.developer?.name) || '---'}>
                             {cleanMetadataValue(game.developer?.name) || '---'}
                           </span>
                         </div>
                         <div className="flex justify-between border-b border-white/5 pb-1">
-                          <span className="text-theme-text-muted/60">SOUNDTRACK</span>
+                          <span className="text-theme-text-muted/60">{t('detail.soundtrack')}</span>
                           <span className="font-bold truncate max-w-[130px]" title={cleanMetadataValue(game.musician?.name) || '---'}>
                             {cleanMetadataValue(game.musician?.name) || '---'}
                           </span>
@@ -1803,38 +1805,38 @@ export function UnifiedDetailLayout({
                       {/* Status indicators from screenshot */}
                       <div className="border border-white/10 bg-black/30 p-2 text-[9px] font-mono grid grid-cols-2 gap-x-2 gap-y-1 shrink-0 mb-2">
                         <div className="flex justify-between items-center">
-                          <span className="text-theme-text-muted/60">Loading Screen</span>
+                          <span className="text-theme-text-muted/60">{t('detail.loadingScreen')}</span>
                           <span className={game.vLoadingScreen === true ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
-                            {game.vLoadingScreen === true ? '✓ YES' : '✗ NO'}
+                            {game.vLoadingScreen === true ? `✓ ${t('common.yes').toUpperCase()}` : `✗ ${t('common.no').toUpperCase()}`}
                           </span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-theme-text-muted/60">High Score Saver</span>
+                          <span className="text-theme-text-muted/60">{t('detail.highScoreSaver')}</span>
                           <span className={game.vHighScoreSaver === true ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
-                            {game.vHighScoreSaver === true ? '✓ YES' : '✗ NO'}
+                            {game.vHighScoreSaver === true ? `✓ ${t('common.yes').toUpperCase()}` : `✗ ${t('common.no').toUpperCase()}`}
                           </span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-theme-text-muted/60">Included Docs</span>
+                          <span className="text-theme-text-muted/60">{t('detail.includedDocs')}</span>
                           <span className={game.vIncludedDocs === true ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
-                            {game.vIncludedDocs === true ? '✓ YES' : '✗ NO'}
+                            {game.vIncludedDocs === true ? `✓ ${t('common.yes').toUpperCase()}` : `✗ ${t('common.no').toUpperCase()}`}
                           </span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-theme-text-muted/60">True Drive Emul</span>
+                          <span className="text-theme-text-muted/60">{t('detail.trueDriveEmul')}</span>
                           <span className={game.vTrueDriveEmu === true ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
-                            {game.vTrueDriveEmu === true ? '✓ YES' : '✗ NO'}
+                            {game.vTrueDriveEmu === true ? `✓ ${t('common.yes').toUpperCase()}` : `✗ ${t('common.no').toUpperCase()}`}
                           </span>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 font-mono shrink-0">
                         <div className="bg-black/40 p-1.5 border-l-2 border-[#ff003c]">
-                          <div className="text-[8px] uppercase text-theme-text-muted/60">Integrity</div>
-                          <div className="text-[10px] font-bold text-[#ff003c]">VERIFIED</div>
+                          <div className="text-[8px] uppercase text-theme-text-muted/60">{t('detail.integrity')}</div>
+                          <div className="text-[10px] font-bold text-[#ff003c]">{t('detail.verified')}</div>
                         </div>
                         <div className="bg-black/40 p-1.5 border-l-2 border-[#ff8000]">
-                          <div className="text-[8px] uppercase text-theme-text-muted/60">Rarity</div>
+                          <div className="text-[8px] uppercase text-theme-text-muted/60">{t('detail.rarity')}</div>
                           <div className="text-[10px] font-bold text-[#ff8000]">CLASS-A</div>
                         </div>
                       </div>
@@ -1848,7 +1850,7 @@ export function UnifiedDetailLayout({
                       /* Media Gallery */
                       <div className="w-1/2 border border-[#353437] shadow-[2px_2px_0_0_#ff003c] bg-[#141417] p-4 flex flex-col gap-2 rounded-none">
                         <div className="border-b border-white/10 pb-2 flex items-center justify-between">
-                          <SectionHeading title="Media Gallery" />
+                          <SectionHeading title={t('detail.media')} />
                           <div className="flex gap-1.5 flex-wrap">
                             {availableMedia.map((mediaItem) => {
                               const zone = ('media-' + mediaItem.id) as DetailZone;
@@ -1884,7 +1886,7 @@ export function UnifiedDetailLayout({
                           >
                             <div className="w-full h-full bg-black/45 flex items-center justify-center relative">
                               <div className="absolute top-2 left-2 z-10 bg-black/60 px-2 py-1 text-[10px] font-mono border border-[#ff003c]/30">
-                                IMG_BUFFER: {activeMedia.toUpperCase()}
+                                {t('detail.imgBuffer')}: {activeMedia.toUpperCase()}
                               </div>
                               {activeMedia === 'videosna' && game.videoSnapFilename ? (
                                 <video
@@ -1904,7 +1906,7 @@ export function UnifiedDetailLayout({
                                     className="h-full w-full object-contain"
                                   />
                                 ) : (
-                                  <span className="text-xs font-mono text-theme-text-muted">No Image</span>
+                                  <span className="text-xs font-mono text-theme-text-muted">{t('media.noScreenshots')}</span>
                                 )
                               ) : (
                                 <ImageSlider
@@ -1926,7 +1928,7 @@ export function UnifiedDetailLayout({
                           nav.isFocused('media-extras') ? 'ring-2 ring-[#00f0ff] shadow-[0_0_12px_#00f0ff]' : ''
                         }`}
                       >
-                        <SectionHeading title="Extras & Documentation" />
+                        <SectionHeading title={t('detail.extras')} />
                         <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar mt-2 pr-1">
                           <ExtrasDetail
                             game={game}
@@ -1963,7 +1965,7 @@ export function UnifiedDetailLayout({
                                   : 'bg-black/10 text-theme-text-muted hover:bg-black/20 hover:text-white'
                               } ${nav.focusedZone === 'sidebar-tabs' && activeSidebarTab === tab ? 'outline-none ring-2 ring-inset ring-[#00f0ff]' : ''}`}
                             >
-                              {tab}
+                              {tab === 'files' ? t('detail.files') : tab === 'notes' ? t('detail.notes') : t('detail.credits')}
                             </button>
                           ))}
                         </div>
@@ -2013,7 +2015,7 @@ export function UnifiedDetailLayout({
                                       </span>
                                       {isSelected && (
                                         <span className="text-[8px] bg-[#ff003c] text-black px-1 py-0.5 font-black uppercase tracking-wider">
-                                          ACT
+                                          {t('common.active')}
                                         </span>
                                       )}
                                     </div>
@@ -2030,7 +2032,7 @@ export function UnifiedDetailLayout({
                                 nav.isFocused('sidebar-content') ? 'ring-1 ring-[#00f0ff] bg-black/30' : ''
                               }`}
                             >
-                              <p className="mb-4">&gt;&gt; CRITICAL_ENTRY: {game.name.toUpperCase()}</p>
+                              <p className="mb-4">&gt;&gt; {t('detail.criticalEntry')}: {game.name.toUpperCase()}</p>
                               {archiveNotes}
                             </div>
                           )}
@@ -2072,7 +2074,7 @@ export function UnifiedDetailLayout({
                           </div>
                           <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-1">
                             <div>
-                              <div className="text-[10px] text-[#ffb787] uppercase tracking-widest mb-1 font-mono">NOW_PLAYING // SID_CHIP</div>
+                              <div className="text-[10px] text-[#ffb787] uppercase tracking-widest mb-1 font-mono">{t('media.nowPlaying').toUpperCase()} // SID_CHIP</div>
                               <h3 className="font-bold text-base truncate font-mono text-white" title={game.musician?.name || 'Unknown'}>
                                 {game.name}
                               </h3>
@@ -2297,7 +2299,7 @@ export function UnifiedDetailLayout({
                               <div className="flex h-full min-h-0 w-full flex-col">
                                 {/* Media Selector Tabs */}
                                 <div className="border-b border-theme-outline/20 pb-2 mb-2 flex items-center justify-between">
-                                  <SectionHeading title="Media Gallery" />
+                                  <SectionHeading title={t('detail.media')} />
                                   <div className="flex gap-1.5 flex-wrap">
                                     {availableMedia.map((mediaItem) => {
                                       const zone = ('media-' + mediaItem.id) as DetailZone;
@@ -2375,7 +2377,7 @@ export function UnifiedDetailLayout({
                                 >
                                   <div className="flex h-full min-h-0 w-full flex-col" style={{ padding: Math.max(10, panelPadding - 4) }}>
                                     <div className="text-[9px] font-black uppercase tracking-[0.24em] text-theme-primary mb-2">
-                                      Box Art
+                                      {t('detail.boxArt')}
                                     </div>
                                     <div className="mt-1 flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-theme-md bg-black/35">
                                       {boxArtUrl ? (
@@ -2392,7 +2394,7 @@ export function UnifiedDetailLayout({
                           {!isArcade && (
                             <section className={panelCls}>
                               <div className="flex h-full min-h-0 flex-col" style={{ gap: compactLowerPanelGap, padding: compactLowerPanelPadding }}>
-                                <SectionHeading title="Archive Notes" />
+                                <SectionHeading title={t('detail.archiveNotes')} />
                                 <div className={insetPanelCls} style={{ padding: compactInnerCardPadding }}>
                                   <div
                                     className="text-theme-text/85 overflow-y-auto"
@@ -2407,7 +2409,7 @@ export function UnifiedDetailLayout({
                                   {isC64 && (
                                     <div className="mt-2 flex items-center gap-2">
                                       <span className="w-1.5 h-3 bg-theme-primary theme-cursor-blink"></span>
-                                      <span className="text-theme-primary font-mono text-[10px]">SYSTEM_READY_FOR_BOOT</span>
+                                      <span className="text-theme-primary font-mono text-[10px]">{t('detail.systemReadyForBoot')}</span>
                                     </div>
                                   )}
                                 </div>
@@ -2442,7 +2444,7 @@ export function UnifiedDetailLayout({
                       <aside className="grid min-h-0" style={{ gap: panelGap, gridTemplateRows: sidebarTemplateRows }}>
                         <section className={panelCls}>
                           <div className="flex h-full min-h-0 flex-col" style={{ gap: compactLowerPanelGap, padding: compactLowerPanelPadding }}>
-                            <SectionHeading title="Alternative Versions" />
+                            <SectionHeading title={t('detail.alternativeVersions')} />
                             <div
                               className="grid items-center justify-items-start"
                               style={{
@@ -2518,7 +2520,7 @@ export function UnifiedDetailLayout({
                                   <div
                                     className="rounded-full border border-theme-primary bg-theme-primary/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.22em] text-theme-primary"
                                   >
-                                    Active
+                                    {t('common.active')}
                                   </div>
                                 </div>
                               </div>
@@ -2529,7 +2531,7 @@ export function UnifiedDetailLayout({
                         {showSoundtrack && (
                           <section className={panelCls}>
                             <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(6, panelInnerGap - 8), padding: Math.max(8, panelPadding - 4) }}>
-                              <SectionHeading title="Soundtrack Module" />
+                              <SectionHeading title={t('detail.soundtrackModule')} />
                               {game.musician ? (
                                 <div className="flex items-center gap-2">
                                   {PLATFORM_PROFILES[settings.activePlatformId]?.mediaCapabilities.photos ? (
@@ -2543,7 +2545,7 @@ export function UnifiedDetailLayout({
                                   <div className="min-w-0">
                                     <div className="truncate font-black text-theme-text" style={{ fontSize: `${Math.max(11, (detailLayout?.infoValueFontSize ?? 13) - 1)}px` }}>{game.musician.name}</div>
                                     <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-theme-text-muted">
-                                      {settings.activePlatformId === 'c64' ? 'SID Composer' : 'Music Composer'}
+                                      {settings.activePlatformId === 'c64' ? t('detail.sidComposer') : t('detail.musician')}
                                     </div>
                                   </div>
                                 </div>
@@ -2557,12 +2559,12 @@ export function UnifiedDetailLayout({
 
                         <section className={panelCls}>
                           <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
-                            <SectionHeading title="Version Details" />
+                            <SectionHeading title={t('detail.versionDetails')} />
                             <div className="grid gap-1.5">
-                              <InfoRow label="Version By" value={cleanMetadataValue(game.versionBy) ?? 'Unknown'} layout={infoDensity} />
+                              <InfoRow label={t('detail.versionBy')} value={cleanMetadataValue(game.versionBy) ?? 'Unknown'} layout={infoDensity} />
                               <InfoRow label="PAL/NTSC" value={cleanMetadataValue(game.vPalNtsc) ?? formatVersionLabel(game)} layout={infoDensity} />
-                              <InfoRow label="Size" value={cleanMetadataValue(game.vLength) ? `${game.vLength} Blocks` : 'Unknown'} layout={infoDensity} />
-                              <InfoRow label="Trainers" value={cleanMetadataValue(game.vTrainers) ?? '0'} layout={infoDensity} />
+                              <InfoRow label={t('detail.size')} value={cleanMetadataValue(game.vLength) ? `${game.vLength} ${t('detail.blocks')}` : 'Unknown'} layout={infoDensity} />
+                              <InfoRow label={t('detail.trainers')} value={cleanMetadataValue(game.vTrainers) ?? '0'} layout={infoDensity} />
                             </div>
                             <div
                               className={`grid rounded-theme-md ${
@@ -2577,17 +2579,17 @@ export function UnifiedDetailLayout({
                                 rowGap: 6,
                               }}
                             >
-                              <StatusRow label="Loading Screen" value={game.vLoadingScreen} />
-                              <StatusRow label="High Score Saver" value={game.vHighScoreSaver} />
-                              <StatusRow label="Included Docs" value={game.vIncludedDocs} />
-                              <StatusRow label="True Drive Emul" value={game.vTrueDriveEmu} />
+                              <StatusRow label={t('detail.loadingScreen')} value={game.vLoadingScreen} />
+                              <StatusRow label={t('detail.highScoreSaver')} value={game.vHighScoreSaver} />
+                              <StatusRow label={t('detail.includedDocs')} value={game.vIncludedDocs} />
+                              <StatusRow label={t('detail.trueDriveEmul')} value={game.vTrueDriveEmu} />
                             </div>
                           </div>
                         </section>
 
                         <section className={panelCls}>
                           <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
-                            <SectionHeading title="Credits" />
+                            <SectionHeading title={t('detail.credits')} />
                             <div className="grid gap-1.5">
                               {personnel.length > 0 ? (
                                 personnel.map((entry) => (
@@ -2600,7 +2602,7 @@ export function UnifiedDetailLayout({
                                 ))
                               ) : (
                                 <div className="rounded-theme-md border border-theme-outline/20 bg-black/20 px-4 py-3 text-sm text-theme-text-muted">
-                                  No credits metadata available for this title.
+                                  {t('detail.noCreditsAvailable')}
                                 </div>
                               )}
                             </div>

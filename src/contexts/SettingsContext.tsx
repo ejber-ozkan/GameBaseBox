@@ -55,6 +55,7 @@ export interface Settings {
   lastUsedPlatformId: PlatformId | null;
   platformSettings: Record<PlatformId, PlatformSettings>;
   themeId: string;
+  language: string;
 }
 
 interface SettingsContextType {
@@ -76,7 +77,7 @@ defaultPlatformSettings.c64.folders = {
   extrasPath: '/media/extras',
 };
 
-const defaultSettings: Settings = {
+export const defaultSettings: Settings = {
   screenshotsPath: '/media/screenshots',
   soundsPath: '/media/sounds',
   musicianPhotosPath: '/media/musicians',
@@ -119,6 +120,7 @@ const defaultSettings: Settings = {
   lastUsedPlatformId: 'c64',
   platformSettings: defaultPlatformSettings,
   themeId: 'arcade-void',
+  language: 'system',
 };
 
 export const SettingsContext = createContext<SettingsContextType | undefined>(undefined);

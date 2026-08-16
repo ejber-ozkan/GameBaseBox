@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useGamepad } from '../../hooks/useGamepad';
 import { usePopupOpenSound } from '../../hooks/usePopupOpenSound';
+import { useTranslation } from '../../i18n';
 
 type ExitPromptFocus = 'checkbox' | 'cancel' | 'exit';
 
@@ -19,6 +20,7 @@ export function BigBoxExitPrompt({
   onConfirm,
   onGamepadInput,
 }: BigBoxExitPromptProps) {
+  const { t } = useTranslation();
   const [focusTarget, setFocusTarget] = useState<ExitPromptFocus>('exit');
   const [dontAskAgain, setDontAskAgain] = useState(false);
   usePopupOpenSound(isOpen, 'bigbox-exit-prompt');
@@ -142,12 +144,11 @@ export function BigBoxExitPrompt({
       <div className="w-full max-w-[760px] rounded-[34px] border border-red-400/20 bg-[linear-gradient(180deg,rgba(17,24,39,0.98),rgba(3,7,18,0.98))] p-8 shadow-[0_35px_120px_rgba(0,0,0,0.65)]">
         <div className="mb-8">
           <div className="mb-3 text-[11px] font-black uppercase tracking-[0.32em] text-red-300/70">
-            Exit Fullscreen Session
+            {t('bigbox.exitTitle')}
           </div>
-          <h2 className="text-4xl font-black tracking-tight text-white">Quit GBBox?</h2>
+          <h2 className="text-4xl font-black tracking-tight text-white">{t('common.exitApplication')}?</h2>
           <p className="mt-3 max-w-[560px] text-base leading-7 text-white/58">
-            Your current fullscreen session will be saved before the application closes, including your
-            latest BigBox browsing position and saved settings.
+            {t('bigbox.exitMessage')}
           </p>
         </div>
 
@@ -171,18 +172,15 @@ export function BigBoxExitPrompt({
           </span>
           <span>
             <span className="block text-sm font-black uppercase tracking-[0.18em] text-white">
-              Don&apos;t ask again
-            </span>
-            <span className="block text-sm text-white/52">
-              Pressing controller B in fullscreen will quit directly next time.
+              {t('common.disabled')}
             </span>
           </span>
         </button>
 
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-xs font-black uppercase tracking-[0.22em] text-white/34">
-            <span className="rounded-full border border-white/10 bg-white/[0.045] px-3 py-2">A Select</span>
-            <span className="rounded-full border border-white/10 bg-white/[0.045] px-3 py-2">B Cancel</span>
+            <span className="rounded-full border border-white/10 bg-white/[0.045] px-3 py-2">A {t('common.select')}</span>
+            <span className="rounded-full border border-white/10 bg-white/[0.045] px-3 py-2">B {t('common.cancel')}</span>
           </div>
 
           <div className="flex items-center gap-4">
@@ -195,7 +193,7 @@ export function BigBoxExitPrompt({
                   : 'border-white/12 bg-white/[0.04] text-white/72 hover:border-white/24 hover:bg-white/[0.07]'
               }`}
             >
-              Stay Here
+              {t('bigbox.cancelExit')}
             </button>
             <button
               type="button"
@@ -206,7 +204,7 @@ export function BigBoxExitPrompt({
                   : 'border-red-400/30 bg-red-500/18 text-red-100 hover:border-red-300/45 hover:bg-red-500/26'
               }`}
             >
-              Exit Application
+              {t('common.exitApplication')}
             </button>
           </div>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useGamepadControls, type GamepadViewContext } from '../../lib/gamepad-controls';
+import { useTranslation } from '../../i18n';
 
 interface BigBoxFooterProps {
   context?: GamepadViewContext;
@@ -9,6 +10,30 @@ interface BigBoxFooterProps {
 
 export function BigBoxFooter({ context = 'grid', className = '' }: BigBoxFooterProps) {
   const controls = useGamepadControls(context);
+  const { t } = useTranslation();
+
+  const getLocalizedLabel = (id: string, defaultLabel: string) => {
+    switch (id) {
+      case 'navigate':
+        return t('shortcuts.navigate');
+      case 'select':
+        return context === 'detail' ? `${t('shortcuts.select')} / ${t('shortcuts.play')}` : t('shortcuts.select');
+      case 'back':
+        return t('shortcuts.back');
+      case 'favorite':
+        return t('shortcuts.favorite');
+      case 'sections':
+        return t('shortcuts.sections');
+      case 'tabs':
+        return t('shortcuts.tabs');
+      case 'top_menu':
+        return t('shortcuts.topMenu');
+      case 'settings':
+        return t('shortcuts.settings');
+      default:
+        return defaultLabel;
+    }
+  };
 
   return (
     <footer
@@ -22,7 +47,7 @@ export function BigBoxFooter({ context = 'grid', className = '' }: BigBoxFooterP
             <span className="flex h-5 min-w-5 items-center justify-center rounded-[var(--theme-radius-sm)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] px-1.5 font-mono text-[10px] text-[var(--theme-text)] shadow-sm">
               {control.button}
             </span>
-            <span>{control.label}</span>
+            <span>{getLocalizedLabel(control.id, control.label)}</span>
           </div>
         ))}
       </div>

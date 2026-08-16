@@ -7,6 +7,7 @@ import type { LibraryViewMode } from '../../hooks/useLibraryBrowserState';
 import { getVisibleSubGenres } from '../../lib/subgenre-display';
 import { PlatformSwitcher } from '../PlatformSwitcher';
 import type { PlatformId } from '../../types/platform';
+import { useTranslation } from '../../i18n';
 
 interface LibraryHeaderProps {
   filters: GameFilters;
@@ -42,6 +43,7 @@ export function LibraryHeader({
   onSelectRandomGame,
 }: LibraryHeaderProps) {
   const [isSubGenrePickerOpen, setIsSubGenrePickerOpen] = useState(false);
+  const { t } = useTranslation();
   const isC64Edition = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'c64-edition';
   const isCyberpunkCrt = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'cyberpunk-crt';
   const { hasOverflow, visibleSubGenres } = useMemo(
@@ -68,13 +70,13 @@ export function LibraryHeader({
             {totalGameCount !== undefined ? (
               <div className="flex items-center gap-2">
                 <div className="whitespace-nowrap rounded-lg border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-[var(--theme-text-muted)]">
-                  {new Intl.NumberFormat('en-GB').format(totalGameCount)} Games
+                  {t('library.gamesCount', { count: new Intl.NumberFormat('en-GB').format(totalGameCount) })}
                 </div>
                 {onSelectRandomGame && (
                   <button
                     onClick={onSelectRandomGame}
-                    title="Random Game (Select / R)"
-                    aria-label="Select random game"
+                    title={t('common.randomGameTooltip')}
+                    aria-label={t('common.randomGame')}
                     data-testid="random-game-button"
                     className={`flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] text-sm font-bold text-[var(--theme-primary)] transition-all hover:scale-105 hover:border-[var(--theme-primary)] hover:bg-[var(--theme-primary-container)] hover:text-[var(--theme-text)] hover:shadow-[0_0_12px_var(--theme-primary)] ${
                       isC64Edition ? 'font-mono border-2' : ''
@@ -92,7 +94,7 @@ export function LibraryHeader({
           <div className="relative min-w-0 flex-1 lg:flex-none">
             <input
               type="text"
-              placeholder="QUICK SEARCH"
+              placeholder={t('library.quickSearch')}
               value={searchInput}
               onChange={(event) => onSearchChange(event.target.value)}
               className={`w-full rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-background)] px-6 py-3 text-sm font-bold text-[var(--theme-text)] shadow-inner transition-colors placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:bg-[var(--theme-surface)] focus:outline-none sm:w-80 ${isC64Edition ? 'pr-12 font-mono uppercase tracking-[0.14em]' : ''}`}
@@ -107,7 +109,7 @@ export function LibraryHeader({
             }`}
             onClick={() => onViewModeChange('grid')}
           >
-            Grid {viewMode === 'list' && <span className="ml-1 text-[10px] opacity-50">(X)</span>}
+            {t('library.grid')} {viewMode === 'list' && <span className="ml-1 text-[10px] opacity-50">(X)</span>}
           </button>
           <button
             className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
@@ -115,14 +117,14 @@ export function LibraryHeader({
             }`}
             onClick={() => onViewModeChange('list')}
           >
-            List {viewMode === 'grid' && <span className="ml-1 text-[10px] opacity-50">(X)</span>}
+            {t('library.list')} {viewMode === 'grid' && <span className="ml-1 text-[10px] opacity-50">(X)</span>}
           </button>
           </div>
 
           <button
             onClick={onOpenSettings}
             className="ml-2 flex h-11 w-11 items-center justify-center rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] text-[var(--theme-text-muted)] transition-colors hover:bg-[var(--theme-primary-container)] hover:text-[var(--theme-text)]"
-            title="Settings"
+            title={t('navigation.settings')}
           >
             <span>⚙️</span>
           </button>
@@ -130,7 +132,7 @@ export function LibraryHeader({
           <button
             onClick={onExit}
             className="ml-1 flex h-11 w-11 items-center justify-center rounded-[var(--theme-radius-xl)] border border-[var(--theme-tertiary)] bg-[var(--theme-surface)] text-[var(--theme-tertiary)] transition-colors hover:bg-[var(--theme-tertiary)] hover:text-[var(--theme-background)]"
-            title="Exit Application"
+            title={t('common.exitApplication')}
           >
             ⏻
           </button>
@@ -138,7 +140,7 @@ export function LibraryHeader({
         </div>
 
         <div className="mt-5 flex items-center gap-3 overflow-hidden">
-        <div className="shrink-0 text-[10px] font-black uppercase tracking-[0.22em] text-[var(--theme-text-muted)]">Genre</div>
+        <div className="shrink-0 text-[10px] font-black uppercase tracking-[0.22em] text-[var(--theme-text-muted)]">{t('library.genre')}</div>
         <div className="no-scrollbar flex flex-1 items-center gap-2 overflow-x-auto">
           {genres.map((genre) => {
             const isSelected = filters.genre === genre;
@@ -168,7 +170,7 @@ export function LibraryHeader({
 
         {filters.genre && subGenres.length > 0 ? (
           <div className="mt-3 flex items-center gap-3 overflow-hidden">
-          <div className="shrink-0 text-[10px] font-black uppercase tracking-[0.22em] text-[var(--theme-text-muted)]">Sub-Genre</div>
+          <div className="shrink-0 text-[10px] font-black uppercase tracking-[0.22em] text-[var(--theme-text-muted)]">{t('library.subGenre')}</div>
           <div className="no-scrollbar flex flex-1 items-center gap-2 overflow-x-auto">
             {visibleSubGenres.map((subGenre) => {
               const isSelected = filters.subGenre === subGenre;
@@ -198,7 +200,7 @@ export function LibraryHeader({
                 onClick={() => setIsSubGenrePickerOpen(true)}
                 className="rounded-[var(--theme-radius-md)] border border-[var(--theme-primary)] bg-[var(--theme-primary-container)] px-4 py-1.5 text-xs font-bold text-[var(--theme-primary)] transition-all hover:bg-[var(--theme-surface)]"
               >
-                More...
+                {t('common.more')}
               </button>
             ) : null}
           </div>
@@ -220,7 +222,7 @@ export function LibraryHeader({
         }}
         selectedSubGenre={filters.subGenre}
         subGenres={subGenres}
-        title={filters.genre ? `${filters.genre} Sub-Genres` : 'Choose Sub-Genre'}
+        title={filters.genre ? `${filters.genre} ${t('library.subGenres')}` : t('library.chooseSubGenre')}
       />
     </>
   );

@@ -1,5 +1,6 @@
 import { useTheme } from '../../contexts/ThemeContext';
 import type { ContentNavProps } from './types';
+import { useTranslation } from '../../i18n';
 import packageJson from '../../../package.json';
 
 interface AboutSettingsTabProps extends ContentNavProps {
@@ -13,6 +14,7 @@ export function AboutSettingsTab({
   onOpenTigerHeli,
 }: AboutSettingsTabProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const appVersion = packageJson.version;
 
   return (
@@ -22,8 +24,7 @@ export function AboutSettingsTab({
         <div className={`p-5 ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme-xl border'} border-theme-outline-variant bg-theme-surface/30`}>
           <h3 className="mb-3 flex items-center gap-2 text-base font-black text-theme-text">GBBox v{appVersion}</h3>
           <p className="mb-3 text-[10px] text-theme-text-muted leading-relaxed">
-            GameBase Box is a local-first launcher for GameBase-style libraries, with imports for Commodore 64,
-            Atari 800, Atari 2600, ZX Spectrum, Acorn BBC Micro, and Commodore Amiga.
+            {t('settings.aboutAppDescription')}
           </p>
 
           <div className={`mb-3 p-4 ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme-xl border'} border-theme-primary/20 bg-theme-primary/5`}>
@@ -36,11 +37,11 @@ export function AboutSettingsTab({
           </div>
 
           <div className={`p-4 ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme-xl border'} border-theme-secondary/20 bg-theme-secondary/5`}>
-            <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-theme-secondary font-mono">Project Credits</h4>
+            <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-theme-secondary font-mono">{t('settings.creditsTitle')}</h4>
             <p className="text-[10px] text-theme-text-muted leading-relaxed">
               AI Wrangler &amp; Manipulator: <span className="font-semibold text-theme-text">Ejber Ozkan</span>
             </p>
-            <p className="mt-1 text-[10px] text-theme-text-muted">My game is here too!</p>
+            <p className="mt-1 text-[10px] text-theme-text-muted">{t('settings.developedFor')}</p>
             <button
               type="button"
               onClick={() => void onOpenTigerHeli?.()}
@@ -53,7 +54,7 @@ export function AboutSettingsTab({
                   : 'border-emerald-500/20 text-emerald-300 hover:text-emerald-200'
               }`}
             >
-              Open Tiger Heli →
+              {t('settings.easterEggPrompt')} →
             </button>
           </div>
         </div>

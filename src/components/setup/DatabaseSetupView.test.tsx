@@ -4,6 +4,7 @@ import type { PlatformFolderSettings } from '@/types/platform';
 import { DatabaseSetupView } from './DatabaseSetupView';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { I18nProvider } from '@/i18n';
 
 const atariFolders: PlatformFolderSettings = {
   platformId: 'atari800',
@@ -85,9 +86,11 @@ const vic20Folders: PlatformFolderSettings = {
 function renderWithProviders(ui: React.ReactElement) {
   return render(
     <SettingsProvider>
-      <ThemeProvider>
-        {ui}
-      </ThemeProvider>
+      <I18nProvider>
+        <ThemeProvider>
+          {ui}
+        </ThemeProvider>
+      </I18nProvider>
     </SettingsProvider>
   );
 }

@@ -1,6 +1,7 @@
 import type { EditableSettings, ContentNavProps } from './types';
 import { ThemedToggle } from './ThemedToggle';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useTranslation } from '../../i18n';
 
 interface InteractionSettingsTabProps extends ContentNavProps {
   draft: EditableSettings;
@@ -15,12 +16,13 @@ export function InteractionSettingsTab({
   isFocused,
 }: InteractionSettingsTabProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <div className="flex h-full flex-col justify-start gap-4">
       {/* Title */}
       <div className="text-xs font-bold uppercase tracking-widest text-theme-text-muted font-mono">
-        Input & Interaction Preferences
+        {t('settings.interaction')}
       </div>
 
       {/* Row of Settings */}
@@ -29,21 +31,14 @@ export function InteractionSettingsTab({
           {
             key: 'mouseHoverSelection' as const,
             index: 0,
-            title: '🖱️ Mouse Hover Focus',
-            description:
-              'Automatically focus list and grid items when the pointer moves over them. Turn off if your mouse is too sensitive.',
+            title: `🖱️ ${t('settings.mouseHoverSelection')}`,
+            description: t('settings.mouseHoverSelectionDescription'),
           },
           {
             key: 'scrollNavigation' as const,
             index: 1,
-            title: '💎 Scroll Wheel Navigation',
-            description: 'Navigate up and down through list and menu choices using your mouse scroll wheel.',
-          },
-          {
-            key: 'bigBoxAnimateVertical' as const,
-            index: 2,
-            title: '↕️ BigBox Rail Animations',
-            description: 'Enable smooth sliding transitions when swapping between game rails in BigBox mode.',
+            title: `💎 ${t('settings.scrollNavigation')}`,
+            description: t('settings.scrollNavigationDescription'),
           },
         ].map((item) => (
           <div
@@ -56,7 +51,7 @@ export function InteractionSettingsTab({
                 <div className="mt-1 max-w-xl text-[10px] text-theme-text-muted leading-relaxed">{item.description}</div>
               </div>
               <ThemedToggle
-                label={item.title.substring(item.title.indexOf(' ') + 1)}
+                label={item.title}
                 checked={draft[item.key]}
                 onChange={() => setField(item.key, !draft[item.key])}
                 onMouseEnter={() => isMouseMode && onMouseFocus(item.index)}

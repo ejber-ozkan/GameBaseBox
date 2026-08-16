@@ -3,6 +3,7 @@
 import { startTransition, useCallback, useEffect, useMemo, useState } from 'react';
 import { useGamepad } from '../hooks/useGamepad';
 import { usePopupOpenSound } from '../hooks/usePopupOpenSound';
+import { useTranslation } from '../i18n';
 
 type KeyboardAction = 'append' | 'space' | 'backspace' | 'clear' | 'close';
 
@@ -98,9 +99,25 @@ export function ControllerSearchKeyboard({
   onSearchChange,
   searchInput,
 }: ControllerSearchKeyboardProps) {
+  const { t } = useTranslation();
   const [selectedRow, setSelectedRow] = useState(0);
   const [selectedCol, setSelectedCol] = useState(0);
   usePopupOpenSound(isOpen, 'controller-search-keyboard');
+
+  const getKeyLabel = (key: KeyboardKey) => {
+    switch (key.id) {
+      case 'backspace':
+        return t('keyboard.backspace');
+      case 'space':
+        return t('keyboard.space');
+      case 'clear':
+        return t('keyboard.clear');
+      case 'close':
+        return t('keyboard.done');
+      default:
+        return key.label;
+    }
+  };
 
   const selectedKey = useMemo(
     () => KEYBOARD_ROWS[selectedRow]?.[selectedCol] ?? KEYBOARD_ROWS[0][0],
@@ -196,6 +213,22 @@ export function ControllerSearchKeyboard({
         return;
       }
 
+      if (button === 'Y') {
+        const nextValue = updateSearchValue(searchInput, { id: 'space', label: 'Space', action: 'space' });
+        startTransition(() => onSearchChange(nextValue));
+        return;
+      }
+
+      if (button === 'X') {
+        const nextValue = updateSearchValue(searchInput, {
+          id: 'backspace',
+          label: 'Backspace',
+          action: 'backspace',
+        });
+        startTransition(() => onSearchChange(nextValue));
+        return;
+      }
+
       if (button === 'A') {
         applyKey(selectedKey);
         return;
@@ -241,16 +274,16 @@ export function ControllerSearchKeyboard({
           <div className="flex items-end justify-between gap-8">
             <div className="min-w-0 flex-1">
               <div className="mb-2 text-[11px] font-black uppercase tracking-[0.28em] text-cyan-300/70">
-                Controller Search
+                {t('bigbox.searchPrompt')}
               </div>
               <div className="min-h-[68px] rounded-[24px] border border-white/10 bg-white/[0.045] px-7 py-4 text-3xl font-black tracking-tight text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                {searchInput || <span className="text-white/20">Search your library</span>}
+                {searchInput || <span className="text-white/20">{t('library.searchPlaceholder')}</span>}
               </div>
             </div>
 
             <div className="flex shrink-0 items-center gap-3 text-sm font-bold uppercase tracking-[0.18em] text-white/45">
-              <span className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-cyan-200">A Select</span>
-              <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-2">B Close</span>
+              <span className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-2 text-cyan-200">A {t('common.select')}</span>
+              <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-2">B {t('common.close')}</span>
             </div>
           </div>
 
@@ -286,7 +319,7 @@ export function ControllerSearchKeyboard({
                       }`}
                     >
                       <div className="flex h-full items-center justify-center text-[26px] font-black tracking-tight">
-                        {key.label}
+                        {getKeyLabel(key)}
                       </div>
                     </button>
                   );

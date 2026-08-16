@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from '../i18n/I18nContext';
 
 interface Props {
   label: string;
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export function StatusRow({ label, value, className = "" }: Props) {
+  const { t } = useTranslation();
   if (value === null || value === undefined) return null;
   
   return (
@@ -14,7 +16,7 @@ export function StatusRow({ label, value, className = "" }: Props) {
       <span className="text-gray-500">{label}</span>
       <div className={`flex items-center gap-1 font-bold ${value ? 'text-emerald-400' : 'text-rose-500/80'}`}>
         <span className="text-[10px]">{value ? '✓' : '✗'}</span>
-        <span className="uppercase tracking-tighter">{value ? 'Yes' : 'No'}</span>
+        <span className="uppercase tracking-tighter">{value ? t('common.yes') : t('common.no')}</span>
       </div>
     </div>
   );
