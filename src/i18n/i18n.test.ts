@@ -7,7 +7,7 @@ import en from './locales/en.json';
 const localesDir = path.join(__dirname, 'locales');
 
 // Extract all dot-separated keys and parameter placeholders
-function extractKeysAndParams(obj: Record<string, any>, prefix = ''): { keys: string[]; params: Record<string, string[]> } {
+function extractKeysAndParams(obj: Record<string, unknown>, prefix = ''): { keys: string[]; params: Record<string, string[]> } {
   let keys: string[] = [];
   const params: Record<string, string[]> = {};
 

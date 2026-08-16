@@ -156,7 +156,9 @@ describe('Comprehensive UI Localization Tests', () => {
 
     function TestComponent() {
       const { t } = useTranslation();
-      tFunc = t;
+      React.useEffect(() => {
+        tFunc = t;
+      }, [t]);
       return <div>Ready</div>;
     }
 

@@ -1,10 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { SettingsProvider } from '../contexts/SettingsContext';
 import { I18nProvider, useTranslation } from './I18nContext';
-import { AppearanceSettingsTab } from '../components/settings/AppearanceSettingsTab';
-import { getEditableSettings } from '../components/settings/types';
 
 function TestTranslationConsumer() {
   const { t, language, isRtl, direction, setLanguage } = useTranslation();

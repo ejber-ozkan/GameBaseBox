@@ -917,7 +917,7 @@ export function UnifiedDetailLayout({
                 }`}
               >
                 <div className="flex items-center justify-between border-b-4 border-theme-outline-variant pb-1.5 mb-2 select-none font-mono">
-                  <span className="text-[10px] font-bold text-theme-primary">SYSTEM // {t('extras.title').toUpperCase()}</span>
+                  <span className="text-[10px] font-bold text-theme-primary">SYSTEM {'//'} {t('extras.title').toUpperCase()}</span>
                 </div>
                 <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar font-mono">
                   <ExtrasDetail
@@ -2074,7 +2074,7 @@ export function UnifiedDetailLayout({
                           </div>
                           <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-1">
                             <div>
-                              <div className="text-[10px] text-[#ffb787] uppercase tracking-widest mb-1 font-mono">{t('media.nowPlaying').toUpperCase()} // SID_CHIP</div>
+                              <div className="text-[10px] text-[#ffb787] uppercase tracking-widest mb-1 font-mono">{t('media.nowPlaying').toUpperCase()}{' // '}SID_CHIP</div>
                               <h3 className="font-bold text-base truncate font-mono text-white" title={game.musician?.name || 'Unknown'}>
                                 {game.name}
                               </h3>

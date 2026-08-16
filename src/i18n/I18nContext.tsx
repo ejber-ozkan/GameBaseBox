@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, normalizeLanguageCode } from './languages';
 import type { LanguageInfo, LanguageDirection, NestedTranslationRecord } from './types';
@@ -124,11 +124,7 @@ export function detectSystemLanguage(): string {
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const { settings, updateSettings } = useSettings();
-  const [detectedLanguage, setDetectedLanguage] = useState<string>(DEFAULT_LANGUAGE);
-
-  useEffect(() => {
-    setDetectedLanguage(detectSystemLanguage());
-  }, []);
+  const [detectedLanguage] = useState<string>(() => detectSystemLanguage());
 
   const activeLanguageCode = useMemo(() => {
     const pref = settings.language || 'system';
@@ -173,9 +169,9 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     };
   }, [activeLanguageCode]);
 
-  const setLanguage = (lang: string) => {
+  const setLanguage = useCallback((lang: string) => {
     updateSettings({ language: lang });
-  };
+  }, [updateSettings]);
 
   const contextValue = useMemo<I18nContextType>(() => ({
     language: activeLanguageCode,
@@ -185,7 +181,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     setLanguage,
     t,
     supportedLanguages: SUPPORTED_LANGUAGES,
-  }), [activeLanguageCode, languageInfo, isRtl, t]);
+  }), [activeLanguageCode, languageInfo, isRtl, setLanguage, t]);
 
   return <I18nContext.Provider value={contextValue}>{children}</I18nContext.Provider>;
 }
