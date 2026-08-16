@@ -16,6 +16,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { usePopupOpenSound } from '../hooks/usePopupOpenSound';
 import { supportsEmbeddedEmulation } from '../lib/platform-capabilities';
 import { FullscreenLayoutMetrics, useFullscreenLayoutMetrics } from '../hooks/useFullscreenLayoutMetrics';
+import { useTranslation } from '../i18n';
 
 interface DetailViewProps {
   game: Game;
@@ -61,6 +62,7 @@ function getCachedGameDetail(gameId: string, platformId: string) {
 }
 
 export function DetailView({ game, onBack }: DetailViewProps) {
+  const { t } = useTranslation();
   const { settings } = useSettings();
   const { theme } = useTheme();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -267,7 +269,7 @@ export function DetailView({ game, onBack }: DetailViewProps) {
                   ×
                 </button>
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/50 rounded-full text-xs text-white/70 border border-white/10 backdrop-blur-sm">
-                    Click anywhere to close
+                    {t('common.clickToClose')}
                 </div>
               </>
             )}

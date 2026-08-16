@@ -1,6 +1,7 @@
 import type { EditableSettings, ContentNavProps } from './types';
 import { ThemedToggle } from './ThemedToggle';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useTranslation } from '../../i18n';
 
 interface MediaSettingsTabProps extends ContentNavProps {
   draft: EditableSettings;
@@ -15,25 +16,26 @@ export function MediaSettingsTab({
   isFocused,
 }: MediaSettingsTabProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col justify-start gap-4">
       {/* Title */}
       <div className="text-xs font-bold uppercase tracking-widest text-theme-text-muted font-mono">
-        Screenshot & Media Gallery
+        {t('settings.media')}
       </div>
 
       {/* Card: Cycle Images */}
       <div className={`settings-card p-5 ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme-xl border'} border-theme-outline-variant bg-theme-surface/30 ${isFocused(0) ? 'settings-card-focused' : ''}`}>
         <label className="group flex cursor-pointer items-center justify-between">
           <div>
-            <div className="flex items-center gap-2 text-sm font-semibold text-theme-text">🔄 Cycle Multiple Images</div>
+            <div className="flex items-center gap-2 text-sm font-semibold text-theme-text">🔄 {t('settings.imageCycling')}</div>
             <div className="mt-1 max-w-xl text-[10px] text-theme-text-muted leading-relaxed">
-              Automatically cycle through gameplay screenshots and variants (every 3.5 seconds) in detail view.
+              {t('settings.imageCyclingDescription')}
             </div>
           </div>
           <ThemedToggle
-            label="Cycle Multiple Images"
+            label={t('settings.imageCycling')}
             checked={draft.imageCycling}
             onChange={() => setField('imageCycling', !draft.imageCycling)}
             onMouseEnter={() => isMouseMode && onMouseFocus(0)}
@@ -46,12 +48,12 @@ export function MediaSettingsTab({
       {/* Card: Transition Effect */}
       <div className={`settings-card p-5 ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme-xl border'} border-theme-outline-variant bg-theme-surface/30 ${[1, 2].some(isFocused) ? 'settings-card-focused' : ''} ${!draft.imageCycling ? 'pointer-events-none opacity-40' : ''}`}>
         <label className="mb-3 block text-[10px] font-bold uppercase tracking-widest text-theme-text-muted">
-          Transition Effect
+          {t('settings.imageAnimation')}
         </label>
         <div className="w-fit rounded-theme-lg border border-theme-outline-variant bg-theme-background/60 p-1">
           {([
-            { value: 'none', label: 'Instant/Fade', idx: 1 },
-            { value: 'slide', label: 'Graceful Slide', idx: 2 },
+            { value: 'none', label: t('settings.imageAnimationNone'), idx: 1 },
+            { value: 'slide', label: t('settings.imageAnimationSlide'), idx: 2 },
           ] as const).map((anim) => (
             <button
               key={anim.value}
@@ -68,7 +70,7 @@ export function MediaSettingsTab({
           ))}
         </div>
         <p className="mt-3 text-[9px] italic text-theme-text-muted leading-relaxed">
-          Animation effects may impact performance on legacy hardware or handheld devices.
+          {t('settings.imageAnimationDescription')}
         </p>
       </div>
     </div>

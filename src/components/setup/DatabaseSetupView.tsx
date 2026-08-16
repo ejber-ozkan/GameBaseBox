@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useTranslation } from '@/i18n';
 import type { PlatformFolderSettings } from '@/types/platform';
 
 type RequiredPlatformFolderKey = keyof Pick<
@@ -34,14 +35,6 @@ interface DatabaseSetupViewProps {
   onFolderChange?: (folderKey: RequiredPlatformFolderKey, value: string) => void;
   onImport: () => void;
 }
-
-const folderLabels = {
-  gamesPath: 'Games',
-  musicPath: 'Music',
-  photosPath: 'Musician Photos',
-  screenshotsPath: 'Screenshots',
-  extrasPath: 'Extras',
-} as const;
 
 function getThemeIdForPlatform(platformId?: string): string {
   if (!platformId) return 'arcade-void';
@@ -83,6 +76,7 @@ export function DatabaseSetupView({
 }: DatabaseSetupViewProps) {
   useSettings();
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
 
   // Temporarily apply the selected platform's theme on mount/dropdown change.
   useEffect(() => {
@@ -110,6 +104,23 @@ export function DatabaseSetupView({
 
   const handleGoBackWarning = () => {
     setShowGamesWarning(false);
+  };
+
+  const getFolderLabel = (key: RequiredPlatformFolderKey) => {
+    switch (key) {
+      case 'gamesPath':
+        return t('setup.games');
+      case 'musicPath':
+        return t('setup.music');
+      case 'photosPath':
+        return t('setup.musicianPhotos');
+      case 'screenshotsPath':
+        return t('setup.screenshots');
+      case 'extrasPath':
+        return t('setup.extras');
+      default:
+        return key;
+    }
   };
 
   const allFolderKeys: RequiredPlatformFolderKey[] = [
@@ -152,7 +163,7 @@ export function DatabaseSetupView({
 
           <div className="mb-10">
             <div className="mb-4 text-[12px] font-black uppercase tracking-[0.34em] text-theme-primary">
-              First Run Setup
+              {t('setup.firstRunSetup')}
             </div>
             <h1 
               className="text-4xl font-black tracking-tight text-theme-text md:text-5xl"
@@ -160,22 +171,23 @@ export function DatabaseSetupView({
                 textShadow: theme.id === 'cyberpunk-crt' ? `0 0 8px ${theme.colors.primary}cc` : undefined
               }}
             >
-              Build Your {platformName} Database
+              {t('setup.buildDatabaseTitle', { platform: platformName })}
             </h1>
             <p className="mt-4 max-w-3xl text-base leading-8 text-theme-text-muted">
-              GBBox needs the original <span className="font-bold text-theme-primary">{platformName}</span>{' '}
-              MDB file to build the local SQLite database for search, filters, favorites, and BigBox browsing.
+              {t('setup.descriptionPrefix')}{' '}
+              <span className="font-bold text-theme-primary">{platformName}</span>{' '}
+              {t('setup.descriptionSuffix')}
               {platformAliases.length > 0 ? (
                 <>
                   {' '}
-                  This importer supports {platformAliases.join(' and ')} GameBase databases for this platform.
+                  {t('setup.supportsAliases', { aliases: platformAliases.join(' and ') })}
                 </>
               ) : null}
             </p>
             {showPlatformPicker ? (
               <label className="mt-6 block max-w-sm">
                 <span className="text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
-                  GameBase
+                  {t('setup.gamebase')}
                 </span>
                 <select
                   value={selectedPlatformId}
@@ -194,17 +206,17 @@ export function DatabaseSetupView({
                     if (imported.length > 0 && unimported.length > 0) {
                       return (
                         <>
-                          <optgroup label="Imported GameBases" className="bg-theme-surface text-theme-text-muted font-bold">
+                          <optgroup label={t('setup.importedGamebases')} className="bg-theme-surface text-theme-text-muted font-bold">
                             {imported.map((platform) => (
                               <option key={platform.id} value={platform.id} className="bg-theme-surface text-theme-text font-semibold">
                                 {platform.displayName}
                               </option>
                             ))}
                           </optgroup>
-                          <optgroup label="Not Imported" className="bg-theme-surface text-theme-text-muted font-bold">
+                          <optgroup label={t('setup.notImportedGroup')} className="bg-theme-surface text-theme-text-muted font-bold">
                             {unimported.map((platform) => (
                               <option key={platform.id} value={platform.id} className="bg-theme-surface text-theme-text font-semibold">
-                                {platform.displayName} (Not Imported)
+                                {platform.displayName} {t('setup.notImportedTag')}
                               </option>
                             ))}
                           </optgroup>
@@ -215,7 +227,7 @@ export function DatabaseSetupView({
                     return [...imported, ...unimported].map((platform) => (
                       <option key={platform.id} value={platform.id} className="bg-theme-surface text-theme-text">
                         {platform.displayName}
-                        {platform.importStatus === 'imported' ? '' : ' (Not Imported)'}
+                        {platform.importStatus === 'imported' ? '' : ` ${t('setup.notImportedTag')}`}
                       </option>
                     ));
                   })()}
@@ -230,14 +242,14 @@ export function DatabaseSetupView({
               style={{ borderWidth: theme.effects.steppedBorders ? '2px' : '1px' }}
             >
               <div className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
-                Source File
+                {t('setup.sourceFile')}
               </div>
               <div className="border border-theme-outline/20 bg-theme-surface/30 p-4 rounded-theme-md">
                 <div className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">
-                  Selected MDB
+                  {t('setup.selectedMdb')}
                 </div>
                 <div className="mt-2 break-all text-sm leading-7 text-theme-text font-bold">
-                  {mdbPath || 'No MDB selected yet'}
+                  {mdbPath || t('setup.noMdbSelected')}
                 </div>
               </div>
 
@@ -252,7 +264,7 @@ export function DatabaseSetupView({
                     borderColor: theme.colors.primary
                   }}
                 >
-                  Choose MDB
+                  {t('setup.chooseMdb')}
                 </button>
                 <button
                   type="button"
@@ -264,7 +276,7 @@ export function DatabaseSetupView({
                     borderColor: theme.colors.secondary
                   }}
                 >
-                  {isImporting ? 'Importing…' : 'Build Database'}
+                  {isImporting ? t('setup.importing') : t('setup.buildDatabase')}
                 </button>
                 {isImporting && onCancelImport ? (
                   <button
@@ -276,7 +288,7 @@ export function DatabaseSetupView({
                       borderColor: theme.colors.tertiary
                     }}
                   >
-                    Cancel Import
+                    {t('setup.cancelImport')}
                   </button>
                 ) : null}
               </div>
@@ -298,19 +310,19 @@ export function DatabaseSetupView({
                       }} 
                     />
                   </div>
-                  <p className="mt-3 text-xs leading-6 text-theme-text-muted">Cancellation is applied safely before the database merge.</p>
+                  <p className="mt-3 text-xs leading-6 text-theme-text-muted">{t('setup.cancellationHelp')}</p>
                 </div>
               ) : null}
 
               {hasFoldersToDisplay ? (
                 <div className="mt-7 space-y-4">
                   <div className="text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
-                    Platform Folders (Optional)
+                    {t('setup.platformFoldersOptional')}
                   </div>
                   {displayFolderKeys.map((folderKey) => (
                     <label key={folderKey} className="block">
                       <span className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">
-                        {folderLabels[folderKey]}
+                        {getFolderLabel(folderKey)}
                       </span>
                       <div className="mt-2 flex gap-3">
                         <input
@@ -319,7 +331,7 @@ export function DatabaseSetupView({
                           onChange={(event) => onFolderChange?.(folderKey, event.target.value)}
                           disabled={isImporting}
                           className="min-w-0 flex-1 rounded-theme-md border border-theme-outline/20 bg-theme-surface/30 px-4 py-3 text-sm text-theme-text outline-none transition-all placeholder:text-theme-text-muted/40 focus:border-theme-primary disabled:cursor-not-allowed disabled:opacity-45"
-                          placeholder={`Select ${folderLabels[folderKey]} folder`}
+                          placeholder={t('setup.selectFolder', { folder: getFolderLabel(folderKey) })}
                           style={{
                             borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
                           }}
@@ -333,7 +345,7 @@ export function DatabaseSetupView({
                             borderWidth: theme.effects.steppedBorders ? '2px' : '1px'
                           }}
                         >
-                          Browse
+                          {t('common.browse')}
                         </button>
                       </div>
                     </label>
@@ -362,23 +374,23 @@ export function DatabaseSetupView({
             >
               <div>
                 <div className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] text-theme-primary">
-                  What Happens
+                  {t('setup.whatHappens')}
                 </div>
                 <ol className="space-y-4 text-sm leading-7 text-theme-text-muted">
-                  <li>1. GBBox exports the MDB tables to CSV on this machine.</li>
-                  <li>2. The app imports those CSVs into a local optimized SQLite database.</li>
-                  <li>3. Search indexes, cover lookup, and support tables are created automatically.</li>
-                  <li>4. The normal library UI starts once the database is ready.</li>
+                  <li>{t('setup.step1')}</li>
+                  <li>{t('setup.step2')}</li>
+                  <li>{t('setup.step3')}</li>
+                  <li>{t('setup.step4')}</li>
                 </ol>
               </div>
 
               <div className="mt-6 border border-theme-outline/20 bg-theme-surface/30 p-4 rounded-theme-md">
-                <div className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">Target SQLite Path</div>
+                <div className="text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted">{t('setup.targetSqlitePath')}</div>
                 <div className="mt-2 break-all text-sm leading-7 text-theme-text font-bold">{dbPath}</div>
               </div>
 
               <p className="mt-6 text-sm leading-7 text-theme-text-muted/60">
-                If export fails, install the Microsoft Access Database Engine and try again.
+                {t('setup.accessEngineHelp')}
               </p>
             </section>
           </div>
@@ -401,15 +413,15 @@ export function DatabaseSetupView({
               <svg className="w-5 h-5 fill-current shrink-0" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
-              <span>Folder Warning</span>
+              <span>{t('setup.folderWarning')}</span>
             </div>
 
             <h2 className="text-xl font-black text-theme-text mt-1">
-              No Games Folder Selected
+              {t('setup.noGamesFolderSelected')}
             </h2>
 
             <p className="mt-4 text-sm leading-7 text-theme-text-muted">
-              You haven&apos;t selected a <span className="font-bold text-theme-text">Games</span> folder for <span className="font-bold text-theme-primary">{platformName}</span>. Without a Games folder, you will be able to search and browse the database metadata, but <span className="font-bold text-amber-400">no games will be launchable</span>!
+              {t('setup.noGamesFolderWarning', { platform: platformName })}
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
@@ -418,14 +430,14 @@ export function DatabaseSetupView({
                 onClick={handleGoBackWarning}
                 className="rounded-theme-md border border-theme-primary bg-theme-primary px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-theme-background transition-all hover:opacity-90"
               >
-                Go Back &amp; Add Games Folder
+                {t('setup.goBackAndAddGames')}
               </button>
               <button
                 type="button"
                 onClick={handleProceedWarning}
                 className="rounded-theme-md border border-theme-outline/30 bg-theme-surface/50 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted hover:text-theme-text transition-all hover:bg-theme-surface"
               >
-                Proceed Anyway
+                {t('setup.proceedAnyway')}
               </button>
             </div>
           </div>

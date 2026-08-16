@@ -9,6 +9,7 @@ import { useInputMode } from '../hooks/useInputMode';
 import { type GameFilters, exitApp, getDbGameCount, getDbGames } from '../lib/tauri-bridge';
 import type { LibraryViewMode } from '../hooks/useLibraryBrowserState';
 import { useTheme } from '../contexts/ThemeContext';
+import { useTranslation } from '../i18n/I18nContext';
 
 // Fullscreen / BigBox Subcomponents
 import { BigBoxHeader } from './bigbox/BigBoxHeader';
@@ -127,6 +128,7 @@ export function UnifiedLibraryView({
   onRequestExit,
 }: UnifiedLibraryViewProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
   const { showMouse, isMouseMode } = useInputMode();
 
@@ -909,7 +911,7 @@ export function UnifiedLibraryView({
                 section="recent"
                 subtitle="Your latest launches, kept near the top for quick return trips."
                 shelfRef={shelfRef}
-                title="Recent Games"
+                title={t('library.recentGames')}
               />
 
               <WindowGameShelf
@@ -921,7 +923,7 @@ export function UnifiedLibraryView({
                 onSelectGame={handleSelectGame}
                 section="favorites"
                 subtitle="Pinned titles from your personal shortlist."
-                title="Your Favorites"
+                title={t('library.yourFavorites')}
               />
 
               <WindowGameShelf
@@ -933,7 +935,7 @@ export function UnifiedLibraryView({
                 onSelectGame={handleSelectGame}
                 section="legendary"
                 subtitle="Essential GB64 staples surfaced in the windowed library too."
-                title="🏆 Legendary Classics 🏆"
+                title={t('library.legendaryClassics')}
               />
 
               <GridView
@@ -952,21 +954,21 @@ export function UnifiedLibraryView({
               isFavorite={isFavorite}
               onSelectGame={handleSelectGame}
               section="recent"
-              title="Recent Games"
+              title={t('library.recentGames')}
             />
             <WindowGameListSection
               games={favoriteGames}
               isFavorite={isFavorite}
               onSelectGame={handleSelectGame}
               section="favorites"
-              title="Your Favorites"
+              title={t('library.yourFavorites')}
             />
             <WindowGameListSection
               games={classicGames}
               isFavorite={isFavorite}
               onSelectGame={handleSelectGame}
               section="legendary"
-              title="🏆 Legendary Classics 🏆"
+              title={t('library.legendaryClassics')}
             />
             <ListView
               games={games}

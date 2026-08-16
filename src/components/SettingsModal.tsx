@@ -22,7 +22,10 @@ import {
   getSettingsTabs,
   type EditableSettings,
   type SettingsTabId,
+  type SettingsTabOption,
 } from './settings/types';
+import { PLATFORM_PROFILES } from '../lib/platform-capabilities';
+import { useTranslation } from '../i18n';
 import packageJson from '../../package.json';
 
 interface SettingsViewProps {
@@ -35,6 +38,7 @@ type HeaderZone = 'tabs' | 'content' | 'header';
 export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
   const { settings, updateSettings } = useSettings();
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const { isMouseMode, onGamepadInput } = useInputMode();
   const isFullscreenLayout = settings.isFullscreen;
   const [draft, setDraft] = useState<EditableSettings>(() => getEditableSettings(settings));
@@ -380,6 +384,36 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
     return '';
   };
 
+  const getTabLabel = (tab: SettingsTabOption) => {
+    switch (tab.id) {
+      case 'appearance':
+        return t('settings.appearance');
+      case 'display':
+        return t('settings.display');
+      case 'media':
+        return t('settings.media');
+      case 'interaction':
+        return t('settings.interaction');
+      case 'content':
+        return t('settings.content');
+      case 'about':
+        return t('settings.about');
+      case 'scrapers':
+        return t('settings.scrapers');
+      case 'maintenance':
+        return t('settings.maintenance');
+      default: {
+        const platformId = getPlatformIdFromSettingsTab(tab.id);
+        if (platformId) {
+          const platform = PLATFORM_PROFILES[platformId];
+          const name = platform?.displayName === 'Commodore 64' ? 'C64' : (platform?.displayName || platformId);
+          return `${name} ${t('settings.platformPaths')}`;
+        }
+        return tab.label;
+      }
+    }
+  };
+
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-theme-background text-theme-text font-sans select-none">
       <div
@@ -401,10 +435,10 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
                 : 'bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
             }`}
           >
-            <span className="hidden sm:inline">← Back to Library</span>
-            <span className="sm:hidden">← Back</span>
+            <span className="hidden sm:inline">← {t('common.backToLibrary')}</span>
+            <span className="sm:hidden">← {t('common.back')}</span>
           </button>
-          <h2 className="text-base sm:text-xl font-black uppercase tracking-widest text-theme-text truncate">⚙ Settings</h2>
+          <h2 className="text-base sm:text-xl font-black uppercase tracking-widest text-theme-text truncate">⚙ {t('settings.title')}</h2>
         </div>
 
         <button
@@ -418,8 +452,8 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
               : 'bg-theme-primary-container text-theme-primary border border-theme-primary/30 hover:bg-theme-primary/20'
           }`}
         >
-          <span className="hidden sm:inline">Save Configuration</span>
-          <span className="sm:hidden">Save</span>
+          <span className="hidden sm:inline">{t('common.saveConfiguration')}</span>
+          <span className="sm:hidden">{t('common.save')}</span>
         </button>
       </div>
 
@@ -437,7 +471,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
         >
           <div className="flex flex-1 flex-col gap-2 overflow-y-auto min-h-0">
             <div className="mb-2 px-2 text-xs font-bold uppercase tracking-widest text-theme-text-muted">
-              Configuration Categories
+              {t('settings.categoriesTitle')}
             </div>
 
             {settingsTabs.map((tab, idx) => (
@@ -460,7 +494,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
                 }`}
               >
                 <span className="font-semibold text-xs">
-                  {tab.label}
+                  {getTabLabel(tab)}
                   {getC64KeyHint(idx)}
                 </span>
               </button>
@@ -470,11 +504,11 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
           {/* System Status in Sidebar Footer */}
           <div className={`mt-auto p-4 border border-dashed border-theme-outline-variant bg-theme-surface/10 ${theme.effects.steppedBorders ? '' : 'rounded-theme-xl'}`}>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-theme-primary">SYSTEM STATUS</span>
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-theme-primary">{t('common.systemStatus')}</span>
             </div>
             <p className="font-mono text-[9px] text-theme-text-muted leading-relaxed">
-              Version: {packageJson.version}<br />
-              Environment: {isTauri() ? 'Desktop' : 'Web Dev'}
+              {t('common.version')}: {packageJson.version}<br />
+              {t('common.environment')}: {isTauri() ? t('common.desktop') : t('common.webDev')}
             </p>
           </div>
         </div>

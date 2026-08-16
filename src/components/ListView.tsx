@@ -2,6 +2,7 @@ import { Game } from '../types/game';
 import { useEffect, useRef } from 'react';
 import { getThemeListPresentation } from '../themes/list-presentations';
 import { getC64ViewingPath, getCyberpunkViewingPath } from '../lib/c64-viewing-path';
+import { useTranslation } from '../i18n';
 
 
 interface ListViewProps {
@@ -39,6 +40,7 @@ export function ListView({
   alphabetLabel,
   searchInput,
 }: ListViewProps) {
+  const { t } = useTranslation();
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
   const endSentinelRef = useRef<HTMLTableRowElement>(null);
   const themeId = providedThemeId ?? (typeof document === 'undefined' ? 'arcade-void' : document.documentElement.dataset.theme || 'arcade-void');
@@ -86,15 +88,15 @@ export function ListView({
         <div className="sticky top-0 z-30 bg-[var(--theme-background)]/95 py-2 backdrop-blur-sm" data-testid="arcade-void-currently-viewing-container">
           <div className="theme-panel grid gap-4 rounded-[var(--theme-radius-xl)] p-5 md:grid-cols-[1fr_auto]">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--theme-primary)]">ACTIVE PLATFORM</p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--theme-primary)]">{t('common.activePlatform')}</p>
               <p className="mt-1 text-2xl font-black text-[var(--theme-text)]">{activePlatformName}</p>
               <p className="mt-2 text-xs text-[var(--theme-text-muted)] font-mono" data-testid="arcade-void-currently-viewing-path">
                 {getC64ViewingPath(alphabetLabel, searchInput)}
               </p>
             </div>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-1 font-mono text-xs">
-              <div><dt className="text-[var(--theme-text-muted)]">TOTAL ENTRIES</dt><dd className="text-lg text-[var(--theme-secondary)]">{formatCount(totalGameCount)}</dd></div>
-              <div><dt className="text-[var(--theme-text-muted)]">FAVORITES</dt><dd className="text-lg text-[var(--theme-tertiary)]">{formatCount(favoriteCount)}</dd></div>
+              <div><dt className="text-[var(--theme-text-muted)]">{t('library.filterAll')}</dt><dd className="text-lg text-[var(--theme-secondary)]">{formatCount(totalGameCount)}</dd></div>
+              <div><dt className="text-[var(--theme-text-muted)]">{t('library.favorites')}</dt><dd className="text-lg text-[var(--theme-tertiary)]">{formatCount(favoriteCount)}</dd></div>
             </dl>
           </div>
         </div>
@@ -104,13 +106,13 @@ export function ListView({
         <div className="sticky top-0 z-30 bg-[var(--theme-background)]/95 py-2 backdrop-blur-sm" data-testid="c64-currently-viewing-container">
           <div className="grid gap-3 md:grid-cols-[1fr_auto]">
             <div className="border-4 border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] p-4">
-              <p className="text-xs uppercase text-[var(--theme-text-muted)] font-mono">CURRENTLY VIEWING</p>
+              <p className="text-xs uppercase text-[var(--theme-text-muted)] font-mono">{t('library.viewMode')}</p>
               <p className="theme-cursor-blink text-lg font-bold text-[var(--theme-primary)] font-mono">
                 {getC64ViewingPath(alphabetLabel, searchInput)}
               </p>
             </div>
             <div className="border-4 border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] px-5 py-3 font-mono">
-              <p className="text-xs uppercase text-[var(--theme-text-muted)]">TOTAL ENTRIES</p>
+              <p className="text-xs uppercase text-[var(--theme-text-muted)]">{t('library.filterAll')}</p>
               <p className="text-2xl text-[var(--theme-text)]">{formatCount(totalGameCount)}</p>
             </div>
           </div>
@@ -135,11 +137,11 @@ export function ListView({
           <thead className={`text-xs uppercase ${headerClass}`}>
             <tr>
               <th scope="col" className="w-14 px-3 py-3 text-center">#</th>
-              <th scope="col" className="w-[32%] cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('name')}>Title</th>
-              <th scope="col" className="w-20 cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('year')}>Year</th>
-              <th scope="col" className="w-[20%] cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('publisher')}>Publisher</th>
-              <th scope="col" className="w-[18%] cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('parentGenre')}>Genre</th>
-              <th scope="col" className="w-[15%] px-3 py-3 text-right">System</th>
+              <th scope="col" className="w-[32%] cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('name')}>{t('common.title')}</th>
+              <th scope="col" className="w-20 cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('year')}>{t('detail.year')}</th>
+              <th scope="col" className="w-[20%] cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('publisher')}>{t('detail.publisher')}</th>
+              <th scope="col" className="w-[18%] cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('parentGenre')}>{t('library.genre')}</th>
+              <th scope="col" className="w-[15%] px-3 py-3 text-right">{t('common.system')}</th>
             </tr>
           </thead>
           <tbody ref={tbodyRef}>

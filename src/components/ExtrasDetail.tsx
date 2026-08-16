@@ -11,6 +11,7 @@ import { VisualExtraCard } from './extras/VisualExtraCard';
 import { VisualExtrasBrowser } from './extras/VisualExtrasBrowser';
 import { isVideoExtra, isAudioExtra } from './extras/ResolvedExtraMedia';
 import type { DetailNavigationHook } from '../hooks/useDetailNavigation';
+import { useTranslation } from '../i18n';
 
 interface ExtrasDetailProps {
   game: Game;
@@ -38,6 +39,7 @@ export function ExtrasDetail({
   onRegisterBigscreenNavigation,
   nav,
 }: ExtrasDetailProps) {
+  const { t } = useTranslation();
   const { markAsPlayed, settings } = useSettings();
   const [groupedExtras, setGroupedExtras] = useState<ExtraGroup[]>([]);
   const [launchStatus, setLaunchStatus] = useState<string | null>(null);
@@ -249,10 +251,25 @@ export function ExtrasDetail({
     return (
       <div className="flex flex-col items-center justify-center py-12 text-gray-500 opacity-50">
         <span className="text-4xl mb-4">🗂️</span>
-        <p className="text-sm font-medium">No additional extras available for this title.</p>
+        <p className="text-sm font-medium">{t('extras.noExtras')}</p>
       </div>
     );
   }
+
+  const getGroupLabel = (group: ExtraGroup) => {
+    switch (group.category) {
+      case 'visual':
+        return t('extras.galleryAndMedia');
+      case 'docs':
+        return t('extras.documentsAndManuals');
+      case 'media':
+        return t('extras.mediaAssets');
+      case 'games':
+        return t('extras.gamesAndPrograms');
+      default:
+        return group.label;
+    }
+  };
 
   if (enableBigscreenGalleryUX && layoutSpec) {
     return (
@@ -278,14 +295,14 @@ export function ExtrasDetail({
           </div>
         ) : (
           <div className="flex min-h-0 items-center justify-center rounded-[18px] border border-white/8 bg-black/20 text-sm text-gray-400">
-            No gallery or media artwork available for this title.
+            {t('extras.noGallery')}
           </div>
         )}
 
         {docsExtras.length > 0 ? (
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">Documents & Manuals</h3>
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">{t('extras.documentsAndManuals')}</h3>
               <div className="h-px flex-1 bg-gradient-to-r from-gray-700/50 to-transparent"></div>
             </div>
             <div className="grid grid-cols-2 gap-3 max-h-[140px] overflow-y-auto custom-scrollbar p-1" id="extras-docs-container">
@@ -331,7 +348,7 @@ export function ExtrasDetail({
         {mediaExtras.length > 0 ? (
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">Media Assets</h3>
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">{t('extras.mediaAssets')}</h3>
               <div className="h-px flex-1 bg-gradient-to-r from-gray-700/50 to-transparent"></div>
             </div>
             <div className="grid grid-cols-2 gap-3 max-h-[140px] overflow-y-auto custom-scrollbar p-1" id="extras-media-container">
@@ -365,7 +382,7 @@ export function ExtrasDetail({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium text-white">{item.name}</div>
-                      <div className="truncate text-[10px] uppercase tracking-wider text-purple-300/55">Asset file</div>
+                      <div className="truncate text-[10px] uppercase tracking-wider text-purple-300/55">{t('extras.assetFile')}</div>
                     </div>
                   </button>
                 );
@@ -388,7 +405,7 @@ export function ExtrasDetail({
       {visibleGroups.map(group => (
         <div key={group.category} className="space-y-4">
           <div className="flex items-center gap-3">
-            <h3 className="text-white font-bold text-xs uppercase tracking-[0.2em] opacity-80">{group.label}</h3>
+            <h3 className="text-white font-bold text-xs uppercase tracking-[0.2em] opacity-80">{getGroupLabel(group)}</h3>
             <div className="h-px flex-1 bg-gradient-to-r from-gray-700/50 to-transparent"></div>
           </div>
 
@@ -432,7 +449,7 @@ export function ExtrasDetail({
                     <div className="text-white font-medium text-sm truncate">{item.name}</div>
                     <div className="text-gray-500 text-[10px] uppercase tracking-wider truncate">{item.path.split(/[\/\\]/).shift()}</div>
                   </div>
-                  <span className="text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs">Open ↗</span>
+                  <span className="text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs">{t('common.browse')} ↗</span>
                 </button>
               ))}
             </div>
@@ -451,9 +468,9 @@ export function ExtrasDetail({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-white font-medium text-sm truncate">{item.name}</div>
-                    <div className="text-blue-400/60 text-[10px] uppercase tracking-wider truncate">Load from {item.path.split(/[\/\\]/).shift()}</div>
+                    <div className="text-blue-400/60 text-[10px] uppercase tracking-wider truncate">{t('common.loadFrom')} {item.path.split(/[\/\\]/).shift()}</div>
                   </div>
-                  <span className="text-green-400 font-bold text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity">Launch</span>
+                  <span className="text-green-400 font-bold text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity">{t('detail.play')}</span>
                 </button>
               ))}
             </div>
@@ -472,9 +489,9 @@ export function ExtrasDetail({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-white font-medium text-sm truncate">{item.name}</div>
-                    <div className="text-purple-400/60 text-[10px] uppercase tracking-wider truncate">{isAudioExtra(item) ? 'Audio file' : 'Video file'}</div>
+                    <div className="text-purple-400/60 text-[10px] uppercase tracking-wider truncate">{isAudioExtra(item) ? t('extras.audioFile') : t('extras.videoFile')}</div>
                   </div>
-                   <span className="text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs">{isAudioExtra(item) ? 'Play ↗' : 'Open ↗'}</span>
+                   <span className="text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs">{isAudioExtra(item) ? `${t('detail.play')} ↗` : `${t('common.browse')} ↗`}</span>
                 </button>
               ))}
             </div>

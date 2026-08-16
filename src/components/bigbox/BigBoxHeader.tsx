@@ -6,6 +6,7 @@ import { FullscreenLayoutMetrics } from '../../hooks/useFullscreenLayoutMetrics'
 import { SUPPORTED_PLATFORMS } from '../../lib/platform-capabilities';
 import type { PlatformId } from '../../types/platform';
 import { PlatformSwitcher } from '../PlatformSwitcher';
+import { useTranslation } from '../../i18n';
 
 interface BigBoxHeaderProps {
   activeHeaderItemIndex: number;
@@ -56,6 +57,7 @@ export function BigBoxHeader({
   totalGameCount,
   visibleSubGenres,
 }: BigBoxHeaderProps) {
+  const { t } = useTranslation();
   const isC64Edition = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'c64-edition';
   const isCyberpunkCrt = typeof document !== 'undefined' && document.documentElement.dataset.theme === 'cyberpunk-crt';
   const hasSubGenres = Boolean(filters.genre && (visibleSubGenres.length > 0 || hasOverflowSubGenres));
@@ -118,20 +120,20 @@ export function BigBoxHeader({
               <PlatformSwitcher
                 activePlatformId={activePlatformId}
                 isFocused={platformFocused}
-                label="Platform"
+                label={t('library.platform')}
                 onFocus={() => onSetHeaderFocus(0, 1)}
                 onMouseEnter={() => onSetHeaderFocus(0, 1)}
                 onPlatformSelect={onPlatformSelect}
               />
               <div className="flex items-center gap-2">
                 <div className={`shrink-0 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.2em] ${headerLabelClass}`}>
-                  {totalGameCount} {isFiltered ? 'GAMES FOUND' : 'GAMES AVAILABLE'}
+                  {totalGameCount} {isFiltered ? t('bigbox.gamesFound') : t('bigbox.gamesAvailable')}
                 </div>
                 {onSelectRandomGame && (
                   <button
                     onClick={onSelectRandomGame}
-                    title="Random Game (Select / R)"
-                    aria-label="Select random game"
+                    title={t('common.randomGameTooltip')}
+                    aria-label={t('common.randomGame')}
                     data-testid="random-game-button-bigbox"
                     className={`flex h-7 w-7 items-center justify-center rounded-lg border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] text-xs font-bold text-[var(--theme-primary)] transition-all hover:scale-105 hover:border-[var(--theme-primary)] hover:bg-[var(--theme-primary-container)] hover:text-[var(--theme-text)] hover:shadow-[0_0_12px_var(--theme-primary)] ${
                       isC64Edition ? 'font-mono border-2' : ''
@@ -147,7 +149,7 @@ export function BigBoxHeader({
           <div className={`relative group max-w-full transition-all duration-300 ${searchFocused ? 'scale-105 z-10' : ''}`}>
             <input
               type="text"
-              placeholder="QUICK SEARCH"
+              placeholder={t('library.quickSearch')}
               value={searchInput}
               onChange={(event) => onSearchChange(event.target.value)}
               onFocus={onSearchFocus}
@@ -176,7 +178,7 @@ export function BigBoxHeader({
                 : 'border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] text-[var(--theme-text-muted)] hover:bg-[var(--theme-primary-container)] hover:text-[var(--theme-text)]'
             }`}
             style={{ height: `${layout.headerControlSize}px`, width: `${layout.headerControlSize}px` }}
-            title="Settings"
+            title={t('navigation.settings')}
           >
             <span
               className={`transition-transform duration-500 ${activeRailIndex === -1 && activeHeaderRow === 0 && activeHeaderItemIndex === settingsIndex ? 'rotate-45' : 'group-hover:rotate-45'}`}
@@ -195,7 +197,7 @@ export function BigBoxHeader({
                 : 'border-[var(--theme-tertiary)] bg-[var(--theme-surface)] text-[var(--theme-tertiary)] hover:bg-[var(--theme-tertiary)] hover:text-[var(--theme-background)]'
             }`}
             style={{ height: `${layout.headerControlSize}px`, width: `${layout.headerControlSize}px` }}
-            title="Exit Application"
+            title={t('common.exitApplication')}
           >
             <span
               className={`transition-transform ${activeRailIndex === -1 && activeHeaderRow === 0 && activeHeaderItemIndex === exitIndex ? 'scale-110' : 'group-hover:scale-110'}`}
@@ -216,7 +218,7 @@ export function BigBoxHeader({
 
       <div className="w-full" style={{ paddingTop: `${Math.max(layout.headerPaddingY - 8, 8)}px` }}>
         <div className="flex items-center gap-2 overflow-hidden max-w-full" style={{ ...shellStyle, paddingBottom: '12px' }}>
-        <div className={`shrink-0 font-black uppercase tracking-[0.2em] ${headerLabelClass}`} style={{ fontSize: `${layout.headerEyebrowSize}px` }}>Genre</div>
+        <div className={`shrink-0 font-black uppercase tracking-[0.2em] ${headerLabelClass}`} style={{ fontSize: `${layout.headerEyebrowSize}px` }}>{t('library.genre')}</div>
         <div className="min-w-0 flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth flex-1 justify-start">
           {genres.map((genre, index) => {
             const isSelected = filters.genre === genre;
@@ -252,7 +254,7 @@ export function BigBoxHeader({
       {hasSubGenres ? (
         <div className="w-full border-t border-[var(--theme-outline-variant)]" style={{ paddingTop: `${Math.max(layout.headerPaddingY - 6, 10)}px` }}>
         <div className="flex items-center gap-2 overflow-hidden max-w-full" style={{ ...shellStyle, paddingBottom: '12px' }}>
-        <div className={`shrink-0 font-black uppercase tracking-[0.2em] ${headerLabelClass}`} style={{ fontSize: `${layout.headerEyebrowSize}px` }}>Sub-Genre</div>
+        <div className={`shrink-0 font-black uppercase tracking-[0.2em] ${headerLabelClass}`} style={{ fontSize: `${layout.headerEyebrowSize}px` }}>{t('library.subGenre')}</div>
         <div className="min-w-0 flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth flex-1 justify-start">
             {visibleSubGenres.map((subGenre, index) => {
               const isSelected = filters.subGenre === subGenre;
@@ -295,7 +297,7 @@ export function BigBoxHeader({
                 }`}
                 style={chipStyle}
               >
-                More...
+                {t('common.more')}
               </button>
             ) : null}
           </div>

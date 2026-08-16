@@ -7,6 +7,7 @@ import { ExtrasBigscreenNavigation } from '../ExtrasDetail';
 import { ResolvedExtraMedia, VisualExtraThumb } from './ResolvedExtraMedia';
 import { usePopupOpenSound } from '../../hooks/usePopupOpenSound';
 import { useGamepad } from '../../hooks/useGamepad';
+import { useTranslation } from '../../i18n';
 
 export function VisualExtrasBrowser({
   extras,
@@ -23,6 +24,7 @@ export function VisualExtrasBrowser({
   thumbnailLimit?: number;
   onRegisterNavigation?: (navigation: ExtrasBigscreenNavigation | null) => void;
 }) {
+  const { t } = useTranslation();
   const visibleExtras = thumbnailLimit ? extras.slice(0, thumbnailLimit) : extras;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
@@ -204,7 +206,7 @@ export function VisualExtrasBrowser({
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent px-4 py-3 opacity-0 transition-opacity group-hover:opacity-100">
             <p className="truncate text-xs font-bold text-white">{selectedExtra.name}</p>
-            <p className="text-[9px] uppercase tracking-widest text-gray-400">Press Enter for fullscreen</p>
+            <p className="text-[9px] uppercase tracking-widest text-gray-400">{t('extras.pressEnterFullscreen')}</p>
           </div>
           <button
             type="button"
@@ -215,7 +217,7 @@ export function VisualExtrasBrowser({
             }}
             className="absolute right-3 top-3 z-30 rounded-lg border border-white/20 bg-black/70 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white/75 hover:border-blue-400/60 hover:text-blue-200"
           >
-            Fullscreen
+            {t('detail.fullscreen')}
           </button>
         </div>
       </div>

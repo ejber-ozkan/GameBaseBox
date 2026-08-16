@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.3] - 2026-08-16
+
+### Added
+- Complete Multilingual & Internationalization (i18n) support across the entire frontend application.
+- Full coverage of **33 languages**:
+  - All 24 European Union official languages (Bulgarian, Croatian, Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Hungarian, Irish, Italian, Latvian, Lithuanian, Maltese, Polish, Portuguese, Romanian, Slovak, Slovenian, Spanish, Swedish).
+  - Turkish (`tr`) with retro gaming terminology.
+  - Arabic (`ar`) with automatic right-to-left (`dir="rtl"`) layout and document attribute synchronization.
+  - Simplified Chinese (`zh-CN`), Traditional Chinese (`zh-TW`), Japanese (`ja`), Korean (`ko`), Russian (`ru`), Ukrainian (`uk`), and Indonesian (`id`).
+- Full localization across all UI modes, themes, and views:
+  - **Themes**: C64 Edition, Cyberpunk CRT, Arcade Void, and Desktop Windowed.
+  - **Game Detail View**: Action buttons, retro F-key tabs, technical metadata sidebars, SID and music player labels, alternative versions, and credits.
+  - **Library & Shelves**: Recent, Favorites, and Classics rail headers, quick search bar, game counters, and genre selection modals.
+  - **First Run Setup Wizard**: MDB source selector, platform database builders, optional folder path mappings, step explanation panels, and validation dialogs.
+  - **Settings Modal**: Appearance language selection dropdown, folder paths, emulator settings, display options, input bindings, content filters, and maintenance tools.
+  - **BigBox & Controller UI**: Gamepad HUD prompts, exit confirmation prompts, and on-screen virtual search keyboard.
+
+### Changed
+- Bumped package, Tauri, Cargo, and root version metadata to `0.6.3`.
+
 ## [0.6.2] - 2026-08-15
 
 ### Added

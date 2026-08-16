@@ -17,6 +17,7 @@ import { DetailGameTitle } from '../../detail/DetailGameTitle';
 import { DetailTitleBanner } from '../../detail/DetailTitleBanner';
 import type { DetailLayoutProps } from '../../DetailView';
 import { useResolvedBoxArtUrl } from '../../../hooks/useResolvedBoxArtUrl';
+import { useTranslation } from '../../../i18n';
 
 type WindowedMediaId = 'gameplay' | 'titlescreen' | 'videosna' | 'boxfront';
 type WindowedDetailTab = 'gallery' | 'extras-alt' | 'extras';
@@ -71,6 +72,7 @@ export function WindowedDetailLayout({
   isFavorite,
   onToggleFavorite,
 }: WindowedDetailLayoutProps) {
+  const { t } = useTranslation();
   const { resolveMediaPath, settings } = useSettings();
   const [extras, setExtras] = useState<Extra[]>([]);
   const [selectedMedia, setSelectedMedia] = useState<WindowedMediaId>('gameplay');
@@ -270,7 +272,7 @@ export function WindowedDetailLayout({
                       : 'border-white/10 bg-white/[0.03] text-white/55 hover:border-white/20 hover:text-white'
                   } ${visibleTab === 'gallery' ? nav.focusCls(galleryFocusZone) : ''}`}
                 >
-                  Gallery
+                  {t('detail.media')}
                 </button>
                 {launchableExtras.length > 0 ? (
                   <button
@@ -283,7 +285,7 @@ export function WindowedDetailLayout({
                         : 'border-white/10 bg-white/[0.03] text-white/55 hover:border-white/20 hover:text-white'
                     } ${visibleTab === 'extras-alt' ? nav.focusCls('media-extras') : ''}`}
                   >
-                    Extras Alt. ({launchableExtras.length})
+                    {t('detail.extras')} Alt. ({launchableExtras.length})
                   </button>
                 ) : null}
                 {galleryExtras.length > 0 ? (
@@ -297,7 +299,7 @@ export function WindowedDetailLayout({
                         : 'border-white/10 bg-white/[0.03] text-white/55 hover:border-white/20 hover:text-white'
                     } ${visibleTab === 'extras' ? nav.focusCls('media-extras') : ''}`}
                   >
-                    Extras ({galleryExtras.length})
+                    {t('detail.extras')} ({galleryExtras.length})
                   </button>
                 ) : null}
               </div>
@@ -395,29 +397,29 @@ export function WindowedDetailLayout({
           <aside className="min-w-0 space-y-6">
             <div className={`rounded-[28px] border ${palette.surface} p-5`}>
               <div className={`mb-4 text-[11px] font-black uppercase tracking-[0.24em] ${palette.accentText}`}>
-                Game Info
+                {t('detail.gameInfo')}
               </div>
               <div className="grid gap-3 text-sm text-white/75">
-                <InfoRow label="Genre" value={game.parentGenre} />
-                <InfoRow label="Sub-Genre" value={game.subGenre} />
-                <InfoRow label="Control" value={game.control || 'Joystick'} />
+                <InfoRow label={t('detail.genre')} value={game.parentGenre} />
+                <InfoRow label={t('detail.subGenre')} value={game.subGenre} />
+                <InfoRow label={t('detail.control')} value={game.control || 'Joystick'} />
                 <InfoRow
-                  label="Players"
+                  label={t('detail.players')}
                   value={
                     game.playersFrom === game.playersTo
                       ? game.playersFrom || '1'
                       : `${game.playersFrom || '1'}-${game.playersTo || '1'}`
                   }
                 />
-                <InfoRow label="Coder" value={cleanMetadataValue(game.coderName) || 'Unknown'} />
-                <InfoRow label="Graphics" value={cleanMetadataValue(game.graphicsName) || 'Unknown'} />
+                <InfoRow label={t('detail.programmer')} value={cleanMetadataValue(game.coderName) || 'Unknown'} />
+                <InfoRow label={t('detail.artist')} value={cleanMetadataValue(game.graphicsName) || 'Unknown'} />
               </div>
             </div>
 
             {game.musician ? (
               <div className={`rounded-[28px] border ${palette.surface} p-5`}>
                 <div className={`mb-4 text-[11px] font-black uppercase tracking-[0.24em] ${palette.accentText}`}>
-                  Music
+                  {t('detail.music')}
                 </div>
                 <div className="mb-5 flex items-center gap-4">
                   <MusicianPhoto
@@ -444,18 +446,18 @@ export function WindowedDetailLayout({
 
             <div className={`rounded-[28px] border ${palette.surface} p-5`}>
               <div className={`mb-4 text-[11px] font-black uppercase tracking-[0.24em] ${palette.accentText}`}>
-                Version Details
+                {t('detail.versionDetails')}
               </div>
               <div className="space-y-2">
-                <InfoRow label="Version By" value={game.versionBy || '---'} />
+                <InfoRow label={t('detail.versionBy')} value={game.versionBy || '---'} />
                 <InfoRow label="PAL / NTSC" value={game.vPalNtsc || '---'} />
-                <InfoRow label="Size" value={game.vLength ? `${game.vLength} Blocks` : '---'} />
-                <InfoRow label="Trainers" value={game.vTrainers || '0'} />
+                <InfoRow label={t('detail.size')} value={game.vLength ? `${game.vLength} ${t('detail.blocks')}` : '---'} />
+                <InfoRow label={t('detail.trainers')} value={game.vTrainers || '0'} />
                 <div className="my-3 h-px bg-white/10" />
-                <StatusRow label="Loading Screen" value={game.vLoadingScreen} />
-                <StatusRow label="High Score Saver" value={game.vHighScoreSaver} />
-                <StatusRow label="Included Docs" value={game.vIncludedDocs} />
-                <StatusRow label="True Drive Emul" value={game.vTrueDriveEmu} />
+                <StatusRow label={t('detail.loadingScreen')} value={game.vLoadingScreen} />
+                <StatusRow label={t('detail.highScoreSaver')} value={game.vHighScoreSaver} />
+                <StatusRow label={t('detail.includedDocs')} value={game.vIncludedDocs} />
+                <StatusRow label={t('detail.trueDriveEmul')} value={game.vTrueDriveEmu} />
               </div>
             </div>
           </aside>

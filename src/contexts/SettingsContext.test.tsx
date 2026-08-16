@@ -318,4 +318,18 @@ describe('SettingsContext', () => {
     expect(result.current.settings.lastFocusedIndex).toBe(12);
     expect(result.current.settings.lastSelectedGameId).toBe('100');
   });
+
+  test('manages and updates language preference', async () => {
+    const { result } = renderHook(() => useSettings(), {
+      wrapper: ({ children }) => <SettingsProvider>{children}</SettingsProvider>
+    });
+
+    expect(result.current.settings.language).toBe('system');
+
+    act(() => {
+      result.current.updateSettings({ language: 'de' });
+    });
+
+    expect(result.current.settings.language).toBe('de');
+  });
 });

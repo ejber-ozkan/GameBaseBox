@@ -9,6 +9,7 @@ import { DetailNavigationHook } from '../../hooks/useDetailNavigation';
 import { buildLaunchRequest, buildPlatformAssetPath, getPlatformLaunchSettings } from '../../lib/platform-launch';
 import { supportsEmbeddedEmulation } from '../../lib/platform-capabilities';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useTranslation } from '../../i18n';
 
 export interface PlayLaunchTarget {
   label?: string;
@@ -49,6 +50,7 @@ function EmbeddedGlyph({ className = 'h-5 w-5' }: { className?: string }) {
 export function PlayButton({ game, launchTarget, nav, compact = false }: PlayButtonProps) {
   const { markAsPlayed, settings } = useSettings();
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const [status, setStatus] = useState<'idle' | 'launching' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const [showWasm, setShowWasm] = useState(false);
@@ -123,10 +125,10 @@ export function PlayButton({ game, launchTarget, nav, compact = false }: PlayBut
   };
 
   const buttonLabel: Record<typeof status, string> = {
-    idle:      'Launch Emulator',
-    launching: 'Launching',
-    success:   'Launched',
-    error:     'Launch Failed',
+    idle:      t('detail.playGame'),
+    launching: t('common.loading'),
+    success:   t('common.success'),
+    error:     t('common.error'),
   };
 
   const handlePlayWeb = () => {
@@ -204,7 +206,7 @@ export function PlayButton({ game, launchTarget, nav, compact = false }: PlayBut
                 <span className={`flex shrink-0 items-center justify-center rounded-[10px] bg-black/18 ${iconWrapClass} ${webIconClass}`}>
                   <EmbeddedGlyph className={iconGlyphClass} />
                 </span>
-                <span className={`min-w-0 truncate ${labelClass}`}>Play Embedded</span>
+                <span className={`min-w-0 truncate ${labelClass}`}>{t('detail.playEmbedded')}</span>
                 <span className={sideLabelClass}>Instant</span>
               </button>
             </div>

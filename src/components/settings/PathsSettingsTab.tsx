@@ -2,7 +2,7 @@ import type { EditableSettings, ContentNavProps } from './types';
 import { PLATFORM_EMULATOR_PROFILES, PLATFORM_PROFILES } from '../../lib/platform-capabilities';
 import type { PlatformFolderSettings, PlatformFolderType, PlatformId } from '../../types/platform';
 import { useTheme } from '../../contexts/ThemeContext';
-
+import { useTranslation } from '../../i18n/I18nContext';
 
 interface PathsSettingsTabProps extends ContentNavProps {
   draft: EditableSettings;
@@ -36,6 +36,7 @@ function PathRow({
   isFocused,
 }: PathRowProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -62,9 +63,9 @@ function PathRow({
                 ? 'bg-theme-primary text-theme-surface border border-theme-primary'
                 : 'border border-theme-outline-variant bg-theme-surface/50 text-theme-text-muted hover:bg-theme-surface hover:text-theme-text'
             } ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme'}`}
-            title="Browse (Desktop mode only)"
+            title={t('settings.browseDesktopTooltip')}
           >
-            Browse…
+            {t('common.browse')}..
           </button>
         )}
       </div>
@@ -83,6 +84,7 @@ export function PathsSettingsTab({
   onMouseFocus,
   isFocused,
 }: PathsSettingsTabProps) {
+  const { t } = useTranslation();
   const platformProfile = PLATFORM_PROFILES[platformId];
   const platformSettings = draft.platformSettings[platformId];
   const platformFolders = platformSettings.folders;
@@ -219,8 +221,8 @@ export function PathsSettingsTab({
     return (
       <div className="mb-4 flex items-center justify-between border-b border-theme-outline-variant pb-4">
         <div>
-          <span className="block text-sm font-bold uppercase tracking-wider text-theme-text">Default Desktop Emulator</span>
-          <span className="mt-1 block text-[10px] text-theme-text-muted">Which engine to use when clicking &quot;Desktop&quot;</span>
+          <span className="block text-sm font-bold uppercase tracking-wider text-theme-text">{t('settings.defaultEmulator')}</span>
+          <span className="mt-1 block text-[10px] text-theme-text-muted">{t('settings.defaultEmulatorDescription')}</span>
         </div>
         <div className="flex rounded-theme-lg border border-theme-outline-variant bg-theme-background/60 p-1">
           {supportedEmulatorProfileIds.map((profileId, idx) => (
@@ -249,11 +251,11 @@ export function PathsSettingsTab({
         {/* Left Column: Folders */}
         <div className="flex flex-col gap-4">
           <div className="border-b border-theme-outline-variant pb-1.5 text-xs font-bold uppercase tracking-widest text-theme-primary font-mono">
-            {platformProfile.displayName} Folders
+            {platformProfile.displayName} {t('settings.folders')}
           </div>
           {hasFolderType('games') && (
             <PathRow
-              label="Games folder"
+              label={t('settings.gamesFolder')}
               value={platformFolders.gamesPath}
               onChange={(value) => setPlatformFolder('gamesPath', value)}
               placeholder={isC64 ? 'e.g. D:/GB64/Games' : `Select ${platformProfile.displayName} games folder`}
@@ -267,7 +269,7 @@ export function PathsSettingsTab({
           )}
           {hasFolderType('screenshots') && (
             <PathRow
-              label="Screenshots folder"
+              label={t('settings.screenshotsFolder')}
               value={platformFolders.screenshotsPath}
               onChange={(value) => setPlatformFolder('screenshotsPath', value)}
               placeholder={isC64 ? 'e.g. D:/GB64/Screenshots' : `Select ${platformProfile.displayName} screenshots folder`}
@@ -281,7 +283,7 @@ export function PathsSettingsTab({
           )}
           {hasFolderType('music') && (
             <PathRow
-              label={isC64 ? 'C64Music folder' : 'Music folder'}
+              label={isC64 ? t('settings.c64MusicFolder') : t('settings.musicFolder')}
               value={platformFolders.musicPath}
               onChange={(value) => setPlatformFolder('musicPath', value)}
               placeholder={isC64 ? 'e.g. D:/GB64/C64Music' : `Select ${platformProfile.displayName} music folder`}
@@ -295,7 +297,7 @@ export function PathsSettingsTab({
           )}
           {hasFolderType('photos') && (
             <PathRow
-              label={isC64 || isZxSpectrum || isAmstradCpc ? 'Photos (Musicians) folder' : 'Photos folder'}
+              label={isC64 || isZxSpectrum || isAmstradCpc ? t('settings.musicianPhotosFolder') : t('settings.photosFolder')}
               value={platformFolders.photosPath}
               onChange={(value) => setPlatformFolder('photosPath', value)}
               placeholder={
@@ -315,7 +317,7 @@ export function PathsSettingsTab({
           )}
           {hasFolderType('extras') && (
             <PathRow
-              label="Extras folder"
+              label={t('settings.extrasFolder')}
               value={platformFolders.extrasPath}
               onChange={(value) => setPlatformFolder('extrasPath', value)}
               placeholder={isC64 ? 'e.g. D:/GB64/Extras' : `Select ${platformProfile.displayName} extras folder`}
@@ -332,7 +334,7 @@ export function PathsSettingsTab({
         {/* Right Column: Emulators */}
         <div className="flex flex-col gap-4">
           <div className="border-b border-theme-outline-variant pb-1.5 text-xs font-bold uppercase tracking-widest text-theme-primary font-mono">
-            Emulator Settings
+            {t('settings.emulatorSettings')}
           </div>
 
           {isC64 && (
@@ -341,7 +343,7 @@ export function PathsSettingsTab({
 
               <div className={`space-y-3 transition-opacity ${preferredC64Emulator !== 'vice' ? 'opacity-50' : ''}`}>
                 <PathRow
-                  label="VICE Executable (x64sc.exe)"
+                  label={t('settings.viceExecutable')}
                   value={platformEmulatorSettings.executablePaths['vice-c64'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('vice-c64', value)}
                   placeholder="e.g. C:/VICE/x64sc.exe"
@@ -356,7 +358,7 @@ export function PathsSettingsTab({
 
               <div className={`space-y-3 transition-opacity ${preferredC64Emulator !== 'retroarch' ? 'opacity-50' : ''}`}>
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-c64'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-c64', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -368,7 +370,7 @@ export function PathsSettingsTab({
                   isFocused={isFocused}
                 />
                 <PathRow
-                  label="RetroArch C64 Core"
+                  label={t('settings.retroarchCore')}
                   value={platformEmulatorSettings.corePaths['retroarch-c64'] ?? ''}
                   onChange={(value) => setPlatformCorePath('retroarch-c64', value)}
                   placeholder="e.g. C:/RetroArch/cores/vice_x64sc_libretro.dll"
@@ -393,7 +395,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-atari800'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-atari800', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -448,7 +450,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-atari2600'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-atari2600', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -484,7 +486,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-zxspectrum'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-zxspectrum', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -538,7 +540,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-bbcmicro'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-bbcmicro', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -592,7 +594,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-amiga'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-amiga', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -646,7 +648,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-atarist'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-atarist', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -718,7 +720,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-vic20'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-vic20', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -772,7 +774,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-amstradcpc'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-amstradcpc', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -826,7 +828,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-apple2gs'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-apple2gs', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -898,7 +900,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-pet'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-pet', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -934,7 +936,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-atari5200'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-atari5200', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -1006,7 +1008,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-c128'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-c128', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -1042,7 +1044,7 @@ export function PathsSettingsTab({
                 }`}
               >
                 <PathRow
-                  label="RetroArch Executable (retroarch.exe)"
+                  label={t('settings.retroarchExecutable')}
                   value={platformEmulatorSettings.executablePaths['retroarch-atari7800'] ?? ''}
                   onChange={(value) => setPlatformExecutablePath('retroarch-atari7800', value)}
                   placeholder="e.g. C:/RetroArch/retroarch.exe"
@@ -1072,7 +1074,7 @@ export function PathsSettingsTab({
         </div>
       </div>
       <p className="text-[10px] text-theme-text-muted mt-auto pt-2">
-        ✅ &quot;Browse…&quot; opens the native OS folder/file picker.
+        ✅ {t('settings.browseHelp')}
       </p>
     </div>
   );
