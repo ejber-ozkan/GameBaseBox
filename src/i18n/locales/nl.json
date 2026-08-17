@@ -336,7 +336,9 @@
     "connectionSuccess": "Verbinding geslaagd!",
     "connectionFailed": "Verbinding mislukt.",
     "scrapeMedia": "Media scrapen",
-    "scraping": "Media wordt gescraped..."
+    "scraping": "Media wordt gescraped...",
+    "apple2gsInstructionsTitle": "Apple IIGS Systeemconfiguratie & Opstartschijven",
+    "apple2gsInstructions": "Zelfstartende spellen starten direct. Voor niet-zelfstartende applicatieschijven (bijv. Déjà Vu, Bard's Tale II), plaats een GS/OS- of ProDOS-opstartschijfimage (bijv. system5.2mg, system6.2mg, System.Disk.po of ProDOS 16v1_6.2mg) en Apple IIGS ROMs (apple2gs.zip / ROM) in uw emulatormap of RetroArch system-map."
   },
   "media": {
     "noScreenshots": "Geen screenshots beschikbaar",

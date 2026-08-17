@@ -336,7 +336,9 @@
     "connectionSuccess": "Połączenie udane!",
     "connectionFailed": "Połączenie nie powiodło się.",
     "scrapeMedia": "Pobierz multimedia",
-    "scraping": "Pobieranie multimediów..."
+    "scraping": "Pobieranie multimediów...",
+    "apple2gsInstructionsTitle": "Configurare sistem Apple IIGS și discuri de pornire",
+    "apple2gsInstructions": "Jocurile care pornesc automat se lansează direct. Pentru discurile de aplicații care necesită sistem de operare (de ex. Déjà Vu, Bard's Tale II), plasați o imagine de disc de boot GS/OS sau ProDOS (de ex. system5.2mg, system6.2mg, System.Disk.po sau ProDOS 16v1_6.2mg) și ROM-urile Apple IIGS (apple2gs.zip / ROM) în dosarul emulatorului sau directorul system din RetroArch."
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",

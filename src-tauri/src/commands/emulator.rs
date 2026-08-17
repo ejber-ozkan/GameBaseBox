@@ -213,6 +213,74 @@ fn push_altirra_rom_args(args: &mut Vec<String>, rom_path: &Path) {
     }
 }
 
+fn find_matching_primary_rom(extracted_roms: &[PathBuf], file_to_run: &str) -> Option<PathBuf> {
+    if file_to_run.is_empty() {
+        return None;
+    }
+    let target_filename = Path::new(file_to_run)
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or(file_to_run)
+        .to_lowercase();
+    let target_path_normalized = file_to_run.replace('\\', "/").to_lowercase();
+
+    // 1. Try matching full relative path suffix
+    for r in extracted_roms {
+        let r_str = r.to_string_lossy().replace('\\', "/").to_lowercase();
+        if r_str.ends_with(&target_path_normalized) {
+            return Some(r.clone());
+        }
+    }
+
+    // 2. Try matching filename (case-insensitive)
+    for r in extracted_roms {
+        if let Some(n) = r.file_name().and_then(|n| n.to_str()) {
+            if n.to_lowercase() == target_filename {
+                return Some(r.clone());
+            }
+        }
+    }
+
+    None
+}
+
+fn natural_disk_sort_key(path: &Path) -> (u32, u32, String) {
+    let name = path
+        .file_stem()
+        .and_then(|name| name.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+
+    // Prioritize main game / boot / disk 1 over addon / character / save disks
+    let is_secondary_or_save = name.contains("character")
+        || name.contains("save")
+        || name.contains("course")
+        || name.contains("car ")
+        || name.contains("scenery")
+        || name.contains("data");
+
+    let priority = if is_secondary_or_save { 2 } else { 1 };
+
+    // Extract disk / side number
+    let mut disk_num = u32::MAX;
+    for token in ["disk ", "disk_", "disk", "d", "side ", "side_", "side"] {
+        if let Some((_, rest)) = name.rsplit_once(token) {
+            let num_str: String = rest.chars().take_while(|c| c.is_ascii_digit()).collect();
+            if let Ok(n) = num_str.parse::<u32>() {
+                disk_num = n;
+                break;
+            } else if let Some(c) = rest.chars().next() {
+                if ('a'..='d').contains(&c) {
+                    disk_num = (c as u32) - ('a' as u32) + 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    (priority, disk_num, name)
+}
+
 fn amiga_disk_sort_key(path: &Path) -> (u32, String) {
     let name = path
         .file_stem()
@@ -321,6 +389,319 @@ fn push_uae_gemus_args(args: &mut Vec<String>, gemus: &str) {
     }
 }
 
+fn is_apple_525_disk(path: &Path) -> bool {
+    let ext = path
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+    match ext.as_str() {
+        "nib" | "woz" | "do" => true,
+        "dsk" => {
+            // Standard 5.25" Apple II disk is ~140KB. If file size <= 200KB, treat as 5.25"
+            std::fs::metadata(path)
+                .map(|m| m.len() <= 200 * 1024)
+                .unwrap_or(true)
+        }
+        _ => false,
+    }
+}
+
+fn is_kegs_hard_drive_image(path: &Path) -> bool {
+    let ext = path
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+    if ext == "hdv" {
+        return true;
+    }
+    std::fs::metadata(path)
+        .map(|m| m.len() > 2 * 1024 * 1024)
+        .unwrap_or(false)
+}
+
+fn find_kegs_boot_disk(emulator_dir: &Path, gemus_rom_version: Option<&str>) -> Option<PathBuf> {
+    let is_rom1 = gemus_rom_version == Some("1");
+    let preferred_names: &[&str] = if is_rom1 {
+        &[
+            "system5.2mg",
+            "system5.hdv",
+            "system504.2mg",
+            "system504.hdv",
+            "system6.2mg",
+            "system6.hdv",
+            "prod 16v1_6.2mg",
+            "prod16.2mg",
+            "prodos16.2mg",
+            "prodos.2mg",
+            "boot.2mg",
+            "boot.hdv",
+            "nucleus01.gz",
+            "nucleus01.hdv",
+            "nucleus01.2mg",
+            "nucleus03.gz",
+            "nucleus03.hdv",
+        ]
+    } else {
+        &[
+            "system6.2mg",
+            "system6.hdv",
+            "system601.2mg",
+            "system601.hdv",
+            "system604.2mg",
+            "system604.hdv",
+            "system5.2mg",
+            "system5.hdv",
+            "prod 16v1_6.2mg",
+            "prod16.2mg",
+            "prodos16.2mg",
+            "prodos.2mg",
+            "boot.2mg",
+            "boot.hdv",
+            "nucleus03.gz",
+            "nucleus03.hdv",
+            "nucleus03.2mg",
+            "nucleus01.gz",
+            "nucleus01.hdv",
+        ]
+    };
+
+    if let Ok(entries) = std::fs::read_dir(emulator_dir) {
+        let files: Vec<PathBuf> = entries.filter_map(Result::ok).map(|e| e.path()).collect();
+        for name in preferred_names {
+            if let Some(found) = files.iter().find(|p| {
+                p.file_name()
+                    .and_then(|n| n.to_str())
+                    .is_some_and(|n| n.eq_ignore_ascii_case(name))
+            }) {
+                return Some(found.clone());
+            }
+        }
+        for file in files {
+            if let Some(stem) = file.file_stem().and_then(|s| s.to_str()) {
+                let lower = stem.to_lowercase();
+                if lower.contains("system") || lower.contains("prod") || lower.contains("nucleus") {
+                    let ext = file
+                        .extension()
+                        .and_then(|e| e.to_str())
+                        .unwrap_or("")
+                        .to_lowercase();
+                    if ["2mg", "hdv", "po", "dsk", "gz"].contains(&ext.as_str()) {
+                        return Some(file);
+                    }
+                }
+            }
+        }
+    }
+
+    for name in preferred_names {
+        let candidate = emulator_dir.join(name);
+        if candidate.exists() && candidate.is_file() {
+            return Some(candidate);
+        }
+    }
+
+    None
+}
+
+fn is_apple_disk_self_bootable(path: &Path) -> bool {
+    let Ok(data) = std::fs::read(path) else {
+        return true;
+    };
+    if data.len() < 2048 {
+        return true;
+    }
+
+    let mut data_offset = 0;
+    if data.starts_with(b"2IMG") && data.len() >= 0x1c {
+        data_offset = u32::from_le_bytes([data[0x18], data[0x19], data[0x1a], data[0x1b]]) as usize;
+    }
+
+    // ProDOS volume root directory is at Block 2 (1024 bytes from data_offset)
+    let root_offset = data_offset + 1024;
+    if data.len() >= root_offset + 1024 {
+        let root_dir = &data[root_offset..root_offset + 1024];
+        // If "PRODOS" or "SOS" is found in the root directory, it has the system kernel and is bootable
+        return root_dir.windows(6).any(|w| w.eq_ignore_ascii_case(b"PRODOS"))
+            || root_dir.windows(3).any(|w| w.eq_ignore_ascii_case(b"SOS"));
+    }
+
+    true
+}
+
+fn prepare_kegs_launch(
+    emulator_dir: Option<&Path>,
+    args: &mut Vec<String>,
+    rom_files: &[PathBuf],
+    primary_rom: &Path,
+    gemus: &str,
+) {
+    let is_525 = is_apple_525_disk(primary_rom);
+    let primary_str = primary_rom.to_string_lossy().to_string();
+    let secondary_str = rom_files
+        .iter()
+        .find(|f| *f != primary_rom)
+        .map(|f| f.to_string_lossy().to_string());
+
+    // Check GEMUS for boot=no and rom=...
+    let mut is_boot_no = false;
+    let mut gemus_rom_version: Option<&str> = None;
+    for line in gemus.lines() {
+        let trimmed = line.trim();
+        if let Some((k, v)) = trimmed.split_once('=') {
+            let key = k.trim();
+            let val = v.trim();
+            if key.eq_ignore_ascii_case("boot") && val.eq_ignore_ascii_case("no") {
+                is_boot_no = true;
+            } else if key.eq_ignore_ascii_case("rom") {
+                gemus_rom_version = Some(val);
+            }
+        }
+    }
+
+    let needs_boot_disk = is_boot_no || (!is_525 && !is_apple_disk_self_bootable(primary_rom));
+
+    let boot_disk = if needs_boot_disk {
+        emulator_dir.and_then(|dir| find_kegs_boot_disk(dir, gemus_rom_version))
+    } else {
+        None
+    };
+
+    let (s5d1_disk, s5d2_disk, s6d1_disk, s6d2_disk, s7d1_disk) = if let Some(ref boot) = boot_disk {
+        if is_kegs_hard_drive_image(boot) {
+            // Hard drive boot image: goes into s7d1, game goes into primary floppy slot
+            let s5_1 = if !is_525 { Some(primary_str.clone()) } else { None };
+            let s5_2 = if !is_525 { secondary_str.clone() } else { None };
+            let s6_1 = if is_525 { Some(primary_str.clone()) } else { None };
+            let s6_2 = if is_525 { secondary_str.clone() } else { None };
+            (s5_1, s5_2, s6_1, s6_2, Some(boot.to_string_lossy().to_string()))
+        } else {
+            // Floppy boot disk (e.g. system5.2mg, prod 16v1_6.2mg):
+            // Boot floppy goes into s5d1, game disk goes into s5d2 (or s6d1 for 5.25" game)
+            let s5_1 = Some(boot.to_string_lossy().to_string());
+            let s5_2 = if !is_525 { Some(primary_str.clone()) } else { None };
+            let s6_1 = if is_525 { Some(primary_str.clone()) } else { None };
+            let s6_2 = if is_525 { secondary_str.clone() } else { None };
+            (s5_1, s5_2, s6_1, s6_2, None)
+        }
+    } else {
+        // Standard game: game goes into s5d1 or s6d1, s7d1 is cleared
+        let s5_1 = if !is_525 { Some(primary_str.clone()) } else { None };
+        let s5_2 = if !is_525 { secondary_str.clone() } else { None };
+        let s6_1 = if is_525 { Some(primary_str.clone()) } else { None };
+        let s6_2 = if is_525 { secondary_str.clone() } else { None };
+        (s5_1, s5_2, s6_1, s6_2, None)
+    };
+
+    // 1. Add command line switches (supported by KEGS 1.33+ and GSplus)
+    if let Some(ref d) = s5d1_disk {
+        args.push(format!("-s5d1={}", d));
+    } else {
+        args.push("-s5d1=".to_string());
+    }
+    if let Some(ref d) = s5d2_disk {
+        args.push(format!("-s5d2={}", d));
+    } else {
+        args.push("-s5d2=".to_string());
+    }
+    if let Some(ref d) = s6d1_disk {
+        args.push(format!("-s6d1={}", d));
+    } else {
+        args.push("-s6d1=".to_string());
+    }
+    if let Some(ref d) = s6d2_disk {
+        args.push(format!("-s6d2={}", d));
+    } else {
+        args.push("-s6d2=".to_string());
+    }
+    if let Some(ref d) = s7d1_disk {
+        args.push(format!("-s7d1={}", d));
+    } else {
+        args.push("-s7d1=".to_string());
+    }
+
+    // 2. Also update / write config.kegs in emulator directory for compatibility with KEGS 0.91/Win32
+    if let Some(dir) = emulator_dir {
+        let config_path = dir.join("config.kegs");
+        let mut lines: Vec<String> = if config_path.exists() {
+            std::fs::read_to_string(&config_path)
+                .unwrap_or_default()
+                .lines()
+                .map(|s| s.to_string())
+                .collect()
+        } else {
+            Vec::new()
+        };
+
+        let mut set_s5d1 = false;
+        let mut set_s5d2 = false;
+        let mut set_s6d1 = false;
+        let mut set_s6d2 = false;
+        let mut set_s7d1 = false;
+        let mut set_rom_ver = false;
+
+        for line in lines.iter_mut() {
+            let trimmed = line.trim();
+            let lower = trimmed.to_lowercase();
+            if lower.starts_with("s5d1 ") || lower.starts_with("s5d1=") || lower == "s5d1" {
+                *line = format!("s5d1 = {}", s5d1_disk.as_deref().unwrap_or(""));
+                set_s5d1 = true;
+            } else if lower.starts_with("s5d2 ") || lower.starts_with("s5d2=") || lower == "s5d2" {
+                *line = format!("s5d2 = {}", s5d2_disk.as_deref().unwrap_or(""));
+                set_s5d2 = true;
+            } else if lower.starts_with("s6d1 ") || lower.starts_with("s6d1=") || lower == "s6d1" {
+                *line = format!("s6d1 = {}", s6d1_disk.as_deref().unwrap_or(""));
+                set_s6d1 = true;
+            } else if lower.starts_with("s6d2 ") || lower.starts_with("s6d2=") || lower == "s6d2" {
+                *line = format!("s6d2 = {}", s6d2_disk.as_deref().unwrap_or(""));
+                set_s6d2 = true;
+            } else if lower.starts_with("s7d1 ") || lower.starts_with("s7d1=") || lower == "s7d1" {
+                *line = format!("s7d1 = {}", s7d1_disk.as_deref().unwrap_or(""));
+                set_s7d1 = true;
+            } else if lower.starts_with("s7d") {
+                let slot_name = lower
+                    .split_whitespace()
+                    .next()
+                    .unwrap_or("s7d2")
+                    .split('=')
+                    .next()
+                    .unwrap_or("s7d2");
+                *line = format!("{} = ", slot_name);
+            } else if lower.starts_with("g_rom_version") {
+                if let Some(rom_ver) = gemus_rom_version {
+                    *line = format!("g_rom_version = {}", rom_ver);
+                    set_rom_ver = true;
+                }
+            }
+        }
+
+        if !set_s5d1 {
+            lines.push(format!("s5d1 = {}", s5d1_disk.as_deref().unwrap_or("")));
+        }
+        if !set_s5d2 {
+            lines.push(format!("s5d2 = {}", s5d2_disk.as_deref().unwrap_or("")));
+        }
+        if !set_s6d1 {
+            lines.push(format!("s6d1 = {}", s6d1_disk.as_deref().unwrap_or("")));
+        }
+        if !set_s6d2 {
+            lines.push(format!("s6d2 = {}", s6d2_disk.as_deref().unwrap_or("")));
+        }
+        if !set_s7d1 {
+            lines.push(format!("s7d1 = {}", s7d1_disk.as_deref().unwrap_or("")));
+        }
+        if let Some(rom_ver) = gemus_rom_version {
+            if !set_rom_ver {
+                lines.push(format!("g_rom_version = {}", rom_ver));
+            }
+        }
+
+        let content = lines.join("\r\n");
+        let _ = std::fs::write(&config_path, content);
+    }
+}
+
 #[derive(Default)]
 struct GameLaunchMetadata {
     file_to_run: String,
@@ -417,6 +798,113 @@ fn write_retroarch_m3u(
         }
     }
     Ok(m3u_path)
+}
+
+fn write_mame_apple2gs_cmd(
+    temp_dir: &Path,
+    primary_rom: &Path,
+    rom_files: &[PathBuf],
+    gemus: &str,
+    system_dir: Option<&Path>,
+) -> Result<PathBuf, String> {
+    let is_525 = is_apple_525_disk(primary_rom);
+    let primary_str = primary_rom.to_string_lossy();
+    let secondary = rom_files.iter().find(|f| *f != primary_rom);
+
+    // Check GEMUS for rom version (apple2gs vs apple2gsr1) and boot=no
+    let mut is_boot_no = false;
+    let mut rom_ver: Option<&str> = None;
+    for line in gemus.lines() {
+        let trimmed = line.trim();
+        if let Some((k, v)) = trimmed.split_once('=') {
+            let key = k.trim();
+            let val = v.trim();
+            if key.eq_ignore_ascii_case("boot") && val.eq_ignore_ascii_case("no") {
+                is_boot_no = true;
+            } else if key.eq_ignore_ascii_case("rom") {
+                rom_ver = Some(val);
+            }
+        }
+    }
+
+    let machine = match rom_ver {
+        Some("1") => "apple2gsr1",
+        Some("0") => "apple2gsr0",
+        _ => "apple2gs",
+    };
+
+    let needs_boot_disk = is_boot_no || (!is_525 && !is_apple_disk_self_bootable(primary_rom));
+    let mut candidate_dirs: Vec<PathBuf> = Vec::new();
+    if let Some(sys) = system_dir {
+        candidate_dirs.push(sys.to_path_buf());
+        candidate_dirs.push(sys.join("mame"));
+        if let Some(parent) = sys.parent() {
+            candidate_dirs.push(parent.to_path_buf());
+        }
+    }
+    for fallback in [Path::new("F:/RETRO/Mac2"), Path::new("C:/RETRO/Mac2"), Path::new("F:/RETRO/kegs")] {
+        if fallback.exists() {
+            candidate_dirs.push(fallback.to_path_buf());
+        }
+    }
+
+    let boot_disk = if needs_boot_disk {
+        candidate_dirs.iter().find_map(|dir| find_kegs_boot_disk(dir, rom_ver))
+    } else {
+        None
+    };
+
+    let mut cmd_line = format!("{}", machine);
+
+    if let Some(sys) = system_dir {
+        cmd_line.push_str(&format!(" -rompath \"{}\"", sys.to_string_lossy()));
+    }
+
+    if let Some(ref boot) = boot_disk {
+        if is_kegs_hard_drive_image(boot) {
+            cmd_line.push_str(&format!(" -hard1 \"{}\"", boot.to_string_lossy()));
+            if !is_525 {
+                cmd_line.push_str(&format!(" -flop3 \"{}\"", primary_str));
+                if let Some(sec) = secondary {
+                    cmd_line.push_str(&format!(" -flop4 \"{}\"", sec.to_string_lossy()));
+                }
+            } else {
+                cmd_line.push_str(&format!(" -flop1 \"{}\"", primary_str));
+                if let Some(sec) = secondary {
+                    cmd_line.push_str(&format!(" -flop2 \"{}\"", sec.to_string_lossy()));
+                }
+            }
+        } else {
+            // Floppy boot disk in flop3, game in flop4
+            cmd_line.push_str(&format!(" -flop3 \"{}\"", boot.to_string_lossy()));
+            if !is_525 {
+                cmd_line.push_str(&format!(" -flop4 \"{}\"", primary_str));
+            } else {
+                cmd_line.push_str(&format!(" -flop1 \"{}\"", primary_str));
+            }
+        }
+    } else if is_525 {
+        cmd_line.push_str(&format!(" -flop1 \"{}\"", primary_str));
+        if let Some(sec) = secondary {
+            cmd_line.push_str(&format!(" -flop2 \"{}\"", sec.to_string_lossy()));
+        }
+    } else {
+        cmd_line.push_str(&format!(" -flop3 \"{}\"", primary_str));
+        if let Some(sec) = secondary {
+            cmd_line.push_str(&format!(" -flop4 \"{}\"", sec.to_string_lossy()));
+        }
+    }
+
+    let cmd_file_path = temp_dir.join(format!(
+        "{}.cmd",
+        primary_rom
+            .file_stem()
+            .unwrap_or_default()
+            .to_string_lossy()
+    ));
+
+    std::fs::write(&cmd_file_path, &cmd_line).map_err(|e| e.to_string())?;
+    Ok(cmd_file_path)
 }
 
 #[tauri::command]
@@ -550,6 +1038,12 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             "fs-uae",
             "amiberry.exe",
             "amiberry",
+            "kegswin.exe",
+            "kegswin",
+            "kegs.exe",
+            "kegs",
+            "gsplus.exe",
+            "gsplus",
         ];
         let mut found = false;
         for exe in possible_exes {
@@ -603,6 +1097,12 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         || exe_name.contains("winuae")
         || exe_name.contains("fs-uae")
         || exe_name.contains("amiberry");
+    let is_kegs = request
+        .emulator_profile_id
+        .as_deref()
+        .is_some_and(|profile_id| profile_id == "kegs-apple2gs")
+        || exe_name.contains("kegs")
+        || exe_name.contains("gsplus");
 
     if is_retroarch {
         if let Some(cp) = &request.core_path {
@@ -623,7 +1123,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         } else {
             args.push("/ntsc".to_string());
         }
-    } else if !is_retroarch && !is_spectaculator && !is_beebem && !is_uae {
+    } else if !is_retroarch && !is_spectaculator && !is_beebem && !is_uae && !is_kegs {
         if request.true_drive_emulation {
             args.push("-truedrive".to_string());
         }
@@ -698,22 +1198,11 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         if platform_id == Some("amiga") {
             extracted_roms.sort_by_key(|path| amiga_disk_sort_key(path));
         } else {
-            extracted_roms.sort();
+            extracted_roms.sort_by_key(|path| natural_disk_sort_key(path));
         }
-        let mut primary_rom = None;
-        if !file_to_run.is_empty() {
-            let target = file_to_run.to_lowercase();
-            for r in &extracted_roms {
-                if let Some(n) = r.file_name().and_then(|n| n.to_str()) {
-                    if n.to_lowercase() == target {
-                        primary_rom = Some(r.clone());
-                        break;
-                    }
-                }
-            }
-        }
-        let resolved_primary_rom =
-            primary_rom.unwrap_or_else(|| extracted_roms.first().unwrap().clone());
+
+        let resolved_primary_rom = find_matching_primary_rom(&extracted_roms, &file_to_run)
+            .unwrap_or_else(|| extracted_roms.first().unwrap().clone());
 
         if is_retroarch {
             if let Some(cp) = &request.core_path {
@@ -722,7 +1211,17 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                     args.push(cp.clone());
                 }
             }
-            if extracted_roms.len() > 1 {
+            if platform_id == Some("apple2gs") {
+                let system_dir = emulator.parent().map(|p| p.join("system"));
+                let cmd_path = write_mame_apple2gs_cmd(
+                    &temp_dir,
+                    &resolved_primary_rom,
+                    &extracted_roms,
+                    &launch_metadata.gemus,
+                    system_dir.as_deref().or_else(|| emulator.parent()),
+                )?;
+                args.push(cmd_path.to_string_lossy().to_string());
+            } else if extracted_roms.len() > 1 {
                 let m3u_path =
                     write_retroarch_m3u(&temp_dir, &resolved_primary_rom, &extracted_roms)?;
                 args.push(m3u_path.to_string_lossy().to_string());
@@ -734,6 +1233,14 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         } else if is_uae {
             push_uae_rom_args(&mut args, &extracted_roms);
             push_uae_gemus_args(&mut args, &launch_metadata.gemus);
+        } else if is_kegs {
+            prepare_kegs_launch(
+                emulator.parent(),
+                &mut args,
+                &extracted_roms,
+                &resolved_primary_rom,
+                &launch_metadata.gemus,
+            );
         } else if is_spectaculator || is_beebem {
             args.push(resolved_primary_rom.to_string_lossy().to_string());
         } else {
@@ -766,12 +1273,33 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                     args.push(cp.clone());
                 }
             }
-            args.push(rom.to_string_lossy().to_string());
+            if platform_id == Some("apple2gs") {
+                let temp_dir = create_launch_temp_dir()?;
+                let system_dir = emulator.parent().map(|p| p.join("system"));
+                let cmd_path = write_mame_apple2gs_cmd(
+                    &temp_dir,
+                    &rom,
+                    &[rom.clone()],
+                    &launch_metadata.gemus,
+                    system_dir.as_deref().or_else(|| emulator.parent()),
+                )?;
+                args.push(cmd_path.to_string_lossy().to_string());
+            } else {
+                args.push(rom.to_string_lossy().to_string());
+            }
         } else if is_altirra {
             push_altirra_rom_args(&mut args, &rom);
         } else if is_uae {
             push_uae_rom_args(&mut args, &[rom]);
             push_uae_gemus_args(&mut args, &launch_metadata.gemus);
+        } else if is_kegs {
+            prepare_kegs_launch(
+                emulator.parent(),
+                &mut args,
+                &[rom.clone()],
+                &rom,
+                &launch_metadata.gemus,
+            );
         } else if is_spectaculator || is_beebem {
             args.push(rom.to_string_lossy().to_string());
         } else {
@@ -780,9 +1308,20 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         }
     }
 
-    if std::env::var("VIC40_DEBUG_LAUNCH").is_ok() || crate::is_debug_mode() {
-        println!("[DEBUG LAUNCH] Emulator: {}", emulator.to_string_lossy());
-        println!("[DEBUG LAUNCH] Switches: {:?}", args);
+    let is_debug = crate::is_debug_mode() || std::env::var("VIC40_DEBUG_LAUNCH").is_ok();
+
+    if is_retroarch && is_debug {
+        if let Some(parent) = emulator.parent() {
+            let log_path = parent.join("retroarch_debug.log");
+            args.push("--verbose".to_string());
+            args.push("--log-file".to_string());
+            args.push(log_path.to_string_lossy().to_string());
+        }
+    }
+
+    if is_debug {
+        println!("[GameBaseBox Launch] Emulator: {}", emulator.to_string_lossy());
+        println!("[GameBaseBox Launch] Switches: {:?}", args);
     }
 
     let mut cmd = Command::new(&emulator);
@@ -908,6 +1447,188 @@ mod tests {
                 "kickstart_rom_file=C:/ROMs/Kick31.rom".to_string(),
             ]
         );
+    }
+
+    #[test]
+    fn test_kegs_slot5_disk_mapping_and_config_generation() {
+        let dir = tempdir().unwrap();
+        let disk1 = dir.path().join("Gauntlet.2mg");
+        std::fs::write(&disk1, b"disk1").unwrap();
+
+        // Write existing config.kegs with hard drive in s7d1
+        let config_file = dir.path().join("config.kegs");
+        std::fs::write(&config_file, "s7d1 = NUCLEUS03.gz\r\ns5d1 = xmas_demo.gz\r\n").unwrap();
+
+        let mut args = Vec::new();
+        prepare_kegs_launch(
+            Some(dir.path()),
+            &mut args,
+            &[disk1.clone()],
+            &disk1,
+            "",
+        );
+
+        assert_eq!(
+            args,
+            vec![
+                format!("-s5d1={}", disk1.to_string_lossy()),
+                "-s5d2=".to_string(),
+                "-s6d1=".to_string(),
+                "-s6d2=".to_string(),
+                "-s7d1=".to_string(),
+            ]
+        );
+
+        let config_content = std::fs::read_to_string(&config_file).unwrap();
+        assert!(config_content.contains(&format!("s5d1 = {}", disk1.to_string_lossy())));
+        assert!(config_content.contains("s7d1 = "));
+        assert!(!config_content.contains("NUCLEUS03.gz"));
+    }
+
+    #[test]
+    fn test_kegs_mounts_floppy_system_disk_when_gemus_has_boot_no() {
+        let dir = tempdir().unwrap();
+        let disk1 = dir.path().join("DejaVu_Disk1.2mg");
+        let sys5 = dir.path().join("system5.2mg");
+        std::fs::write(&disk1, b"disk1").unwrap();
+        std::fs::write(&sys5, &[0u8; 819200]).unwrap(); // standard 800KB 3.5" disk
+
+        let config_file = dir.path().join("config.kegs");
+        std::fs::write(&config_file, "s7d1 = \r\ns5d1 = \r\n").unwrap();
+
+        let mut args = Vec::new();
+        prepare_kegs_launch(
+            Some(dir.path()),
+            &mut args,
+            &[disk1.clone()],
+            &disk1,
+            "boot=no\r\nrom=1",
+        );
+
+        assert_eq!(
+            args,
+            vec![
+                format!("-s5d1={}", sys5.to_string_lossy()),
+                format!("-s5d2={}", disk1.to_string_lossy()),
+                "-s6d1=".to_string(),
+                "-s6d2=".to_string(),
+                "-s7d1=".to_string(),
+            ]
+        );
+
+        let config_content = std::fs::read_to_string(&config_file).unwrap();
+        assert!(config_content.contains(&format!("s5d1 = {}", sys5.to_string_lossy())));
+        assert!(config_content.contains(&format!("s5d2 = {}", disk1.to_string_lossy())));
+        assert!(config_content.contains("s7d1 = "));
+        assert!(config_content.contains("g_rom_version = 1"));
+    }
+
+    #[test]
+    fn test_kegs_mounts_hard_drive_boot_disk_when_gemus_has_boot_no() {
+        let dir = tempdir().unwrap();
+        let disk1 = dir.path().join("DejaVu_Disk1.2mg");
+        let sys6_hdv = dir.path().join("system6.hdv");
+        std::fs::write(&disk1, b"disk1").unwrap();
+        std::fs::write(&sys6_hdv, b"system6_hdd").unwrap();
+
+        let config_file = dir.path().join("config.kegs");
+        std::fs::write(&config_file, "s7d1 = \r\ns5d1 = \r\n").unwrap();
+
+        let mut args = Vec::new();
+        prepare_kegs_launch(
+            Some(dir.path()),
+            &mut args,
+            &[disk1.clone()],
+            &disk1,
+            "boot=no\r\nrom=3",
+        );
+
+        assert_eq!(
+            args,
+            vec![
+                format!("-s5d1={}", disk1.to_string_lossy()),
+                "-s5d2=".to_string(),
+                "-s6d1=".to_string(),
+                "-s6d2=".to_string(),
+                format!("-s7d1={}", sys6_hdv.to_string_lossy()),
+            ]
+        );
+
+        let config_content = std::fs::read_to_string(&config_file).unwrap();
+        assert!(config_content.contains(&format!("s5d1 = {}", disk1.to_string_lossy())));
+        assert!(config_content.contains(&format!("s7d1 = {}", sys6_hdv.to_string_lossy())));
+        assert!(config_content.contains("g_rom_version = 3"));
+    }
+
+    #[test]
+    fn test_kegs_mounts_system_disk_when_disk_lacks_prodos_even_if_gemus_empty() {
+        let dir = tempdir().unwrap();
+        let disk1 = dir.path().join("BardsTale2.2mg");
+        let sys5 = dir.path().join("system5.2mg");
+        // Create an 800KB disk without "PRODOS" in its root directory
+        let mut non_boot_disk = vec![0u8; 819200];
+        non_boot_disk[0..4].copy_from_slice(b"2IMG");
+        std::fs::write(&disk1, &non_boot_disk).unwrap();
+        std::fs::write(&sys5, &[0u8; 819200]).unwrap();
+
+        let config_file = dir.path().join("config.kegs");
+        std::fs::write(&config_file, "s7d1 = \r\ns5d1 = \r\n").unwrap();
+
+        let mut args = Vec::new();
+        // gemus is empty string (like in the DB for Bard's Tale 2)
+        prepare_kegs_launch(
+            Some(dir.path()),
+            &mut args,
+            &[disk1.clone()],
+            &disk1,
+            "",
+        );
+
+        assert_eq!(
+            args,
+            vec![
+                format!("-s5d1={}", sys5.to_string_lossy()),
+                format!("-s5d2={}", disk1.to_string_lossy()),
+                "-s6d1=".to_string(),
+                "-s6d2=".to_string(),
+                "-s7d1=".to_string(),
+            ]
+        );
+
+        let config_content = std::fs::read_to_string(&config_file).unwrap();
+        assert!(config_content.contains(&format!("s5d1 = {}", sys5.to_string_lossy())));
+        assert!(config_content.contains(&format!("s5d2 = {}", disk1.to_string_lossy())));
+    }
+
+    #[test]
+    fn test_kegs_slot6_mapping_for_525_disks() {
+        let dir = tempdir().unwrap();
+        let disk1 = dir.path().join("Game.dsk");
+        std::fs::write(&disk1, &[0u8; 143360]).unwrap(); // standard 140KB 5.25" disk
+
+        let mut args = Vec::new();
+        prepare_kegs_launch(
+            Some(dir.path()),
+            &mut args,
+            &[disk1.clone()],
+            &disk1,
+            "",
+        );
+
+        assert_eq!(
+            args,
+            vec![
+                "-s5d1=".to_string(),
+                "-s5d2=".to_string(),
+                format!("-s6d1={}", disk1.to_string_lossy()),
+                "-s6d2=".to_string(),
+                "-s7d1=".to_string(),
+            ]
+        );
+
+        let config_file = dir.path().join("config.kegs");
+        let config_content = std::fs::read_to_string(config_file).unwrap();
+        assert!(config_content.contains(&format!("s6d1 = {}", disk1.to_string_lossy())));
     }
 
     #[test]
@@ -1127,6 +1848,93 @@ mod tests {
             .contains("RetroArch Core path is not a file"));
     }
 
+    #[test]
+    fn test_write_mame_apple2gs_cmd_for_floppies_and_boot_disks() {
+        let dir = tempdir().unwrap();
+        let disk1 = dir.path().join("DejaVu_Disk1.2mg");
+        let disk2 = dir.path().join("DejaVu_Disk2.2mg");
+        let sys5 = dir.path().join("system5.2mg");
+        std::fs::write(&disk1, b"disk1").unwrap();
+        std::fs::write(&disk2, b"disk2").unwrap();
+        std::fs::write(&sys5, &[0u8; 819200]).unwrap();
+
+        // 1. Boot=no with System floppy -> flop3 = system5, flop4 = disk1
+        let cmd_path = write_mame_apple2gs_cmd(
+            dir.path(),
+            &disk1,
+            &[disk1.clone(), disk2.clone()],
+            "boot=no\r\nrom=1",
+            Some(dir.path()),
+        )
+        .unwrap();
+
+        let content = std::fs::read_to_string(cmd_path).unwrap();
+        assert!(content.starts_with("apple2gsr1"));
+        assert!(content.contains(&format!("-rompath \"{}\"", dir.path().to_string_lossy())));
+        assert!(content.contains(&format!("-flop3 \"{}\"", sys5.to_string_lossy())));
+        assert!(content.contains(&format!("-flop4 \"{}\"", disk1.to_string_lossy())));
+
+        // 2. Standard 5.25" disk -> flop1 = game, flop2 = disk2
+        let dsk1 = dir.path().join("Game_SideA.dsk");
+        let dsk2 = dir.path().join("Game_SideB.dsk");
+        std::fs::write(&dsk1, &[0u8; 143360]).unwrap();
+        std::fs::write(&dsk2, &[0u8; 143360]).unwrap();
+
+        let cmd_path525 = write_mame_apple2gs_cmd(
+            dir.path(),
+            &dsk1,
+            &[dsk1.clone(), dsk2.clone()],
+            "",
+            None,
+        )
+        .unwrap();
+
+        let content525 = std::fs::read_to_string(cmd_path525).unwrap();
+        assert!(content525.starts_with("apple2gs"));
+        assert!(content525.contains(&format!("-flop1 \"{}\"", dsk1.to_string_lossy())));
+        assert!(content525.contains(&format!("-flop2 \"{}\"", dsk2.to_string_lossy())));
+    }
+
+    #[test]
+    fn test_find_matching_primary_rom_with_directory_prefix() {
+        let roms = vec![
+            PathBuf::from("temp/Bard's Tale II (Character Disk).2mg"),
+            PathBuf::from("temp/The Bard's Tale 2/Bard's Tale II.2mg"),
+        ];
+
+        let matched = find_matching_primary_rom(&roms, "The Bard's Tale 2\\Bard's Tale II.2mg");
+        assert_eq!(
+            matched,
+            Some(PathBuf::from("temp/The Bard's Tale 2/Bard's Tale II.2mg"))
+        );
+
+        let matched_by_filename =
+            find_matching_primary_rom(&roms, "Subfolder\\Bard's Tale II.2mg");
+        assert_eq!(
+            matched_by_filename,
+            Some(PathBuf::from("temp/The Bard's Tale 2/Bard's Tale II.2mg"))
+        );
+    }
+
+    #[test]
+    fn test_natural_disk_sort_key_prioritizes_main_disk_over_character_and_addon_disks() {
+        let mut disks = vec![
+            PathBuf::from("Test Drive II (Course Disk).2mg"),
+            PathBuf::from("Test Drive II.2mg"),
+            PathBuf::from("Test Drive II (Car Disk).2mg"),
+        ];
+        disks.sort_by_key(|p| natural_disk_sort_key(p));
+
+        assert_eq!(
+            disks,
+            vec![
+                PathBuf::from("Test Drive II.2mg"),
+                PathBuf::from("Test Drive II (Car Disk).2mg"),
+                PathBuf::from("Test Drive II (Course Disk).2mg"),
+            ]
+        );
+    }
+
     #[tokio::test]
     async fn test_launch_emulator_zip_prefers_file_to_run() {
         let dir = tempdir().unwrap();
@@ -1329,6 +2137,7 @@ mod tests {
                     && path
                         .file_name()
                         .is_some_and(|name| name.to_string_lossy().starts_with("GBBoxTemp-"))
+                    && path.join("Leander Disk 1.m3u").exists()
             })
             .unwrap();
         let m3u_path = launch_dir.join("Leander Disk 1.m3u");

@@ -821,6 +821,15 @@ export function PathsSettingsTab({
 
           {isApple2Gs && (
             <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
+              <div className="rounded-theme-lg border border-theme-outline-variant/60 bg-theme-surface/60 p-3.5 text-xs text-theme-text/90">
+                <div className="flex items-center gap-2 font-bold text-theme-primary mb-1.5 font-mono">
+                  <span className="text-sm">ℹ️</span>
+                  <span>{t('settings.apple2gsInstructionsTitle')}</span>
+                </div>
+                <p className="leading-relaxed text-theme-text/80">
+                  {t('settings.apple2gsInstructions')}
+                </p>
+              </div>
               {renderEmulatorSelector(10)}
               <div
                 className={`space-y-3 transition-opacity ${

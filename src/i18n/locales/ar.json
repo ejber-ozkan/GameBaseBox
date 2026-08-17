@@ -336,7 +336,9 @@
     "connectionSuccess": "تم الاتصال بنجاح!",
     "connectionFailed": "فشل الاتصال.",
     "scrapeMedia": "جلب الوسائط",
-    "scraping": "جارٍ جلب الوسائط..."
+    "scraping": "جارٍ جلب الوسائط...",
+    "apple2gsInstructionsTitle": "إعداد نظام Apple IIGS وأقراص الإقلاع",
+    "apple2gsInstructions": "الألعاب ذاتية الإقلاع تبدأ مباشرة. بالنسبة لأقراص التطبيقات التي تتطلب نظام تشغيل (مثل Déjà Vu و Bard's Tale II)، ضع صورة قرص إقلاع GS/OS أو ProDOS (مثل system5.2mg أو system6.2mg أو System.Disk.po أو ProDOS 16v1_6.2mg) وملفات ROM لجهاز Apple IIGS (apple2gs.zip / ROM) في مجلد المحاكي أو دليل system في RetroArch."
   },
   "media": {
     "noScreenshots": "لا توجد لقطات شاشة متاحة",

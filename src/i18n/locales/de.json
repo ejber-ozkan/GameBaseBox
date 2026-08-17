@@ -336,7 +336,9 @@
     "connectionSuccess": "Verbindung erfolgreich!",
     "connectionFailed": "Verbindung fehlgeschlagen.",
     "scrapeMedia": "Medien scrapen",
-    "scraping": "Medien werden gescrapt..."
+    "scraping": "Medien werden gescrapt...",
+    "apple2gsInstructionsTitle": "Apple IIGS Systemeinrichtung & Bootdisketten",
+    "apple2gsInstructions": "Selbststartende Spiele starten direkt. Für nicht selbststartende Anwendungsdisketten (z.B. Déjà Vu, Bard's Tale II) legen Sie ein GS/OS- oder ProDOS-Bootdisketten-Image (z.B. system5.2mg, system6.2mg, System.Disk.po oder ProDOS 16v1_6.2mg) und Apple IIGS ROMs (apple2gs.zip / ROM) in Ihren Emulator-Ordner oder das RetroArch-Systemverzeichnis."
   },
   "media": {
     "noScreenshots": "Keine Screenshots verfügbar",

@@ -336,7 +336,9 @@
     "connectionSuccess": "Bağlantı başarılı!",
     "connectionFailed": "Bağlantı başarısız.",
     "scrapeMedia": "Medyayı İndir",
-    "scraping": "Medya indiriliyor..."
+    "scraping": "Medya indiriliyor...",
+    "apple2gsInstructionsTitle": "Apple IIGS Sistem Kurulumu ve Başlangıç Diskleri",
+    "apple2gsInstructions": "Kendiliğinden başlayan oyunlar doğrudan çalışır. Kendi kendine başlamayan uygulama diskleri için (örn. Déjà Vu, Bard's Tale II), bir GS/OS veya ProDOS başlangıç disk imajını (örn. system5.2mg, system6.2mg, System.Disk.po veya ProDOS 16v1_6.2mg) ve Apple IIGS ROM'larını (apple2gs.zip / ROM) emülatör klasörünüze veya RetroArch system dizinine yerleştirin."
   },
   "media": {
     "noScreenshots": "Ekran görüntüsü yok",

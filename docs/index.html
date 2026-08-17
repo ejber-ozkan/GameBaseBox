@@ -590,7 +590,7 @@
               <span class="eyebrow">Local-first desktop frontend</span>
               <h1 id="hero-title">GBBox</h1>
               <p class="subtitle">
-                GameBase Box is a local-first desktop frontend for GameBase-style retro game libraries. It started life as 64Box for the GameBase64 collection and now supports platform-scoped imports for Commodore 64, Atari 800, Atari 2600, ZX Spectrum, Acorn BBC Micro, and Commodore Amiga, with more GameBase platforms coming soon.
+                GameBase Box is a local-first desktop frontend for GameBase-style retro game libraries. It started life as 64Box for the GameBase64 collection and now supports platform-scoped imports for <strong>Commodore 64, Commodore 128, Commodore VIC-20, Commodore PET, Commodore Amiga, Atari 800, Atari 2600, Atari 5200, Atari 7800, Atari ST, ZX Spectrum, Acorn BBC Micro, Amstrad CPC, and Apple 2GS</strong>.
               </p>
               <p class="former">
                 Formerly 64Box. The public repository is <a href="https://github.com/ejber-ozkan/GameBaseBox">GameBaseBox on GitHub</a>.
@@ -652,6 +652,11 @@
                   <td>Compatibility baseline with VICE, RetroArch, SID playback, extras, screenshots, and GameBase64 metadata.</td>
                 </tr>
                 <tr>
+                  <td>Commodore 128</td>
+                  <td>Supported</td>
+                  <td>Imports GameBase C128 MDBs with Extras, Games, Screenshots, Musician Photos, and SID music folders. VICE x128 and RetroArch support.</td>
+                </tr>
+                <tr>
                   <td>Atari 800</td>
                   <td>Supported</td>
                   <td>Imports Atari 800 v12-compatible GameBase MDBs with Games, Music, Photos, Screenshots, and Extras folders. Supports RetroArch Atari800 and Altirra launch settings.</td>
@@ -662,9 +667,24 @@
                   <td>Imports Atari 2600 GameBase MDBs with Games, Screenshots, and Extras folders. Uses RetroArch/Stella-style launch settings.</td>
                 </tr>
                 <tr>
+                  <td>Atari 5200</td>
+                  <td>Supported</td>
+                  <td>Imports Atari 5200 GameBase MDBs with Extras, Games, Screenshots, and Photos folders. Altirra and RetroArch desktop profiles.</td>
+                </tr>
+                <tr>
+                  <td>Atari 7800</td>
+                  <td>Supported</td>
+                  <td>Imports Atari 7800 GameBase MDBs with Extras, Games, and Screenshots folders. RetroArch ProSystem desktop profile.</td>
+                </tr>
+                <tr>
+                  <td>Atari ST</td>
+                  <td>Supported</td>
+                  <td>Imports Atari ST GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch, STeem, and Hatari support.</td>
+                </tr>
+                <tr>
                   <td>ZX Spectrum / GameBaseZX / SpeccyMania</td>
                   <td>Supported</td>
-                  <td>Imports Sinclair ZX Spectrum v6-compatible GameBase MDBs with Extras, Games, Screenshots, Musician Photos, and Music folders. RetroArch is the default launch profile, with Spectaculator as an external emulator option. <code>.ay</code> music files are recognized as ZX Spectrum music media; in-app JavaScript playback still needs evaluation.</td>
+                  <td>Imports Sinclair ZX Spectrum v6-compatible GameBase MDBs with Extras, Games, Screenshots, Musician Photos, and Music folders. RetroArch is the default launch profile, with Spectaculator as an external emulator option. <code>.ay</code> music files are recognized as ZX Spectrum music media.</td>
                 </tr>
                 <tr>
                   <td>Acorn BBC Micro</td>
@@ -677,9 +697,24 @@
                   <td>Imports Amiga GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch is the default launch profile, with WinUAE on Windows and UAE-style equivalents such as FS-UAE or Amiberry on Linux/macOS.</td>
                 </tr>
                 <tr>
-                  <td>More GameBase platforms</td>
-                  <td>Coming soon</td>
-                  <td>The platform model is now data-driven so additional GameBase databases can be added without cloning the app.</td>
+                  <td>Commodore VIC-20</td>
+                  <td>Supported</td>
+                  <td>Imports VIC-20 v4.0+ GameBase MDBs with Extras, Games, Screenshots, and Music folders. RetroArch and VICE VIC-20 support.</td>
+                </tr>
+                <tr>
+                  <td>Amstrad CPC / AmstradMania</td>
+                  <td>Supported</td>
+                  <td>Imports Amstrad CPC (AmstradMania v7+) GameBase MDBs with Extras, Games, Screenshots, Photos, and AY music folders. Caprice32 / CPC++ and RetroArch support.</td>
+                </tr>
+                <tr>
+                  <td>Apple 2GS</td>
+                  <td>Supported</td>
+                  <td>Imports Apple 2GS GameBase MDBs with Extras, Games, Screenshots, Photos, and Music folders. Full KEGS and RetroArch (MAME core) support with automated GS/OS boot disk mounting and natural multi-disk sequencing.</td>
+                </tr>
+                <tr>
+                  <td>Commodore PET</td>
+                  <td>Supported</td>
+                  <td>Imports Commodore PET (v3.1+) GameBase MDBs with Extras, Games, and Screenshots folders. VICE xpet and RetroArch support.</td>
                 </tr>
               </tbody>
             </table>
@@ -704,20 +739,24 @@
               <p>Keep catalog data, media roots, emulator paths, favorites, and navigation state separate per platform.</p>
             </article>
             <article class="feature">
+              <h3>Complete 33-Language Localisation</h3>
+              <p>Fully translated across 33 languages including all 24 EU official languages, Turkish, Arabic (with RTL layout), Japanese, Chinese, and Korean.</p>
+            </article>
+            <article class="feature">
               <h3>Fast search and filtering</h3>
               <p>Search by title and metadata, browse by genre/subgenre, and jump alphabetically through large collections.</p>
             </article>
             <article class="feature">
               <h3>Native emulator bridge</h3>
-              <p>Launch through VICE, RetroArch, Altirra, and platform-specific emulator profiles where supported.</p>
+              <p>Launch through VICE, RetroArch, Altirra, KEGS, and platform-specific emulator profiles where supported.</p>
             </article>
             <article class="feature">
               <h3>In-app C64 emulation</h3>
               <p>Play supported Commodore 64 games through the bundled EmulatorJS/VICE core.</p>
             </article>
             <article class="feature">
-              <h3>Multi-file launch handling</h3>
-              <p>Generate temporary <code>.vfl</code> or <code>.m3u</code> launch artifacts for multi-disk and multi-file games.</p>
+              <h3>Multi-file & Multi-disk Automation</h3>
+              <p>Generate temporary <code>.vfl</code>, <code>.m3u</code>, or <code>.cmd</code> launch artifacts for multi-disk games and automated OS boot disk mounting.</p>
             </article>
             <article class="feature">
               <h3>Distinctive themes</h3>
@@ -725,7 +764,7 @@
             </article>
             <article class="feature">
               <h3>Media and extras browsing</h3>
-              <p>View screenshots, box art, photos, manuals, maps, adverts, books, and other extras from local folders, with video playback when a video extra is available.</p>
+              <p>View screenshots, box art, photos, manuals, maps, adverts, books, and other extras from local folders, with video playback when available.</p>
             </article>
           </div>
         </section>

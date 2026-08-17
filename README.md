@@ -190,6 +190,20 @@ GBBox remains grateful to the GameBase64 project and GB64 Team for decades of Co
 3. Select Commodore Amiga from the platform switcher. If it has not been imported, GBBox opens the Amiga import flow.
 4. Configure Amiga launch paths under **Commodore Amiga Platform Paths**. RetroArch is the default profile and typically uses a PUAE-compatible libretro core; WinUAE can be configured on Windows, with UAE-style equivalents such as FS-UAE or Amiberry on Linux/macOS.
 
+### Apple 2GS
+
+1. Obtain an Apple 2GS GameBase MDB.
+2. Prepare folder roots for Extras, Games, Screenshots, Photos, and Music.
+3. Select Apple 2GS from the platform switcher. If it has not been imported, GBBox opens the Apple 2GS import flow.
+4. Configure Apple 2GS launch paths under **Apple 2GS Platform Paths**:
+   - **KEGS (Standalone)**: Point to `kegswin.exe` (Windows) or `kegs` (Linux/macOS). Place your Apple IIGS ROM (ROM 01 or ROM 03 named `ROM` or `apple2gs.rom`) in your KEGS directory.
+   - **RetroArch (MAME Core)**: Point to `retroarch.exe` and `mame_libretro.dll`. Place the MAME Apple IIGS BIOS archive (`apple2gs.zip` / `apple2gsr1.zip`) into your RetroArch `system/` directory.
+5. **GS/OS & ProDOS Boot Disks for Non-Booting Applications**:
+   - Self-booting games (e.g. *Gauntlet*) launch directly.
+   - For games released as non-bootable application disks (e.g. *Déjà Vu*, *The Bard's Tale II*, *Shadowgate*), GBBox automatically inspects the disk image for `PRODOS` / `boot=no` and mounts a system boot disk in Drive 1 with the game in Drive 2.
+   - You can place your GS/OS or ProDOS boot disk image (such as `system5.2mg`, `system6.2mg`, `System.Disk.po`, `ProDOS 16v1_6.2mg`, or a `.hdv` hard drive image) in your emulator directory, RetroArch `system/` folder, or any configured emulator path.
+   - Multi-disk games automatically mount Disk 1 as primary and secondary disks (Course, Character, Save disks) into additional virtual drives.
+
 ## Building the SQLite Database
 
 GBBox converts GameBase Access (`.mdb`) exports into an optimized local SQLite database. The conversion step creates performance indexes, persisted cover lookup, platform library metadata, and full-text search support objects.
@@ -338,7 +352,7 @@ Temporary extraction and launch playlists are generated outside your source libr
 
 ## Release Notes
 
-See [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_0.6.3.md](RELEASE_NOTES_0.6.3.md), [RELEASE_NOTES_0.6.2.md](RELEASE_NOTES_0.6.2.md), [RELEASE_NOTES_0.6.1.md](RELEASE_NOTES_0.6.1.md), [RELEASE_NOTES_0.6.0.md](RELEASE_NOTES_0.6.0.md), [RELEASE_NOTES_0.5.4.md](RELEASE_NOTES_0.5.4.md), [RELEASE_NOTES_0.5.3.md](RELEASE_NOTES_0.5.3.md), [RELEASE_NOTES_0.5.2.md](RELEASE_NOTES_0.5.2.md), [RELEASE_NOTES_0.5.1.md](RELEASE_NOTES_0.5.1.md), [RELEASE_NOTES_0.5.0.md](RELEASE_NOTES_0.5.0.md), [RELEASE_NOTES_0.4.1.md](RELEASE_NOTES_0.4.1.md), [RELEASE_NOTES_0.4.0.md](RELEASE_NOTES_0.4.0.md), [RELEASE_NOTES_0.3.1.md](RELEASE_NOTES_0.3.1.md), [RELEASE_NOTES_0.3.0.md](RELEASE_NOTES_0.3.0.md), [RELEASE_NOTES_0.2.0.md](RELEASE_NOTES_0.2.0.md), and [RELEASE_NOTES_0.1.0.md](RELEASE_NOTES_0.1.0.md) for GBBox release notes.
+See [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_0.6.4.md](RELEASE_NOTES_0.6.4.md), [RELEASE_NOTES_0.6.3.md](RELEASE_NOTES_0.6.3.md), [RELEASE_NOTES_0.6.2.md](RELEASE_NOTES_0.6.2.md), [RELEASE_NOTES_0.6.1.md](RELEASE_NOTES_0.6.1.md), [RELEASE_NOTES_0.6.0.md](RELEASE_NOTES_0.6.0.md), [RELEASE_NOTES_0.5.4.md](RELEASE_NOTES_0.5.4.md), [RELEASE_NOTES_0.5.3.md](RELEASE_NOTES_0.5.3.md), [RELEASE_NOTES_0.5.2.md](RELEASE_NOTES_0.5.2.md), [RELEASE_NOTES_0.5.1.md](RELEASE_NOTES_0.5.1.md), [RELEASE_NOTES_0.5.0.md](RELEASE_NOTES_0.5.0.md), [RELEASE_NOTES_0.4.1.md](RELEASE_NOTES_0.4.1.md), [RELEASE_NOTES_0.4.0.md](RELEASE_NOTES_0.4.0.md), [RELEASE_NOTES_0.3.1.md](RELEASE_NOTES_0.3.1.md), [RELEASE_NOTES_0.3.0.md](RELEASE_NOTES_0.3.0.md), [RELEASE_NOTES_0.2.0.md](RELEASE_NOTES_0.2.0.md), and [RELEASE_NOTES_0.1.0.md](RELEASE_NOTES_0.1.0.md) for GBBox release notes.
 
 
 ## Skills used to build this

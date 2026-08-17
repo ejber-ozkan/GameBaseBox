@@ -4,7 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [0.6.3] - 2026-08-16
+## [0.6.4] - 2026-08-17
+
+### Added
+- **Apple IIGS Multi-Emulator Integration**:
+  - Full support for both **KEGS** (standalone) and **RetroArch (MAME `mame_libretro` core)**.
+  - Automatic temporary `.cmd` launcher generation for MAME libretro with exact machine driver mappings (`apple2gs` / `apple2gsr1`) and `-rompath` resolution.
+  - Automatic GS/OS & ProDOS boot disk injection for non-bootable disks (`boot=no` or disks missing the ProDOS root system file, e.g. *Déjà Vu*, *The Bard's Tale II*, *Shadowgate*), mounting the system boot image into Drive 1 and the game disk into Drive 2.
+  - Multi-candidate boot disk discovery searching emulator directories, RetroArch `system/` folders, and configured fallback paths for `system5.2mg`, `system6.2mg`, `System.Disk.po`, `ProDOS 16v1_6.2mg`, or `.hdv` images.
+  - Multi-disk playlist and archive extraction ordering: ensures Disk 1 / primary game disks are always mounted first and secondary disks (Course, Character, Save disks) into additional virtual drives.
+  - In-app localized guidance card in **Settings > Platform Paths > Apple 2GS** detailing ROM and boot disk setup.
+- **Documentation & Website Updates**:
+  - Added full Apple IIGS setup section in `README.md`.
+  - Updated https://ejber-ozkan.github.io/GameBaseBox/ website with the complete table of all supported platforms and highlighted the 33-language internationalization system in the feature grid.
+
+### Changed
+- Refined launcher debug mode: RetroArch verbose logging (`--verbose` / `--log-file`) and console command line prints are only enabled when the application runs in debug mode (`--debug`, `-d`, or `GAMEBASEBOX_DEBUG=1`).
+- Bumped package, Tauri, Cargo, and root version metadata to `0.6.4`.
 
 ### Added
 - Complete Multilingual & Internationalization (i18n) support across the entire frontend application.

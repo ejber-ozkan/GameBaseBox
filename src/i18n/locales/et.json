@@ -336,7 +336,9 @@
     "connectionSuccess": "Anslutningen lyckades!",
     "connectionFailed": "Anslutningen misslyckades.",
     "scrapeMedia": "Hämta media",
-    "scraping": "Hämtar media..."
+    "scraping": "Hämtar media...",
+    "apple2gsInstructionsTitle": "Apple IIGS süsteemi seadistus ja alglaadimiskettad",
+    "apple2gsInstructions": "Isekäivituvad mängud käivituvad otse. Operatsioonisüsteemi vajavate rakendusketaste puhul (nt Déjà Vu, Bard's Tale II) asetage GS/OS või ProDOS alglaadimisketta tõmmis (nt system5.2mg, system6.2mg, System.Disk.po või ProDOS 16v1_6.2mg) ja Apple IIGS ROM-id (apple2gs.zip / ROM) oma emulaatori kausta või RetroArchi system-kataloogi."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

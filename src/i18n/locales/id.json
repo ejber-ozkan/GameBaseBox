@@ -336,7 +336,9 @@
     "connectionSuccess": "Koneksi berhasil!",
     "connectionFailed": "Koneksi gagal.",
     "scrapeMedia": "Ambil Media",
-    "scraping": "Mengambil data media..."
+    "scraping": "Mengambil data media...",
+    "apple2gsInstructionsTitle": "Pengaturan Sistem Apple IIGS & Disk Boot",
+    "apple2gsInstructions": "Game yang dapat melakukan auto-boot akan langsung berjalan. Untuk disk aplikasi yang memerlukan OS (mis. Déjà Vu, Bard's Tale II), letakkan file image boot GS/OS atau ProDOS (mis. system5.2mg, system6.2mg, System.Disk.po, atau ProDOS 16v1_6.2mg) dan ROM Apple IIGS (apple2gs.zip / ROM) di folder emulator Anda atau direktori system RetroArch."
   },
   "media": {
     "noScreenshots": "Tidak ada tangkapan layar",

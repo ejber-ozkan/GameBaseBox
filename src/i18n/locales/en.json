@@ -336,7 +336,9 @@
     "connectionSuccess": "Connection successful!",
     "connectionFailed": "Connection failed.",
     "scrapeMedia": "Scrape Media",
-    "scraping": "Scraping media..."
+    "scraping": "Scraping media...",
+    "apple2gsInstructionsTitle": "Apple IIGS System Setup & Boot Disks",
+    "apple2gsInstructions": "Self-booting games launch directly. For non-booting application disks (e.g. Déjà Vu, Bard's Tale II), place a GS/OS or ProDOS boot disk image (e.g. system5.2mg, system6.2mg, System.Disk.po, or ProDOS 16v1_6.2mg) and Apple IIGS ROMs (apple2gs.zip / ROM) in your emulator folder or RetroArch system directory."
   },
   "media": {
     "noScreenshots": "No screenshots available",

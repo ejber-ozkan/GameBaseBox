@@ -336,7 +336,9 @@
     "connectionSuccess": "¡Conexión exitosa!",
     "connectionFailed": "Conexión fallida.",
     "scrapeMedia": "Descargar medios",
-    "scraping": "Descargando medios..."
+    "scraping": "Descargando medios...",
+    "apple2gsInstructionsTitle": "Configuración del sistema Apple IIGS y discos de arranque",
+    "apple2gsInstructions": "Los juegos autoarrancables se inician directamente. Para discos de aplicación que no arrancan solos (p. ej. Déjà Vu, Bard's Tale II), coloque una imagen de disco de arranque GS/OS o ProDOS (p. ej. system5.2mg, system6.2mg, System.Disk.po o ProDOS 16v1_6.2mg) y ROMs de Apple IIGS (apple2gs.zip / ROM) en la carpeta de su emulador o directorio system de RetroArch."
   },
   "media": {
     "noScreenshots": "No hay capturas disponibles",

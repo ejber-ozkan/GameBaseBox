@@ -336,7 +336,9 @@
     "connectionSuccess": "接続に成功しました！",
     "connectionFailed": "接続に失敗しました。",
     "scrapeMedia": "メディア取得開始",
-    "scraping": "データ取得中..."
+    "scraping": "データ取得中...",
+    "apple2gsInstructionsTitle": "Apple IIGS システム設定とブートディスク",
+    "apple2gsInstructions": "自動起動対応ゲームはそのまま起動します。OSが必要なアプリケーションディスク（例: Déjà Vu、Bard's Tale II）の場合は、GS/OSまたはProDOSブートディスクイメージ（例: system5.2mg、system6.2mg、System.Disk.po、ProDOS 16v1_6.2mg）およびApple IIGS ROM（apple2gs.zip / ROM）をエミュレータフォルダまたはRetroArchのsystemディレクトリに配置してください。"
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",

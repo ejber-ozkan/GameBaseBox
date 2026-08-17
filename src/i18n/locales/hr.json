@@ -336,7 +336,9 @@
     "connectionSuccess": "Połączenie udane!",
     "connectionFailed": "Połączenie nie powiodło się.",
     "scrapeMedia": "Pobierz multimedia",
-    "scraping": "Pobieranie multimediów..."
+    "scraping": "Pobieranie multimediów...",
+    "apple2gsInstructionsTitle": "Postavljanje sustava Apple IIGS i diskovi za pokretanje",
+    "apple2gsInstructions": "Samopokretajuće igre pokreću se izravno. Za aplikacijske diskove koji nemaju ugrađen operativni sustav (npr. Déjà Vu, Bard's Tale II), postavite sliku diska GS/OS ili ProDOS (npr. system5.2mg, system6.2mg, System.Disk.po ili ProDOS 16v1_6.2mg) i ROM-ove za Apple IIGS (apple2gs.zip / ROM) u mapu emulatora ili mapu system za RetroArch."
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
