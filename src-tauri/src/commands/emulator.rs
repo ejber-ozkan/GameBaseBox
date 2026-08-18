@@ -217,12 +217,13 @@ fn find_matching_primary_rom(extracted_roms: &[PathBuf], file_to_run: &str) -> O
     if file_to_run.is_empty() {
         return None;
     }
-    let target_filename = Path::new(file_to_run)
-        .file_name()
-        .and_then(|n| n.to_str())
-        .unwrap_or(file_to_run)
+    let normalized = file_to_run.replace('\\', "/");
+    let target_filename = normalized
+        .rsplit('/')
+        .next()
+        .unwrap_or(&normalized)
         .to_lowercase();
-    let target_path_normalized = file_to_run.replace('\\', "/").to_lowercase();
+    let target_path_normalized = normalized.to_lowercase();
 
     // 1. Try matching full relative path suffix
     for r in extracted_roms {
