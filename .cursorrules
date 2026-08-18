@@ -1,0 +1,17 @@
+# Cursor IDE Rules for GameBaseBox
+
+Always refer to AGENTS.md for full project standards.
+
+## Mandatory Quality Gates
+Before any commit or release:
+1. `npm run lint`
+2. `npm run test:frontend`
+3. `npm run test:backend`
+4. `npm run build`
+5. `npm run test:e2e`
+
+## Architectural Guidelines
+- Cross-platform path handling: Normalize Windows backslashes `\` to `/`.
+- Apple IIGS KEGS uses `config.kegs`; RetroArch MAME uses `.cmd` launcher files with `-rompath`.
+- Multi-disk order: Ensure Disk 1 is top of playlist (`.m3u` / `.vfl` / `.cmd`).
+- Emulator silence: Keep `--verbose` and logs guarded under debug mode.

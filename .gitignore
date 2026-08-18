@@ -65,14 +65,12 @@ gb64.sqlite.bk
 /.agent
 /.agents
 /.specify/
-/CLAUDE.md
 /skills-lock.json
 /plans/
 /.claude/
 /.codex
 handover-*.md
 design_brief.md
-AGENTS.md
 
 # One-off scripts and test logs
 /check_*.py
