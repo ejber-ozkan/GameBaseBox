@@ -89,7 +89,7 @@ fn launch_extensions_for_platform(platform_id: Option<&str>) -> &'static [&'stat
         Some("atari7800") => &["a78", "bin", "rom"],
         Some("zxspectrum") => &["tzx", "tap", "z80", "sna", "szx", "trd", "dsk"],
         Some("bbcmicro") => &["ssd", "dsd", "adl", "adf", "uef", "rom", "bin"],
-        Some("amiga") => &["adf", "adz", "dms", "ipf", "lha", "hdf", "hdz"],
+        Some("amiga") => &["adf", "adz", "dms", "ipf", "lha", "hdf", "hdz", "slave"],
         Some("atarist") => &["st", "msa", "stx", "dim", "ipf"],
         Some("vic20") => &["d64", "t64", "tap", "prg", "crt", "a0", "20", "40", "60"],
         Some("amstradcpc") => &["dsk", "cpr", "sna", "cdt", "tap", "bin"],
@@ -282,18 +282,40 @@ fn natural_disk_sort_key(path: &Path) -> (u32, u32, String) {
     (priority, disk_num, name)
 }
 
+fn is_amiga_slave(path: &Path) -> bool {
+    path.extension()
+        .and_then(|ext| ext.to_str())
+        .is_some_and(|ext| ext.eq_ignore_ascii_case("slave"))
+}
+
 fn amiga_disk_sort_key(path: &Path) -> (u32, String) {
+    let ext = path
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("")
+        .to_lowercase();
     let name = path
         .file_stem()
         .and_then(|name| name.to_str())
         .unwrap_or("")
         .to_lowercase();
-    let disk_number = name
-        .rsplit_once("_disk")
-        .and_then(|(_, suffix)| suffix.parse::<u32>().ok())
-        .unwrap_or(u32::MAX);
 
-    (disk_number, name)
+    // Prioritize .slave files (priority 0) over floppy disks (priority 1)
+    let priority = if ext == "slave" {
+        0
+    } else {
+        1
+    };
+
+    let disk_number = if name.contains("disk1") || name.contains("disk 1") || name.contains("disk_1") {
+        1
+    } else if let Some((_, rest)) = name.rsplit_once("_disk") {
+        rest.parse::<u32>().unwrap_or(999)
+    } else {
+        999
+    };
+
+    (priority * 1000 + disk_number, name)
 }
 
 fn collect_amiga_sibling_disk_archives(rom_path: &Path) -> Vec<PathBuf> {
@@ -352,6 +374,16 @@ fn push_uae_rom_args(args: &mut Vec<String>, rom_files: &[PathBuf]) {
     args.push("-G".to_string());
 
     if rom_files.is_empty() {
+        return;
+    }
+
+    if let Some(slave_path) = rom_files.iter().find(|p| is_amiga_slave(p)) {
+        if let Some(parent_dir) = slave_path.parent() {
+            args.push("-s".to_string());
+            args.push(format!("filesystem2=rw,DH1:DH1:{},0", parent_dir.to_string_lossy()));
+            args.push("-s".to_string());
+            args.push(format!("filesystem=rw,DH1:{}", parent_dir.to_string_lossy()));
+        }
         return;
     }
 
@@ -988,6 +1020,44 @@ pub async fn test_emulator_profile(
     })
 }
 
+fn resolve_existing_rom_path(rom_path_str: &str) -> PathBuf {
+    let direct = PathBuf::from(rom_path_str);
+    if direct.exists() {
+        return direct;
+    }
+
+    let normalized = rom_path_str.replace('\\', "/");
+
+    // 1. Check if inserting "Extras" before subfolders (WHDLoad, SPS, Disks, etc.) resolves to an existing file
+    for candidate_folder in [
+        "WHDLoad", "whdload", "SPS", "sps", "Disks", "disks", "Tapes", "tapes", "Carts",
+        "carts",
+    ] {
+        let pattern = format!("/{candidate_folder}/");
+        if let Some((base, rest)) = normalized.split_once(&pattern) {
+            let candidate_with_extras =
+                PathBuf::from(format!("{base}/Extras/{candidate_folder}/{rest}"));
+            if candidate_with_extras.exists() {
+                return candidate_with_extras;
+            }
+        }
+    }
+
+    // 2. Check if removing "/Extras/" resolves to an existing file
+    if normalized.contains("/Extras/") || normalized.contains("/extras/") {
+        let candidate_without_extras = PathBuf::from(
+            normalized
+                .replace("/Extras/", "/")
+                .replace("/extras/", "/"),
+        );
+        if candidate_without_extras.exists() {
+            return candidate_without_extras;
+        }
+    }
+
+    direct
+}
+
 #[tauri::command]
 pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, String> {
     let mut emulator = PathBuf::from(&request.emulator_path);
@@ -1063,7 +1133,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         }
     }
 
-    let rom = PathBuf::from(&request.rom_path);
+    let rom = resolve_existing_rom_path(&request.rom_path);
     require_existing_file(
         &rom,
         || format!("ROM file not found: {}", request.rom_path),
@@ -1222,7 +1292,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                     system_dir.as_deref().or_else(|| emulator.parent()),
                 )?;
                 args.push(cmd_path.to_string_lossy().to_string());
-            } else if extracted_roms.len() > 1 {
+            } else if extracted_roms.len() > 1 && !extracted_roms.iter().any(|p| is_amiga_slave(p)) {
                 let m3u_path =
                     write_retroarch_m3u(&temp_dir, &resolved_primary_rom, &extracted_roms)?;
                 args.push(m3u_path.to_string_lossy().to_string());
@@ -2352,4 +2422,49 @@ mod tests {
         assert!(result.success);
         assert!(result.message.contains("C64 VICE"));
     }
+
+    #[test]
+    fn test_amiga_disk_sort_key_prioritizes_whdload_slaves() {
+        let slave = PathBuf::from("C:/Turrican2/Turrican2.Slave");
+        let info = PathBuf::from("C:/Turrican2/Turrican2.info");
+        let disk1 = PathBuf::from("C:/Turrican2/Turrican2_Disk1.adf");
+
+        let slave_key = amiga_disk_sort_key(&slave);
+        let disk1_key = amiga_disk_sort_key(&disk1);
+        let info_key = amiga_disk_sort_key(&info);
+
+        assert!(slave_key < disk1_key);
+        assert!(slave_key < info_key);
+    }
+
+    #[test]
+    fn test_push_uae_rom_args_mounts_whdload_slave_directory() {
+        let mut args = Vec::new();
+        let slave = PathBuf::from("C:/Games/Turrican2/Turrican2.Slave");
+        push_uae_rom_args(&mut args, &[slave]);
+
+        assert!(args.contains(&"-G".to_string()));
+        assert!(args.iter().any(|arg| arg.contains("filesystem2=rw,DH1:DH1:")));
+        assert!(args.iter().any(|arg| arg.contains("filesystem=rw,DH1:")));
+    }
+
+    #[test]
+    fn test_resolve_existing_rom_path_finds_extras_subfolder() {
+        let temp = tempdir().unwrap();
+        let extras_whd = temp.path().join("Extras").join("WHDLoad").join("T");
+        std::fs::create_dir_all(&extras_whd).unwrap();
+        let zip_file = extras_whd.join("Turrican2.zip");
+        std::fs::write(&zip_file, b"test zip").unwrap();
+
+        // Path missing the "Extras" segment
+        let missing_extras_path = temp
+            .path()
+            .join("WHDLoad")
+            .join("T")
+            .join("Turrican2.zip");
+        let resolved = resolve_existing_rom_path(&missing_extras_path.to_string_lossy());
+
+        assert_eq!(resolved, zip_file);
+    }
 }
+

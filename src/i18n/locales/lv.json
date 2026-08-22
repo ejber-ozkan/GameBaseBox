@@ -338,7 +338,11 @@
     "scrapeMedia": "Hämta media",
     "scraping": "Hämtar media...",
     "apple2gsInstructionsTitle": "Apple IIGS sistēmas iestatīšana un sāknēšanas diski",
-    "apple2gsInstructions": "Pašstartējošās spēles startējas tieši. Lietojumprogrammu diskiem, kam nepieciešama OS (piem., Déjà Vu, Bard's Tale II), ievietojiet GS/OS vai ProDOS sāknēšanas diska attēlu (piem., system5.2mg, system6.2mg, System.Disk.po vai ProDOS 16v1_6.2mg) un Apple IIGS ROM (apple2gs.zip / ROM) emulatora mapē vai RetroArch system direktorijā."
+    "apple2gsInstructions": "Pašstartējošās spēles startējas tieši. Lietojumprogrammu diskiem, kam nepieciešama OS (piem., Déjà Vu, Bard's Tale II), ievietojiet GS/OS vai ProDOS sāknēšanas diska attēlu (piem., system5.2mg, system6.2mg, System.Disk.po vai ProDOS 16v1_6.2mg) un Apple IIGS ROM (apple2gs.zip / ROM) emulatora mapē vai RetroArch system direktorijā.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

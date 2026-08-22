@@ -9,6 +9,7 @@ import type { PlatformId } from '../../types/platform';
 import { groupExtras } from '../../lib/extras';
 import { isLaunchableExtra } from '../../lib/extras';
 import { PLATFORM_PROFILES, supportsEmbeddedEmulation } from '../../lib/platform-capabilities';
+import { checkAmigaExtraExists, downloadAmigaExtra, useAmigaExtraDownload } from '../../lib/amiga-scraper';
 import { ImageSlider } from '../ImageSlider';
 import { ExtrasDetail, type ExtrasBigscreenNavigation } from '../ExtrasDetail';
 import { MusicianPhoto } from '../MusicianPhoto';
@@ -26,6 +27,90 @@ import type { DetailZone } from '../../hooks/useDetailNavigation';
 import { BigBoxFooter } from '../bigbox/BigBoxFooter';
 import { useTranslation } from '../../i18n';
 
+function AmigaDownloadBadge({
+  version,
+  isAvailable,
+  onDownload,
+}: {
+  version: LaunchVersionOption;
+  isAvailable: boolean;
+  onDownload: () => void;
+}) {
+  const { isDownloading, percentage } = useAmigaExtraDownload(version.relativePath);
+
+  if (isAvailable) return null;
+
+  if (isDownloading) {
+    return (
+      <span className="text-[8px] bg-blue-600/90 text-white px-1.5 py-0.5 rounded font-mono font-bold flex items-center gap-1 shadow-sm animate-pulse">
+        ⏳ {percentage !== null && percentage > 0 ? `${percentage}%` : '...'}
+      </span>
+    );
+  }
+
+  return (
+    <span
+      role="button"
+      tabIndex={0}
+      onClick={(e) => {
+        e.stopPropagation();
+        onDownload();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.stopPropagation();
+          onDownload();
+        }
+      }}
+      className="text-[8px] bg-blue-600/80 hover:bg-blue-500 text-white px-1.5 py-0.5 rounded font-black uppercase tracking-wider flex items-center gap-1 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+    >
+      ⬇ GET
+    </span>
+  );
+}
+
+function CyberpunkAmigaDownloadBadge({
+  version,
+  isAvailable,
+  onDownload,
+}: {
+  version: LaunchVersionOption;
+  isAvailable: boolean;
+  onDownload: () => void;
+}) {
+  const { isDownloading, percentage } = useAmigaExtraDownload(version.relativePath);
+
+  if (isAvailable) return null;
+
+  if (isDownloading) {
+    return (
+      <span className="text-[8px] bg-[#00f0ff]/30 border border-[#00f0ff] text-[#00f0ff] px-1.5 py-0.5 font-mono font-bold flex items-center gap-1 shadow-sm animate-pulse">
+        DL {percentage !== null && percentage > 0 ? `${percentage}%` : '...'}
+      </span>
+    );
+  }
+
+  return (
+    <span
+      role="button"
+      tabIndex={0}
+      onClick={(e) => {
+        e.stopPropagation();
+        onDownload();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.stopPropagation();
+          onDownload();
+        }
+      }}
+      className="text-[8px] bg-[#00f0ff]/20 border border-[#00f0ff] hover:bg-[#00f0ff] hover:text-black text-[#00f0ff] px-1.5 py-0.5 font-mono uppercase tracking-wider flex items-center gap-1 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+    >
+      ⬇ GET
+    </span>
+  );
+}
+
 type UnifiedDetailTab = 'game' | 'extras';
 
 interface LaunchVersionOption {
@@ -37,7 +122,7 @@ interface LaunchVersionOption {
   tag: string;
 }
 
-type VersionVisualKind = 'default' | 'tape' | 'disk' | 'cart';
+type VersionVisualKind = 'default' | 'tape' | 'disk' | 'cart' | 'whd' | 'sps';
 
 const VERSION_STORAGE_KEY = 'gb64_selected_launch_versions';
 
@@ -152,14 +237,20 @@ function buildVersions(game: Game, launchableExtras: Extra[]): LaunchVersionOpti
       source: 'roms',
       subtitle: cleanMetadataValue(game.vLength) ? `${game.vLength} Blocks` : 'Main release package',
     },
-    ...launchableExtras.slice(0, 3).map((extra) => ({
-      id: extra.id,
-      tag: extra.path.split(/[\\/]/)[0] || 'Extras',
-      label: extra.name,
-      relativePath: extra.path,
-      source: 'extras' as const,
-      subtitle: extra.path,
-    })),
+    ...launchableExtras.map((extra) => {
+      const folder = extra.path.split(/[\\/]/)[0] || 'Extras';
+      const isWhd = extra.name?.toLowerCase().includes('whd') || folder.toLowerCase().includes('whd');
+      const isSps = extra.name?.toLowerCase().includes('sps') || folder.toLowerCase().includes('sps');
+      const tag = isWhd ? 'WHD' : isSps ? 'SPS' : folder;
+      return {
+        id: extra.id,
+        tag,
+        label: extra.name || folder,
+        relativePath: extra.path,
+        source: 'extras' as const,
+        subtitle: extra.path.split(/[\\/]/).pop() || extra.path,
+      };
+    }),
   ];
 }
 
@@ -167,7 +258,9 @@ function getVersionVisualKind(version: LaunchVersionOption): VersionVisualKind {
   if (version.source === 'roms') {
     return 'default';
   }
-  const combined = `${version.tag} ${version.subtitle}`.toLowerCase();
+  const combined = `${version.tag} ${version.label} ${version.subtitle}`.toLowerCase();
+  if (combined.includes('whd')) return 'whd';
+  if (combined.includes('sps')) return 'sps';
   if (combined.includes('tape')) return 'tape';
   if (combined.includes('disk')) return 'disk';
   if (combined.includes('cart')) return 'cart';
@@ -178,6 +271,10 @@ function getVersionVisualLabel(kind: VersionVisualKind) {
   switch (kind) {
     case 'default':
       return { badge: 'DEF', label: 'Default' };
+    case 'whd':
+      return { badge: 'WHD', label: 'WHDLoad' };
+    case 'sps':
+      return { badge: 'SPS', label: 'SPS' };
     case 'tape':
       return { badge: 'TAP', label: 'Tape' };
     case 'disk':
@@ -213,6 +310,21 @@ function VersionGlyph({
           <circle cx="16" cy="20.5" r="1" {...common} />
         </>
       ) : null}
+      {kind === 'whd' ? (
+        <>
+          <rect x="6" y="8" width="20" height="16" rx="2" {...common} />
+          <line x1="6" y1="18" x2="26" y2="18" {...common} />
+          <circle cx="21" cy="13" r="1.5" {...common} />
+          <circle cx="16" cy="13" r="1.5" {...common} />
+        </>
+      ) : null}
+      {kind === 'sps' ? (
+        <>
+          <path d="M8 5.5h14l3 3v18H7V6.5a1 1 0 0 1 1-1Z" {...common} />
+          <rect x="10" y="8.5" width="10" height="5" rx="1.2" {...common} />
+          <circle cx="16" cy="20.5" r="3.4" {...common} />
+        </>
+      ) : null}
       {kind === 'tape' ? (
         <>
           <rect x="4.5" y="8.5" width="23" height="15" rx="3.2" {...common} />
@@ -230,7 +342,6 @@ function VersionGlyph({
           <path d="M8 5.5h14l3 3v18H7V6.5a1 1 0 0 1 1-1Z" {...common} />
           <rect x="10" y="8.5" width="10" height="5" rx="1.2" {...common} />
           <circle cx="16" cy="20.5" r="3.4" {...common} />
-          <circle cx="16" cy="20.5" r="1" {...common} />
         </>
       ) : null}
       {kind === 'cart' ? (
@@ -406,10 +517,10 @@ export function UnifiedDetailLayout({
     };
   }, [game.id, settings.activePlatformId]);
 
-  const groupedExtras = useMemo(() => groupExtras(extras), [extras]);
+  const groupedExtras = useMemo(() => groupExtras(extras, settings.activePlatformId), [extras, settings.activePlatformId]);
   const launchableExtras = useMemo(
-    () => (groupedExtras.find((group) => group.category === 'games')?.items ?? []).filter(isLaunchableExtra),
-    [groupedExtras],
+    () => (groupedExtras.find((group) => group.category === 'games')?.items ?? []).filter((extra) => isLaunchableExtra(extra, settings.activePlatformId)),
+    [groupedExtras, settings.activePlatformId],
   );
   const archiveExtras = useMemo(
     () => groupedExtras.filter((group) => group.category !== 'games').flatMap((group) => group.items),
@@ -439,7 +550,7 @@ export function UnifiedDetailLayout({
   }, [availableTabs, selectTab, visibleTab]);
 
   const archiveNotes = getArchiveNotes(game);
-  const versions = buildVersions(game, launchableExtras);
+  const versions = useMemo(() => buildVersions(game, launchableExtras), [game, launchableExtras]);
   const selectedVersion = versions.find((version) => version.id === selectedVersionId) ?? versions[0] ?? null;
   const versionIds = versions.map((version) => version.id);
   const versionIdsKey = versionIds.join('|');
@@ -511,6 +622,99 @@ export function UnifiedDetailLayout({
   );
 
   const [showWasm, setShowWasm] = useState(false);
+  const [extraAvailability, setExtraAvailability] = useState<Record<string, boolean>>({});
+
+  const amigaExtrasPath =
+    settings.platformSettings?.amiga?.folders.extrasPath ||
+    settings.extrasPath ||
+    '';
+  const amigaGamesPath =
+    settings.platformSettings?.amiga?.folders.gamesPath ||
+    settings.romsPath ||
+    '';
+
+  const versionsKey = useMemo(
+    () => versions.map((v) => `${v.id}:${v.relativePath || ''}`).join('|'),
+    [versions],
+  );
+
+  useEffect(() => {
+    let active = true;
+    async function checkExtras() {
+      if (settings.activePlatformId !== 'amiga' || (!amigaExtrasPath && !amigaGamesPath)) return;
+
+      const results: Record<string, boolean> = {};
+      for (const v of versions) {
+        if (v.source === 'extras' && v.relativePath) {
+          const exists = await checkAmigaExtraExists(amigaExtrasPath, v.relativePath, amigaGamesPath);
+          results[v.id] = exists;
+        }
+      }
+      if (active) {
+        setExtraAvailability((prev) => ({ ...prev, ...results }));
+      }
+    }
+    checkExtras();
+    return () => {
+      active = false;
+    };
+  }, [settings.activePlatformId, amigaExtrasPath, amigaGamesPath, versionsKey, versions]);
+
+  useEffect(() => {
+    const handleDownloaded = (e: Event) => {
+      const detail = (e as CustomEvent<{ extraPath: string; success: boolean }>).detail;
+      if (detail?.success && detail.extraPath) {
+        const normTarget = detail.extraPath.replace(/\\/g, '/').toLowerCase();
+        const filenameTarget = normTarget.split('/').pop() || normTarget;
+        const matching = versions.filter((v) => {
+          if (!v.relativePath) return false;
+          const normRel = v.relativePath.replace(/\\/g, '/').toLowerCase();
+          const filenameRel = normRel.split('/').pop() || normRel;
+          return normRel === normTarget || normRel.endsWith(normTarget) || normTarget.endsWith(normRel) || filenameRel === filenameTarget;
+        });
+        if (matching.length > 0) {
+          setExtraAvailability((prev) => {
+            const next = { ...prev };
+            for (const m of matching) {
+              next[m.id] = true;
+            }
+            return next;
+          });
+        }
+      }
+    };
+    window.addEventListener('amiga-extra-downloaded', handleDownloaded);
+    return () => {
+      window.removeEventListener('amiga-extra-downloaded', handleDownloaded);
+    };
+  }, [versions]);
+
+  const handleDownloadExtra = useCallback(
+    async (version: LaunchVersionOption) => {
+      if (!version.relativePath || settings.activePlatformId !== 'amiga') return;
+      const targetPath = amigaExtrasPath || amigaGamesPath;
+      if (!targetPath) {
+        console.warn('Extras folder path is missing');
+        return;
+      }
+
+      try {
+        const extraObj: Extra = {
+          id: version.id,
+          name: version.label,
+          path: version.relativePath,
+          type: '1',
+        };
+        const res = await downloadAmigaExtra(extraObj, targetPath, settings.amigaDownloadTarget);
+        if (res.exists) {
+          setExtraAvailability((prev) => ({ ...prev, [version.id]: true }));
+        }
+      } catch (err) {
+        console.error('Failed to download Amiga extra:', err);
+      }
+    },
+    [settings.activePlatformId, amigaExtrasPath, amigaGamesPath, settings.amigaDownloadTarget],
+  );
 
   const selectVersion = useCallback((versionId: string) => {
     setSelectedVersionId(versionId);
@@ -529,20 +733,23 @@ export function UnifiedDetailLayout({
     setShowWasm(true);
   }, [game, selectedVersion, markAsPlayed]);
 
-  const handleLaunchVersion = useCallback(async (version: LaunchVersionOption) => {
-    if (!version.relativePath) return;
+  const handleLaunchVersion = useCallback(
+    async (version: LaunchVersionOption) => {
+      if (!version.relativePath) return;
 
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('game-launch'));
-    }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('game-launch'));
+      }
 
-    try {
-      await launchEmulator(buildLaunchRequest(settings, version.source, version.relativePath, game));
-      markAsPlayed(game.id.toString());
-    } catch (err) {
-      console.error('Failed to launch emulator from files list:', err);
-    }
-  }, [settings, game, markAsPlayed]);
+      try {
+        await launchEmulator(buildLaunchRequest(settings, version.source, version.relativePath, game));
+        markAsPlayed(game.id.toString());
+      } catch (err) {
+        console.error('Failed to launch emulator from files list:', err);
+      }
+    },
+    [settings, game, markAsPlayed],
+  );
 
   const handleFullscreenMedia = useCallback(() => {
     const activeObj = availableMedia.find(m => m.id === activeMedia);
@@ -738,6 +945,13 @@ export function UnifiedDetailLayout({
                         <span className="text-[9px] font-mono border border-theme-outline/50 px-1 rounded text-theme-text-muted">
                           {version.tag}
                         </span>
+                        {settings.activePlatformId === 'amiga' && version.source === 'extras' && (
+                          <AmigaDownloadBadge
+                            version={version}
+                            isAvailable={extraAvailability[version.id] === true}
+                            onDownload={() => void handleDownloadExtra(version)}
+                          />
+                        )}
                         {isSelected && (
                           <span className="text-[8px] bg-theme-primary text-[#00363e] px-1 py-0.5 rounded font-black uppercase tracking-wider">
                             ACT
@@ -1087,6 +1301,13 @@ export function UnifiedDetailLayout({
                             <span className="text-[8px] border border-theme-outline/50 px-1 text-theme-text-muted">
                               {version.tag}
                             </span>
+                            {version.source === 'extras' && settings.activePlatformId === 'amiga' && (
+                              <AmigaDownloadBadge
+                                version={version}
+                                isAvailable={extraAvailability[version.id] === true}
+                                onDownload={() => void handleDownloadExtra(version)}
+                              />
+                            )}
                             {isSelected && (
                               <span className="text-[8px] bg-theme-tertiary text-black px-1 font-bold">
                                 {t('common.active').toUpperCase()}
@@ -2013,6 +2234,13 @@ export function UnifiedDetailLayout({
                                       <span className="text-[9px] font-mono border border-white/20 px-1 text-theme-text-muted">
                                         {version.tag}
                                       </span>
+                                      {settings.activePlatformId === 'amiga' && version.source === 'extras' && (
+                                        <CyberpunkAmigaDownloadBadge
+                                          version={version}
+                                          isAvailable={extraAvailability[version.id] === true}
+                                          onDownload={() => void handleDownloadExtra(version)}
+                                        />
+                                      )}
                                       {isSelected && (
                                         <span className="text-[8px] bg-[#ff003c] text-black px-1 py-0.5 font-black uppercase tracking-wider">
                                           {t('common.active')}

@@ -56,6 +56,7 @@ export interface Settings {
   platformSettings: Record<PlatformId, PlatformSettings>;
   themeId: string;
   language: string;
+  amigaDownloadTarget?: 'extras' | 'temp';
 }
 
 interface SettingsContextType {
@@ -121,6 +122,7 @@ export const defaultSettings: Settings = {
   platformSettings: defaultPlatformSettings,
   themeId: 'arcade-void',
   language: 'system',
+  amigaDownloadTarget: 'extras',
 };
 
 export const SettingsContext = createContext<SettingsContextType | undefined>(undefined);

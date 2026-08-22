@@ -1060,3 +1060,23 @@ export async function getSecureSetting(key: string): Promise<string | null> {
   }
   return invoke<string | null>('get_secure_setting', { key });
 }
+
+export interface MediaDownloadProgress {
+  filename: string;
+  bytesDownloaded: number;
+  totalBytes?: number | null;
+  percentage?: number | null;
+  done: boolean;
+  error?: string | null;
+}
+
+/** Subscribe to progress events for media asset downloads. */
+export async function listenMediaDownloadProgress(
+  listener: (progress: MediaDownloadProgress) => void,
+): Promise<() => void> {
+  if (!isTauri()) {
+    return () => undefined;
+  }
+  const { listen } = await import('@tauri-apps/api/event');
+  return listen<MediaDownloadProgress>('media-asset-download-progress', (event) => listener(event.payload));
+}

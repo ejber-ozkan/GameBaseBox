@@ -338,7 +338,11 @@
     "scrapeMedia": "抓取媒体文件",
     "scraping": "正在抓取媒体...",
     "apple2gsInstructionsTitle": "Apple IIGS 系統設定與開機磁碟",
-    "apple2gsInstructions": "具備自開機功能的遊戲可直接啟動。對於需要系統環境的應用程式磁碟（例如 Déjà Vu、Bard's Tale II），請將 GS/OS 或 ProDOS 開機磁碟映像檔（例如 system5.2mg、system6.2mg、System.Disk.po 或 ProDOS 16v1_6.2mg）以及 Apple IIGS ROM（apple2gs.zip / ROM）放入模擬器資料夾或 RetroArch system 目錄。"
+    "apple2gsInstructions": "具備自開機功能的遊戲可直接啟動。對於需要系統環境的應用程式磁碟（例如 Déjà Vu、Bard's Tale II），請將 GS/OS 或 ProDOS 開機磁碟映像檔（例如 system5.2mg、system6.2mg、System.Disk.po 或 ProDOS 16v1_6.2mg）以及 Apple IIGS ROM（apple2gs.zip / ROM）放入模擬器資料夾或 RetroArch system 目錄。",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "暂无截图",

@@ -338,7 +338,11 @@
     "scrapeMedia": "Hämta media",
     "scraping": "Hämtar media...",
     "apple2gsInstructionsTitle": "Socrú Córais Apple IIGS & Dioscaí Tosaithe",
-    "apple2gsInstructions": "Tosaíonn cluichí féintosaithe go díreach. I gcás dioscaí feidhmchláir a dteastaíonn córas uathu (m.sh. Déjà Vu, Bard's Tale II), cuir íomhá diosca tosaithe GS/OS nó ProDOS (m.sh. system5.2mg, system6.2mg, System.Disk.po nó ProDOS 16v1_6.2mg) agus ROManna Apple IIGS (apple2gs.zip / ROM) i d'fhillteán aithriseora nó i bhfillteán system RetroArch."
+    "apple2gsInstructions": "Tosaíonn cluichí féintosaithe go díreach. I gcás dioscaí feidhmchláir a dteastaíonn córas uathu (m.sh. Déjà Vu, Bard's Tale II), cuir íomhá diosca tosaithe GS/OS nó ProDOS (m.sh. system5.2mg, system6.2mg, System.Disk.po nó ProDOS 16v1_6.2mg) agus ROManna Apple IIGS (apple2gs.zip / ROM) i d'fhillteán aithriseora nó i bhfillteán system RetroArch.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

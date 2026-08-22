@@ -338,7 +338,11 @@
     "scrapeMedia": "Ambil Media",
     "scraping": "Mengambil data media...",
     "apple2gsInstructionsTitle": "Pengaturan Sistem Apple IIGS & Disk Boot",
-    "apple2gsInstructions": "Game yang dapat melakukan auto-boot akan langsung berjalan. Untuk disk aplikasi yang memerlukan OS (mis. Déjà Vu, Bard's Tale II), letakkan file image boot GS/OS atau ProDOS (mis. system5.2mg, system6.2mg, System.Disk.po, atau ProDOS 16v1_6.2mg) dan ROM Apple IIGS (apple2gs.zip / ROM) di folder emulator Anda atau direktori system RetroArch."
+    "apple2gsInstructions": "Game yang dapat melakukan auto-boot akan langsung berjalan. Untuk disk aplikasi yang memerlukan OS (mis. Déjà Vu, Bard's Tale II), letakkan file image boot GS/OS atau ProDOS (mis. system5.2mg, system6.2mg, System.Disk.po, atau ProDOS 16v1_6.2mg) dan ROM Apple IIGS (apple2gs.zip / ROM) di folder emulator Anda atau direktori system RetroArch.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Tidak ada tangkapan layar",

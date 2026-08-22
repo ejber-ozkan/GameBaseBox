@@ -111,6 +111,7 @@ export type EditableSettings = Pick<
   | 'activePlatformId'
   | 'platformSettings'
   | 'language'
+  | 'amigaDownloadTarget'
 >;
 
 export function getEditableSettings(settings: Settings): EditableSettings {
@@ -142,6 +143,7 @@ export function getEditableSettings(settings: Settings): EditableSettings {
     activePlatformId: settings.activePlatformId,
     platformSettings: settings.platformSettings,
     language: settings.language || 'system',
+    amigaDownloadTarget: settings.amigaDownloadTarget ?? 'extras',
   };
 }
 

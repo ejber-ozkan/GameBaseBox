@@ -338,7 +338,11 @@
     "scrapeMedia": "Pobierz multimedia",
     "scraping": "Pobieranie multimediów...",
     "apple2gsInstructionsTitle": "Apple IIGS Rendszerbeállítás és Rendszerlemezek",
-    "apple2gsInstructions": "Az önindító játékok közvetlenül indulnak. A rendszert igénylő lemezekhez (pl. Déjà Vu, Bard's Tale II) helyezzen el egy GS/OS vagy ProDOS indítólemez-képet (pl. system5.2mg, system6.2mg, System.Disk.po vagy ProDOS 16v1_6.2mg) és Apple IIGS ROM-okat (apple2gs.zip / ROM) az emulátor mappájába vagy a RetroArch system könyvtárába."
+    "apple2gsInstructions": "Az önindító játékok közvetlenül indulnak. A rendszert igénylő lemezekhez (pl. Déjà Vu, Bard's Tale II) helyezzen el egy GS/OS vagy ProDOS indítólemez-képet (pl. system5.2mg, system6.2mg, System.Disk.po vagy ProDOS 16v1_6.2mg) és Apple IIGS ROM-okat (apple2gs.zip / ROM) az emulátor mappájába vagy a RetroArch system könyvtárába.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",

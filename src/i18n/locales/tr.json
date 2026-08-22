@@ -338,7 +338,11 @@
     "scrapeMedia": "Medyayı İndir",
     "scraping": "Medya indiriliyor...",
     "apple2gsInstructionsTitle": "Apple IIGS Sistem Kurulumu ve Başlangıç Diskleri",
-    "apple2gsInstructions": "Kendiliğinden başlayan oyunlar doğrudan çalışır. Kendi kendine başlamayan uygulama diskleri için (örn. Déjà Vu, Bard's Tale II), bir GS/OS veya ProDOS başlangıç disk imajını (örn. system5.2mg, system6.2mg, System.Disk.po veya ProDOS 16v1_6.2mg) ve Apple IIGS ROM'larını (apple2gs.zip / ROM) emülatör klasörünüze veya RetroArch system dizinine yerleştirin."
+    "apple2gsInstructions": "Kendiliğinden başlayan oyunlar doğrudan çalışır. Kendi kendine başlamayan uygulama diskleri için (örn. Déjà Vu, Bard's Tale II), bir GS/OS veya ProDOS başlangıç disk imajını (örn. system5.2mg, system6.2mg, System.Disk.po veya ProDOS 16v1_6.2mg) ve Apple IIGS ROM'larını (apple2gs.zip / ROM) emülatör klasörünüze veya RetroArch system dizinine yerleştirin.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Ekran görüntüsü yok",

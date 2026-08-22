@@ -338,7 +338,11 @@
     "scrapeMedia": "Media scrapen",
     "scraping": "Media wordt gescraped...",
     "apple2gsInstructionsTitle": "Apple IIGS Systeemconfiguratie & Opstartschijven",
-    "apple2gsInstructions": "Zelfstartende spellen starten direct. Voor niet-zelfstartende applicatieschijven (bijv. Déjà Vu, Bard's Tale II), plaats een GS/OS- of ProDOS-opstartschijfimage (bijv. system5.2mg, system6.2mg, System.Disk.po of ProDOS 16v1_6.2mg) en Apple IIGS ROMs (apple2gs.zip / ROM) in uw emulatormap of RetroArch system-map."
+    "apple2gsInstructions": "Zelfstartende spellen starten direct. Voor niet-zelfstartende applicatieschijven (bijv. Déjà Vu, Bard's Tale II), plaats een GS/OS- of ProDOS-opstartschijfimage (bijv. system5.2mg, system6.2mg, System.Disk.po of ProDOS 16v1_6.2mg) en Apple IIGS ROMs (apple2gs.zip / ROM) in uw emulatormap of RetroArch system-map.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Geen screenshots beschikbaar",

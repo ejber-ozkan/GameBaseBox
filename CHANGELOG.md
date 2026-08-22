@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.5] - 2026-08-22
+
+### Added
+- **Commodore Amiga WHDLoad & Multi-Disk Platform Enhancements**:
+  - **RetroArch (PUAE Core) Seamless Integration**: Multi-disk ADF/IPF games and WHDLoad installed games launch smoothly with zero friction ("It just works!").
+  - **Automated M3U Playlists & Disk Swapping**: Extracts multi-disk sibling archives in exact disk order (prioritizing Disk 1) and builds clean `.m3u` playlists for RetroArch's disk control interface.
+  - **WinUAE Dynamic GEMUS Profiling**: Automatically queries and parses GameBase Amiga hardware configurations (`cpu_model=68020`, `chipset=AGA`, `chipset_compatible=A1200`, `kickstart_rom=v3.1`, `chipmem_size=4`, `nr_floppies=4`) and passes them dynamically via `-s <key>=<value>` command line flags.
+  - **On-Demand WHDLoad & SPS Downloader**: Smart Archive.org scraper matching missing WHDLoad packages and SPS disk images with SPS ID code brackets and exact name resolution.
+  - **Live Micro Download Badges**: Compact percentage indicators (`⏳ 45%` / `DL 45%`) in file lists across all themes (Arcade, Commodore 64/128, Cyberpunk CRT) and view modes (Windowed & BigBox).
+  - **Amiga Download Target Setting**: Configurable preference in **Settings > Platform Paths > Amiga** allowing users to choose between saving to the permanent Extras folder or a safe temporary cache folder without overwriting, fully translated across 33 languages.
+- **Resilient Media Asset Downloader**: Enhanced streaming downloader with custom User-Agent headers, 10-hop redirect following, 300s timeouts, and exponential backoff retry on transient CDN errors.
+
+### Changed
+- Bumped package, Tauri, Cargo, and root version metadata to `0.6.5`.
+
 ## [0.6.4] - 2026-08-17
 
 ### Added

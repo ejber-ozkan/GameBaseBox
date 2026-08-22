@@ -338,7 +338,11 @@
     "scrapeMedia": "Hämta media",
     "scraping": "Hämtar media...",
     "apple2gsInstructionsTitle": "Apple IIGS Järjestelmäasetukset ja Käynnistyslevyt",
-    "apple2gsInstructions": "Itsekäynnistyvät pelit käynnistyvät suoraan. Käyttöjärjestelmää vaativille levyille (esim. Déjà Vu, Bard's Tale II) aseta GS/OS- tai ProDOS-käynnistyslevykuva (esim. system5.2mg, system6.2mg, System.Disk.po tai ProDOS 16v1_6.2mg) sekä Apple IIGS ROMit (apple2gs.zip / ROM) emulaattorikansioon tai RetroArch system -hakemistoon."
+    "apple2gsInstructions": "Itsekäynnistyvät pelit käynnistyvät suoraan. Käyttöjärjestelmää vaativille levyille (esim. Déjà Vu, Bard's Tale II) aseta GS/OS- tai ProDOS-käynnistyslevykuva (esim. system5.2mg, system6.2mg, System.Disk.po tai ProDOS 16v1_6.2mg) sekä Apple IIGS ROMit (apple2gs.zip / ROM) emulaattorikansioon tai RetroArch system -hakemistoon.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

@@ -338,7 +338,11 @@
     "scrapeMedia": "メディア取得開始",
     "scraping": "データ取得中...",
     "apple2gsInstructionsTitle": "Apple IIGS システム設定とブートディスク",
-    "apple2gsInstructions": "自動起動対応ゲームはそのまま起動します。OSが必要なアプリケーションディスク（例: Déjà Vu、Bard's Tale II）の場合は、GS/OSまたはProDOSブートディスクイメージ（例: system5.2mg、system6.2mg、System.Disk.po、ProDOS 16v1_6.2mg）およびApple IIGS ROM（apple2gs.zip / ROM）をエミュレータフォルダまたはRetroArchのsystemディレクトリに配置してください。"
+    "apple2gsInstructions": "自動起動対応ゲームはそのまま起動します。OSが必要なアプリケーションディスク（例: Déjà Vu、Bard's Tale II）の場合は、GS/OSまたはProDOSブートディスクイメージ（例: system5.2mg、system6.2mg、System.Disk.po、ProDOS 16v1_6.2mg）およびApple IIGS ROM（apple2gs.zip / ROM）をエミュレータフォルダまたはRetroArchのsystemディレクトリに配置してください。",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",

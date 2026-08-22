@@ -7,17 +7,18 @@ export interface ExtraGroup {
   items: Extra[];
 }
 
-export const VISUAL_FOLDERS = ["Adverts", "Advert", "Books", "Cover", "Magcover", "Maps", "Missing", "Photos"];
-export const DOC_FOLDERS = ["Docs", "Listings", "SceneMags", "Tips"];
+export const VISUAL_FOLDERS = ["Adverts", "Advert", "Books", "Cover", "Magcover", "Maps", "Missing", "Photos", "Cover Scans"];
+export const DOC_FOLDERS = ["Docs", "Listings", "SceneMags", "Tips", "Hints, Tips, Cheats & Walkthroughs", "Instructions"];
 export const MEDIA_FOLDERS = ["Trailer", "mkv", "mp3s"];
 export const GAME_FOLDERS = ["Carts", "Coverdisks", "Covertapes", "Disks", "PD-Disks", "Tapes", "Type-Ins"];
+export const AMIGA_GAME_FOLDERS = ["WHDLoad", "WHD", "SPS", "Disks", "PD-Disks", "Games", "Roms"];
 
 const IMG_EXT = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-const GAME_EXT = ['d64', 'g64', 't64', 'tap', 'prg', 'crt', 'nib', 'zip'];
+const GAME_EXT = ['d64', 'g64', 't64', 'tap', 'prg', 'crt', 'nib', 'zip', 'adf', 'adz', 'dms', 'ipf', 'lha', 'hdf', 'hdz', 'slave'];
 const MEDIA_EXT = ['mkv', 'mp4', 'mp3', 'avi', 'mov'];
 const DOC_EXT = ['pdf', 'txt', 'doc', 'docx', 'htm', 'html'];
 
-export function groupExtras(extras: Extra[]): ExtraGroup[] {
+export function groupExtras(extras: Extra[], platformId?: PlatformId | string | null): ExtraGroup[] {
   const groups: Record<string, Extra[]> = {
     visual: [],
     docs: [],
@@ -29,6 +30,12 @@ export function groupExtras(extras: Extra[]): ExtraGroup[] {
     const path = extra.path.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/');
     const folder = path.split('/')[0].toLowerCase();
     const ext = path.split('.').pop()?.toLowerCase() || '';
+
+    // Amiga-scoped check for WHDLoad, SPS, or type 1 executable extras
+    if (platformId === 'amiga' && isLaunchableExtra(extra, 'amiga')) {
+      groups.games.push(extra);
+      return;
+    }
 
     // Smart categorization: Extension takes precedence for ambiguous folders like "Cover"
     if (GAME_EXT.includes(ext)) {
@@ -90,16 +97,39 @@ export function getExtraSourceLabel(extra: Extra) {
   return extra.path.split(/[\\/]/)[0] || 'Extras';
 }
 
-export function getExtraLaunchLabel(extra: Extra) {
+export function getExtraLaunchLabel(extra: Extra, platformId?: PlatformId | string | null) {
   const root = getExtraSourceLabel(extra).toLowerCase();
+  const name = (extra.name || '').toLowerCase();
+
+  if (platformId === 'amiga' || root.includes('whd') || name.includes('whd')) {
+    if (root.includes('whd') || name.includes('whd')) return 'Launch WHDLoad';
+    if (root.includes('sps') || name.includes('sps')) return 'Launch SPS';
+  }
+
   if (root.includes('tape')) return 'Launch Tape';
   if (root.includes('disk')) return 'Launch Disk';
   if (root.includes('cart')) return 'Launch Cart';
   return 'Launch Variant';
 }
 
-export function isLaunchableExtra(extra: Extra) {
+export function isLaunchableExtra(extra: Extra, platformId?: PlatformId | string | null) {
   const root = getExtraSourceLabel(extra).toLowerCase();
+  const name = (extra.name || '').toLowerCase();
+
+  if (platformId === 'amiga') {
+    if (
+      root.includes('whd') ||
+      name.includes('whd') ||
+      root.includes('sps') ||
+      name.includes('sps') ||
+      extra.type === '1' ||
+      extra.type === 'game'
+    ) {
+      return true;
+    }
+    return AMIGA_GAME_FOLDERS.some((candidate) => root.includes(candidate.toLowerCase()));
+  }
+
   return GAME_FOLDERS.some((candidate) => root.includes(candidate.toLowerCase()));
 }
 
@@ -123,4 +153,5 @@ export function supportsAtariExtraCoverArt(platformId: PlatformId) {
 export function getVisibleDetailExtraCategories(platformId: PlatformId): ExtraGroup['category'][] {
   return platformId === 'atari800' ? ['visual', 'docs', 'media'] : ['visual', 'media'];
 }
+
 

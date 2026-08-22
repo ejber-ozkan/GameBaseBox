@@ -24,10 +24,19 @@ export function buildPlatformAssetPath(
   relativePath: string,
 ): string {
   const platformSettings = settings.platformSettings[settings.activePlatformId];
-  const platformBasePath =
+  let platformBasePath =
     source === 'extras'
-      ? platformSettings?.folders.extrasPath
-      : platformSettings?.folders.gamesPath;
+      ? platformSettings?.folders.extrasPath || ''
+      : platformSettings?.folders.gamesPath || '';
+
+  if (source === 'extras' && !platformBasePath && platformSettings?.folders.gamesPath) {
+    const gamesPath = platformSettings.folders.gamesPath.replace(/\\/g, '/').replace(/\/+$/, '');
+    if (gamesPath.toLowerCase().endsWith('/games')) {
+      platformBasePath = gamesPath.slice(0, -6) + '/Extras';
+    } else {
+      platformBasePath = gamesPath + '/Extras';
+    }
+  }
 
   return [platformBasePath, relativePath]
     .map(normalizePathSegment)

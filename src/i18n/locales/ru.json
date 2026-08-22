@@ -338,7 +338,11 @@
     "scrapeMedia": "Загрузить медиа",
     "scraping": "Загрузка медиаданных...",
     "apple2gsInstructionsTitle": "Настройка системы Apple IIGS и загрузочные диски",
-    "apple2gsInstructions": "Самозагружаемые игры запускаются напрямую. Для дисков приложений, требующих ОС (например, Déjà Vu, Bard's Tale II), поместите образ загрузочного диска GS/OS или ProDOS (например, system5.2mg, system6.2mg, System.Disk.po или ProDOS 16v1_6.2mg) и ROM-файлы Apple IIGS (apple2gs.zip / ROM) в папку эмулятора или системную директорию RetroArch."
+    "apple2gsInstructions": "Самозагружаемые игры запускаются напрямую. Для дисков приложений, требующих ОС (например, Déjà Vu, Bard's Tale II), поместите образ загрузочного диска GS/OS или ProDOS (например, system5.2mg, system6.2mg, System.Disk.po или ProDOS 16v1_6.2mg) и ROM-файлы Apple IIGS (apple2gs.zip / ROM) в папку эмулятора или системную директорию RetroArch.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Скриншоты отсутствуют",

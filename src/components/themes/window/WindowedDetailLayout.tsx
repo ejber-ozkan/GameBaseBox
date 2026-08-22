@@ -93,10 +93,10 @@ export function WindowedDetailLayout({
   const studios = getGameStudios(game);
   const headerArtworkUrl = useResolvedBoxArtUrl(game);
   const showBoxArtPanel = Boolean(headerArtworkUrl);
-  const groupedExtras = useMemo(() => groupExtras(extras), [extras]);
+  const groupedExtras = useMemo(() => groupExtras(extras, settings.activePlatformId), [extras, settings.activePlatformId]);
   const launchableExtras = useMemo(
-    () => (groupedExtras.find((group) => group.category === 'games')?.items ?? []).filter(isLaunchableExtra),
-    [groupedExtras],
+    () => (groupedExtras.find((group) => group.category === 'games')?.items ?? []).filter((extra) => isLaunchableExtra(extra, settings.activePlatformId)),
+    [groupedExtras, settings.activePlatformId],
   );
   const galleryExtras = useMemo(
     () => groupedExtras

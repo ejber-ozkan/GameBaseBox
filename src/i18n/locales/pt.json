@@ -338,7 +338,11 @@
     "scrapeMedia": "Buscar Mídias",
     "scraping": "Buscando mídias...",
     "apple2gsInstructionsTitle": "Configuração do sistema Apple IIGS e discos de inicialização",
-    "apple2gsInstructions": "Jogos com auto-inicialização iniciam diretamente. Para discos de aplicação sem inicialização própria (ex: Déjà Vu, Bard's Tale II), coloque uma imagem de disco GS/OS ou ProDOS (ex: system5.2mg, system6.2mg, System.Disk.po ou ProDOS 16v1_6.2mg) e ROMs Apple IIGS (apple2gs.zip / ROM) na pasta do emulador ou no diretório system do RetroArch."
+    "apple2gsInstructions": "Jogos com auto-inicialização iniciam diretamente. Para discos de aplicação sem inicialização própria (ex: Déjà Vu, Bard's Tale II), coloque uma imagem de disco GS/OS ou ProDOS (ex: system5.2mg, system6.2mg, System.Disk.po ou ProDOS 16v1_6.2mg) e ROMs Apple IIGS (apple2gs.zip / ROM) na pasta do emulador ou no diretório system do RetroArch.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Nenhuma captura de tela disponível",

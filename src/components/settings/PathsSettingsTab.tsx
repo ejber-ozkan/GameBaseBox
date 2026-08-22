@@ -329,6 +329,45 @@ export function PathsSettingsTab({
               isFocused={isFocused}
             />
           )}
+
+          {isAmiga && (
+            <div className="mt-2 rounded-theme-lg border border-theme-outline-variant bg-theme-surface/30 p-3 space-y-2">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <span className="block text-xs font-bold uppercase tracking-wider text-theme-text font-mono">
+                    {t('settings.amigaDownloadTarget')}
+                  </span>
+                  <span className="mt-0.5 block text-[10px] text-theme-text-muted">
+                    {t('settings.amigaDownloadTargetDescription')}
+                  </span>
+                </div>
+                <div className="flex shrink-0 rounded-theme-lg border border-theme-outline-variant bg-theme-background/60 p-1">
+                  <button
+                    type="button"
+                    onClick={() => setField('amigaDownloadTarget', 'extras')}
+                    className={`rounded-theme px-3 py-1 text-[10px] font-bold uppercase transition-all ${
+                      (draft.amigaDownloadTarget ?? 'extras') === 'extras'
+                        ? 'bg-theme-primary text-theme-surface shadow'
+                        : 'text-theme-text-muted hover:text-theme-text'
+                    }`}
+                  >
+                    {t('settings.amigaDownloadTargetExtras')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setField('amigaDownloadTarget', 'temp')}
+                    className={`rounded-theme px-3 py-1 text-[10px] font-bold uppercase transition-all ${
+                      draft.amigaDownloadTarget === 'temp'
+                        ? 'bg-theme-primary text-theme-surface shadow'
+                        : 'text-theme-text-muted hover:text-theme-text'
+                    }`}
+                  >
+                    {t('settings.amigaDownloadTargetTemp')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Column: Emulators */}

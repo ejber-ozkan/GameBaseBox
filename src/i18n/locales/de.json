@@ -338,7 +338,11 @@
     "scrapeMedia": "Medien scrapen",
     "scraping": "Medien werden gescrapt...",
     "apple2gsInstructionsTitle": "Apple IIGS Systemeinrichtung & Bootdisketten",
-    "apple2gsInstructions": "Selbststartende Spiele starten direkt. Für nicht selbststartende Anwendungsdisketten (z.B. Déjà Vu, Bard's Tale II) legen Sie ein GS/OS- oder ProDOS-Bootdisketten-Image (z.B. system5.2mg, system6.2mg, System.Disk.po oder ProDOS 16v1_6.2mg) und Apple IIGS ROMs (apple2gs.zip / ROM) in Ihren Emulator-Ordner oder das RetroArch-Systemverzeichnis."
+    "apple2gsInstructions": "Selbststartende Spiele starten direkt. Für nicht selbststartende Anwendungsdisketten (z.B. Déjà Vu, Bard's Tale II) legen Sie ein GS/OS- oder ProDOS-Bootdisketten-Image (z.B. system5.2mg, system6.2mg, System.Disk.po oder ProDOS 16v1_6.2mg) und Apple IIGS ROMs (apple2gs.zip / ROM) in Ihren Emulator-Ordner oder das RetroArch-Systemverzeichnis.",
+    "amigaDownloadTarget": "Amiga Extras Download-Ziel",
+    "amigaDownloadTargetDescription": "Wählen Sie, ob On-Demand-Amiga-Dateien im Extras-Ordner oder in einem temporären Ordner gespeichert werden.",
+    "amigaDownloadTargetExtras": "Extras-Ordner (Dauerhaft)",
+    "amigaDownloadTargetTemp": "Temp-Ordner (Kein Überschreiben)"
   },
   "media": {
     "noScreenshots": "Keine Screenshots verfügbar",

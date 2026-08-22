@@ -338,7 +338,11 @@
     "scrapeMedia": "Pobierz multimedia",
     "scraping": "Pobieranie multimediów...",
     "apple2gsInstructionsTitle": "Namestitev sistema Apple IIGS in zagonski diski",
-    "apple2gsInstructions": "Samozagonske igre se zaženejo neposredno. Za aplikacijske diske brez operacijskega sistema (npr. Déjà Vu, Bard's Tale II) postavite sliko zagonskega diska GS/OS ali ProDOS (npr. system5.2mg, system6.2mg, System.Disk.po ali ProDOS 16v1_6.2mg) in ROM-e Apple IIGS (apple2gs.zip / ROM) v mapo emulatorja ali mapo system za RetroArch."
+    "apple2gsInstructions": "Samozagonske igre se zaženejo neposredno. Za aplikacijske diske brez operacijskega sistema (npr. Déjà Vu, Bard's Tale II) postavite sliko zagonskega diska GS/OS ali ProDOS (npr. system5.2mg, system6.2mg, System.Disk.po ali ProDOS 16v1_6.2mg) in ROM-e Apple IIGS (apple2gs.zip / ROM) v mapo emulatorja ali mapo system za RetroArch.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",

@@ -113,4 +113,22 @@ describe('steam extras helpers', () => {
     expect(supportsAtariExtraCoverArt('atari800')).toBe(true);
     expect(supportsAtariExtraCoverArt('c64')).toBe(false);
   });
+
+  test('detects Amiga WHDLoad and SPS extras as launchable variants', () => {
+    const whdExtra = { id: '9', name: 'WHDLoad', path: 'WHDLoad\\T\\Turrican2_v1.7_0029.zip', type: '1' };
+    const spsExtra = { id: '10', name: 'SPS', path: 'SPS\\1\\0029_Turrican II - The Final Fight.zip', type: '1' };
+    const docExtra = { id: '11', name: 'Instructions', path: 'Instructions\\T\\Turrican II.txt', type: '0' };
+
+    expect(isLaunchableExtra(whdExtra, 'amiga')).toBe(true);
+    expect(isLaunchableExtra(spsExtra, 'amiga')).toBe(true);
+    expect(isLaunchableExtra(docExtra, 'amiga')).toBe(false);
+
+    expect(getExtraLaunchLabel(whdExtra, 'amiga')).toBe('Launch WHDLoad');
+    expect(getExtraLaunchLabel(spsExtra, 'amiga')).toBe('Launch SPS');
+
+    const grouped = groupExtras([whdExtra, spsExtra, docExtra], 'amiga');
+    expect(grouped.find((g) => g.category === 'games')?.items).toHaveLength(2);
+    expect(grouped.find((g) => g.category === 'docs')?.items).toHaveLength(1);
+  });
 });
+

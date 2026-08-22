@@ -338,7 +338,11 @@
     "scrapeMedia": "Hämta media",
     "scraping": "Hämtar media...",
     "apple2gsInstructionsTitle": "Apple IIGS sistemos sąranka ir paleidimo diskai",
-    "apple2gsInstructions": "Savaime pasileidžiantys žaidimai pasileidžia tiesiogiai. Programų diskams, kuriems reikalinga OS (pvz., Déjà Vu, Bard's Tale II), įdėkite GS/OS arba ProDOS paleidimo disko atvaizdą (pvz., system5.2mg, system6.2mg, System.Disk.po arba ProDOS 16v1_6.2mg) ir Apple IIGS ROM (apple2gs.zip / ROM) į emuliatoriaus aplanką arba RetroArch system katalogą."
+    "apple2gsInstructions": "Savaime pasileidžiantys žaidimai pasileidžia tiesiogiai. Programų diskams, kuriems reikalinga OS (pvz., Déjà Vu, Bard's Tale II), įdėkite GS/OS arba ProDOS paleidimo disko atvaizdą (pvz., system5.2mg, system6.2mg, System.Disk.po arba ProDOS 16v1_6.2mg) ir Apple IIGS ROM (apple2gs.zip / ROM) į emuliatoriaus aplanką arba RetroArch system katalogą.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

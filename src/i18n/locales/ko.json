@@ -338,7 +338,11 @@
     "scrapeMedia": "メディア取得開始",
     "scraping": "データ取得中...",
     "apple2gsInstructionsTitle": "Apple IIGS 시스템 설정 및 부팅 디스크",
-    "apple2gsInstructions": "자체 부팅 게임은 바로 실행됩니다. OS가 필요한 응용 프로그램 디스크(예: Déjà Vu, Bard's Tale II)의 경우 GS/OS 또는 ProDOS 부팅 디스크 이미지(예: system5.2mg, system6.2mg, System.Disk.po, ProDOS 16v1_6.2mg) 및 Apple IIGS ROM(apple2gs.zip / ROM)을 에뮬레이터 폴더 또는 RetroArch system 디렉터리에 넣으세요."
+    "apple2gsInstructions": "자체 부팅 게임은 바로 실행됩니다. OS가 필요한 응용 프로그램 디스크(예: Déjà Vu, Bard's Tale II)의 경우 GS/OS 또는 ProDOS 부팅 디스크 이미지(예: system5.2mg, system6.2mg, System.Disk.po, ProDOS 16v1_6.2mg) 및 Apple IIGS ROM(apple2gs.zip / ROM)을 에뮬레이터 폴더 또는 RetroArch system 디렉터리에 넣으세요.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",

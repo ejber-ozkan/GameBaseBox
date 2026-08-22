@@ -338,7 +338,11 @@
     "scrapeMedia": "Pobierz multimedia",
     "scraping": "Pobieranie multimediów...",
     "apple2gsInstructionsTitle": "Nastavení systému Apple IIGS a spouštěcí disky",
-    "apple2gsInstructions": "Automaticky spustitelné hry startují přímo. U aplikačních disků vyžadujících systém (např. Déjà Vu, Bard's Tale II) umístěte obraz spouštěcího disku GS/OS nebo ProDOS (např. system5.2mg, system6.2mg, System.Disk.po nebo ProDOS 16v1_6.2mg) a ROM Apple IIGS (apple2gs.zip / ROM) do složky emulátoru nebo systémového adresáře RetroArch."
+    "apple2gsInstructions": "Automaticky spustitelné hry startují přímo. U aplikačních disků vyžadujících systém (např. Déjà Vu, Bard's Tale II) umístěte obraz spouštěcího disku GS/OS nebo ProDOS (např. system5.2mg, system6.2mg, System.Disk.po nebo ProDOS 16v1_6.2mg) a ROM Apple IIGS (apple2gs.zip / ROM) do složky emulátoru nebo systémového adresáře RetroArch.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",

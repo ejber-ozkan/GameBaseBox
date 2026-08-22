@@ -1,5 +1,22 @@
 use crate::models::{ResolvedPath, ScannedRom};
+use serde::{Deserialize, Serialize};
+use std::io::Write;
 use std::path::{Component, Path, PathBuf};
+use std::time::{Duration, Instant};
+use tauri::Emitter;
+
+const MEDIA_DOWNLOAD_PROGRESS_EVENT: &str = "media-asset-download-progress";
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MediaDownloadProgress {
+    pub filename: String,
+    pub bytes_downloaded: u64,
+    pub total_bytes: Option<u64>,
+    pub percentage: Option<u8>,
+    pub done: bool,
+    pub error: Option<String>,
+}
 
 fn clean_unc_prefix(path_str: String) -> String {
     #[cfg(windows)]
@@ -132,8 +149,8 @@ pub async fn scan_rom_directory(directory: String) -> Result<Vec<ScannedRom>, St
     Ok(results)
 }
 
-#[tauri::command]
-pub async fn download_media_asset(
+pub async fn download_media_asset_internal(
+    app: Option<&tauri::AppHandle>,
     url: String,
     dest_dir: String,
     filename: String,
@@ -154,32 +171,142 @@ pub async fn download_media_asset(
         }
     }
 
-    let response = reqwest::get(url.clone())
+    let client = reqwest::Client::builder()
+        .user_agent("GameBaseBox/0.6.5 (https://github.com/ejber-ozkan/GameBaseBox)")
+        .redirect(reqwest::redirect::Policy::limited(10))
+        .timeout(Duration::from_secs(300))
+        .build()
+        .map_err(|e| format!("Failed to create HTTP client: {e}"))?;
+
+    let mut response_opt = None;
+    let mut last_status = reqwest::StatusCode::INTERNAL_SERVER_ERROR;
+
+    for attempt in 1..=3 {
+        match client.get(url.clone()).send().await {
+            Ok(resp) => {
+                let status = resp.status();
+                if status.is_success() {
+                    response_opt = Some(resp);
+                    break;
+                }
+                last_status = status;
+                if status.is_server_error() && attempt < 3 {
+                    tokio::time::sleep(Duration::from_millis(600 * attempt)).await;
+                    continue;
+                }
+                return Err(format!("Download failed with status: {}", status));
+            }
+            Err(e) => {
+                if attempt >= 3 {
+                    return Err(format!("Failed to download {}: {}", url, e));
+                }
+                tokio::time::sleep(Duration::from_millis(600 * attempt)).await;
+            }
+        }
+    }
+
+    let mut response = response_opt.ok_or_else(|| format!("Download failed with status: {}", last_status))?;
+
+    let total_bytes = response.content_length();
+    if total_bytes.is_some_and(|length| length > MAX_MEDIA_DOWNLOAD_BYTES) {
+        return Err(format!("Media download exceeds the {} MiB limit.", MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024));
+    }
+
+    let temp_path = full_path.with_extension(format!("tmp-{}", std::process::id()));
+    let mut file = std::fs::File::create(&temp_path)
+        .map_err(|e| format!("Could not create temp download file: {}", e))?;
+
+    let mut downloaded = 0u64;
+    let mut last_emit = Instant::now();
+
+    if let Some(app_handle) = app {
+        let _ = app_handle.emit(
+            MEDIA_DOWNLOAD_PROGRESS_EVENT,
+            MediaDownloadProgress {
+                filename: filename.clone(),
+                bytes_downloaded: 0,
+                total_bytes,
+                percentage: Some(0),
+                done: false,
+                error: None,
+            },
+        );
+    }
+
+    while let Some(chunk) = response
+        .chunk()
         .await
-        .map_err(|e| format!("Failed to download {}: {}", url, e))?;
+        .map_err(|e| format!("Download failed while receiving data: {}", e))?
+    {
+        downloaded += chunk.len() as u64;
+        if downloaded > MAX_MEDIA_DOWNLOAD_BYTES {
+            drop(file);
+            let _ = std::fs::remove_file(&temp_path);
+            return Err(format!("Media download exceeds the {} MiB limit.", MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024));
+        }
 
-    if !response.status().is_success() {
-        return Err(format!(
-            "Download failed with status: {}",
-            response.status()
-        ));
+        file.write_all(&chunk)
+            .map_err(|e| format!("Could not write chunk to disk: {}", e))?;
+
+        if let Some(app_handle) = app {
+            if last_emit.elapsed() >= Duration::from_millis(150)
+                || total_bytes.is_some_and(|total| downloaded >= total)
+            {
+                let pct = total_bytes.map(|total| {
+                    if total > 0 {
+                        ((downloaded as f64 / total as f64) * 100.0).clamp(0.0, 100.0) as u8
+                    } else {
+                        0
+                    }
+                });
+                let _ = app_handle.emit(
+                    MEDIA_DOWNLOAD_PROGRESS_EVENT,
+                    MediaDownloadProgress {
+                        filename: filename.clone(),
+                        bytes_downloaded: downloaded,
+                        total_bytes,
+                        percentage: pct,
+                        done: false,
+                        error: None,
+                    },
+                );
+                last_emit = Instant::now();
+            }
+        }
     }
 
-    if response.content_length().is_some_and(|length| length > MAX_MEDIA_DOWNLOAD_BYTES) {
-        return Err(format!("Media download exceeds the {} MiB limit.", MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024));
-    }
+    drop(file);
+    let _ = std::fs::rename(&temp_path, &full_path)
+        .map_err(|e| format!("Failed to finalize downloaded file: {}", e))?;
 
-    let bytes = response.bytes().await.map_err(|e| e.to_string())?;
-    if bytes.len() as u64 > MAX_MEDIA_DOWNLOAD_BYTES {
-        return Err(format!("Media download exceeds the {} MiB limit.", MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024));
+    if let Some(app_handle) = app {
+        let _ = app_handle.emit(
+            MEDIA_DOWNLOAD_PROGRESS_EVENT,
+            MediaDownloadProgress {
+                filename: filename.clone(),
+                bytes_downloaded: downloaded,
+                total_bytes,
+                percentage: Some(100),
+                done: true,
+                error: None,
+            },
+        );
     }
-    std::fs::write(&full_path, bytes)
-        .map_err(|e| format!("Failed to write file {}: {}", full_path.display(), e))?;
 
     Ok(ResolvedPath {
         exists: true,
         absolute_path: full_path.to_string_lossy().to_string(),
     })
+}
+
+#[tauri::command]
+pub async fn download_media_asset(
+    app: tauri::AppHandle,
+    url: String,
+    dest_dir: String,
+    filename: String,
+) -> Result<ResolvedPath, String> {
+    download_media_asset_internal(Some(&app), url, dest_dir, filename).await
 }
 
 #[tauri::command]
@@ -263,7 +390,7 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
 
     // Fast-path: Check if any candidate path exists directly on disk
     for candidate in &candidates {
-        if candidate.exists() && candidate.is_file() {
+        if candidate.exists() {
             // Canonicalize to obtain the actual on-disk path with real casing
             let resolved = candidate.canonicalize().unwrap_or_else(|_| candidate.clone());
             let path_str = clean_unc_prefix(resolved.to_string_lossy().to_string());
@@ -648,7 +775,8 @@ mod tests {
     #[tokio::test]
     async fn test_download_media_asset_rejects_parent_traversal_filename() {
         let dir = tempdir().unwrap();
-        let res = download_media_asset(
+        let res = download_media_asset_internal(
+            None,
             "https://example.invalid/test.png".to_string(),
             dir.path().to_string_lossy().to_string(),
             "../escape.png".to_string(),

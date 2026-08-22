@@ -338,7 +338,11 @@
     "scrapeMedia": "Hämta media",
     "scraping": "Hämtar media...",
     "apple2gsInstructionsTitle": "Apple IIGS Systemopsætning og Startdiske",
-    "apple2gsInstructions": "Selvstartende spil starter direkte. For applikationsdiske uden indbygget bootloader (f.eks. Déjà Vu, Bard's Tale II), placer et GS/OS- eller ProDOS-startdiskbillede (f.eks. system5.2mg, system6.2mg, System.Disk.po eller ProDOS 16v1_6.2mg) og Apple IIGS ROMs (apple2gs.zip / ROM) i din emulator-mappe eller RetroArch system-mappe."
+    "apple2gsInstructions": "Selvstartende spil starter direkte. For applikationsdiske uden indbygget bootloader (f.eks. Déjà Vu, Bard's Tale II), placer et GS/OS- eller ProDOS-startdiskbillede (f.eks. system5.2mg, system6.2mg, System.Disk.po eller ProDOS 16v1_6.2mg) og Apple IIGS ROMs (apple2gs.zip / ROM) i din emulator-mappe eller RetroArch system-mappe.",
+    "amigaDownloadTarget": "Amiga Extras Download Target",
+    "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
+    "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
