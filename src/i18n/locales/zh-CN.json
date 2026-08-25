@@ -343,8 +343,8 @@
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
-    "bbcmicroInstructionsTitle": "BBC Micro / Acorn 系统设置与 BIOS",
-    "bbcmicroInstructions": "为获得与磁带 (.uef) 和磁盘 (.ssd / .dsd) 的完整兼容性，请使用配备 MAME 核心 (mame_libretro.dll) 的 RetroArch。请确保以下必需的 MAME BIOS zip 文件已放置在 RetroArch 的 system 目录中：bbcb.zip、bbc_acorn8271.zip 和 saa5050.zip（以及用于 Acorn Electron 游戏的 electron.zip）。"
+    "bbcmicroInstructionsTitle": "BBC Micro 系统设置与模拟器指南",
+    "bbcmicroInstructions": "如需快速启动磁盘 (.ssd / .dsd)，请使用配备 B2 核心 (b2_libretro.dll) 的 RetroArch 或 BeebEm。Extras 中附带磁盘版本的游戏将自动以磁盘模式启动。对于磁带 (.uef)，请使用具备自动输入功能的 BeebEm，或配备所需 BIOS 文件的 MAME。"
   },
   "media": {
     "noScreenshots": "暂无截图",

@@ -41,6 +41,12 @@ npm run test:e2e
 - **Debug Mode Guard**:
   - Keep emulator `--verbose` flags and verbose command line logging guarded by debug flags (`--debug`, `-d`, `GAMEBASEBOX_DEBUG=1`) so standard emulator launches remain silent.
 
+### Codebase Architecture & Questions via Graphify
+- Always consult the Graphify knowledge graph (`graphify-out/graph.json` / `graphify query` / NetworkX graph traversal) when investigating codebase architecture, component relationships, or answering structural questions.
+
+### Direct SQLite Database Access
+- When inspecting or querying the SQLite database (`gb64.sqlite` / `gamebasebox.db`), always use direct SQLite tools / CLI (`sqlite3 <db-path> "<query>"`) or dedicated database skills rather than writing temporary Python scripts.
+
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->
 ## Issue Tracking with bd (beads)

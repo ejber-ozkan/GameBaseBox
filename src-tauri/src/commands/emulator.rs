@@ -368,6 +368,41 @@ fn bbcmicro_media_sort_key(path: &Path) -> (u32, u32, String) {
     (ext_priority * 10 + secondary_penalty, disk_num, name)
 }
 
+fn find_bbcmicro_companion_disk_archive(rom_path: &Path) -> Option<PathBuf> {
+    let normalized = rom_path.to_string_lossy().replace('\\', "/");
+    let (base, rest) = normalized.split_once("/Games/")?;
+    let stem = Path::new(rest).file_stem()?.to_str()?;
+
+    // 1. Direct match in Extras/Disks/<rest>
+    let candidate1 = PathBuf::from(format!("{base}/Extras/Disks/{rest}"));
+    if candidate1.exists() {
+        return Some(candidate1);
+    }
+
+    // 2. Cleaned _RUN match in Extras/Disks/<dir_prefix>/<cleaned_stem>.zip
+    let cleaned_stem = stem.replace("_RUN_", "_").replace("_RUN", "");
+    if let Some((dir_prefix, _)) = rest.rsplit_once('/') {
+        let candidate2 = PathBuf::from(format!("{base}/Extras/Disks/{dir_prefix}/{cleaned_stem}.zip"));
+        if candidate2.exists() {
+            return Some(candidate2);
+        }
+    } else {
+        let candidate2 = PathBuf::from(format!("{base}/Extras/Disks/{cleaned_stem}.zip"));
+        if candidate2.exists() {
+            return Some(candidate2);
+        }
+    }
+
+    // 3. Haven Disks match in Extras/Haven Disks/<snake_stem>.zip
+    let snake_stem = cleaned_stem.to_lowercase().replace('-', "_");
+    let candidate3 = PathBuf::from(format!("{base}/Extras/Haven Disks/{snake_stem}.zip"));
+    if candidate3.exists() {
+        return Some(candidate3);
+    }
+
+    None
+}
+
 fn collect_amiga_sibling_disk_archives(rom_path: &Path) -> Vec<PathBuf> {
     let is_amiga_disk_zip = rom_path
         .file_stem()
@@ -1413,6 +1448,50 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                 "No compatible {} launch files found inside the ZIP file.",
                 platform_display_name(platform_id)
             ));
+        }
+
+        if platform_id == Some("bbcmicro")
+            && extracted_roms.iter().all(|p| {
+                let ext = p
+                    .extension()
+                    .and_then(|e| e.to_str())
+                    .unwrap_or("")
+                    .to_lowercase();
+                matches!(ext.as_str(), "uef" | "csw" | "wav")
+            })
+        {
+            if let Some(companion_disk_zip) = find_bbcmicro_companion_disk_archive(&rom) {
+                if let Ok(file) = std::fs::File::open(&companion_disk_zip) {
+                    if let Ok(mut archive) = zip::ZipArchive::new(file) {
+                        let stem = companion_disk_zip
+                            .file_stem()
+                            .and_then(|s| s.to_str())
+                            .unwrap_or("disk");
+                        let extract_dir = temp_dir.join(stem);
+                        for i in 0..archive.len() {
+                            if let Ok(mut file) = archive.by_index(i) {
+                                let outpath = extract_dir.join(file.mangled_name());
+                                if !(&*file.name()).ends_with('/') {
+                                    if let Some(p) = outpath.parent() {
+                                        let _ = std::fs::create_dir_all(p);
+                                    }
+                                    if let Ok(mut outfile) = std::fs::File::create(&outpath) {
+                                        let _ = std::io::copy(&mut file, &mut outfile);
+                                        let ext = outpath
+                                            .extension()
+                                            .and_then(|e| e.to_str())
+                                            .unwrap_or("")
+                                            .to_lowercase();
+                                        if matches!(ext.as_str(), "ssd" | "dsd" | "adl" | "adf") {
+                                            extracted_roms.push(outpath);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if platform_id == Some("amiga") {
@@ -2823,6 +2902,30 @@ mod tests {
         let result = launch_emulator(request).await.unwrap();
         assert!(result.success);
         assert!(!is_retroarch_mame_core(Some("b2_libretro.dll")));
+    }
+
+    #[tokio::test]
+    async fn test_bbcmicro_companion_disk_resolution() {
+        let dir = tempdir().unwrap();
+        let games_dir = dir.path().join("Games").join("A");
+        let extras_disks_dir = dir.path().join("Extras").join("Disks").join("A");
+        std::fs::create_dir_all(&games_dir).unwrap();
+        std::fs::create_dir_all(&extras_disks_dir).unwrap();
+
+        let tape_zip = games_dir.join("AticAtac_RUN_B.zip");
+        write_zip(
+            &tape_zip,
+            &[("AticAtac_RUN_B.hq.uef", b"tape data")],
+        );
+
+        let disk_zip = extras_disks_dir.join("AticAtac_B.zip");
+        write_zip(
+            &disk_zip,
+            &[("AticAtac.ssd", b"disk data")],
+        );
+
+        let companion = find_bbcmicro_companion_disk_archive(&tape_zip);
+        assert_eq!(companion, Some(disk_zip));
     }
 }
 

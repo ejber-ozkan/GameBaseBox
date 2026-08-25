@@ -343,8 +343,8 @@
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
-    "bbcmicroInstructionsTitle": "BBC Micro / Acorn süsteemi seadistus ja BIOS",
-    "bbcmicroInstructions": "Täielikuks ühilduvuseks kassettidega (.uef) ja ketastega (.ssd / .dsd) kasutage RetroArchi koos MAME tuumaga (mame_libretro.dll). Veenduge, et järgmised vajalikud MAME BIOS-i zip-failid on paigutatud teie RetroArchi system-kataloogi: bbcb.zip, bbc_acorn8271.zip ja saa5050.zip (ning electron.zip Acorn Electroni mängude jaoks)."
+    "bbcmicroInstructionsTitle": "BBC Micro süsteemi seadistus ja emulaatori juhend",
+    "bbcmicroInstructions": "Ketaste (.ssd / .dsd) kiireks käivitamiseks kasutage RetroArchi B2 tuumaga (b2_libretro.dll) või BeebEmi. Extras kaustas olevate kettaversioonidega mängud käivituvad automaatselt. Kassettide (.uef) jaoks kasutage BeebEmi automaatkäivitust või MAME-i koos vajalike BIOS-failidega."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

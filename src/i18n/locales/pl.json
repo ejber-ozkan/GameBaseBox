@@ -343,8 +343,8 @@
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
-    "bbcmicroInstructionsTitle": "Konfiguracja systemu BBC Micro / Acorn i BIOS",
-    "bbcmicroInstructions": "W celu uzyskania pełnej kompatybilności z kasetami (.uef) i dyskietkami (.ssd / .dsd) użyj RetroArch z rdzeniem MAME (mame_libretro.dll). Upewnij się, że w katalogu system RetroArch znajdują się następujące wymagane pliki zip BIOS MAME: bbcb.zip, bbc_acorn8271.zip oraz saa5050.zip (oraz electron.zip dla gier Acorn Electron)."
+    "bbcmicroInstructionsTitle": "Konfiguracja systemu BBC Micro i przewodnik po emulatorach",
+    "bbcmicroInstructions": "W celu szybkiego uruchamiania dyskietek (.ssd / .dsd) użyj RetroArch z rdzeniem B2 (b2_libretro.dll) lub emulatora BeebEm. Gry z wersjami dyskietkowymi w Extras uruchomią się automatycznie. Dla kaset (.uef) użyj BeebEm lub MAME z wymaganymi plikami BIOS."
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",

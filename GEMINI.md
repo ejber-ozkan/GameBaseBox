@@ -33,6 +33,8 @@ Before committing changes, bumping versions, creating release tags, or pushing t
   - RetroArch MAME: generates `.cmd` launcher files targeting `apple2gs` (or `apple2gsr1`) with `-rompath` and 3.5" (`-flop3`/`-flop4`) / 5.25" (`-flop1`/`-flop2`) drive parameters.
 - **Multi-Disk Order**: Always ensure Disk 1 / Main Game is prioritized at the top of playlists (`.m3u` / `.vfl` / `.cmd`) ahead of character, course, or save disks.
 - **Debug Mode Guard**: Keep `--verbose` and log files guarded so normal emulator launches remain silent.
+- **Codebase Architecture & Questions via Graphify**: Always consult the Graphify knowledge graph (`graphify-out/graph.json` / `graphify query` / NetworkX graph traversal) when investigating codebase architecture, component relationships, or answering structural questions.
+- **Direct SQLite Database Access**: When inspecting or querying the SQLite database (`gb64.sqlite` / `gamebasebox.db`), always use direct SQLite tools / CLI (`sqlite3 <db-path> "<query>"`) or dedicated database skills rather than writing temporary Python scripts.
 
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:ca08a54f -->
