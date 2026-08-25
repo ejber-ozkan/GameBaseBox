@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Amiga Extras Download Target",
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
-    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
+    "bbcmicroInstructionsTitle": "Socrú Córais BBC Micro / Acorn & BIOS",
+    "bbcmicroInstructions": "Chun comhoiriúnacht iomlán a fháil le caiséid (.uef) agus dioscaí (.ssd / .dsd), bain úsáid as RetroArch leis an gcroí MAME (mame_libretro.dll). Cinntigh go bhfuil na comhaid zip BIOS MAME riachtanacha seo i d'fhillteán system RetroArch: bbcb.zip, bbc_acorn8271.zip, agus saa5050.zip (agus electron.zip do chluichí Acorn Electron)."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

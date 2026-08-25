@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Destinazione download extra Amiga",
     "amigaDownloadTargetDescription": "Scegli se i file Amiga su richiesta vengono salvati nella cartella Extras o in una cartella temporanea.",
     "amigaDownloadTargetExtras": "Cartella Extras (Permanente)",
-    "amigaDownloadTargetTemp": "Cartella Temp (Nessuna sovrascrittura)"
+    "amigaDownloadTargetTemp": "Cartella Temp (Nessuna sovrascrittura)",
+    "bbcmicroInstructionsTitle": "Configurazione sistema BBC Micro / Acorn e BIOS",
+    "bbcmicroInstructions": "Per la piena compatibilità con cassette (.uef) e dischetti (.ssd / .dsd), usa RetroArch con il core MAME (mame_libretro.dll). Assicurati che i seguenti file zip del BIOS MAME siano presenti nella cartella system di RetroArch: bbcb.zip, bbc_acorn8271.zip e saa5050.zip (e electron.zip per i giochi Acorn Electron)."
   },
   "media": {
     "noScreenshots": "Nessuno screenshot disponibile",

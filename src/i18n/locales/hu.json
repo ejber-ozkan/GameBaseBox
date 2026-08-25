@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Amiga Extras Download Target",
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
-    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
+    "bbcmicroInstructionsTitle": "BBC Micro / Acorn Rendszerbeállítás és BIOS",
+    "bbcmicroInstructions": "A kazetták (.uef) és lemezek (.ssd / .dsd) teljes kompatibilitásához használja a RetroArchot a MAME maggal (mame_libretro.dll). Győződjön meg arról, hogy a következő kötelező MAME BIOS zip fájlok megtalálhatók a RetroArch system könyvtárában: bbcb.zip, bbc_acorn8271.zip és saa5050.zip (valamint electron.zip az Acorn Electron játékokhoz)."
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",

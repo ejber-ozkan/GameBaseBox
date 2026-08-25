@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Amiga Extras Download Target",
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
-    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
+    "bbcmicroInstructionsTitle": "Konfigurazzjoni tas-Sistema BBC Micro / Acorn u BIOS",
+    "bbcmicroInstructions": "Għal kompatibilità sħiħa mal-cassettes (.uef) u d-diski (.ssd / .dsd), uża RetroArch bil-qalba MAME (mame_libretro.dll). Kun żgur li l-fajls zip meħtieġa tal-MAME BIOS jinsabu fid-direttorju system ta' RetroArch: bbcb.zip, bbc_acorn8271.zip, u saa5050.zip (kif ukoll electron.zip għal logħob ta' Acorn Electron)."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

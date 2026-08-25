@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Amiga Extras Download Target",
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
-    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
+    "bbcmicroInstructionsTitle": "BBC Micro / Acorn 시스템 설정 및 BIOS",
+    "bbcmicroInstructions": "카세트 테이프(.uef) 및 디스크(.ssd / .dsd)와의 완벽한 호환성을 위해 MAME 코어(mame_libretro.dll)가 포함된 RetroArch를 사용하세요. 다음 필수 MAME BIOS zip 파일이 RetroArch system 디렉터리에 있는지 확인하세요: bbcb.zip, bbc_acorn8271.zip, saa5050.zip (및 Acorn Electron 게임용 electron.zip)."
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",

@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Amiga Extras Download Target",
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
-    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
+    "bbcmicroInstructionsTitle": "BBC Micro / Acorn sistēmas iestatīšana un BIOS",
+    "bbcmicroInstructions": "Pilnīgai saderībai ar kasetēm (.uef) un diskiem (.ssd / .dsd) izmantojiet RetroArch ar MAME kodolu (mame_libretro.dll). Pārliecinieties, ka RetroArch system direktorijā atrodas šādi nepieciešamie MAME BIOS zip faili: bbcb.zip, bbc_acorn8271.zip un saa5050.zip (kā arī electron.zip Acorn Electron spēlēm)."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
