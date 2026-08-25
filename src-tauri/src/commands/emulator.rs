@@ -1006,35 +1006,30 @@ fn write_mame_bbcmicro_cmd(
     gemus: &str,
     system_dir: Option<&Path>,
 ) -> Result<PathBuf, String> {
-    let primary_str = primary_rom.to_string_lossy().to_string();
+    let primary_str = primary_rom.to_string_lossy().replace('\\', "/");
     let secondary = rom_files.iter().find(|f| *f != primary_rom);
 
-    // Parse GEMUS for machine model and boot command
+    // Parse GEMUS for machine model
     let mut is_electron = false;
     let mut model: Option<&str> = None;
-    let mut is_disk_cat = false;
 
     for line in gemus.lines() {
         let trimmed = line.trim();
-        if let Some((k, v)) = trimmed.split_once('=') {
-            let key = k.trim().to_lowercase();
-            let val = v.trim().to_lowercase();
-            if key == "emu" && (val.contains("electrem") || val.contains("elkulator")) {
+        if trimmed.starts_with("emu=") {
+            let val = trimmed.trim_start_matches("emu=").trim();
+            if val.eq_ignore_ascii_case("ElectrEm") || val.eq_ignore_ascii_case("Elkulator") {
                 is_electron = true;
-            } else if key == "model" {
-                model = Some(v.trim());
-            } else if key == "disk" && val == "cat" {
-                is_disk_cat = true;
             }
+        } else if trimmed.starts_with("model=") {
+            model = Some(trimmed.trim_start_matches("model=").trim());
         }
     }
 
     let ext = primary_rom
         .extension()
         .and_then(|e| e.to_str())
-        .unwrap_or("")
+        .unwrap_or_default()
         .to_lowercase();
-
     let is_tape = matches!(ext.as_str(), "uef" | "csw" | "wav");
     let is_cart = matches!(ext.as_str(), "rom" | "bin");
 
@@ -1051,45 +1046,34 @@ fn write_mame_bbcmicro_cmd(
     let mut cmd_line = format!("{}", machine);
 
     if let Some(sys) = system_dir {
-        let sys_lossy = sys.to_string_lossy();
+        let sys_lossy = sys.to_string_lossy().replace('\\', "/");
         let mame_dir = sys.join("mame");
         let mame_roms = sys.join("mame").join("roms");
         let sys_roms = sys.join("roms");
-        let mut paths = vec![sys_lossy.to_string()];
+        let mut paths = vec![sys_lossy];
         if mame_dir.exists() {
-            paths.push(mame_dir.to_string_lossy().to_string());
+            paths.push(mame_dir.to_string_lossy().replace('\\', "/"));
         }
         if mame_roms.exists() {
-            paths.push(mame_roms.to_string_lossy().to_string());
+            paths.push(mame_roms.to_string_lossy().replace('\\', "/"));
         }
         if sys_roms.exists() {
-            paths.push(sys_roms.to_string_lossy().to_string());
+            paths.push(sys_roms.to_string_lossy().replace('\\', "/"));
         }
         let separator = if cfg!(windows) { ";" } else { ":" };
         cmd_line.push_str(&format!(" -rompath \"{}\"", paths.join(separator)));
     }
 
-    cmd_line.push_str(" -autoboot_delay 2");
-
     if is_tape {
         cmd_line.push_str(&format!(" -cass \"{}\"", primary_str));
-        if is_electron {
-            cmd_line.push_str(" -autoboot_command \"*TAPE\\n*RUN\\n\"");
-        } else {
-            cmd_line.push_str(" -autoboot_command \"*TAPE\\nPAGE=&E00\\n*RUN\\n\"");
-        }
     } else if is_cart {
         cmd_line.push_str(&format!(" -cart1 \"{}\"", primary_str));
     } else {
         // Floppy disk (ssd, dsd, adl, adf, img)
         cmd_line.push_str(&format!(" -flop1 \"{}\"", primary_str));
         if let Some(sec) = secondary {
-            cmd_line.push_str(&format!(" -flop2 \"{}\"", sec.to_string_lossy()));
-        }
-        if is_disk_cat {
-            cmd_line.push_str(" -autoboot_command \"*CAT\\n\"");
-        } else {
-            cmd_line.push_str(" -autoboot_command \"*RUN !BOOT\\n\"");
+            let sec_str = sec.to_string_lossy().replace('\\', "/");
+            cmd_line.push_str(&format!(" -flop2 \"{}\"", sec_str));
         }
     }
 
@@ -2704,10 +2688,9 @@ mod tests {
 
         let content = std::fs::read_to_string(cmd_path).unwrap();
         assert!(content.starts_with("bbcb"));
-        assert!(content.contains(&format!("-rompath \"{}\"", dir.path().to_string_lossy())));
-        assert!(content.contains(&format!("-flop1 \"{}\"", disk1.to_string_lossy())));
-        assert!(content.contains(&format!("-flop2 \"{}\"", disk2.to_string_lossy())));
-        assert!(content.contains("-autoboot_command \"*RUN !BOOT\\n\""));
+        assert!(content.contains(&format!("-rompath \"{}\"", dir.path().to_string_lossy().replace('\\', "/"))));
+        assert!(content.contains(&format!("-flop1 \"{}\"", disk1.to_string_lossy().replace('\\', "/"))));
+        assert!(content.contains(&format!("-flop2 \"{}\"", disk2.to_string_lossy().replace('\\', "/"))));
     }
 
     #[test]
@@ -2727,8 +2710,7 @@ mod tests {
 
         let content = std::fs::read_to_string(cmd_path).unwrap();
         assert!(content.starts_with("bbcb"));
-        assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy())));
-        assert!(content.contains("-autoboot_command \"*TAPE\\nPAGE=&E00\\n*RUN\\n\""));
+        assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy().replace('\\', "/"))));
     }
 
     #[test]
@@ -2748,12 +2730,11 @@ mod tests {
 
         let content = std::fs::read_to_string(cmd_path).unwrap();
         assert!(content.starts_with("electron"));
-        assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy())));
-        assert!(content.contains("-autoboot_command \"*TAPE\\n*RUN\\n\""));
+        assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy().replace('\\', "/"))));
     }
 
     #[test]
-    fn test_write_mame_bbcmicro_cmd_model_master_and_disk_cat() {
+    fn test_write_mame_bbcmicro_cmd_model_master() {
         let dir = tempdir().unwrap();
         let disk = dir.path().join("Game.dsd");
         std::fs::write(&disk, b"disk").unwrap();
@@ -2762,15 +2743,14 @@ mod tests {
             dir.path(),
             &disk,
             &[disk.clone()],
-            "model=05\r\ndisk=cat",
+            "model=05",
             None,
         )
         .unwrap();
 
         let content = std::fs::read_to_string(cmd_path).unwrap();
         assert!(content.starts_with("bbcm"));
-        assert!(content.contains(&format!("-flop1 \"{}\"", disk.to_string_lossy())));
-        assert!(content.contains("-autoboot_command \"*CAT\\n\""));
+        assert!(content.contains(&format!("-flop1 \"{}\"", disk.to_string_lossy().replace('\\', "/"))));
     }
 
     #[tokio::test]
