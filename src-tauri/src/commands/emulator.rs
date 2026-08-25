@@ -994,9 +994,9 @@ fn is_retroarch_mame_core(core_path: Option<&str>) -> bool {
     core_path
         .map(|c| {
             let cl = c.to_lowercase();
-            cl.contains("mame") || cl.contains("mess") || (!cl.contains("b-em") && !cl.contains("beebem"))
+            cl.contains("mame") || cl.contains("mess")
         })
-        .unwrap_or(true)
+        .unwrap_or(false)
 }
 
 fn write_mame_bbcmicro_cmd(
@@ -2790,6 +2790,42 @@ mod tests {
 
         let result = launch_emulator(request).await.unwrap();
         assert!(result.success);
+    }
+
+    #[tokio::test]
+    async fn test_launch_emulator_bbcmicro_retroarch_b2_core_passes_rom_directly() {
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "retroarch.exe"
+        } else {
+            "retroarch"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let core_path = dir.path().join("b2_libretro.dll");
+        std::fs::write(&core_path, b"core").unwrap();
+
+        let zip_path = dir.path().join("AticAtac_RUN_B.zip");
+        write_zip(
+            &zip_path,
+            &[
+                ("AticAtac_RUN_B.hq.uef", b"tape data"),
+                ("Instructions.txt", b"text notes"),
+            ],
+        );
+
+        let request = LaunchRequest {
+            platform_id: Some("bbcmicro".to_string()),
+            emulator_profile_id: Some("retroarch-bbcmicro".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            rom_path: zip_path.to_string_lossy().to_string(),
+            core_path: Some(core_path.to_string_lossy().to_string()),
+            ..Default::default()
+        };
+
+        let result = launch_emulator(request).await.unwrap();
+        assert!(result.success);
+        assert!(!is_retroarch_mame_core(Some("b2_libretro.dll")));
     }
 }
 
