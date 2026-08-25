@@ -1057,9 +1057,9 @@ fn write_mame_bbcmicro_cmd(
     if is_tape {
         cmd_line.push_str(&format!(" -cass \"{}\"", primary_str));
         if is_electron {
-            cmd_line.push_str(" -autoboot_command \"*TAPE\\nCHAIN\\\"\\\"\\n\"");
+            cmd_line.push_str(" -autoboot_command \"*TAPE\\n*RUN\\n\"");
         } else {
-            cmd_line.push_str(" -autoboot_command \"*TAPE\\nPAGE=&E00\\nCHAIN\\\"\\\"\\n\"");
+            cmd_line.push_str(" -autoboot_command \"*TAPE\\nPAGE=&E00\\n*RUN\\n\"");
         }
     } else if is_cart {
         cmd_line.push_str(&format!(" -cart1 \"{}\"", primary_str));
@@ -2711,7 +2711,7 @@ mod tests {
         let content = std::fs::read_to_string(cmd_path).unwrap();
         assert!(content.starts_with("bbcb"));
         assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy())));
-        assert!(content.contains("-autoboot_command \"*TAPE\\nPAGE=&E00\\nCHAIN\\\"\\\"\\n\""));
+        assert!(content.contains("-autoboot_command \"*TAPE\\nPAGE=&E00\\n*RUN\\n\""));
     }
 
     #[test]
@@ -2732,7 +2732,7 @@ mod tests {
         let content = std::fs::read_to_string(cmd_path).unwrap();
         assert!(content.starts_with("electron"));
         assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy())));
-        assert!(content.contains("-autoboot_command \"*TAPE\\nCHAIN\\\"\\\"\\n\""));
+        assert!(content.contains("-autoboot_command \"*TAPE\\n*RUN\\n\""));
     }
 
     #[test]
