@@ -1051,8 +1051,25 @@ fn write_mame_bbcmicro_cmd(
     let mut cmd_line = format!("{}", machine);
 
     if let Some(sys) = system_dir {
-        cmd_line.push_str(&format!(" -rompath \"{}\"", sys.to_string_lossy()));
+        let sys_lossy = sys.to_string_lossy();
+        let mame_dir = sys.join("mame");
+        let mame_roms = sys.join("mame").join("roms");
+        let sys_roms = sys.join("roms");
+        let mut paths = vec![sys_lossy.to_string()];
+        if mame_dir.exists() {
+            paths.push(mame_dir.to_string_lossy().to_string());
+        }
+        if mame_roms.exists() {
+            paths.push(mame_roms.to_string_lossy().to_string());
+        }
+        if sys_roms.exists() {
+            paths.push(sys_roms.to_string_lossy().to_string());
+        }
+        let separator = if cfg!(windows) { ";" } else { ":" };
+        cmd_line.push_str(&format!(" -rompath \"{}\"", paths.join(separator)));
     }
+
+    cmd_line.push_str(" -autoboot_delay 2");
 
     if is_tape {
         cmd_line.push_str(&format!(" -cass \"{}\"", primary_str));
