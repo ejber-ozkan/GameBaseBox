@@ -344,7 +344,7 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro Systeminställningar & Emulatorguide",
-    "bbcmicroInstructions": "För snabb diskettstart (.ssd / .dsd) använd RetroArch med B2-kärnan (b2_libretro.dll) eller BeebEm. Spel med diskettversioner i Extras startar automatiskt. För kassettband (.uef) använd BeebEm för automatisk inmatning eller MAME med nödvändiga BIOS-filer."
+    "bbcmicroInstructions": "Stöder både RetroArch B2-kärnan (b2_libretro.dll) och RetroArch MAME-kärnan (mame_libretro.dll) samt fristående BeebEm. För snabb start utan BIOS-filer använd B2. För MAME-kärnan se till att nödvändiga BIOS-filer (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) finns i RetroArchs system-mapp. Spel med diskettversioner i Extras startar automatiskt."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

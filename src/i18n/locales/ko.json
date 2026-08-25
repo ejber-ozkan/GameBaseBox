@@ -344,7 +344,7 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro 시스템 설정 및 에뮬레이터 가이드",
-    "bbcmicroInstructions": "디스크(.ssd / .dsd)의 빠른 부팅을 위해 B2 코어(b2_libretro.dll)가 포함된 RetroArch 또는 BeebEm을 사용하세요. Extras에 디스크 버전이 있는 게임은 자동으로 디스크로 부팅됩니다. 카세트 테이프(.uef)의 경우 BeebEm의 자동 시작 기능이나 필수 BIOS가 있는 MAME을 사용하세요."
+    "bbcmicroInstructions": "RetroArch B2 코어(b2_libretro.dll)와 RetroArch MAME 코어(mame_libretro.dll), 독립 실행형 BeebEm을 모두 지원합니다. BIOS 파일 없이 빠른 디스크 부팅을 위해 B2를 사용하세요. MAME 코어의 경우 RetroArch의 system 폴더에 필수 BIOS 파일(bbcb.zip, bbc_acorn8271.zip, saa5050.zip)이 있는지 확인하세요. Extras에 디스크 버전이 있는 게임은 자동으로 부팅됩니다."
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",

@@ -344,7 +344,7 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "Konfigurazzjoni tas-Sistema BBC Micro u Gwida tal-Emulatur",
-    "bbcmicroInstructions": "Għal ibbutjar mgħaġġel mid-diski (.ssd / .dsd), uża RetroArch bil-qalba B2 (b2_libretro.dll) jew BeebEm. Logħob b'verżjonijiet tad-diska f'Extras jibdew awtomatikament. Għall-cassettes (.uef), uża BeebEm għall-istartjar awtomatiku jew MAME bil-fajls meħtieġa tal-BIOS."
+    "bbcmicroInstructions": "Jappoġġja kemm il-qalba RetroArch B2 (b2_libretro.dll) kif ukoll il-qalba RetroArch MAME (mame_libretro.dll), kif ukoll BeebEm waħdu. Għal ibbutjar mgħaġġel mingħajr fajls BIOS, uża B2. Għal MAME, kun żgur li l-fajls BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) qegħdin fid-direttorju system. Logħob b'verżjonijiet tad-diska f'Extras jibdew awtomatikament."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

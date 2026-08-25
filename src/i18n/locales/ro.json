@@ -344,7 +344,7 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "Configurare sistem BBC Micro și ghid emulator",
-    "bbcmicroInstructions": "Pentru pornire rapidă de pe disc (.ssd / .dsd), utilizați RetroArch cu nucleul B2 (b2_libretro.dll) sau BeebEm. Jocurile cu versiuni pe disc în Extras vor porni automat. Pentru casete (.uef), utilizați BeebEm sau MAME cu fișierele BIOS necesare."
+    "bbcmicroInstructions": "Acceptă atât nucleul RetroArch B2 (b2_libretro.dll), cât și nucleul RetroArch MAME (mame_libretro.dll), precum și BeebEm independent. Pentru pornire rapidă fără fișiere BIOS, utilizați B2. Pentru MAME, asigurați-vă că fișierele BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) sunt în dosarul system. Jocurile cu versiuni pe disc în Extras pornesc automat."
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",

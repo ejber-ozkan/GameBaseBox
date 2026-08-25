@@ -344,7 +344,7 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "إعداد نظام BBC Micro ودليل المحاكي",
-    "bbcmicroInstructions": "لتشغيل الأقراص بسهولة وسرعة (.ssd / .dsd)، استخدم RetroArch مع نواة B2 (b2_libretro.dll) أو BeebEm. الألعاب التي تتوفر لها نسخ أقراص في Extras ستقلع تلقائيًا. لأشرطة الكاسيت المستقلة (.uef)، استخدم BeebEm للكتابة التلقائية للإقلاع أو MAME مع ملفات BIOS المطلوبة."
+    "bbcmicroInstructions": "يدعم كلاً من نواة RetroArch B2 (b2_libretro.dll) ونواة RetroArch MAME (mame_libretro.dll)، بالإضافة إلى محاكي BeebEm المستقل. لإقلاع سريع من الأقراص بدون ملفات BIOS، استخدم B2. لنواة MAME، تأكد من وجود ملفات BIOS المطلوبة (bbcb.zip، bbc_acorn8271.zip، saa5050.zip) في مجلد system لـ RetroArch. الألعاب التي تتوفر لها نسخ أقراص في Extras ستقلع تلقائيًا."
   },
   "media": {
     "noScreenshots": "لا توجد لقطات شاشة متاحة",

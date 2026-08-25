@@ -344,7 +344,7 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "Socrú Córais BBC Micro & Treoir Aithriseora",
-    "bbcmicroInstructions": "Chun dioscaí a thosú go tapa (.ssd / .dsd), bain úsáid as RetroArch leis an gcroí B2 (b2_libretro.dll) nó BeebEm. Tosóidh cluichí le leaganacha diosca in Extras go huathoibríoch. I gcás caiséad (.uef), bain úsáid as BeebEm nó MAME leis na comhaid BIOS riachtanacha."
+    "bbcmicroInstructions": "Tacaíonn sé le croí RetroArch B2 (b2_libretro.dll) agus croí RetroArch MAME (mame_libretro.dll), chomh maith le BeebEm neamhspleách. Chun tosú go tapa gan comhaid BIOS, bain úsáid as B2. I gcás MAME, cinntigh go bhfuil comhaid BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) i bhfillteán system RetroArch. Tosóidh cluichí le leaganacha diosca in Extras go huathoibríoch."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

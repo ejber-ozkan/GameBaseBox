@@ -344,7 +344,7 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro Sistem Kurulumu ve Emülatör Kılavuzu",
-    "bbcmicroInstructions": "Hızlı disk başlatma (.ssd / .dsd) için B2 çekirdeğine (b2_libretro.dll) sahip RetroArch veya BeebEm kullanın. Extras içinde disk sürümü bulunan oyunlar otomatik olarak başlar. Kasetler (.uef) için otomatik başlatma özelliğine sahip BeebEm'i veya gerekli BIOS dosyalarıyla MAME'i kullanın."
+    "bbcmicroInstructions": "Hem RetroArch B2 çekirdeğini (b2_libretro.dll) hem de RetroArch MAME çekirdeğini (mame_libretro.dll) ve bağımsız BeebEm'i destekler. BIOS dosyası olmadan hızlı disk başlatma için B2'yi kullanın. MAME çekirdeği için gerekli BIOS dosyalarının (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) RetroArch system klasöründe olduğundan emin olun. Extras içinde disk sürümü bulunan oyunlar otomatik olarak başlar."
   },
   "media": {
     "noScreenshots": "Ekran görüntüsü yok",

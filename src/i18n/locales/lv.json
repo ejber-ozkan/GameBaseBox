@@ -344,7 +344,7 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro sistēmas iestatīšana un emulatora rokasgrāmata",
-    "bbcmicroInstructions": "Ātrai disku (.ssd / .dsd) palaišanai izmantojiet RetroArch ar B2 kodolu (b2_libretro.dll) vai BeebEm. Spēles ar disku versijām Extras mapē startēs automātiski. Kasetēm (.uef) izmantojiet BeebEm automātisko palaišanu vai MAME ar nepieciešamajiem BIOS failiem."
+    "bbcmicroInstructions": "Atbalsta gan RetroArch B2 kodolu (b2_libretro.dll), gan RetroArch MAME kodolu (mame_libretro.dll), kā arī atsevišķu BeebEm. Ātrai palaišanai bez BIOS failiem izmantojiet B2. MAME kodolam nodrošiniet nepieciešamos BIOS failus (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) RetroArch system mapē. Spēles ar disku versijām Extras mapē startē automātiski."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
