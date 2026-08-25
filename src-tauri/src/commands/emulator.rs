@@ -318,6 +318,56 @@ fn amiga_disk_sort_key(path: &Path) -> (u32, String) {
     (priority * 1000 + disk_number, name)
 }
 
+fn bbcmicro_media_sort_key(path: &Path) -> (u32, u32, String) {
+    let ext = path
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+    let name = path
+        .file_stem()
+        .and_then(|n| n.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+
+    // Prioritize formats:
+    // 0: Standard DFS floppy disks (ssd, dsd)
+    // 1: ADFS disks (adl, adf, img)
+    // 2: Cassette tape images (uef, csw, wav)
+    // 3: Cartridges / ROMs (rom, bin)
+    // 4: Other
+    let ext_priority = match ext.as_str() {
+        "ssd" | "dsd" => 0,
+        "adl" | "adf" | "img" => 1,
+        "uef" | "csw" | "wav" => 2,
+        "rom" | "bin" => 3,
+        _ => 4,
+    };
+
+    let is_secondary = name.contains("save")
+        || name.contains("data")
+        || name.contains("side 2")
+        || name.contains("side_2")
+        || name.contains("side2")
+        || name.contains("disk 2")
+        || name.contains("disk_2")
+        || name.contains("disk2");
+    let secondary_penalty = if is_secondary { 1 } else { 0 };
+
+    let mut disk_num = 1u32;
+    for token in ["disk ", "disk_", "disk", "d", "side ", "side_", "side"] {
+        if let Some((_, rest)) = name.rsplit_once(token) {
+            let num_str: String = rest.chars().take_while(|c| c.is_ascii_digit()).collect();
+            if let Ok(n) = num_str.parse::<u32>() {
+                disk_num = n;
+                break;
+            }
+        }
+    }
+
+    (ext_priority * 10 + secondary_penalty, disk_num, name)
+}
+
 fn collect_amiga_sibling_disk_archives(rom_path: &Path) -> Vec<PathBuf> {
     let is_amiga_disk_zip = rom_path
         .file_stem()
@@ -940,6 +990,104 @@ fn write_mame_apple2gs_cmd(
     Ok(cmd_file_path)
 }
 
+fn is_retroarch_mame_core(core_path: Option<&str>) -> bool {
+    core_path
+        .map(|c| {
+            let cl = c.to_lowercase();
+            cl.contains("mame") || cl.contains("mess") || (!cl.contains("b-em") && !cl.contains("beebem"))
+        })
+        .unwrap_or(true)
+}
+
+fn write_mame_bbcmicro_cmd(
+    temp_dir: &Path,
+    primary_rom: &Path,
+    rom_files: &[PathBuf],
+    gemus: &str,
+    system_dir: Option<&Path>,
+) -> Result<PathBuf, String> {
+    let primary_str = primary_rom.to_string_lossy().to_string();
+    let secondary = rom_files.iter().find(|f| *f != primary_rom);
+
+    // Parse GEMUS for machine model and boot command
+    let mut is_electron = false;
+    let mut model: Option<&str> = None;
+    let mut is_disk_cat = false;
+
+    for line in gemus.lines() {
+        let trimmed = line.trim();
+        if let Some((k, v)) = trimmed.split_once('=') {
+            let key = k.trim().to_lowercase();
+            let val = v.trim().to_lowercase();
+            if key == "emu" && (val.contains("electrem") || val.contains("elkulator")) {
+                is_electron = true;
+            } else if key == "model" {
+                model = Some(v.trim());
+            } else if key == "disk" && val == "cat" {
+                is_disk_cat = true;
+            }
+        }
+    }
+
+    let ext = primary_rom
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+
+    let is_tape = matches!(ext.as_str(), "uef" | "csw" | "wav");
+    let is_cart = matches!(ext.as_str(), "rom" | "bin");
+
+    let machine = if is_electron {
+        "electron"
+    } else {
+        match model {
+            Some("05") | Some("06") => "bbcm",
+            Some("04") => "bbcbp",
+            _ => "bbcb",
+        }
+    };
+
+    let mut cmd_line = format!("{}", machine);
+
+    if let Some(sys) = system_dir {
+        cmd_line.push_str(&format!(" -rompath \"{}\"", sys.to_string_lossy()));
+    }
+
+    if is_tape {
+        cmd_line.push_str(&format!(" -cass \"{}\"", primary_str));
+        if is_electron {
+            cmd_line.push_str(" -autoboot_command \"*TAPE\\nCHAIN\\\"\\\"\\n\"");
+        } else {
+            cmd_line.push_str(" -autoboot_command \"*TAPE\\nPAGE=&E00\\nCHAIN\\\"\\\"\\n\"");
+        }
+    } else if is_cart {
+        cmd_line.push_str(&format!(" -cart1 \"{}\"", primary_str));
+    } else {
+        // Floppy disk (ssd, dsd, adl, adf, img)
+        cmd_line.push_str(&format!(" -flop1 \"{}\"", primary_str));
+        if let Some(sec) = secondary {
+            cmd_line.push_str(&format!(" -flop2 \"{}\"", sec.to_string_lossy()));
+        }
+        if is_disk_cat {
+            cmd_line.push_str(" -autoboot_command \"*CAT\\n\"");
+        } else {
+            cmd_line.push_str(" -autoboot_command \"*RUN !BOOT\\n\"");
+        }
+    }
+
+    let cmd_file_path = temp_dir.join(format!(
+        "{}.cmd",
+        primary_rom
+            .file_stem()
+            .unwrap_or_default()
+            .to_string_lossy()
+    ));
+
+    std::fs::write(&cmd_file_path, &cmd_line).map_err(|e| e.to_string())?;
+    Ok(cmd_file_path)
+}
+
 #[tauri::command]
 pub async fn test_emulator_profile(
     request: EmulatorProfileTestRequest,
@@ -1268,6 +1416,8 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
 
         if platform_id == Some("amiga") {
             extracted_roms.sort_by_key(|path| amiga_disk_sort_key(path));
+        } else if platform_id == Some("bbcmicro") {
+            extracted_roms.sort_by_key(|path| bbcmicro_media_sort_key(path));
         } else {
             extracted_roms.sort_by_key(|path| natural_disk_sort_key(path));
         }
@@ -1292,6 +1442,20 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                     system_dir.as_deref().or_else(|| emulator.parent()),
                 )?;
                 args.push(cmd_path.to_string_lossy().to_string());
+            } else if platform_id == Some("bbcmicro") {
+                if is_retroarch_mame_core(request.core_path.as_deref()) {
+                    let system_dir = emulator.parent().map(|p| p.join("system"));
+                    let cmd_path = write_mame_bbcmicro_cmd(
+                        &temp_dir,
+                        &resolved_primary_rom,
+                        &extracted_roms,
+                        &launch_metadata.gemus,
+                        system_dir.as_deref().or_else(|| emulator.parent()),
+                    )?;
+                    args.push(cmd_path.to_string_lossy().to_string());
+                } else {
+                    args.push(resolved_primary_rom.to_string_lossy().to_string());
+                }
             } else if extracted_roms.len() > 1 && !extracted_roms.iter().any(|p| is_amiga_slave(p)) {
                 let m3u_path =
                     write_retroarch_m3u(&temp_dir, &resolved_primary_rom, &extracted_roms)?;
@@ -1355,6 +1519,21 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                     system_dir.as_deref().or_else(|| emulator.parent()),
                 )?;
                 args.push(cmd_path.to_string_lossy().to_string());
+            } else if platform_id == Some("bbcmicro") {
+                if is_retroarch_mame_core(request.core_path.as_deref()) {
+                    let temp_dir = create_launch_temp_dir()?;
+                    let system_dir = emulator.parent().map(|p| p.join("system"));
+                    let cmd_path = write_mame_bbcmicro_cmd(
+                        &temp_dir,
+                        &rom,
+                        &[rom.clone()],
+                        &launch_metadata.gemus,
+                        system_dir.as_deref().or_else(|| emulator.parent()),
+                    )?;
+                    args.push(cmd_path.to_string_lossy().to_string());
+                } else {
+                    args.push(rom.to_string_lossy().to_string());
+                }
             } else {
                 args.push(rom.to_string_lossy().to_string());
             }
@@ -2465,6 +2644,152 @@ mod tests {
         let resolved = resolve_existing_rom_path(&missing_extras_path.to_string_lossy());
 
         assert_eq!(resolved, zip_file);
+    }
+
+    #[test]
+    fn test_bbcmicro_media_sort_key_prioritizes_ssd_over_uef_and_secondary_disks() {
+        let mut files = vec![
+            PathBuf::from("ChuckieEgg_B_Tape.uef"),
+            PathBuf::from("ChuckieEgg_B_Disk2.ssd"),
+            PathBuf::from("ChuckieEgg_B_Disk1.ssd"),
+            PathBuf::from("ChuckieEgg_B_Cart.rom"),
+        ];
+
+        files.sort_by_key(|p| bbcmicro_media_sort_key(p));
+
+        assert_eq!(
+            files,
+            vec![
+                PathBuf::from("ChuckieEgg_B_Disk1.ssd"),
+                PathBuf::from("ChuckieEgg_B_Disk2.ssd"),
+                PathBuf::from("ChuckieEgg_B_Tape.uef"),
+                PathBuf::from("ChuckieEgg_B_Cart.rom"),
+            ]
+        );
+    }
+
+    #[test]
+    fn test_write_mame_bbcmicro_cmd_floppy_disk_and_multi_disk() {
+        let dir = tempdir().unwrap();
+        let disk1 = dir.path().join("ChuckieEgg_Disk1.ssd");
+        let disk2 = dir.path().join("ChuckieEgg_Disk2.ssd");
+        std::fs::write(&disk1, b"disk1").unwrap();
+        std::fs::write(&disk2, b"disk2").unwrap();
+
+        let cmd_path = write_mame_bbcmicro_cmd(
+            dir.path(),
+            &disk1,
+            &[disk1.clone(), disk2.clone()],
+            "",
+            Some(dir.path()),
+        )
+        .unwrap();
+
+        let content = std::fs::read_to_string(cmd_path).unwrap();
+        assert!(content.starts_with("bbcb"));
+        assert!(content.contains(&format!("-rompath \"{}\"", dir.path().to_string_lossy())));
+        assert!(content.contains(&format!("-flop1 \"{}\"", disk1.to_string_lossy())));
+        assert!(content.contains(&format!("-flop2 \"{}\"", disk2.to_string_lossy())));
+        assert!(content.contains("-autoboot_command \"*RUN !BOOT\\n\""));
+    }
+
+    #[test]
+    fn test_write_mame_bbcmicro_cmd_cassette_uef() {
+        let dir = tempdir().unwrap();
+        let tape = dir.path().join("AticAtac_RUN_B.hq.uef");
+        std::fs::write(&tape, b"tape").unwrap();
+
+        let cmd_path = write_mame_bbcmicro_cmd(
+            dir.path(),
+            &tape,
+            &[tape.clone()],
+            "",
+            None,
+        )
+        .unwrap();
+
+        let content = std::fs::read_to_string(cmd_path).unwrap();
+        assert!(content.starts_with("bbcb"));
+        assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy())));
+        assert!(content.contains("-autoboot_command \"*TAPE\\nPAGE=&E00\\nCHAIN\\\"\\\"\\n\""));
+    }
+
+    #[test]
+    fn test_write_mame_bbcmicro_cmd_electron_gemus() {
+        let dir = tempdir().unwrap();
+        let tape = dir.path().join("ChuckieEgg_E.uef");
+        std::fs::write(&tape, b"tape").unwrap();
+
+        let cmd_path = write_mame_bbcmicro_cmd(
+            dir.path(),
+            &tape,
+            &[tape.clone()],
+            "emu=ElectrEm\r\ntape=normal",
+            None,
+        )
+        .unwrap();
+
+        let content = std::fs::read_to_string(cmd_path).unwrap();
+        assert!(content.starts_with("electron"));
+        assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy())));
+        assert!(content.contains("-autoboot_command \"*TAPE\\nCHAIN\\\"\\\"\\n\""));
+    }
+
+    #[test]
+    fn test_write_mame_bbcmicro_cmd_model_master_and_disk_cat() {
+        let dir = tempdir().unwrap();
+        let disk = dir.path().join("Game.dsd");
+        std::fs::write(&disk, b"disk").unwrap();
+
+        let cmd_path = write_mame_bbcmicro_cmd(
+            dir.path(),
+            &disk,
+            &[disk.clone()],
+            "model=05\r\ndisk=cat",
+            None,
+        )
+        .unwrap();
+
+        let content = std::fs::read_to_string(cmd_path).unwrap();
+        assert!(content.starts_with("bbcm"));
+        assert!(content.contains(&format!("-flop1 \"{}\"", disk.to_string_lossy())));
+        assert!(content.contains("-autoboot_command \"*CAT\\n\""));
+    }
+
+    #[tokio::test]
+    async fn test_launch_emulator_bbcmicro_retroarch_zip_creates_cmd_and_ignores_txt() {
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "retroarch.exe"
+        } else {
+            "retroarch"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let core_path = dir.path().join("mame_libretro.dll");
+        std::fs::write(&core_path, b"core").unwrap();
+
+        let zip_path = dir.path().join("ChuckieEgg_B.zip");
+        write_zip(
+            &zip_path,
+            &[
+                ("ChuckieEgg_B.ssd", b"disk data"),
+                ("Instructions.txt", b"text notes"),
+                ("Readme.nfo", b"nfo notes"),
+            ],
+        );
+
+        let request = LaunchRequest {
+            platform_id: Some("bbcmicro".to_string()),
+            emulator_profile_id: Some("retroarch-bbcmicro".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            rom_path: zip_path.to_string_lossy().to_string(),
+            core_path: Some(core_path.to_string_lossy().to_string()),
+            ..Default::default()
+        };
+
+        let result = launch_emulator(request).await.unwrap();
+        assert!(result.success);
     }
 }
 
