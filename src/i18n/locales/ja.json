@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Amiga Extras Download Target",
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
-    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
+    "bbcmicroInstructionsTitle": "BBC Micro システム設定とエミュレータガイド",
+    "bbcmicroInstructions": "RetroArch B2コア (b2_libretro.dll) とRetroArch MAMEコア (mame_libretro.dll)、および単体版BeebEmの両方に対応しています。BIOS不要の高速起動にはB2コアをご使用ください。MAMEコアを使用する場合は、RetroArchのsystemフォルダに必要なBIOSファイル (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) を配置してください。Extrasにディスク版があるゲームは自動的にディスクで起動します。"
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",

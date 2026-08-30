@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Amiga Extras Download Target",
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
-    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
+    "bbcmicroInstructionsTitle": "BBC Micro Sistem Kurulumu ve Emülatör Kılavuzu",
+    "bbcmicroInstructions": "Hem RetroArch B2 çekirdeğini (b2_libretro.dll) hem de RetroArch MAME çekirdeğini (mame_libretro.dll) ve bağımsız BeebEm'i destekler. BIOS dosyası olmadan hızlı disk başlatma için B2'yi kullanın. MAME çekirdeği için gerekli BIOS dosyalarının (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) RetroArch system klasöründe olduğundan emin olun. Extras içinde disk sürümü bulunan oyunlar otomatik olarak başlar."
   },
   "media": {
     "noScreenshots": "Ekran görüntüsü yok",

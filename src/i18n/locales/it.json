@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Destinazione download extra Amiga",
     "amigaDownloadTargetDescription": "Scegli se i file Amiga su richiesta vengono salvati nella cartella Extras o in una cartella temporanea.",
     "amigaDownloadTargetExtras": "Cartella Extras (Permanente)",
-    "amigaDownloadTargetTemp": "Cartella Temp (Nessuna sovrascrittura)"
+    "amigaDownloadTargetTemp": "Cartella Temp (Nessuna sovrascrittura)",
+    "bbcmicroInstructionsTitle": "Configurazione sistema BBC Micro e guida all'emulatore",
+    "bbcmicroInstructions": "Supporta sia il core RetroArch B2 (b2_libretro.dll) che il core RetroArch MAME (mame_libretro.dll), oltre a BeebEm autonomo. Per un avvio rapido senza file BIOS, usa B2. Per il core MAME, assicurati che i file BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) siano nella cartella system di RetroArch. I giochi con versioni su disco in Extras si avviano automaticamente."
   },
   "media": {
     "noScreenshots": "Nessuno screenshot disponibile",

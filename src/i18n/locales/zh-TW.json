@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Amiga Extras Download Target",
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
-    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
+    "bbcmicroInstructionsTitle": "BBC Micro 系統設定與模擬器指南",
+    "bbcmicroInstructions": "同時支援 RetroArch B2 核心 (b2_libretro.dll) 與 RetroArch MAME 核心 (mame_libretro.dll)，以及獨立版 BeebEm。如需無需 BIOS 檔案的快速磁碟啟動，請使用 B2。如使用 MAME 核心，請確保所需的 BIOS 檔案（bbcb.zip、bbc_acorn8271.zip、saa5050.zip）已放置在 RetroArch 的 system 目錄中。Extras 中附帶磁碟版本的遊戲在所有模擬器中均會自動以磁碟模式啟動。"
   },
   "media": {
     "noScreenshots": "暂无截图",

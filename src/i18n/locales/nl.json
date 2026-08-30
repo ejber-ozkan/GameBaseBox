@@ -342,7 +342,9 @@
     "amigaDownloadTarget": "Amiga Extras Download Target",
     "amigaDownloadTargetDescription": "Choose whether on-demand Amiga files are saved to the Extras folder or a temporary folder.",
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
-    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)"
+    "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
+    "bbcmicroInstructionsTitle": "BBC Micro Systeeminstellingen & Emulatorgids",
+    "bbcmicroInstructions": "Ondersteunt zowel de RetroArch B2-core (b2_libretro.dll) als de RetroArch MAME-core (mame_libretro.dll), evenals BeebEm. Gebruik B2 voor snel opstarten zonder BIOS-bestanden. Voor de MAME-core moeten de vereiste BIOS-bestanden (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) in de system-map van RetroArch staan. Spellen met disketteversies in Extras starten automatisch."
   },
   "media": {
     "noScreenshots": "Geen screenshots beschikbaar",

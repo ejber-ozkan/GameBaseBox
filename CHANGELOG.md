@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.6] - 2026-08-30
+
+### Added
+- **Acorn BBC Micro & Electron Multi-Emulator Launch Automation**:
+  - **RetroArch Dual Core Support**: Full support for both plug-and-play **B2 Core (`b2_libretro.dll`)** (zero-setup disk launching) and hardware-accurate **MAME Core (`mame_libretro.dll`)** (BBC Model B `bbcb`, Master 128 `bbcm`, and Electron `electron`).
+  - **Dynamic Autoboot Commands**: Injects `-autoboot_delay 2` alongside automated keystrokes (`*EXEC !BOOT\n`, `*RUN !BOOT\n`, `*CAT\n`, and `*TAPE\nPAGE=&E00\n*RUN\n`) positioned before media arguments to avoid MAME parser collisions.
+  - **Automatic Companion Disk Image Resolution**: When launching tape-based games (`.uef`), automatically checks `Extras/Disks/` and `Extras/Haven Disks/` for `.ssd` / `.dsd` companion disk archives, extracting and booting them ahead of cassette media.
+  - **Standalone BeebEm Integration**: Full native support for standalone BeebEm with command-line mounting and autostart typing.
+  - **In-App Localized Platform Guidance**: Added instructions card in **Settings > Platform Paths > BBC Micro** for MAME BIOS requirements (`bbcb.zip`, `bbc_acorn8271.zip`, `saa5050.zip`) and B2 core usage across all 33 supported languages.
+- **Agent Governance & Architectural Quality Rules**: Standardized persistent instructions in `AGENTS.md` and `GEMINI.md` mandating Graphify knowledge graph queries and direct SQLite CLI tools.
+
+### Changed
+- Bumped package, Tauri, Cargo, and root version metadata to `0.6.6`.
+
 ## [0.6.5] - 2026-08-22
 
 ### Added
