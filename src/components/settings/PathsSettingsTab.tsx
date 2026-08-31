@@ -134,6 +134,13 @@ export function PathsSettingsTab({
     }
   };
 
+  const browsePlatformFile = async (field: keyof PlatformFolderSettings) => {
+    const chosen = await onBrowseFile();
+    if (chosen) {
+      setPlatformFolder(field, chosen);
+    }
+  };
+
   const browsePlatformExecutable = async (profileId: string) => {
     const chosen = await onBrowseFile();
     if (chosen) {
@@ -367,6 +374,21 @@ export function PathsSettingsTab({
                 </div>
               </div>
             </div>
+          )}
+
+          {isAtariSt && (
+            <PathRow
+              label={t('settings.atariStBootDisk')}
+              value={platformFolders.bootDiskPath ?? ''}
+              onChange={(value) => setPlatformFolder('bootDiskPath', value)}
+              placeholder="e.g. C:/GameBase/Atari ST/Scripts/boot.st"
+              inputIndex={10}
+              browseIndex={11}
+              onBrowse={() => void browsePlatformFile('bootDiskPath')}
+              isMouseMode={isMouseMode}
+              onMouseFocus={onMouseFocus}
+              isFocused={isFocused}
+            />
           )}
         </div>
 

@@ -222,7 +222,10 @@ export function VisualExtrasBrowser({
         </div>
       </div>
 
-      <div className="grid min-w-0 gap-2.5" style={{ gridTemplateColumns: `repeat(${thumbColumns}, minmax(0,1fr))` }}>
+      <div
+        className="grid min-w-0 gap-2.5 max-h-[170px] overflow-y-auto custom-scrollbar p-1"
+        style={{ gridTemplateColumns: `repeat(${thumbColumns}, minmax(0,1fr))` }}
+      >
         {visibleExtras.map((item, index) => (
           <button
             key={item.id}

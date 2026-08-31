@@ -346,7 +346,9 @@
     "bbcmicroInstructionsTitle": "Налаштування системи BBC Micro та посібник з емулятора",
     "bbcmicroInstructions": "Підтримує як ядро RetroArch B2 (b2_libretro.dll), так і ядро RetroArch MAME (mame_libretro.dll), а також автономний BeebEm. Для швидкого запуску без файлів BIOS використовуйте B2. Для ядра MAME переконайтеся у наявності файлів BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) у папці system RetroArch. Ігри з дисковими версіями в Extras запускаються автоматично.",
     "atariStInstructionsTitle": "Atari ST Folders Guide",
-    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras."
+    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
+    "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
   },
   "media": {
     "noScreenshots": "Скриншоты отсутствуют",

@@ -95,6 +95,7 @@ export interface PlatformFolderSettings {
   extrasPath: string;
   boxArtPath: string;
   videosPath: string;
+  bootDiskPath?: string;
 }
 
 export interface PlatformEmulatorSettings {

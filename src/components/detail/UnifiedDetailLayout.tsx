@@ -464,6 +464,7 @@ export function UnifiedDetailLayout({
   const [activeTab, setActiveTab] = useState<UnifiedDetailTab>('game');
   const [selectedVersionId, setSelectedVersionId] = useState(() => readStoredVersionId(game.id));
   const extrasNavigationRef = useRef<ExtrasBigscreenNavigation | null>(null);
+  const [launchWarning, setLaunchWarning] = useState<string | null>(null);
 
   // A configuration flag to enable flush-height scaling (sits perfectly flush at the bottom of 720p/1080p/4K viewports)
   // Set to true to make the page sit flush, or false to revert to fixed heights.
@@ -760,18 +761,35 @@ export function UnifiedDetailLayout({
     async (version: LaunchVersionOption) => {
       if (!version.relativePath) return;
 
+      if (settings.activePlatformId === 'atarist') {
+        const isHardDisk = /harddisk|hdold/i.test(version.relativePath || '') || /harddisk/i.test(version.label) || /harddisk/i.test(version.tag);
+        const bootDisk = settings.platformSettings.atarist?.folders.bootDiskPath?.trim();
+        if (isHardDisk && !bootDisk) {
+          setLaunchWarning(t('settings.atariStBootDiskMissingWarning'));
+          setTimeout(() => setLaunchWarning(null), 6000);
+          return;
+        }
+      }
+
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('game-launch'));
       }
 
       try {
-        await launchEmulator(buildLaunchRequest(settings, version.source, version.relativePath, game));
-        markAsPlayed(game.id.toString());
+        const result = await launchEmulator(buildLaunchRequest(settings, version.source, version.relativePath, game));
+        if (!result.success) {
+          setLaunchWarning(result.message);
+          setTimeout(() => setLaunchWarning(null), 6000);
+        } else {
+          markAsPlayed(game.id.toString());
+        }
       } catch (err) {
         console.error('Failed to launch emulator from files list:', err);
+        setLaunchWarning(String(err));
+        setTimeout(() => setLaunchWarning(null), 6000);
       }
     },
-    [settings, game, markAsPlayed],
+    [settings, game, markAsPlayed, t],
   );
 
   const handleFullscreenMedia = useCallback(() => {
@@ -2874,6 +2892,20 @@ export function UnifiedDetailLayout({
           {detailLayout.debugLabel}
         </div>
       ) : null}
+
+      {launchWarning && (
+        <div className="fixed bottom-12 right-6 z-[300] flex max-w-md items-center gap-3 rounded-theme-xl border border-amber-500/60 bg-black/95 px-5 py-3.5 text-xs text-amber-200 shadow-2xl backdrop-blur-md animate-in slide-in-from-bottom-4 duration-300">
+          <span className="text-base shrink-0">⚠️</span>
+          <span className="flex-1 leading-relaxed">{launchWarning}</span>
+          <button
+            type="button"
+            onClick={() => setLaunchWarning(null)}
+            className="shrink-0 rounded-theme p-1 text-xs text-theme-text-muted hover:text-white"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {showWasm && (
         <WasmPlayer

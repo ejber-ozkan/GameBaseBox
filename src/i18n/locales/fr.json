@@ -346,7 +346,9 @@
     "bbcmicroInstructionsTitle": "Configuration du système BBC Micro et guide de l'émulateur",
     "bbcmicroInstructions": "Prend en charge à la fois le cœur RetroArch B2 (b2_libretro.dll) et le cœur RetroArch MAME (mame_libretro.dll), ainsi que BeebEm autonome. Pour un démarrage rapide sans fichiers BIOS, utilisez B2. Pour MAME, assurez-vous d'avoir les fichiers BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) dans le dossier system de RetroArch. Les jeux avec versions disquette dans Extras démarrent automatiquement.",
     "atariStInstructionsTitle": "Guide des dossiers Atari ST",
-    "atariStInstructions": "Les fichiers HardDisk et STX doivent se trouver dans votre dossier Extras (Extras/HardDisk, Extras/STX). Les compilations D-Bug et Automation appartiennent au dossier Games (Games/DBUG, Games/Automation). Toutes les variantes apparaîtront dans Versions alternatives / Extras."
+    "atariStInstructions": "Les fichiers HardDisk et STX doivent se trouver dans votre dossier Extras (Extras/HardDisk, Extras/STX). Les compilations D-Bug et Automation appartiennent au dossier Games (Games/DBUG, Games/Automation). Toutes les variantes apparaîtront dans Versions alternatives / Extras.",
+    "atariStBootDisk": "Disquette de démarrage Atari ST (boot.st)",
+    "atariStBootDiskMissingWarning": "Les jeux HardDisk nécessitent une disquette de démarrage (boot.st). Veuillez configurer le chemin de boot.st dans les paramètres Atari ST."
   },
   "media": {
     "noScreenshots": "Aucune capture disponible",

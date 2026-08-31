@@ -346,7 +346,9 @@
     "bbcmicroInstructionsTitle": "BBC Micro Systeeminstellingen & Emulatorgids",
     "bbcmicroInstructions": "Ondersteunt zowel de RetroArch B2-core (b2_libretro.dll) als de RetroArch MAME-core (mame_libretro.dll), evenals BeebEm. Gebruik B2 voor snel opstarten zonder BIOS-bestanden. Voor de MAME-core moeten de vereiste BIOS-bestanden (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) in de system-map van RetroArch staan. Spellen met disketteversies in Extras starten automatisch.",
     "atariStInstructionsTitle": "Atari ST Mappenhandleiding",
-    "atariStInstructions": "HardDisk- en STX-bestanden horen in uw Extras-map (Extras/HardDisk, Extras/STX). D-Bug- en Automation-compilaties horen in uw Games-map (Games/DBUG, Games/Automation). Alle varianten verschijnen in Alternatieve versies / Extra's."
+    "atariStInstructions": "HardDisk- en STX-bestanden horen in uw Extras-map (Extras/HardDisk, Extras/STX). D-Bug- en Automation-compilaties horen in uw Games-map (Games/DBUG, Games/Automation). Alle varianten verschijnen in Alternatieve versies / Extra's.",
+    "atariStBootDisk": "Atari ST Opstartdiskette (boot.st)",
+    "atariStBootDiskMissingWarning": "HardDisk-spellen vereisen een opstartdiskette (boot.st). Stel het pad naar boot.st in via de Atari ST Instellingen."
   },
   "media": {
     "noScreenshots": "Geen screenshots beschikbaar",

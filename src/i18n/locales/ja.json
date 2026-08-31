@@ -346,7 +346,9 @@
     "bbcmicroInstructionsTitle": "BBC Micro システム設定とエミュレータガイド",
     "bbcmicroInstructions": "RetroArch B2コア (b2_libretro.dll) とRetroArch MAMEコア (mame_libretro.dll)、および単体版BeebEmの両方に対応しています。BIOS不要の高速起動にはB2コアをご使用ください。MAMEコアを使用する場合は、RetroArchのsystemフォルダに必要なBIOSファイル (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) を配置してください。Extrasにディスク版があるゲームは自動的にディスクで起動します。",
     "atariStInstructionsTitle": "Atari ST フォルダガイド",
-    "atariStInstructions": "HardDisk および STX ファイルは Extras フォルダ（Extras/HardDisk、Extras/STX）に配置します。D-Bug および Automation コンピレーションは Games フォルダ（Games/DBUG、Games/Automation）に配置します。すべてのバリアントが代替バージョン／エキストラに表示されます。"
+    "atariStInstructions": "HardDisk および STX ファイルは Extras フォルダ（Extras/HardDisk、Extras/STX）に配置します。D-Bug および Automation コンピレーションは Games フォルダ（Games/DBUG、Games/Automation）に配置します。すべてのバリアントが代替バージョン／エキストラに表示されます。",
+    "atariStBootDisk": "Atari ST ブートディスク (boot.st)",
+    "atariStBootDiskMissingWarning": "HardDisk ゲームにはブートディスク (boot.st) が必要です。Atari ST 設定で boot.st のパスを設定してください。"
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",

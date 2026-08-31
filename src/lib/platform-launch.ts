@@ -99,5 +99,6 @@ export function buildLaunchRequest(
     is_pal: game.isPal ?? true,
     game_id: game.id.toString(),
     core_path: launchSettings.isRetroarch ? launchSettings.corePath : undefined,
+    boot_disk_path: settings.platformSettings[settings.activePlatformId]?.folders.bootDiskPath?.trim() || undefined,
   };
 }

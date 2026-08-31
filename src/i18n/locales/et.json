@@ -346,7 +346,9 @@
     "bbcmicroInstructionsTitle": "BBC Micro süsteemi seadistus ja emulaatori juhend",
     "bbcmicroInstructions": "Toetab nii RetroArchi B2 tuuma (b2_libretro.dll) kui ka RetroArchi MAME tuuma (mame_libretro.dll), samuti eraldiseisvat BeebEmi. Kiireks käivitamiseks ilma BIOS-failideta kasutage B2. MAME jaoks on vajalikud BIOS-failid (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) RetroArchi system kaustas. Extras kaustas olevate kettaversioonidega mängud käivituvad automaatselt.",
     "atariStInstructionsTitle": "Atari ST Folders Guide",
-    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras."
+    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
+    "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
