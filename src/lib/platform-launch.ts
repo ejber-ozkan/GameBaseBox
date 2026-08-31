@@ -15,7 +15,11 @@ export interface PlatformLaunchSettings {
 
 function normalizePathSegment(segment: string | null | undefined): string {
   if (!segment) return '';
-  return segment.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+  return segment
+    .trim()
+    .replace(/^["']+|["']+$/g, '')
+    .replace(/\\/g, '/')
+    .replace(/^\/+|\/+$/g, '');
 }
 
 export function buildPlatformAssetPath(

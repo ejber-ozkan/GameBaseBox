@@ -345,8 +345,8 @@
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "Ρύθμιση Συστήματος BBC Micro & Οδηγός Εξομοιωτή",
     "bbcmicroInstructions": "Υποστηρίζει τόσο τον πυρήνα RetroArch B2 (b2_libretro.dll) όσο και τον πυρήνα RetroArch MAME (mame_libretro.dll), καθώς και το αυτόνομο BeebEm. Για γρήγορη εκκίνηση χωρίς αρχεία BIOS, χρησιμοποιήστε το B2. Για το MAME, απαιτούνται τα αρχεία BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) στον φάκελο system. Παιχνίδια με εκδόσεις δίσκων στο Extras ξεκινούν αυτόματα.",
-    "atariStInstructionsTitle": "Παιχνίδια & Έξτρα Atari ST",
-    "atariStInstructions": "Τα HardDisk, STX, D-Bug και Automation βρίσκονται στον φάκελο Games, όχι στο Extras. Εάν υπάρχουν, θα εμφανίζονται στον πίνακα Εναλλακτικές εκδόσεις / Έξτρα."
+    "atariStInstructionsTitle": "Atari ST Folders Guide",
+    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras."
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",

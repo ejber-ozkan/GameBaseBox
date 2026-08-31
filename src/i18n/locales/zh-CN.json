@@ -345,8 +345,8 @@
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro 系统设置与模拟器指南",
     "bbcmicroInstructions": "同时支持 RetroArch B2 核心 (b2_libretro.dll) 与 RetroArch MAME 核心 (mame_libretro.dll)，以及独立版 BeebEm。如需无需 BIOS 文件的快速磁盘启动，请使用 B2。如使用 MAME 核心，请确保所需的 BIOS 文件（bbcb.zip、bbc_acorn8271.zip、saa5050.zip）已放置在 RetroArch 的 system 目录中。Extras 中附带磁盘版本的游戏在所有模拟器中均会自动以磁盘模式启动。",
-    "atariStInstructionsTitle": "Atari ST 游戏与附加内容",
-    "atariStInstructions": "HardDisk、STX、D-Bug 和 Automation 位于您的 Games 文件夹中，而非 Extras。如果存在，它们仍将显示在备选版本/附加内容面板中。"
+    "atariStInstructionsTitle": "Atari ST 文件夹指南",
+    "atariStInstructions": "HardDisk 和 STX 文件应位于 Extras 文件夹中（Extras/HardDisk、Extras/STX）。D-Bug 和 Automation 合集位于 Games 文件夹中（Games/DBUG、Games/Automation）。所有变体都将显示在备选版本/附加内容中。"
   },
   "media": {
     "noScreenshots": "暂无截图",

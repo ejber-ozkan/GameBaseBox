@@ -345,8 +345,8 @@
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro sistēmas iestatīšana un emulatora rokasgrāmata",
     "bbcmicroInstructions": "Atbalsta gan RetroArch B2 kodolu (b2_libretro.dll), gan RetroArch MAME kodolu (mame_libretro.dll), kā arī atsevišķu BeebEm. Ātrai palaišanai bez BIOS failiem izmantojiet B2. MAME kodolam nodrošiniet nepieciešamos BIOS failus (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) RetroArch system mapē. Spēles ar disku versijām Extras mapē startē automātiski.",
-    "atariStInstructionsTitle": "Atari ST spēles un papildinājumi",
-    "atariStInstructions": "HardDisk, STX, D-Bug un Automation atrodas mapē Games, nevis Extras. Ja tie ir pieejami, tie parādīsies alternatīvo versiju / papildinājumu panelī."
+    "atariStInstructionsTitle": "Atari ST Folders Guide",
+    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

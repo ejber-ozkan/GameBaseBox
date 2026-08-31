@@ -345,8 +345,8 @@
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro 시스템 설정 및 에뮬레이터 가이드",
     "bbcmicroInstructions": "RetroArch B2 코어(b2_libretro.dll)와 RetroArch MAME 코어(mame_libretro.dll), 독립 실행형 BeebEm을 모두 지원합니다. BIOS 파일 없이 빠른 디스크 부팅을 위해 B2를 사용하세요. MAME 코어의 경우 RetroArch의 system 폴더에 필수 BIOS 파일(bbcb.zip, bbc_acorn8271.zip, saa5050.zip)이 있는지 확인하세요. Extras에 디스크 버전이 있는 게임은 자동으로 부팅됩니다.",
-    "atariStInstructionsTitle": "Atari ST 게임 및 추가 항목",
-    "atariStInstructions": "HardDisk, STX, D-Bug 및 Automation은 Extras가 아닌 Games 폴더에 있습니다. 파일이 있으면 대체 버전/추가 항목 패널에 표시됩니다."
+    "atariStInstructionsTitle": "Atari ST Folders Guide",
+    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras."
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",

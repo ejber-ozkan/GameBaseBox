@@ -345,8 +345,8 @@
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro System Setup & Emulator Guide",
     "bbcmicroInstructions": "Supports both RetroArch B2 core (b2_libretro.dll) and RetroArch MAME core (mame_libretro.dll), as well as standalone BeebEm. For fast plug-and-play disk booting without BIOS files, use B2. For MAME core, ensure required BIOS files (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) are in RetroArch's system directory. Games with companion disk versions in Extras automatically boot in disk mode across all emulators.",
-    "atariStInstructionsTitle": "Atari ST Games & Extras",
-    "atariStInstructions": "HardDisk, STX, D-Bug, and Automation are located in your Games folder, not Extras. If present, they will still appear in the Alternative Versions / Extras panel."
+    "atariStInstructionsTitle": "Atari ST Folders Guide",
+    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras."
   },
   "media": {
     "noScreenshots": "No screenshots available",

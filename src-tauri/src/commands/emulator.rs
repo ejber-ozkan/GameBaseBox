@@ -90,7 +90,7 @@ fn launch_extensions_for_platform(platform_id: Option<&str>) -> &'static [&'stat
         Some("zxspectrum") => &["tzx", "tap", "z80", "sna", "szx", "trd", "dsk"],
         Some("bbcmicro") => &["ssd", "dsd", "adl", "adf", "uef", "rom", "bin"],
         Some("amiga") => &["adf", "adz", "dms", "ipf", "lha", "hdf", "hdz", "slave"],
-        Some("atarist") => &["st", "msa", "stx", "dim", "ipf"],
+        Some("atarist") => &["st", "msa", "stx", "dim", "ipf", "hd", "tos", "prg"],
         Some("vic20") => &["d64", "t64", "tap", "prg", "crt", "a0", "20", "40", "60"],
         Some("amstradcpc") => &["dsk", "cpr", "sna", "cdt", "tap", "bin"],
         Some("apple2gs") => &["2mg", "dsk", "po", "woz", "nib"],
@@ -1251,12 +1251,13 @@ pub async fn test_emulator_profile(
 }
 
 fn resolve_existing_rom_path(rom_path_str: &str) -> PathBuf {
-    let direct = PathBuf::from(rom_path_str);
+    let clean_str = rom_path_str.trim().trim_matches('"').trim_matches('\'');
+    let direct = PathBuf::from(clean_str);
     if direct.exists() {
         return direct;
     }
 
-    let normalized = rom_path_str.replace('\\', "/");
+    let normalized = clean_str.replace('\\', "/");
 
     // 1. Check if inserting "Extras" before subfolders (WHDLoad, SPS, Disks, HardDisk, STX, etc.) resolves to an existing file
     for candidate_folder in [

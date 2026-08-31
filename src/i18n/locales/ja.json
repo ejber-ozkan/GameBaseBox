@@ -345,8 +345,8 @@
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro システム設定とエミュレータガイド",
     "bbcmicroInstructions": "RetroArch B2コア (b2_libretro.dll) とRetroArch MAMEコア (mame_libretro.dll)、および単体版BeebEmの両方に対応しています。BIOS不要の高速起動にはB2コアをご使用ください。MAMEコアを使用する場合は、RetroArchのsystemフォルダに必要なBIOSファイル (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) を配置してください。Extrasにディスク版があるゲームは自動的にディスクで起動します。",
-    "atariStInstructionsTitle": "Atari ST ゲーム＆エキストラ",
-    "atariStInstructions": "HardDisk、STX、D-Bug、および Automation は Extras ではなく Games フォルダに配置されます。存在する場合は代替バージョン／エキストラパネルに表示されます。"
+    "atariStInstructionsTitle": "Atari ST フォルダガイド",
+    "atariStInstructions": "HardDisk および STX ファイルは Extras フォルダ（Extras/HardDisk、Extras/STX）に配置します。D-Bug および Automation コンピレーションは Games フォルダ（Games/DBUG、Games/Automation）に配置します。すべてのバリアントが代替バージョン／エキストラに表示されます。"
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",

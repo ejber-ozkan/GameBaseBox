@@ -345,8 +345,8 @@
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "Socrú Córais BBC Micro & Treoir Aithriseora",
     "bbcmicroInstructions": "Tacaíonn sé le croí RetroArch B2 (b2_libretro.dll) agus croí RetroArch MAME (mame_libretro.dll), chomh maith le BeebEm neamhspleách. Chun tosú go tapa gan comhaid BIOS, bain úsáid as B2. I gcás MAME, cinntigh go bhfuil comhaid BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) i bhfillteán system RetroArch. Tosóidh cluichí le leaganacha diosca in Extras go huathoibríoch.",
-    "atariStInstructionsTitle": "Cluichí & Breiseáin Atari ST",
-    "atariStInstructions": "Tá HardDisk, STX, D-Bug agus Automation san fhillteán Games, ní Extras. Má tá siad i láthair, feicfear iad i bpainéal Leaganacha Malartacha / Breiseáin."
+    "atariStInstructionsTitle": "Atari ST Folders Guide",
+    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

@@ -345,8 +345,8 @@
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro Systeminställningar & Emulatorguide",
     "bbcmicroInstructions": "Stöder både RetroArch B2-kärnan (b2_libretro.dll) och RetroArch MAME-kärnan (mame_libretro.dll) samt fristående BeebEm. För snabb start utan BIOS-filer använd B2. För MAME-kärnan se till att nödvändiga BIOS-filer (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) finns i RetroArchs system-mapp. Spel med diskettversioner i Extras startar automatiskt.",
-    "atariStInstructionsTitle": "Atari ST-spel och tillägg",
-    "atariStInstructions": "HardDisk, STX, D-Bug och Automation finns i mappen Games, inte Extras. Om de finns visas de i panelen Alternativa versioner / Tillägg."
+    "atariStInstructionsTitle": "Atari ST Folders Guide",
+    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
