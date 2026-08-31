@@ -7,8 +7,8 @@ export interface ExtraGroup {
   items: Extra[];
 }
 
-export const VISUAL_FOLDERS = ["Adverts", "Advert", "Books", "Cover", "Magcover", "Maps", "Missing", "Photos", "Cover Scans"];
-export const DOC_FOLDERS = ["Docs", "Listings", "SceneMags", "Tips", "Hints, Tips, Cheats & Walkthroughs", "Instructions"];
+export const VISUAL_FOLDERS = ["Adverts", "Advert", "Books", "Cover", "Boxscans", "Boxscan", "Diskscans", "Diskscan", "Magcover", "Maps", "Missing", "Photos", "Cover Scans"];
+export const DOC_FOLDERS = ["Docs", "Listings", "SceneMags", "Tips", "Hints, Tips, Cheats & Walkthroughs", "Instructions", "Cheats", "Hints & Tips", "Reviews", "Solutions"];
 export const MEDIA_FOLDERS = ["Trailer", "mkv", "mp3s"];
 export const GAME_FOLDERS = ["Carts", "Coverdisks", "Covertapes", "Disks", "PD-Disks", "Tapes", "Type-Ins"];
 export const AMIGA_GAME_FOLDERS = ["WHDLoad", "WHD", "SPS", "Disks", "PD-Disks", "Games", "Roms"];
@@ -127,6 +127,7 @@ export function getExtraLaunchLabel(extra: Extra, platformId?: PlatformId | stri
 export function isLaunchableExtra(extra: Extra, platformId?: PlatformId | string | null) {
   const root = getExtraSourceLabel(extra).toLowerCase();
   const name = (extra.name || '').toLowerCase();
+  const ext = getExtraExtension(extra);
 
   if (platformId === 'amiga') {
     if (
@@ -143,21 +144,38 @@ export function isLaunchableExtra(extra: Extra, platformId?: PlatformId | string
   }
 
   if (platformId === 'atarist') {
+    // Images, document files, and media are never launchable variants
+    if (IMG_EXT.includes(ext) || DOC_EXT.includes(ext) || MEDIA_EXT.includes(ext)) {
+      return false;
+    }
+
+    const nonGameFolders = [
+      'adverts', 'advert', 'boxscans', 'boxscan', 'diskscans', 'diskscan',
+      'cheats', 'hints & tips', 'hints', 'tips', 'instructions', 'maps',
+      'other', 'reviews', 'solutions'
+    ];
+    if (nonGameFolders.includes(root)) {
+      return false;
+    }
+
     if (
-      root.includes('harddisk') ||
-      root.includes('hdold') ||
-      root.includes('stx') ||
+      root === 'harddisk' ||
+      root === 'hdold' ||
+      root === 'stx' ||
       name.includes('harddisk') ||
-      name.includes('original disk') ||
-      extra.type === '1' ||
-      extra.type === 'game'
+      name.includes('original disk')
     ) {
       return true;
     }
-    return ATARI_ST_GAME_FOLDERS.some((candidate) => root.includes(candidate.toLowerCase()));
+
+    if ((extra.type === '1' || extra.type === 'game') && GAME_EXT.includes(ext)) {
+      return true;
+    }
+
+    return ATARI_ST_GAME_FOLDERS.some((candidate) => root === candidate.toLowerCase());
   }
 
-  return GAME_FOLDERS.some((candidate) => root.includes(candidate.toLowerCase()));
+  return GAME_FOLDERS.some((candidate) => root === candidate.toLowerCase());
 }
 
 export function isAtariAdvertExtra(extra: Extra) {
