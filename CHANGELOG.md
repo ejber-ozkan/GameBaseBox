@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.7] - 2026-08-31
+
+### Added
+- **Atari ST Native HardDisk & Multi-Emulator Enhancements**:
+  - **Native Hatari Libretro GEMDOS Hard Disk Emulation**: Generates a `.gem` launcher file triggering Hatari libretro's GEMDOS hard drive mounting mechanism (`--harddrive`), staging user boot disks to `<retroarch>/system/hatari/BOOT.ST`, automatically updating `hatari_autoload_config = "true"` and `hatari_boot_hd = "true"` in core options, and creating custom `hatari.cfg` profiles to boot extracted hard disk directories as Drive C:.
+  - **Dedicated Atari ST Boot Disk Setting & Launch Guard**: Added a native `boot.st` file selector in **Settings > Platform Paths > Atari ST** with localized guidance cards across all 33 languages, plus warning toasts preventing launch crashes when `boot.st` is unconfigured.
+  - **Full Extras Browser Visibility**: Correctly categorized Atari ST database extras into visual assets (Diskscans, Boxscans, Adverts) and document assets (Instructions, Cheats, Reviews), and removed thumbnail limits with smooth vertical scrolling across windowed and fullscreen themes.
+  - **D-Bug & Automation Search Expansion**: Enhanced full-text search (FTS5) and fallback SQL query builders to seamlessly expand `dbug` search queries to match hyphenated `[D-Bug]` compilation disk entries alongside `[Automation]` disks.
+  - **Emulator Flag Guards**: Isolated VICE switches from Atari ST emulator launches (Hatari and Steem) and kept verbose flags guarded behind debug flags.
+
+### Changed
+- Bumped package, Tauri, Cargo, and root version metadata to `0.6.7`.
+
 ## [0.6.6] - 2026-08-30
 
 ### Added

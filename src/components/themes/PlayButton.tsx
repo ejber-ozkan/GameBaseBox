@@ -83,6 +83,17 @@ export function PlayButton({ game, launchTarget, nav, compact = false }: PlayBut
       return;
     }
 
+    if (settings.activePlatformId === 'atarist') {
+      const isHardDisk = /harddisk|hdold/i.test(romRelativePath) || /harddisk/i.test(game.filename || '');
+      const bootDisk = settings.platformSettings.atarist?.folders.bootDiskPath?.trim();
+      if (isHardDisk && !bootDisk) {
+        setStatus('error');
+        setMessage(t('settings.atariStBootDiskMissingWarning'));
+        setTimeout(() => setStatus('idle'), 6000);
+        return;
+      }
+    }
+
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('game-launch'));
     }

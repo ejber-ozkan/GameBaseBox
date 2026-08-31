@@ -15,7 +15,11 @@ export interface PlatformLaunchSettings {
 
 function normalizePathSegment(segment: string | null | undefined): string {
   if (!segment) return '';
-  return segment.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+  return segment
+    .trim()
+    .replace(/^["']+|["']+$/g, '')
+    .replace(/\\/g, '/')
+    .replace(/^\/+|\/+$/g, '');
 }
 
 export function buildPlatformAssetPath(
@@ -95,5 +99,6 @@ export function buildLaunchRequest(
     is_pal: game.isPal ?? true,
     game_id: game.id.toString(),
     core_path: launchSettings.isRetroarch ? launchSettings.corePath : undefined,
+    boot_disk_path: settings.platformSettings[settings.activePlatformId]?.folders.bootDiskPath?.trim() || undefined,
   };
 }

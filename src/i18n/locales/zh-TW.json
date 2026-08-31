@@ -344,7 +344,11 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro 系統設定與模擬器指南",
-    "bbcmicroInstructions": "同時支援 RetroArch B2 核心 (b2_libretro.dll) 與 RetroArch MAME 核心 (mame_libretro.dll)，以及獨立版 BeebEm。如需無需 BIOS 檔案的快速磁碟啟動，請使用 B2。如使用 MAME 核心，請確保所需的 BIOS 檔案（bbcb.zip、bbc_acorn8271.zip、saa5050.zip）已放置在 RetroArch 的 system 目錄中。Extras 中附帶磁碟版本的遊戲在所有模擬器中均會自動以磁碟模式啟動。"
+    "bbcmicroInstructions": "同時支援 RetroArch B2 核心 (b2_libretro.dll) 與 RetroArch MAME 核心 (mame_libretro.dll)，以及獨立版 BeebEm。如需無需 BIOS 檔案的快速磁碟啟動，請使用 B2。如使用 MAME 核心，請確保所需的 BIOS 檔案（bbcb.zip、bbc_acorn8271.zip、saa5050.zip）已放置在 RetroArch 的 system 目錄中。Extras 中附帶磁碟版本的遊戲在所有模擬器中均會自動以磁碟模式啟動。",
+    "atariStInstructionsTitle": "Atari ST 資料夾指南",
+    "atariStInstructions": "HardDisk 與 STX 檔案應位於 Extras 資料夾中（Extras/HardDisk、Extras/STX）。D-Bug 與 Automation 合集屬於 Games 資料夾（Games/DBUG、Games/Automation）。所有變體都會顯示在替代版本/附加內容中。",
+    "atariStBootDisk": "Atari ST 開機磁碟 (boot.st)",
+    "atariStBootDiskMissingWarning": "HardDisk 遊戲需要開機磁碟 (boot.st)。請在 Atari ST 設定中設定 boot.st 路徑。"
   },
   "media": {
     "noScreenshots": "暂无截图",

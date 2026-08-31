@@ -89,6 +89,7 @@ export interface LaunchRequest {
   is_pal: boolean;
   game_id?: string;
   core_path?: string;
+  boot_disk_path?: string;
 }
 
 export interface LaunchResult {

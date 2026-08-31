@@ -344,7 +344,11 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro Sistem Kurulumu ve Emülatör Kılavuzu",
-    "bbcmicroInstructions": "Hem RetroArch B2 çekirdeğini (b2_libretro.dll) hem de RetroArch MAME çekirdeğini (mame_libretro.dll) ve bağımsız BeebEm'i destekler. BIOS dosyası olmadan hızlı disk başlatma için B2'yi kullanın. MAME çekirdeği için gerekli BIOS dosyalarının (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) RetroArch system klasöründe olduğundan emin olun. Extras içinde disk sürümü bulunan oyunlar otomatik olarak başlar."
+    "bbcmicroInstructions": "Hem RetroArch B2 çekirdeğini (b2_libretro.dll) hem de RetroArch MAME çekirdeğini (mame_libretro.dll) ve bağımsız BeebEm'i destekler. BIOS dosyası olmadan hızlı disk başlatma için B2'yi kullanın. MAME çekirdeği için gerekli BIOS dosyalarının (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) RetroArch system klasöründe olduğundan emin olun. Extras içinde disk sürümü bulunan oyunlar otomatik olarak başlar.",
+    "atariStInstructionsTitle": "Atari ST Klasör Rehberi",
+    "atariStInstructions": "HardDisk ve STX dosyaları Extras klasöründe yer alır (Extras/HardDisk, Extras/STX). D-Bug ve Automation derlemeleri Games klasörünüzde bulunur (Games/DBUG, Games/Automation). Tüm sürümler Alternatif Sürümler / Ekstralar panelinde görünür.",
+    "atariStBootDisk": "Atari ST Başlatma Diski (boot.st)",
+    "atariStBootDiskMissingWarning": "HardDisk oyunları başlatma diski (boot.st) gerektirir. Lütfen Atari ST Ayarlarından boot.st yolunu yapılandırın."
   },
   "media": {
     "noScreenshots": "Ekran görüntüsü yok",

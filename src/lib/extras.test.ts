@@ -130,5 +130,54 @@ describe('steam extras helpers', () => {
     expect(grouped.find((g) => g.category === 'games')?.items).toHaveLength(2);
     expect(grouped.find((g) => g.category === 'docs')?.items).toHaveLength(1);
   });
+
+  test('detects Atari ST STX preservation disks and HardDisk extras as launchable variants', () => {
+    const stxExtra = { id: '20', name: 'Original Disk', path: 'STX\\Goldrunner.zip', type: '1' };
+    const hdExtra = { id: '21', name: 'HardDisk (GEM)', path: 'HardDisk\\GOLDRUNR.ZIP', type: '1' };
+    const hdOldExtra = { id: '22', name: 'HardDisk (Old)', path: 'HDOLD\\GOLDRUNR.ZIP', type: '1' };
+    const docExtra = { id: '23', name: 'Instructions', path: 'Instructions\\G\\Goldrunner.pdf', type: '0' };
+    const scanExtra = { id: '24', name: 'Boxscan - Front', path: 'Boxscans\\G\\Goldrunner - front.jpg', type: '0' };
+    const diskscanExtra1 = { id: '25', name: 'Diskscan 1', path: 'Diskscans\\A\\Afterburner - diskscan 1.jpg', type: '0' };
+    const diskscanExtra2 = { id: '26', name: 'Diskscan 2', path: 'Diskscans\\A\\Afterburner - diskscan 2.jpg', type: '0' };
+    const cheatExtra = { id: '27', name: 'Cheat', path: 'Cheats\\A\\Afterburner - cheat.jpg', type: '0' };
+    const reviewExtra = { id: '28', name: 'Review', path: 'Reviews\\A\\Afterburner - review.txt', type: '0' };
+
+    expect(isLaunchableExtra(stxExtra, 'atarist')).toBe(true);
+    expect(isLaunchableExtra(hdExtra, 'atarist')).toBe(true);
+    expect(isLaunchableExtra(hdOldExtra, 'atarist')).toBe(true);
+    expect(isLaunchableExtra(docExtra, 'atarist')).toBe(false);
+    expect(isLaunchableExtra(scanExtra, 'atarist')).toBe(false);
+    expect(isLaunchableExtra(diskscanExtra1, 'atarist')).toBe(false);
+    expect(isLaunchableExtra(diskscanExtra2, 'atarist')).toBe(false);
+    expect(isLaunchableExtra(cheatExtra, 'atarist')).toBe(false);
+    expect(isLaunchableExtra(reviewExtra, 'atarist')).toBe(false);
+
+    // Ensure platform isolation: Atari ST folders are not treated as launchable on C64 or Atari 800
+    expect(isLaunchableExtra(stxExtra, 'c64')).toBe(false);
+    expect(isLaunchableExtra(hdExtra, 'atari800')).toBe(false);
+
+    expect(getExtraLaunchLabel(stxExtra, 'atarist')).toBe('Launch STX');
+    expect(getExtraLaunchLabel(hdExtra, 'atarist')).toBe('Launch HardDisk');
+
+    expect(getVisibleDetailExtraCategories('atarist')).toEqual(['visual', 'docs', 'media']);
+
+    const grouped = groupExtras([
+      stxExtra,
+      hdExtra,
+      docExtra,
+      scanExtra,
+      diskscanExtra1,
+      diskscanExtra2,
+      cheatExtra,
+      reviewExtra,
+    ], 'atarist');
+
+    // Only HardDisk and STX should be in Alternative Versions (games)
+    expect(grouped.find((g) => g.category === 'games')?.items).toHaveLength(2);
+    // Boxscan, Diskscan 1, Diskscan 2, Cheat JPG should be in visual (Extras gallery)
+    expect(grouped.find((g) => g.category === 'visual')?.items).toHaveLength(4);
+    // Instructions PDF and Review TXT should be in docs
+    expect(grouped.find((g) => g.category === 'docs')?.items).toHaveLength(2);
+  });
 });
 

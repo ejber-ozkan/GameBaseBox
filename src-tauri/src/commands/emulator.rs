@@ -90,7 +90,7 @@ fn launch_extensions_for_platform(platform_id: Option<&str>) -> &'static [&'stat
         Some("zxspectrum") => &["tzx", "tap", "z80", "sna", "szx", "trd", "dsk"],
         Some("bbcmicro") => &["ssd", "dsd", "adl", "adf", "uef", "rom", "bin"],
         Some("amiga") => &["adf", "adz", "dms", "ipf", "lha", "hdf", "hdz", "slave"],
-        Some("atarist") => &["st", "msa", "stx", "dim", "ipf"],
+        Some("atarist") => &["st", "msa", "stx", "dim", "ipf", "hd", "tos", "prg"],
         Some("vic20") => &["d64", "t64", "tap", "prg", "crt", "a0", "20", "40", "60"],
         Some("amstradcpc") => &["dsk", "cpr", "sna", "cdt", "tap", "bin"],
         Some("apple2gs") => &["2mg", "dsk", "po", "woz", "nib"],
@@ -918,6 +918,68 @@ fn write_retroarch_m3u(
     Ok(m3u_path)
 }
 
+fn prepare_retroarch_hatari_harddisk(
+    parent: &Path,
+    hd_dir: &Path,
+    boot_disk: &Path,
+) -> Result<PathBuf, String> {
+    let system_dir = parent.join("system");
+    let hatari_dir = system_dir.join("hatari");
+    std::fs::create_dir_all(&hatari_dir).map_err(|e| e.to_string())?;
+
+    // Copy boot.st to all locations searched by hatari libretro core
+    let _ = std::fs::copy(boot_disk, hatari_dir.join("BOOT.ST"));
+    let _ = std::fs::copy(boot_disk, hatari_dir.join("boot.st"));
+    let _ = std::fs::copy(boot_disk, system_dir.join("BOOT.ST"));
+    let _ = std::fs::copy(boot_disk, system_dir.join("boot.st"));
+
+    // Write hatari.cfg in both system/hatari and system
+    let cfg_content = format!(
+        "[HardDisk]\nbUseHardDiskDirectory = TRUE\nbBootFromHardDisk = TRUE\nszHardDiskDirectory = {}\nnGemdosDrive = 0\n\n[Floppy]\nszDiskAFileName = {}\nEnableDriveA = TRUE\nFastBoot = TRUE\n",
+        hd_dir.to_string_lossy().replace('\\', "/"),
+        boot_disk.to_string_lossy().replace('\\', "/")
+    );
+    let _ = std::fs::write(hatari_dir.join("hatari.cfg"), &cfg_content);
+    let _ = std::fs::write(system_dir.join("hatari.cfg"), &cfg_content);
+
+    // Update retroarch-core-options.cfg and Hatari.opt to enable hatari_autoload_config and hatari_boot_hd
+    let options_paths = [
+        parent.join("retroarch-core-options.cfg"),
+        parent.join("config").join("Hatari").join("Hatari.opt"),
+    ];
+    for opt_path in &options_paths {
+        if opt_path.exists() {
+            if let Ok(content) = std::fs::read_to_string(opt_path) {
+                let mut lines: Vec<String> = content.lines().map(|s| s.to_string()).collect();
+                let mut autoload_found = false;
+                let mut boot_hd_found = false;
+                for line in &mut lines {
+                    if line.trim().starts_with("hatari_autoload_config") {
+                        *line = "hatari_autoload_config = \"true\"".to_string();
+                        autoload_found = true;
+                    } else if line.trim().starts_with("hatari_boot_hd") {
+                        *line = "hatari_boot_hd = \"true\"".to_string();
+                        boot_hd_found = true;
+                    }
+                }
+                if !autoload_found {
+                    lines.push("hatari_autoload_config = \"true\"".to_string());
+                }
+                if !boot_hd_found {
+                    lines.push("hatari_boot_hd = \"true\"".to_string());
+                }
+                let _ = std::fs::write(opt_path, lines.join("\n"));
+            }
+        }
+    }
+
+    // Create dummy .gem launcher file pointing to hd_dir
+    let gem_file = hd_dir.with_extension("gem");
+    std::fs::write(&gem_file, b"").map_err(|e| e.to_string())?;
+
+    Ok(gem_file)
+}
+
 fn write_mame_apple2gs_cmd(
     temp_dir: &Path,
     primary_rom: &Path,
@@ -1251,17 +1313,18 @@ pub async fn test_emulator_profile(
 }
 
 fn resolve_existing_rom_path(rom_path_str: &str) -> PathBuf {
-    let direct = PathBuf::from(rom_path_str);
+    let clean_str = rom_path_str.trim().trim_matches('"').trim_matches('\'');
+    let direct = PathBuf::from(clean_str);
     if direct.exists() {
         return direct;
     }
 
-    let normalized = rom_path_str.replace('\\', "/");
+    let normalized = clean_str.replace('\\', "/");
 
-    // 1. Check if inserting "Extras" before subfolders (WHDLoad, SPS, Disks, etc.) resolves to an existing file
+    // 1. Check if inserting "Extras" before subfolders (WHDLoad, SPS, Disks, HardDisk, STX, etc.) resolves to an existing file
     for candidate_folder in [
         "WHDLoad", "whdload", "SPS", "sps", "Disks", "disks", "Tapes", "tapes", "Carts",
-        "carts",
+        "carts", "HardDisk", "harddisk", "STX", "stx", "HDOLD", "hdold",
     ] {
         let pattern = format!("/{candidate_folder}/");
         if let Some((base, rest)) = normalized.split_once(&pattern) {
@@ -1404,6 +1467,16 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         .is_some_and(|profile_id| profile_id == "kegs-apple2gs")
         || exe_name.contains("kegs")
         || exe_name.contains("gsplus");
+    let is_hatari = request
+        .emulator_profile_id
+        .as_deref()
+        .is_some_and(|profile_id| profile_id == "hatari-atarist")
+        || exe_name.contains("hatari");
+    let is_steem = request
+        .emulator_profile_id
+        .as_deref()
+        .is_some_and(|profile_id| profile_id == "steem-atarist")
+        || exe_name.contains("steem");
 
     if is_retroarch {
         if let Some(cp) = &request.core_path {
@@ -1424,7 +1497,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         } else {
             args.push("/ntsc".to_string());
         }
-    } else if !is_retroarch && !is_spectaculator && !is_beebem && !is_uae && !is_kegs {
+    } else if !is_retroarch && !is_spectaculator && !is_beebem && !is_uae && !is_kegs && !is_hatari && !is_steem {
         if request.true_drive_emulation {
             args.push("-truedrive".to_string());
         }
@@ -1551,7 +1624,72 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         let resolved_primary_rom = find_matching_primary_rom(&extracted_roms, &file_to_run)
             .unwrap_or_else(|| extracted_roms.first().unwrap().clone());
 
-        if is_retroarch {
+        let is_harddisk_atarist = platform_id == Some("atarist")
+            && (request.rom_path.to_lowercase().contains("harddisk")
+                || request.rom_path.to_lowercase().contains("hdold")
+                || request.rom_path.to_lowercase().ends_with(".hd")
+                || (!extracted_roms.iter().any(|r| {
+                    let ext = r.extension().unwrap_or_default().to_string_lossy().to_lowercase();
+                    matches!(ext.as_str(), "st" | "msa" | "stx" | "dim" | "ipf")
+                }) && extracted_roms.iter().any(|r| {
+                    let ext = r.extension().unwrap_or_default().to_string_lossy().to_lowercase();
+                    matches!(ext.as_str(), "tos" | "prg")
+                        || r.file_name().unwrap_or_default().to_string_lossy().eq_ignore_ascii_case("desktop.inf")
+                })));
+
+        if is_harddisk_atarist {
+            let boot_disk = match &request.boot_disk_path {
+                Some(path) if !path.trim().is_empty() => {
+                    let p = PathBuf::from(path.trim().trim_matches('"').trim_matches('\''));
+                    if !p.exists() {
+                        return Err(format!("Atari ST boot disk file not found: {}", path));
+                    }
+                    p
+                }
+                _ => {
+                    return Err("HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.".to_string());
+                }
+            };
+
+            let primary_extract_dir = temp_dir.join(
+                rom.file_stem()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or("archive"),
+            );
+            let hd_dir = if primary_extract_dir.exists() {
+                &primary_extract_dir
+            } else {
+                &temp_dir
+            };
+
+            if is_hatari {
+                args.push("--disk-a".to_string());
+                args.push(boot_disk.to_string_lossy().to_string());
+                args.push("--harddrive".to_string());
+                args.push(hd_dir.to_string_lossy().to_string());
+                args.push("--boot-hd".to_string());
+                args.push("yes".to_string());
+            } else if is_retroarch {
+                if let Some(cp) = &request.core_path {
+                    if !cp.is_empty() {
+                        args.push("-L".to_string());
+                        args.push(cp.clone());
+                    }
+                }
+                if let Some(parent) = emulator.parent() {
+                    let gem_file = prepare_retroarch_hatari_harddisk(parent, hd_dir, &boot_disk)?;
+                    args.push(gem_file.to_string_lossy().to_string());
+                } else {
+                    let gem_file = hd_dir.with_extension("gem");
+                    let _ = std::fs::write(&gem_file, b"");
+                    args.push(gem_file.to_string_lossy().to_string());
+                }
+            } else if is_steem {
+                args.push(boot_disk.to_string_lossy().to_string());
+            } else {
+                args.push(resolved_primary_rom.to_string_lossy().to_string());
+            }
+        } else if is_retroarch {
             if let Some(cp) = &request.core_path {
                 if !cp.is_empty() {
                     args.push("-L".to_string());
@@ -1604,6 +1742,19 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             );
         } else if is_spectaculator || is_beebem {
             args.push(resolved_primary_rom.to_string_lossy().to_string());
+        } else if is_hatari {
+            if extracted_roms.len() > 1 {
+                args.push("--disk-a".to_string());
+                args.push(resolved_primary_rom.to_string_lossy().to_string());
+                if let Some(second) = extracted_roms.iter().find(|p| **p != resolved_primary_rom) {
+                    args.push("--disk-b".to_string());
+                    args.push(second.to_string_lossy().to_string());
+                }
+            } else {
+                args.push(resolved_primary_rom.to_string_lossy().to_string());
+            }
+        } else if is_steem {
+            args.push(resolved_primary_rom.to_string_lossy().to_string());
         } else {
             args.push("-autostart".to_string());
             args.push(resolved_primary_rom.to_string_lossy().to_string());
@@ -1627,7 +1778,63 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
             }
         }
     } else {
-        if is_retroarch {
+        let is_harddisk_atarist = platform_id == Some("atarist")
+            && (request.rom_path.to_lowercase().contains("harddisk")
+                || request.rom_path.to_lowercase().contains("hdold")
+                || request.rom_path.to_lowercase().ends_with(".hd"));
+
+        if is_harddisk_atarist {
+            let boot_disk = match &request.boot_disk_path {
+                Some(path) if !path.trim().is_empty() => {
+                    let p = PathBuf::from(path.trim().trim_matches('"').trim_matches('\''));
+                    if !p.exists() {
+                        return Err(format!("Atari ST boot disk file not found: {}", path));
+                    }
+                    p
+                }
+                _ => {
+                    return Err("HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.".to_string());
+                }
+            };
+
+            if is_hatari {
+                if rom.extension().is_some_and(|e| e.eq_ignore_ascii_case("hd")) {
+                    args.push("--acsi".to_string());
+                    args.push(rom.to_string_lossy().to_string());
+                } else {
+                    args.push("--disk-a".to_string());
+                    args.push(boot_disk.to_string_lossy().to_string());
+                    args.push("--harddrive".to_string());
+                    args.push(rom.to_string_lossy().to_string());
+                    args.push("--boot-hd".to_string());
+                    args.push("yes".to_string());
+                }
+            } else if is_retroarch {
+                if let Some(cp) = &request.core_path {
+                    if !cp.is_empty() {
+                        args.push("-L".to_string());
+                        args.push(cp.clone());
+                    }
+                }
+                let hd_dir = if rom.is_dir() {
+                    &rom
+                } else {
+                    rom.parent().unwrap_or(&rom)
+                };
+                if let Some(parent) = emulator.parent() {
+                    let gem_file = prepare_retroarch_hatari_harddisk(parent, hd_dir, &boot_disk)?;
+                    args.push(gem_file.to_string_lossy().to_string());
+                } else {
+                    let gem_file = hd_dir.with_extension("gem");
+                    let _ = std::fs::write(&gem_file, b"");
+                    args.push(gem_file.to_string_lossy().to_string());
+                }
+            } else if is_steem {
+                args.push(boot_disk.to_string_lossy().to_string());
+            } else {
+                args.push(rom.to_string_lossy().to_string());
+            }
+        } else if is_retroarch {
             if let Some(cp) = &request.core_path {
                 if !cp.is_empty() {
                     args.push("-L".to_string());
@@ -1676,7 +1883,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                 &rom,
                 &launch_metadata.gemus,
             );
-        } else if is_spectaculator || is_beebem {
+        } else if is_spectaculator || is_beebem || is_hatari || is_steem {
             args.push(rom.to_string_lossy().to_string());
         } else {
             args.push("-autostart".to_string());
@@ -2536,6 +2743,164 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_launch_emulator_atarist_retroarch_zip_creates_m3u_for_stx_and_msa_disks() {
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "retroarch.exe"
+        } else {
+            "retroarch"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let core_path = dir.path().join("hatari_libretro.dll");
+        std::fs::write(&core_path, b"core").unwrap();
+
+        // 1. STX preservation disk
+        let stx_zip_path = dir.path().join("goldrunner_stx.zip");
+        write_zip(&stx_zip_path, &[("Goldrunner.stx", b"stx disk")]);
+
+        let result = launch_emulator(LaunchRequest {
+            platform_id: Some("atarist".to_string()),
+            emulator_profile_id: Some("retroarch-atarist".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            rom_path: stx_zip_path.to_string_lossy().to_string(),
+            core_path: Some(core_path.to_string_lossy().to_string()),
+            ..Default::default()
+        })
+        .await
+        .unwrap();
+        assert!(result.success);
+
+        // 2. MSA compilation disk (Automation / DBUG style)
+        let msa_zip_path = dir.path().join("automation_000.zip");
+        write_zip(&msa_zip_path, &[("000.msa", b"msa disk")]);
+
+        let result_msa = launch_emulator(LaunchRequest {
+            platform_id: Some("atarist".to_string()),
+            emulator_profile_id: Some("retroarch-atarist".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            rom_path: msa_zip_path.to_string_lossy().to_string(),
+            core_path: Some(core_path.to_string_lossy().to_string()),
+            ..Default::default()
+        })
+        .await
+        .unwrap();
+        assert!(result_msa.success);
+    }
+
+    #[tokio::test]
+    async fn test_launch_emulator_atarist_harddisk_requires_boot_disk() {
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "hatari.exe"
+        } else {
+            "hatari"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let hd_zip = dir.path().join("AFTERBUR.ZIP");
+        write_zip(&hd_zip, &[("DESKTOP.INF", b"inf"), ("RUNME.TOS", b"tos")]);
+
+        // Launch without boot_disk_path
+        let err = launch_emulator(LaunchRequest {
+            platform_id: Some("atarist".to_string()),
+            emulator_profile_id: Some("hatari-atarist".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            rom_path: hd_zip.to_string_lossy().to_string(),
+            boot_disk_path: None,
+            ..Default::default()
+        })
+        .await
+        .unwrap_err();
+
+        assert!(err.contains("boot.st"));
+    }
+
+    #[tokio::test]
+    async fn test_launch_emulator_atarist_harddisk_launches_with_boot_disk() {
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "hatari.exe"
+        } else {
+            "hatari"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let boot_disk = dir.path().join("boot.st");
+        std::fs::write(&boot_disk, b"boot disk image").unwrap();
+
+        let hd_zip = dir.path().join("AFTERBUR.ZIP");
+        write_zip(&hd_zip, &[("DESKTOP.INF", b"inf"), ("RUNME.TOS", b"tos")]);
+
+        let result = launch_emulator(LaunchRequest {
+            platform_id: Some("atarist".to_string()),
+            emulator_profile_id: Some("hatari-atarist".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            rom_path: hd_zip.to_string_lossy().to_string(),
+            boot_disk_path: Some(boot_disk.to_string_lossy().to_string()),
+            ..Default::default()
+        })
+        .await
+        .unwrap();
+
+        assert!(result.success);
+    }
+
+    #[tokio::test]
+    async fn test_launch_emulator_atarist_harddisk_retroarch_launches_with_gem_and_boot_disk() {
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "retroarch.exe"
+        } else {
+            "retroarch"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let core_path = dir.path().join("hatari_libretro.dll");
+        std::fs::write(&core_path, b"core").unwrap();
+
+        // Create an existing retroarch-core-options.cfg
+        let opt_path = dir.path().join("retroarch-core-options.cfg");
+        std::fs::write(&opt_path, "hatari_autoload_config = \"false\"\n").unwrap();
+
+        let boot_disk = dir.path().join("boot.st");
+        std::fs::write(&boot_disk, b"boot disk image").unwrap();
+
+        let hd_zip = dir.path().join("AFTERBUR.ZIP");
+        write_zip(&hd_zip, &[("DESKTOP.INF", b"inf"), ("RUNME.TOS", b"tos")]);
+
+        let result = launch_emulator(LaunchRequest {
+            platform_id: Some("atarist".to_string()),
+            emulator_profile_id: Some("retroarch-atarist".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            core_path: Some(core_path.to_string_lossy().to_string()),
+            rom_path: hd_zip.to_string_lossy().to_string(),
+            boot_disk_path: Some(boot_disk.to_string_lossy().to_string()),
+            ..Default::default()
+        })
+        .await
+        .unwrap();
+
+        assert!(result.success);
+
+        // Verify that system/hatari/BOOT.ST was created
+        let system_hatari_boot = dir.path().join("system").join("hatari").join("BOOT.ST");
+        assert!(system_hatari_boot.exists());
+
+        // Verify that system/hatari/hatari.cfg was created
+        let system_hatari_cfg = dir.path().join("system").join("hatari").join("hatari.cfg");
+        assert!(system_hatari_cfg.exists());
+        let cfg_content = std::fs::read_to_string(&system_hatari_cfg).unwrap();
+        assert!(cfg_content.contains("bBootFromHardDisk = TRUE"));
+        assert!(cfg_content.contains("bUseHardDiskDirectory = TRUE"));
+
+        // Verify that retroarch-core-options.cfg was updated
+        let opt_content = std::fs::read_to_string(&opt_path).unwrap();
+        assert!(opt_content.contains("hatari_autoload_config = \"true\""));
+        assert!(opt_content.contains("hatari_boot_hd = \"true\""));
+    }
+
+    #[tokio::test]
     async fn test_launch_emulator_atari800_zip_accepts_tape_and_cart_formats() {
         let dir = tempdir().unwrap();
         let emulator_path = dir.path().join(if cfg!(windows) {
@@ -2770,6 +3135,28 @@ mod tests {
         let resolved = resolve_existing_rom_path(&missing_extras_path.to_string_lossy());
 
         assert_eq!(resolved, zip_file);
+    }
+
+    #[test]
+    fn test_resolve_existing_rom_path_finds_atarist_extras_subfolder() {
+        let temp = tempdir().unwrap();
+        let extras_stx = temp.path().join("Extras").join("STX");
+        std::fs::create_dir_all(&extras_stx).unwrap();
+        let zip_file = extras_stx.join("Goldrunner.zip");
+        std::fs::write(&zip_file, b"test zip").unwrap();
+
+        let missing_extras_path = temp.path().join("STX").join("Goldrunner.zip");
+        let resolved = resolve_existing_rom_path(&missing_extras_path.to_string_lossy());
+        assert_eq!(resolved, zip_file);
+
+        let extras_hd = temp.path().join("Extras").join("HardDisk");
+        std::fs::create_dir_all(&extras_hd).unwrap();
+        let hd_zip = extras_hd.join("GOLDRUNR.ZIP");
+        std::fs::write(&hd_zip, b"hd zip").unwrap();
+
+        let missing_hd_path = temp.path().join("HardDisk").join("GOLDRUNR.ZIP");
+        let resolved_hd = resolve_existing_rom_path(&missing_hd_path.to_string_lossy());
+        assert_eq!(resolved_hd, hd_zip);
     }
 
     #[test]

@@ -84,6 +84,7 @@ export function createDefaultPlatformFolders(platformId: PlatformId): PlatformFo
     extrasPath: '',
     boxArtPath: '',
     videosPath: '',
+    bootDiskPath: '',
   };
 }
 

@@ -35,6 +35,7 @@ pub struct LaunchRequest {
     pub is_pal: bool,
     pub game_id: Option<String>,
     pub core_path: Option<String>,
+    pub boot_disk_path: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]

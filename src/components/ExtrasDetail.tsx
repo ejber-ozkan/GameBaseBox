@@ -41,7 +41,6 @@ export function ExtrasDetail({
 }: ExtrasDetailProps) {
   const { t } = useTranslation();
   const { markAsPlayed, settings } = useSettings();
-  const [groupedExtras, setGroupedExtras] = useState<ExtraGroup[]>([]);
   const [launchStatus, setLaunchStatus] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const visualNavigationRef = useRef<ExtrasBigscreenNavigation | null>(null);
@@ -49,9 +48,10 @@ export function ExtrasDetail({
   const [focusedDocIndex, setFocusedDocIndex] = useState(0);
   const [focusedMediaIndex, setFocusedMediaIndex] = useState(0);
 
-  useEffect(() => {
-    setGroupedExtras(groupExtras(extras));
-  }, [extras]);
+  const groupedExtras = useMemo(
+    () => groupExtras(extras, settings.activePlatformId),
+    [extras, settings.activePlatformId],
+  );
 
   const visibleGroups = useMemo(() => {
     return visibleCategories
@@ -93,6 +93,16 @@ export function ExtrasDetail({
     if (!platformLaunchSettings.emulatorPath) {
       setLaunchStatus("Error: Emulator path not configured in Settings.");
       return;
+    }
+
+    if (settings.activePlatformId === 'atarist') {
+      const isHardDisk = /harddisk|hdold/i.test(extra.path) || /harddisk/i.test(extra.name);
+      const bootDisk = settings.platformSettings.atarist?.folders.bootDiskPath?.trim();
+      if (isHardDisk && !bootDisk) {
+        setLaunchStatus(t('settings.atariStBootDiskMissingWarning'));
+        setTimeout(() => setLaunchStatus(null), 6000);
+        return;
+      }
     }
 
     if (typeof window !== 'undefined') {
@@ -287,7 +297,6 @@ export function ExtrasDetail({
               extrasPath={settings.platformSettings[settings.activePlatformId].folders.extrasPath}
               previewHeight={layoutSpec.extrasPreviewHeight}
               thumbColumns={layoutSpec.extrasThumbColumns}
-              thumbnailLimit={layoutSpec.extrasThumbColumns}
               onRegisterNavigation={(navigation) => {
                 visualNavigationRef.current = navigation;
               }}

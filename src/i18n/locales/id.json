@@ -344,7 +344,11 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "Pengaturan Sistem BBC Micro & Panduan Emulator",
-    "bbcmicroInstructions": "Mendukung core RetroArch B2 (b2_libretro.dll) dan RetroArch MAME (mame_libretro.dll), serta BeebEm mandiri. Untuk booting cepat tanpa file BIOS, gunakan B2. Untuk MAME, pastikan file BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) ada di direktori system RetroArch. Game dengan versi disk di Extras akan otomatis boot di semua emulator."
+    "bbcmicroInstructions": "Mendukung core RetroArch B2 (b2_libretro.dll) dan RetroArch MAME (mame_libretro.dll), serta BeebEm mandiri. Untuk booting cepat tanpa file BIOS, gunakan B2. Untuk MAME, pastikan file BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) ada di direktori system RetroArch. Game dengan versi disk di Extras akan otomatis boot di semua emulator.",
+    "atariStInstructionsTitle": "Atari ST Folders Guide",
+    "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
+    "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
   },
   "media": {
     "noScreenshots": "Tidak ada tangkapan layar",

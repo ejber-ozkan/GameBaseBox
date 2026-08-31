@@ -168,6 +168,14 @@ fn test_build_fts_match_query_sanitizes_terms() {
         build_fts_match_query("I, Ball"),
         Some("I* AND Ball*".to_string())
     );
+    assert_eq!(
+        build_fts_match_query("dbug"),
+        Some("(dbug* OR \"d bug\"*)".to_string())
+    );
+    assert_eq!(
+        build_fts_match_query("dbug001"),
+        Some("(dbug* OR (\"d bug\"* AND 001*))".to_string())
+    );
     assert_eq!(build_fts_match_query("!!!"), None);
 }
 
