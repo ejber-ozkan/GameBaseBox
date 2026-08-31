@@ -344,7 +344,9 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro sistemos nustatymas ir emuliatoriaus vadovas",
-    "bbcmicroInstructions": "Palaiko ir „RetroArch B2“ (b2_libretro.dll), ir „RetroArch MAME“ (mame_libretro.dll) branduolius bei atskirą „BeebEm“. Greitam paleidimui be BIOS failų naudokite B2. MAME branduoliui reikalingi BIOS failai (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) „RetroArch“ system aplanke. Žaidimai su disko versijomis „Extras“ paleidžiami automatiškai."
+    "bbcmicroInstructions": "Palaiko ir „RetroArch B2“ (b2_libretro.dll), ir „RetroArch MAME“ (mame_libretro.dll) branduolius bei atskirą „BeebEm“. Greitam paleidimui be BIOS failų naudokite B2. MAME branduoliui reikalingi BIOS failai (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) „RetroArch“ system aplanke. Žaidimai su disko versijomis „Extras“ paleidžiami automatiškai.",
+    "atariStInstructionsTitle": "„Atari ST“ žaidimai ir priedai",
+    "atariStInstructions": "„HardDisk“, STX, „D-Bug“ ir „Automation“ yra aplanke „Games“, o ne „Extras“. Jei jie yra, jie bus rodomi alternatyvių versijų / priedų skydelyje."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

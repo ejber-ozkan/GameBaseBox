@@ -344,7 +344,9 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "Настройка системы BBC Micro и руководство по эмуляторам",
-    "bbcmicroInstructions": "Поддерживает как ядро RetroArch B2 (b2_libretro.dll), так и ядро RetroArch MAME (mame_libretro.dll), а также автономный BeebEm. Для быстрого запуска без файлов BIOS используйте B2. Для ядра MAME убедитесь в наличии BIOS файлов (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) в папке system RetroArch. Игры с версиями на дисках в Extras запускаются автоматически."
+    "bbcmicroInstructions": "Поддерживает как ядро RetroArch B2 (b2_libretro.dll), так и ядро RetroArch MAME (mame_libretro.dll), а также автономный BeebEm. Для быстрого запуска без файлов BIOS используйте B2. Для ядра MAME убедитесь в наличии BIOS файлов (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) в папке system RetroArch. Игры с версиями на дисках в Extras запускаются автоматически.",
+    "atariStInstructionsTitle": "Игры и дополнения Atari ST",
+    "atariStInstructions": "HardDisk, STX, D-Bug и Automation находятся в папке Games, а не Extras. Если они есть, они отобразятся на панели «Альтернативные версии / Дополнения»."
   },
   "media": {
     "noScreenshots": "Скриншоты отсутствуют",

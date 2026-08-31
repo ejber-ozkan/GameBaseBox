@@ -1258,10 +1258,10 @@ fn resolve_existing_rom_path(rom_path_str: &str) -> PathBuf {
 
     let normalized = rom_path_str.replace('\\', "/");
 
-    // 1. Check if inserting "Extras" before subfolders (WHDLoad, SPS, Disks, etc.) resolves to an existing file
+    // 1. Check if inserting "Extras" before subfolders (WHDLoad, SPS, Disks, HardDisk, STX, etc.) resolves to an existing file
     for candidate_folder in [
         "WHDLoad", "whdload", "SPS", "sps", "Disks", "disks", "Tapes", "tapes", "Carts",
-        "carts",
+        "carts", "HardDisk", "harddisk", "STX", "stx", "HDOLD", "hdold",
     ] {
         let pattern = format!("/{candidate_folder}/");
         if let Some((base, rest)) = normalized.split_once(&pattern) {
@@ -2536,6 +2536,52 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_launch_emulator_atarist_retroarch_zip_creates_m3u_for_stx_and_msa_disks() {
+        let dir = tempdir().unwrap();
+        let emulator_path = dir.path().join(if cfg!(windows) {
+            "retroarch.exe"
+        } else {
+            "retroarch"
+        });
+        copy_test_emulator(&emulator_path);
+
+        let core_path = dir.path().join("hatari_libretro.dll");
+        std::fs::write(&core_path, b"core").unwrap();
+
+        // 1. STX preservation disk
+        let stx_zip_path = dir.path().join("goldrunner_stx.zip");
+        write_zip(&stx_zip_path, &[("Goldrunner.stx", b"stx disk")]);
+
+        let result = launch_emulator(LaunchRequest {
+            platform_id: Some("atarist".to_string()),
+            emulator_profile_id: Some("retroarch-atarist".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            rom_path: stx_zip_path.to_string_lossy().to_string(),
+            core_path: Some(core_path.to_string_lossy().to_string()),
+            ..Default::default()
+        })
+        .await
+        .unwrap();
+        assert!(result.success);
+
+        // 2. MSA compilation disk (Automation / DBUG style)
+        let msa_zip_path = dir.path().join("automation_000.zip");
+        write_zip(&msa_zip_path, &[("000.msa", b"msa disk")]);
+
+        let result_msa = launch_emulator(LaunchRequest {
+            platform_id: Some("atarist".to_string()),
+            emulator_profile_id: Some("retroarch-atarist".to_string()),
+            emulator_path: emulator_path.to_string_lossy().to_string(),
+            rom_path: msa_zip_path.to_string_lossy().to_string(),
+            core_path: Some(core_path.to_string_lossy().to_string()),
+            ..Default::default()
+        })
+        .await
+        .unwrap();
+        assert!(result_msa.success);
+    }
+
+    #[tokio::test]
     async fn test_launch_emulator_atari800_zip_accepts_tape_and_cart_formats() {
         let dir = tempdir().unwrap();
         let emulator_path = dir.path().join(if cfg!(windows) {
@@ -2770,6 +2816,28 @@ mod tests {
         let resolved = resolve_existing_rom_path(&missing_extras_path.to_string_lossy());
 
         assert_eq!(resolved, zip_file);
+    }
+
+    #[test]
+    fn test_resolve_existing_rom_path_finds_atarist_extras_subfolder() {
+        let temp = tempdir().unwrap();
+        let extras_stx = temp.path().join("Extras").join("STX");
+        std::fs::create_dir_all(&extras_stx).unwrap();
+        let zip_file = extras_stx.join("Goldrunner.zip");
+        std::fs::write(&zip_file, b"test zip").unwrap();
+
+        let missing_extras_path = temp.path().join("STX").join("Goldrunner.zip");
+        let resolved = resolve_existing_rom_path(&missing_extras_path.to_string_lossy());
+        assert_eq!(resolved, zip_file);
+
+        let extras_hd = temp.path().join("Extras").join("HardDisk");
+        std::fs::create_dir_all(&extras_hd).unwrap();
+        let hd_zip = extras_hd.join("GOLDRUNR.ZIP");
+        std::fs::write(&hd_zip, b"hd zip").unwrap();
+
+        let missing_hd_path = temp.path().join("HardDisk").join("GOLDRUNR.ZIP");
+        let resolved_hd = resolve_existing_rom_path(&missing_hd_path.to_string_lossy());
+        assert_eq!(resolved_hd, hd_zip);
     }
 
     #[test]

@@ -12,9 +12,10 @@ export const DOC_FOLDERS = ["Docs", "Listings", "SceneMags", "Tips", "Hints, Tip
 export const MEDIA_FOLDERS = ["Trailer", "mkv", "mp3s"];
 export const GAME_FOLDERS = ["Carts", "Coverdisks", "Covertapes", "Disks", "PD-Disks", "Tapes", "Type-Ins"];
 export const AMIGA_GAME_FOLDERS = ["WHDLoad", "WHD", "SPS", "Disks", "PD-Disks", "Games", "Roms"];
+export const ATARI_ST_GAME_FOLDERS = ["HardDisk", "HDOLD", "STX", "stx", "Disks", "Games"];
 
 const IMG_EXT = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-const GAME_EXT = ['d64', 'g64', 't64', 'tap', 'prg', 'crt', 'nib', 'zip', 'adf', 'adz', 'dms', 'ipf', 'lha', 'hdf', 'hdz', 'slave'];
+const GAME_EXT = ['d64', 'g64', 't64', 'tap', 'prg', 'crt', 'nib', 'zip', 'adf', 'adz', 'dms', 'ipf', 'lha', 'hdf', 'hdz', 'slave', 'st', 'msa', 'stx', 'dim'];
 const MEDIA_EXT = ['mkv', 'mp4', 'mp3', 'avi', 'mov'];
 const DOC_EXT = ['pdf', 'txt', 'doc', 'docx', 'htm', 'html'];
 
@@ -33,6 +34,12 @@ export function groupExtras(extras: Extra[], platformId?: PlatformId | string | 
 
     // Amiga-scoped check for WHDLoad, SPS, or type 1 executable extras
     if (platformId === 'amiga' && isLaunchableExtra(extra, 'amiga')) {
+      groups.games.push(extra);
+      return;
+    }
+
+    // Atari ST-scoped check for HardDisk, STX, or type 1 executable extras
+    if (platformId === 'atarist' && isLaunchableExtra(extra, 'atarist')) {
       groups.games.push(extra);
       return;
     }
@@ -106,6 +113,11 @@ export function getExtraLaunchLabel(extra: Extra, platformId?: PlatformId | stri
     if (root.includes('sps') || name.includes('sps')) return 'Launch SPS';
   }
 
+  if (platformId === 'atarist' || root.includes('stx') || root.includes('harddisk') || root.includes('hdold')) {
+    if (root.includes('stx') || name.includes('stx')) return 'Launch STX';
+    if (root.includes('harddisk') || root.includes('hdold') || name.includes('harddisk')) return 'Launch HardDisk';
+  }
+
   if (root.includes('tape')) return 'Launch Tape';
   if (root.includes('disk')) return 'Launch Disk';
   if (root.includes('cart')) return 'Launch Cart';
@@ -130,6 +142,21 @@ export function isLaunchableExtra(extra: Extra, platformId?: PlatformId | string
     return AMIGA_GAME_FOLDERS.some((candidate) => root.includes(candidate.toLowerCase()));
   }
 
+  if (platformId === 'atarist') {
+    if (
+      root.includes('harddisk') ||
+      root.includes('hdold') ||
+      root.includes('stx') ||
+      name.includes('harddisk') ||
+      name.includes('original disk') ||
+      extra.type === '1' ||
+      extra.type === 'game'
+    ) {
+      return true;
+    }
+    return ATARI_ST_GAME_FOLDERS.some((candidate) => root.includes(candidate.toLowerCase()));
+  }
+
   return GAME_FOLDERS.some((candidate) => root.includes(candidate.toLowerCase()));
 }
 
@@ -151,7 +178,7 @@ export function supportsAtariExtraCoverArt(platformId: PlatformId) {
 }
 
 export function getVisibleDetailExtraCategories(platformId: PlatformId): ExtraGroup['category'][] {
-  return platformId === 'atari800' ? ['visual', 'docs', 'media'] : ['visual', 'media'];
+  return platformId === 'atari800' || platformId === 'atarist' ? ['visual', 'docs', 'media'] : ['visual', 'media'];
 }
 
 

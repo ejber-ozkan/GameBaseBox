@@ -344,7 +344,9 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "Configuração do sistema BBC Micro e guia do emulador",
-    "bbcmicroInstructions": "Suporta o core RetroArch B2 (b2_libretro.dll) e o core RetroArch MAME (mame_libretro.dll), bem como o BeebEm independente. Para inicialização rápida sem arquivos BIOS, use B2. Para o core MAME, certifique-se de que os arquivos BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) estejam no diretório system do RetroArch. Jogos com versões em disco no Extras iniciam automaticamente."
+    "bbcmicroInstructions": "Suporta o core RetroArch B2 (b2_libretro.dll) e o core RetroArch MAME (mame_libretro.dll), bem como o BeebEm independente. Para inicialização rápida sem arquivos BIOS, use B2. Para o core MAME, certifique-se de que os arquivos BIOS (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) estejam no diretório system do RetroArch. Jogos com versões em disco no Extras iniciam automaticamente.",
+    "atariStInstructionsTitle": "Jogos e Extras do Atari ST",
+    "atariStInstructions": "HardDisk, STX, D-Bug e Automation estão localizados na pasta Games, e não em Extras. Se presentes, ainda aparecerão no painel Versões Alternativas / Extras."
   },
   "media": {
     "noScreenshots": "Nenhuma captura de tela disponível",

@@ -344,7 +344,9 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "إعداد نظام BBC Micro ودليل المحاكي",
-    "bbcmicroInstructions": "يدعم كلاً من نواة RetroArch B2 (b2_libretro.dll) ونواة RetroArch MAME (mame_libretro.dll)، بالإضافة إلى محاكي BeebEm المستقل. لإقلاع سريع من الأقراص بدون ملفات BIOS، استخدم B2. لنواة MAME، تأكد من وجود ملفات BIOS المطلوبة (bbcb.zip، bbc_acorn8271.zip، saa5050.zip) في مجلد system لـ RetroArch. الألعاب التي تتوفر لها نسخ أقراص في Extras ستقلع تلقائيًا."
+    "bbcmicroInstructions": "يدعم كلاً من نواة RetroArch B2 (b2_libretro.dll) ونواة RetroArch MAME (mame_libretro.dll)، بالإضافة إلى محاكي BeebEm المستقل. لإقلاع سريع من الأقراص بدون ملفات BIOS، استخدم B2. لنواة MAME، تأكد من وجود ملفات BIOS المطلوبة (bbcb.zip، bbc_acorn8271.zip، saa5050.zip) في مجلد system لـ RetroArch. الألعاب التي تتوفر لها نسخ أقراص في Extras ستقلع تلقائيًا.",
+    "atariStInstructionsTitle": "ألعاب وإضافات Atari ST",
+    "atariStInstructions": "توجد HardDisk وSTX وD-Bug وAutomation في مجلد Games وليس Extras. إذا كانت متوفرة، فستظهر في لوحة الإصدارات البديلة / الإضافات."
   },
   "media": {
     "noScreenshots": "لا توجد لقطات شاشة متاحة",

@@ -122,7 +122,7 @@ interface LaunchVersionOption {
   tag: string;
 }
 
-type VersionVisualKind = 'default' | 'tape' | 'disk' | 'cart' | 'whd' | 'sps';
+type VersionVisualKind = 'default' | 'tape' | 'disk' | 'cart' | 'whd' | 'sps' | 'stx' | 'hd';
 
 const VERSION_STORAGE_KEY = 'gb64_selected_launch_versions';
 
@@ -241,7 +241,9 @@ function buildVersions(game: Game, launchableExtras: Extra[]): LaunchVersionOpti
       const folder = extra.path.split(/[\\/]/)[0] || 'Extras';
       const isWhd = extra.name?.toLowerCase().includes('whd') || folder.toLowerCase().includes('whd');
       const isSps = extra.name?.toLowerCase().includes('sps') || folder.toLowerCase().includes('sps');
-      const tag = isWhd ? 'WHD' : isSps ? 'SPS' : folder;
+      const isStx = extra.name?.toLowerCase().includes('stx') || folder.toLowerCase().includes('stx') || extra.path.toLowerCase().endsWith('.stx');
+      const isHd = extra.name?.toLowerCase().includes('harddisk') || folder.toLowerCase().includes('harddisk') || folder.toLowerCase().includes('hdold') || extra.path.toLowerCase().includes('harddisk');
+      const tag = isWhd ? 'WHD' : isSps ? 'SPS' : isStx ? 'STX' : isHd ? 'HD' : folder;
       return {
         id: extra.id,
         tag,
@@ -261,6 +263,8 @@ function getVersionVisualKind(version: LaunchVersionOption): VersionVisualKind {
   const combined = `${version.tag} ${version.label} ${version.subtitle}`.toLowerCase();
   if (combined.includes('whd')) return 'whd';
   if (combined.includes('sps')) return 'sps';
+  if (combined.includes('stx')) return 'stx';
+  if (combined.includes('harddisk') || combined.includes('hd')) return 'hd';
   if (combined.includes('tape')) return 'tape';
   if (combined.includes('disk')) return 'disk';
   if (combined.includes('cart')) return 'cart';
@@ -275,6 +279,10 @@ function getVersionVisualLabel(kind: VersionVisualKind) {
       return { badge: 'WHD', label: 'WHDLoad' };
     case 'sps':
       return { badge: 'SPS', label: 'SPS' };
+    case 'stx':
+      return { badge: 'STX', label: 'STX Preservation' };
+    case 'hd':
+      return { badge: 'HD', label: 'Hard Disk' };
     case 'tape':
       return { badge: 'TAP', label: 'Tape' };
     case 'disk':
@@ -323,6 +331,21 @@ function VersionGlyph({
           <path d="M8 5.5h14l3 3v18H7V6.5a1 1 0 0 1 1-1Z" {...common} />
           <rect x="10" y="8.5" width="10" height="5" rx="1.2" {...common} />
           <circle cx="16" cy="20.5" r="3.4" {...common} />
+        </>
+      ) : null}
+      {kind === 'stx' ? (
+        <>
+          <path d="M8 5.5h14l3 3v18H7V6.5a1 1 0 0 1 1-1Z" {...common} />
+          <rect x="10" y="8.5" width="10" height="5" rx="1.2" {...common} />
+          <circle cx="16" cy="20.5" r="3.4" {...common} />
+        </>
+      ) : null}
+      {kind === 'hd' ? (
+        <>
+          <rect x="6" y="8" width="20" height="16" rx="2" {...common} />
+          <line x1="6" y1="18" x2="26" y2="18" {...common} />
+          <circle cx="21" cy="13" r="1.5" {...common} />
+          <circle cx="16" cy="13" r="1.5" {...common} />
         </>
       ) : null}
       {kind === 'tape' ? (

@@ -344,7 +344,9 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro Järjestelmäasetukset ja Emulaattoriopas",
-    "bbcmicroInstructions": "Tukee sekä RetroArch B2 -ydintä (b2_libretro.dll) että RetroArch MAME -ydintä (mame_libretro.dll) sekä itsenäistä BeebEmiä. Nopeaan käynnistykseen ilman BIOS-tiedostoja käytä B2-ydintä. MAME-ytimelle varmista BIOS-tiedostot (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) RetroArchin system-kansiossa. Extras-kansion levyversiot käynnistyvät automaattisesti."
+    "bbcmicroInstructions": "Tukee sekä RetroArch B2 -ydintä (b2_libretro.dll) että RetroArch MAME -ydintä (mame_libretro.dll) sekä itsenäistä BeebEmiä. Nopeaan käynnistykseen ilman BIOS-tiedostoja käytä B2-ydintä. MAME-ytimelle varmista BIOS-tiedostot (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) RetroArchin system-kansiossa. Extras-kansion levyversiot käynnistyvät automaattisesti.",
+    "atariStInstructionsTitle": "Atari ST -pelit ja lisämateriaali",
+    "atariStInstructions": "HardDisk-, STX-, D-Bug- ja Automation-tiedostot sijaitsevat Games-kansiossa, eivät Extras-kansiossa. Ne näkyvät vaihtoehtoisten versioiden / lisämateriaalin paneelissa."
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",

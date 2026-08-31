@@ -344,7 +344,9 @@
     "amigaDownloadTargetExtras": "Extras Folder (Permanent)",
     "amigaDownloadTargetTemp": "Temp Folder (No Overwrite)",
     "bbcmicroInstructionsTitle": "BBC Micro Systeeminstellingen & Emulatorgids",
-    "bbcmicroInstructions": "Ondersteunt zowel de RetroArch B2-core (b2_libretro.dll) als de RetroArch MAME-core (mame_libretro.dll), evenals BeebEm. Gebruik B2 voor snel opstarten zonder BIOS-bestanden. Voor de MAME-core moeten de vereiste BIOS-bestanden (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) in de system-map van RetroArch staan. Spellen met disketteversies in Extras starten automatisch."
+    "bbcmicroInstructions": "Ondersteunt zowel de RetroArch B2-core (b2_libretro.dll) als de RetroArch MAME-core (mame_libretro.dll), evenals BeebEm. Gebruik B2 voor snel opstarten zonder BIOS-bestanden. Voor de MAME-core moeten de vereiste BIOS-bestanden (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) in de system-map van RetroArch staan. Spellen met disketteversies in Extras starten automatisch.",
+    "atariStInstructionsTitle": "Atari ST Spellen & Extra's",
+    "atariStInstructions": "HardDisk, STX, D-Bug en Automation bevinden zich in uw Games-map, niet in Extras. Indien aanwezig verschijnen ze nog steeds in het paneel Alternatieve versies / Extra's."
   },
   "media": {
     "noScreenshots": "Geen screenshots beschikbaar",

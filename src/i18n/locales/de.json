@@ -344,7 +344,9 @@
     "amigaDownloadTargetExtras": "Extras-Ordner (Dauerhaft)",
     "amigaDownloadTargetTemp": "Temp-Ordner (Kein Überschreiben)",
     "bbcmicroInstructionsTitle": "BBC Micro Systemeinrichtung & Emulator-Leitfaden",
-    "bbcmicroInstructions": "Unterstützt sowohl den RetroArch B2-Core (b2_libretro.dll) als auch den RetroArch MAME-Core (mame_libretro.dll) sowie eigenständiges BeebEm. Für schnelles Booten ohne BIOS-Dateien B2 verwenden. Für den MAME-Core müssen die BIOS-Dateien (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) im system-Ordner liegen. Spiele mit Diskettenversionen in Extras starten automatisch."
+    "bbcmicroInstructions": "Unterstützt sowohl den RetroArch B2-Core (b2_libretro.dll) als auch den RetroArch MAME-Core (mame_libretro.dll) sowie eigenständiges BeebEm. Für schnelles Booten ohne BIOS-Dateien B2 verwenden. Für den MAME-Core müssen die BIOS-Dateien (bbcb.zip, bbc_acorn8271.zip, saa5050.zip) im system-Ordner liegen. Spiele mit Diskettenversionen in Extras starten automatisch.",
+    "atariStInstructionsTitle": "Atari ST Spiele & Extras",
+    "atariStInstructions": "HardDisk, STX, D-Bug und Automation befinden sich im Games-Ordner, nicht in Extras. Falls vorhanden, erscheinen sie weiterhin im Bereich Alternative Versionen / Extras."
   },
   "media": {
     "noScreenshots": "Keine Screenshots verfügbar",
