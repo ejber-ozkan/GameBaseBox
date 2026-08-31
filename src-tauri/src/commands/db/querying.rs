@@ -32,7 +32,17 @@ pub(crate) fn build_fts_match_query(search_query: &str) -> Option<String> {
     let terms = search_query
         .split(|character: char| !character.is_alphanumeric())
         .filter(|term| !term.is_empty())
-        .map(|term| format!("{term}*"))
+        .map(|term| {
+            let lower = term.to_lowercase();
+            if lower == "dbug" {
+                "(dbug* OR \"d bug\"*)".to_string()
+            } else if lower.starts_with("dbug") && lower.len() > 4 {
+                let suffix = &lower[4..];
+                format!("(dbug* OR (\"d bug\"* AND {suffix}*))")
+            } else {
+                format!("{term}*")
+            }
+        })
         .collect::<Vec<_>>();
 
     if terms.is_empty() {
@@ -94,11 +104,19 @@ impl GameQueryBuilder {
                 self.filter_query.push_str(" AND (");
                 self.filter_query
                     .push_str(&LEGACY_SEARCH_FILTER_COLUMNS.join(" OR "));
+                let lower = search_query.to_lowercase();
+                let is_dbug = lower.contains("dbug");
+                if is_dbug {
+                    self.filter_query.push_str(" OR LOWER(gv.name) LIKE ?");
+                }
                 self.filter_query.push(')');
 
-                let pattern = format!("%{}%", search_query.to_lowercase());
+                let pattern = format!("%{lower}%");
                 for _ in 0..LEGACY_SEARCH_FILTER_COLUMNS.len() {
                     self.params.push(pattern.clone());
+                }
+                if is_dbug {
+                    self.params.push(format!("%{}%", lower.replace("dbug", "d-bug")));
                 }
             }
         }
