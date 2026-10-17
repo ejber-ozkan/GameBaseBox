@@ -93,7 +93,17 @@ impl CommandRunner for ProcessRunner {
         destination: Option<&Path>,
     ) -> Result<CommandOutput, String> {
         let mut command = Command::new(program);
-        command.args(args).env("MDBICONV", "UTF-8");
+        // GUI launches may inherit the C locale; mdb-export converts table-name
+        // arguments through the process locale before looking them up.
+        let locale = if cfg!(target_os = "macos") {
+            "en_US.UTF-8"
+        } else {
+            "C.UTF-8"
+        };
+        command
+            .args(args)
+            .env("MDBICONV", "UTF-8")
+            .env("LC_ALL", locale);
         if let Some(destination) = destination {
             let file = OpenOptions::new()
                 .write(true)
@@ -177,6 +187,11 @@ fn normalize_csv(
     let mut reader = BufReader::new(File::open(source).map_err(|error| error.to_string())?);
     let header =
         super::read_csv_record(&mut reader, source)?.ok_or("MDB export produced no CSV header")?;
+    if super::csv_record_has_unclosed_quotes(&header) {
+        return Err(format!(
+            "Malformed CSV exported from MDB table '{table}': unclosed header quotes"
+        ));
+    }
     let headers: Vec<_> = super::parse_csv_line(&header)
         .into_iter()
         .map(|header| header.trim().trim_start_matches('\u{feff}').to_string())
@@ -197,6 +212,11 @@ fn normalize_csv(
         let Some(record) = super::read_csv_record(&mut reader, source)? else {
             break;
         };
+        if super::csv_record_has_unclosed_quotes(&record) {
+            return Err(format!(
+                "Malformed CSV exported from MDB table '{table}': unclosed quotes"
+            ));
+        }
         let values = super::parse_csv_line(&record);
         if values.len() != headers.len() {
             return Err(format!("Malformed CSV exported from MDB table '{table}': column count does not match the header"));
@@ -295,6 +315,20 @@ mod tests {
     use super::*;
     use std::collections::VecDeque;
     use tempfile::tempdir;
+
+    #[test]
+    fn rejects_unclosed_csv_quotes_even_when_column_count_matches() {
+        let directory = tempdir().unwrap();
+        let source = directory.path().join("raw.csv");
+        fs::write(&source, "GA_Id,Name\n1,\"unfinished").unwrap();
+        let result = normalize_csv(
+            "Games",
+            &source,
+            &directory.path().join("Games.csv"),
+            &mut || Ok(()),
+        );
+        assert!(result.unwrap_err().contains("unclosed"));
+    }
 
     fn make_tools(directory: &Path) {
         std::fs::create_dir_all(directory).unwrap();

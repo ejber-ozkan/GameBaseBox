@@ -934,9 +934,13 @@ fn powershell_32_path() -> PathBuf {
         .join("powershell.exe")
 }
 
-fn export_mdb_to_csv(mdb_path: &Path, export_dir: &Path) -> Result<usize, String> {
+fn export_mdb_to_csv(
+    mdb_path: &Path,
+    export_dir: &Path,
+    check_cancelled: &mut impl FnMut() -> Result<(), String>,
+) -> Result<usize, String> {
     if !cfg!(target_os = "windows") {
-        return mdb_export::export_mdb_to_csv(mdb_path, export_dir, &mut || Ok(()));
+        return mdb_export::export_mdb_to_csv(mdb_path, export_dir, check_cancelled);
     }
 
     let script_path = write_embedded_export_script(export_dir)?;
@@ -1342,11 +1346,10 @@ where
     let temp_db_path = create_import_temp_db_path(&live_db_path)?;
     remove_sqlite_artifacts(&temp_db_path)?;
 
-    let mut conn = Connection::open(&temp_db_path).map_err(|error| error.to_string())?;
-    conn.execute_batch("PRAGMA journal_mode = WAL;")
-        .map_err(|error| error.to_string())?;
-
     let import_result = (|| -> Result<usize, String> {
+        let mut conn = Connection::open(&temp_db_path).map_err(|error| error.to_string())?;
+        conn.execute_batch("PRAGMA journal_mode = WAL;")
+            .map_err(|error| error.to_string())?;
         let csv_files = list_csv_files(export_dir)?;
         if csv_files.is_empty() {
             return Err("No CSV files were exported from the MDB.".to_string());
@@ -1367,23 +1370,18 @@ where
         rebuild_search_index(&conn)?;
         ensure_secure_table_on_connection(&conn)?;
 
+        drop(conn);
+        check_cancelled()?;
+        merge_imported_database(&temp_db_path, &live_db_path, &platform_id)?;
         Ok(imported_tables)
     })();
 
-    drop(conn);
-    let imported_tables = match import_result {
-        Ok(imported_tables) => imported_tables,
-        Err(error) => {
-            let _ = remove_sqlite_artifacts(&temp_db_path);
-            return Err(error);
-        }
-    };
-
-    check_cancelled()?;
-    merge_imported_database(&temp_db_path, &live_db_path, &platform_id)?;
-    remove_sqlite_artifacts(&temp_db_path)?;
-
-    Ok(imported_tables)
+    let cleanup_result = remove_sqlite_artifacts(&temp_db_path);
+    match (import_result, cleanup_result) {
+        (Ok(tables), Ok(())) => Ok(tables),
+        (Err(error), Ok(())) | (Ok(_), Err(error)) => Err(error),
+        (Err(error), Err(cleanup)) => Err(format!("{error}; staging cleanup failed at '{}': {cleanup}", temp_db_path.display())),
+    }
 }
 
 fn cleanup_export_directory(export_dir: &Path) {
@@ -1426,7 +1424,7 @@ where
 
     check_cancelled()?;
     let export_dir = create_export_directory()?;
-    let export_result = export_mdb_to_csv(&mdb_path, &export_dir);
+    let export_result = export_mdb_to_csv(&mdb_path, &export_dir, &mut check_cancelled);
     let import_result = export_result.and_then(|exported_tables| {
         check_cancelled()?;
         import_csv_directory_to_sqlite_with_cancellation(&export_dir, &platform_id, &mut check_cancelled)
@@ -2053,5 +2051,61 @@ mod tests {
             )
             .unwrap();
         assert!(!alpha_exists);
+    }
+
+    fn write_staged_import_fixture(directory: &Path) {
+        let tables = [
+            ("Games.csv", "GA_Id,Name,Filename,FileToRun,ScrnshotFilename,SidFilename,CRC,YE_Id,GE_Id,DE_Id,PU_Id,MU_Id,LA_Id,PR_Id,AR_Id,V_PalNTSC,V_TrueDriveEmu,Classic,Adult\n1,Tiger Heli,tiger.zip,,tiger.png,tiger.sid,abc,1,1,1,1,1,1,1,1,P,1,True,False\n"),
+            ("Years.csv", "YE_Id,Year\n1,1988\n"),
+            ("Genres.csv", "GE_Id,Genre,PG_Id\n1,Shoot'em Up,1\n"),
+            ("PGenres.csv", "PG_Id,ParentGenre\n1,Arcade\n"),
+            ("Developers.csv", "DE_Id,Developer\n1,SEUCK\n"),
+            ("Publishers.csv", "PU_Id,Publisher\n1,Firebird\n"),
+            ("Musicians.csv", "MU_Id,Musician,Photo,Nick,Grp\n1,Rob Hubbard,photo.jpg,Hub,Group\n"),
+            ("Languages.csv", "LA_Id,Language\n1,English\n"),
+            ("Programmers.csv", "PR_Id,Programmer\n1,Chris Yates\n"),
+            ("Artists.csv", "AR_Id,Artist\n1,Ejber Ozkan\n"),
+            ("Extras.csv", "GA_Id,DisplayOrder,Path\n1,1,Cover/Test Cover.png\n"),
+        ];
+
+        for (filename, contents) in tables {
+            fs::write(directory.join(filename), contents).unwrap();
+        }
+
+    }
+
+    #[test]
+    fn cancelled_after_staging_preserves_live_database_and_removes_staging() {
+        let directory = tempdir().unwrap();
+        let db = directory.path().join("live.sqlite");
+        let _env = DbEnvGuard::set(db.to_str().unwrap());
+        let original = b"prior library bytes";
+        fs::write(&db, original).unwrap();
+        let exports = tempdir().unwrap();
+        write_staged_import_fixture(exports.path());
+        let mut checks = 0;
+        let result = import_csv_directory_to_sqlite_with_cancellation(exports.path(), "c64", &mut || {
+            checks += 1;
+            if checks == 12 { Err("cancel at merge boundary".into()) } else { Ok(()) }
+        });
+        assert_eq!(result.unwrap_err(), "cancel at merge boundary");
+        assert_eq!(fs::read(&db).unwrap(), original);
+        let remaining: Vec<_> = fs::read_dir(directory.path()).unwrap().map(|entry| entry.unwrap().file_name()).collect();
+        assert_eq!(remaining, vec![std::ffi::OsString::from("live.sqlite")]);
+    }
+
+    #[test]
+    fn failed_merge_preserves_live_database_and_removes_staging() {
+        let directory = tempdir().unwrap();
+        let db = directory.path().join("live.sqlite");
+        let _env = DbEnvGuard::set(db.to_str().unwrap());
+        let original = b"prior unreadable library bytes";
+        fs::write(&db, original).unwrap();
+        let exports = tempdir().unwrap();
+        write_staged_import_fixture(exports.path());
+        assert!(import_csv_directory_to_sqlite(exports.path(), "c64").is_err());
+        assert_eq!(fs::read(&db).unwrap(), original);
+        let remaining: Vec<_> = fs::read_dir(directory.path()).unwrap().map(|entry| entry.unwrap().file_name()).collect();
+        assert_eq!(remaining, vec![std::ffi::OsString::from("live.sqlite")]);
     }
 }
