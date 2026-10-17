@@ -15,6 +15,7 @@ import { CyberpunkCrtGrid } from './library/CyberpunkCrtGrid';
 import { BigBoxExitPrompt } from './bigbox/BigBoxExitPrompt';
 import { HorizontalRail } from './HorizontalRail';
 import { useBigBoxLibraryData, type BigBoxRailCategory } from '../hooks/useBigBoxLibraryData';
+import { getLibraryRefreshToken } from '../hooks/useLibraryBrowserState';
 import { useBigBoxNavigation } from '../hooks/useBigBoxNavigation';
 import { useBigBoxScrollSync } from '../hooks/useBigBoxScrollSync';
 import { ControllerSearchKeyboard } from './ControllerSearchKeyboard';
@@ -107,6 +108,7 @@ export function BigBoxView({
   const usesRailGridNavigation = isC64Edition || isCyberpunkCrt;
 
   const { flatGames, genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
+    libraryRefreshToken: getLibraryRefreshToken(settings),
     activeRailIndex,
     activePlatformId: settings.activePlatformId,
     favorites,

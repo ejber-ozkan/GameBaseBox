@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BigBoxView, getC64NavigationRails } from './BigBoxView';
 import { mockGames } from '../data/mockGames';
+import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
 
 vi.mock('../hooks/useFavorites', () => ({
   useFavorites: () => ({ favorites: [], isFavorite: () => false, toggleFavorite: vi.fn() }),
@@ -87,6 +88,7 @@ describe('BigBoxView', () => {
         searchInput=""
         settings={{
           activePlatformId: 'c64', confirmFullscreenExit: true, lastBigBoxGameId: null, lastBigBoxRailId: null, recentlyPlayedIds: [],
+          platformSettings: createDefaultPlatformSettingsMap(),
         } as never}
       />,
     );
@@ -111,6 +113,7 @@ describe('BigBoxView', () => {
         searchInput=""
         settings={{
           activePlatformId: 'c64', confirmFullscreenExit: true, lastBigBoxGameId: null, lastBigBoxRailId: null, recentlyPlayedIds: [],
+          platformSettings: createDefaultPlatformSettingsMap(),
         } as never}
       />,
     );
@@ -154,6 +157,7 @@ describe('BigBoxView', () => {
         searchInput=""
         settings={{
           activePlatformId: 'c64',
+          platformSettings: createDefaultPlatformSettingsMap(),
           confirmFullscreenExit: true,
           lastBigBoxGameId: null,
           lastBigBoxRailId: null,

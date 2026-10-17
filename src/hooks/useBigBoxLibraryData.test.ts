@@ -8,7 +8,7 @@
  */
 import { createElement } from 'react';
 import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   getAlphabetRailCacheKey,
   getFlatLibraryLoadLimit,
@@ -275,5 +275,74 @@ describe('useBigBoxLibraryData request lifetime', () => {
     await waitFor(() => expect(result.current.genres).toEqual(['Current genre']));
     await act(async () => oldGenres.resolve(['Old genre']));
     expect(result.current.genres).toEqual(['Current genre']);
+  });
+});
+
+describe('BigBox import revision', () => {
+  const emptyIds: string[] = [];
+  const props = {
+    activeRailIndex: 0,
+    activePlatformId: 'c64',
+    favorites: emptyIds,
+    filters: { genre: 'Revision fixture' },
+    recentlyPlayedIds: emptyIds,
+    searchInput: '',
+    libraryRefreshToken: 'c64:imported:361:first',
+  };
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.clearAllMocks();
+    vi.mocked(getGenres).mockResolvedValue([]);
+    vi.mocked(getSubGenres).mockResolvedValue([]);
+    vi.mocked(getDbGameCount).mockResolvedValue(361);
+  });
+  afterEach(() => vi.useRealTimers());
+
+  async function loadLetter() {
+    await act(async () => {});
+    await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+  }
+
+  it('reloads a visited letter after a same-platform same-count reimport', async () => {
+    const oldRows = [{ ...mockGames[0], name: 'Old metadata' }];
+    const newRows = [{ ...mockGames[0], name: 'New metadata' }];
+    vi.mocked(getDbGames).mockImplementation(async (_limit, _offset, filters) => filters?.letter ? oldRows : []);
+    const { result, rerender } = renderHook(useBigBoxLibraryData, { initialProps: props });
+    await loadLetter();
+    expect(result.current.rails[0].games).toEqual(oldRows);
+    vi.mocked(getDbGames).mockImplementation(async (_limit, _offset, filters) => filters?.letter ? newRows : []);
+    rerender({ ...props, libraryRefreshToken: 'c64:imported:361:second' });
+    await loadLetter();
+    expect(result.current.rails[0].games).toEqual(newRows);
+  });
+
+  it('rejects a pending old letter and old initialization after reimport', async () => {
+    const oldLetter = deferred<Game[]>();
+    const oldInit = deferred<Game[]>();
+    const initialProps = { ...props, filters: { genre: 'Pending revision fixture' } };
+    vi.mocked(getDbGames).mockImplementation((_limit, _offset, filters) => filters?.letter
+      ? oldLetter.promise : Promise.resolve([]));
+    const { result, rerender, unmount } = renderHook(useBigBoxLibraryData, { initialProps });
+    await loadLetter();
+    expect(getDbGames).toHaveBeenCalledWith(1000, 0, expect.objectContaining({ letter: '#' }), 'c64');
+    vi.mocked(getDbGames).mockReturnValue(oldInit.promise);
+    rerender({ ...initialProps, libraryRefreshToken: 'c64:imported:361:pending' });
+    await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+    const newRows = [{ ...mockGames[0], name: 'Current revision' }];
+    vi.mocked(getDbGames).mockImplementation(async (_limit, _offset, filters) => filters?.letter ? newRows : []);
+    rerender({ ...initialProps, libraryRefreshToken: 'c64:imported:361:current' });
+    await loadLetter();
+    expect(result.current.rails[0].games).toEqual(newRows);
+    await act(async () => {
+      oldLetter.resolve([{ ...mockGames[0], name: 'Obsolete letter' }]);
+      oldInit.resolve([{ ...mockGames[0], name: 'Obsolete initialization' }]);
+    });
+    expect(result.current.rails[0].games).toEqual(newRows);
+    // Remount to prove an obsolete request did not poison the shared cache.
+    unmount();
+    const revisited = renderHook(useBigBoxLibraryData, { initialProps: { ...initialProps, libraryRefreshToken: 'c64:imported:361:current' } });
+    await loadLetter();
+    expect(revisited.result.current.rails[0].games).toEqual(newRows);
   });
 });

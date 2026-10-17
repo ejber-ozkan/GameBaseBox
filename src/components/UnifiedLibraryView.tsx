@@ -7,7 +7,7 @@ import type { Settings } from '../contexts/SettingsContext';
 import { useFavorites } from '../hooks/useFavorites';
 import { useInputMode } from '../hooks/useInputMode';
 import { type GameFilters, exitApp, getDbGameCount, getDbGames } from '../lib/tauri-bridge';
-import type { LibraryViewMode } from '../hooks/useLibraryBrowserState';
+import { getLibraryRefreshToken, type LibraryViewMode } from '../hooks/useLibraryBrowserState';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from '../i18n/I18nContext';
 
@@ -168,6 +168,7 @@ export function UnifiedLibraryView({
   } = useBigBoxLibraryData({
     activeRailIndex,
     activePlatformId: settings.activePlatformId,
+    libraryRefreshToken: getLibraryRefreshToken(settings),
     favorites,
     filters,
     recentlyPlayedIds: settings.recentlyPlayedIds,
