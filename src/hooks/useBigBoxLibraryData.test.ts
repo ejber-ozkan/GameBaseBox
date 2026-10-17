@@ -7,8 +7,8 @@
  * as plain TypeScript instead.
  */
 import { createElement } from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   getAlphabetRailCacheKey,
   getFlatLibraryLoadLimit,
@@ -17,6 +17,8 @@ import {
   useBigBoxLibraryData,
 } from './useBigBoxLibraryData';
 import { mockGames } from '../data/mockGames';
+import { getDbGameCount, getDbGames, getGenres, getSubGenres } from '../lib/tauri-bridge';
+import type { Game } from '../types/game';
 
 const EMPTY_FILTERS = {};
 const FAVORITE_IDS = [mockGames[0].id.toString()];
@@ -162,5 +164,110 @@ describe('useBigBoxLibraryData primary rails', () => {
     expect(rails.filter((rail) => rail.type === 'alphabet').every(
       (rail) => rail.scale === undefined,
     )).toBe(true);
+  });
+});
+
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((done) => { resolve = done; });
+  return { promise, resolve };
+}
+
+describe('useBigBoxLibraryData request lifetime', () => {
+  const props: Parameters<typeof useBigBoxLibraryData>[0] = {
+    activeRailIndex: -1,
+    activePlatformId: 'c64',
+    favorites: FAVORITE_IDS,
+    filters: EMPTY_FILTERS,
+    recentlyPlayedIds: RECENTLY_PLAYED_IDS,
+    searchInput: 'old search',
+    loadFlatLibrary: true,
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(getGenres).mockResolvedValue([]);
+    vi.mocked(getSubGenres).mockResolvedValue([]);
+    vi.mocked(getDbGameCount).mockResolvedValue(3);
+  });
+
+  for (const change of ['platform', 'filter', 'search'] as const) {
+    it.each(['recent', 'favorites', 'classics', 'search', 'count', 'flat'] as const)(
+      `ignores obsolete %s initialization after a ${change} change`, async (stage) => {
+        const oldGames = deferred<Game[]>();
+        const oldCount = deferred<number>();
+        const oldRows = mockGames.slice(0, 3).map((game) => ({ ...game, name: `Old ${game.name}` }));
+        const currentRows = mockGames.slice(0, 3).map((game) => ({ ...game, name: `Current ${game.name}` }));
+        let reachedStage = false;
+        const isOld = (filters: Parameters<typeof getDbGames>[2], platform?: string) => (
+          change === 'platform' ? platform === 'c64'
+            : change === 'filter' ? !filters?.genre : filters?.searchQuery === 'old search'
+        );
+        vi.mocked(getDbGameCount).mockImplementation((filters, platform) => {
+          if (stage === 'count' && isOld(filters, platform)) {
+            reachedStage = true;
+            return oldCount.promise;
+          }
+          return Promise.resolve(3);
+        });
+        vi.mocked(getDbGames).mockImplementation((limit, _offset, filters, platform) => {
+          if (!isOld(filters, platform)) return Promise.resolve(currentRows);
+          const queryStage = filters?.favoriteIds === RECENTLY_PLAYED_IDS ? 'recent'
+            : filters?.favoriteIds === FAVORITE_IDS ? 'favorites'
+              : filters?.isClassic ? 'classics' : limit === 500 ? 'search' : 'flat';
+          if (queryStage === stage) {
+            reachedStage = true;
+            return oldGames.promise;
+          }
+          return Promise.resolve(oldRows);
+        });
+        const initialProps = {
+          ...props,
+          searchInput: change === 'search' || stage === 'search' ? 'old search' : '',
+        };
+        const { result, rerender } = renderHook(useBigBoxLibraryData, { initialProps });
+        await waitFor(() => expect(reachedStage).toBe(true));
+        rerender({
+          ...initialProps,
+          ...(change === 'platform' ? { activePlatformId: 'atari800' }
+            : change === 'filter' ? { filters: { genre: 'Action' } }
+              : { searchInput: '' }),
+        });
+        await waitFor(() => expect(result.current.loading).toBe(false));
+        expect(result.current.flatGames).toEqual(currentRows);
+        const current = result.current;
+        await act(async () => {
+          oldGames.resolve(oldRows);
+          oldCount.resolve(99);
+        });
+        expect(result.current).toEqual(current);
+      },
+    );
+  }
+
+  it('keeps the current initialization loading when obsolete initialization finishes', async () => {
+    const oldGames = deferred<Game[]>();
+    const currentGames = deferred<Game[]>();
+    vi.mocked(getDbGames).mockImplementation((_limit, _offset, _filters, platform) => (
+      platform === 'c64' ? oldGames.promise : currentGames.promise
+    ));
+    const { result, rerender } = renderHook(useBigBoxLibraryData, { initialProps: props });
+    rerender({ ...props, activePlatformId: 'atari800' });
+    await act(async () => oldGames.resolve(mockGames));
+    expect(result.current.loading).toBe(true);
+    await act(async () => currentGames.resolve(mockGames));
+    expect(result.current.loading).toBe(false);
+  });
+
+  it('ignores obsolete platform genre responses', async () => {
+    const oldGenres = deferred<string[]>();
+    vi.mocked(getGenres).mockImplementation((platform) => platform === 'c64'
+      ? oldGenres.promise : Promise.resolve(['Current genre']));
+    vi.mocked(getDbGames).mockResolvedValue(mockGames);
+    const { result, rerender } = renderHook(useBigBoxLibraryData, { initialProps: props });
+    rerender({ ...props, activePlatformId: 'atari800' });
+    await waitFor(() => expect(result.current.genres).toEqual(['Current genre']));
+    await act(async () => oldGenres.resolve(['Old genre']));
+    expect(result.current.genres).toEqual(['Current genre']);
   });
 });

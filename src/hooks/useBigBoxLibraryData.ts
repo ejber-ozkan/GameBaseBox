@@ -84,7 +84,11 @@ export function useBigBoxLibraryData({
   const activeLetterRequestRef = useRef(0);
 
   useEffect(() => {
-    getGenres(activePlatformId).then(setGenres);
+    let cancelled = false;
+    void getGenres(activePlatformId).then((items) => {
+      if (!cancelled) setGenres(items);
+    });
+    return () => { cancelled = true; };
   }, [activePlatformId]);
 
   useEffect(() => {
@@ -105,29 +109,26 @@ export function useBigBoxLibraryData({
   }, [activePlatformId, filters.genre]);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function initData() {
       setLoading(true);
       try {
         const query = searchInput.trim().length >= 2 ? searchInput : undefined;
         const libraryFilters = { ...filters, searchQuery: query };
-        const gameCountPromise = getDbGameCount(libraryFilters, activePlatformId);
-
-        if (recentlyPlayedIds.length > 0) {
-          const recent = await getDbGames(100, 0, { ...libraryFilters, favoriteIds: recentlyPlayedIds }, activePlatformId);
-          setRecentGames(sortRecentGames(recent, recentlyPlayedIds));
-        } else {
-          setRecentGames([]);
-        }
-
-
-        if (favorites.length > 0) {
-          const favoriteResults = await getDbGames(100, 0, { ...libraryFilters, favoriteIds: favorites }, activePlatformId);
-          setFavoriteGames(favoriteResults);
-        } else {
-          setFavoriteGames([]);
-        }
-
-        const classics = await getDbGames(100, 0, { ...libraryFilters, isClassic: true }, activePlatformId);
+        const [recent, favoriteResults, classics, gameCount] = await Promise.all([
+          recentlyPlayedIds.length > 0
+            ? getDbGames(100, 0, { ...libraryFilters, favoriteIds: recentlyPlayedIds }, activePlatformId)
+            : Promise.resolve<Game[]>([]),
+          favorites.length > 0
+            ? getDbGames(100, 0, { ...libraryFilters, favoriteIds: favorites }, activePlatformId)
+            : Promise.resolve<Game[]>([]),
+          getDbGames(100, 0, { ...libraryFilters, isClassic: true }, activePlatformId),
+          getDbGameCount(libraryFilters, activePlatformId),
+        ]);
+        if (cancelled) return;
+        setRecentGames(sortRecentGames(recent, recentlyPlayedIds));
+        setFavoriteGames(favoriteResults);
         setClassicGames(classics);
 
         if (!query) {
@@ -142,6 +143,7 @@ export function useBigBoxLibraryData({
           );
         } else {
           const results = await getDbGames(500, 0, libraryFilters, activePlatformId);
+          if (cancelled) return;
           setAlphabetRails([
             {
               id: 'search-results',
@@ -152,19 +154,21 @@ export function useBigBoxLibraryData({
           ]);
         }
 
-        const gameCount = await gameCountPromise;
         setTotalGameCount(gameCount);
-        setFlatGames(loadFlatLibrary
+        const flatResults = loadFlatLibrary
           ? await getDbGames(getFlatLibraryLoadLimit(gameCount, true), 0, libraryFilters, activePlatformId)
-          : []);
+          : [];
+        if (cancelled) return;
+        setFlatGames(flatResults);
       } catch (error) {
-        console.error('BigBox init error:', error);
+        if (!cancelled) console.error('BigBox init error:', error);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     void initData();
+    return () => { cancelled = true; };
   }, [activePlatformId, favorites, filters, loadFlatLibrary, recentlyPlayedIds, searchInput]);
 
   const rails = useMemo<BigBoxRailCategory[]>(() => {
