@@ -5,6 +5,7 @@ import { getDbGames, type GameFilters } from '../lib/tauri-bridge';
 import type { Game } from '../types/game';
 
 interface UseWindowLibraryShelvesProps {
+  enabled?: boolean;
   activePlatformId: string;
   favoriteIds: string[];
   filters: GameFilters;
@@ -13,6 +14,7 @@ interface UseWindowLibraryShelvesProps {
 }
 
 export function useWindowLibraryShelves({
+  enabled = true,
   activePlatformId,
   favoriteIds,
   filters,
@@ -24,6 +26,7 @@ export function useWindowLibraryShelves({
   const [classicGames, setClassicGames] = useState<Game[]>([]);
 
   useEffect(() => {
+    if (!enabled) return;
     let isCancelled = false;
 
     async function loadShelves() {
@@ -71,7 +74,7 @@ export function useWindowLibraryShelves({
     return () => {
       isCancelled = true;
     };
-  }, [activePlatformId, favoriteIds, filters, recentlyPlayedIds, searchInput]);
+  }, [activePlatformId, enabled, favoriteIds, filters, recentlyPlayedIds, searchInput]);
 
   return useMemo(
     () => ({

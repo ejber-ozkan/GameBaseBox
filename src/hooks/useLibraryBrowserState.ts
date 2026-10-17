@@ -39,6 +39,7 @@ export function useLibraryBrowserState() {
   const queryGenerationRef = useRef(0);
   const shelfRef = useRef<HTMLDivElement>(null);
   const libraryRefreshToken = getLibraryRefreshToken(settings);
+  const libraryEnabled = !settings.isFullscreen || viewMode === 'list';
 
   if (settings.activePlatformId !== prevPlatformId) {
     setPrevPlatformId(settings.activePlatformId);
@@ -77,6 +78,7 @@ export function useLibraryBrowserState() {
     const isCurrent = () => queryGenerationRef.current === generation;
     hasMorePagesRef.current = false;
     isLoadingNextPageRef.current = false;
+    if (!libraryEnabled) return;
 
     async function fetchGames() {
       const dbGames = await getDbGames(LIBRARY_PAGE_SIZE, 0, queryFilters, settings.activePlatformId);
@@ -90,10 +92,10 @@ export function useLibraryBrowserState() {
     return () => {
       queryGenerationRef.current += 1;
     };
-  }, [queryFilters, settings.activePlatformId, libraryRefreshToken]);
+  }, [libraryEnabled, queryFilters, settings.activePlatformId, libraryRefreshToken]);
 
   useEffect(() => {
-    if (loadedGeneration !== queryGenerationRef.current) return;
+    if (!libraryEnabled || loadedGeneration !== queryGenerationRef.current) return;
     let cancelled = false;
 
     async function restoreSelection() {
@@ -136,6 +138,7 @@ export function useLibraryBrowserState() {
     focusedIndex,
     games,
     isRestored,
+    libraryEnabled,
     loadedGeneration,
     selectedGame,
     settings.activePlatformId,
@@ -145,7 +148,7 @@ export function useLibraryBrowserState() {
   ]);
 
   const loadNextPage = useCallback(async () => {
-    if (!hasMorePagesRef.current || isLoadingNextPageRef.current) {
+    if (!libraryEnabled || !hasMorePagesRef.current || isLoadingNextPageRef.current) {
       return;
     }
 
@@ -168,7 +171,7 @@ export function useLibraryBrowserState() {
         isLoadingNextPageRef.current = false;
       }
     }
-  }, [queryFilters, games.length, settings.activePlatformId]);
+  }, [libraryEnabled, queryFilters, games.length, settings.activePlatformId]);
 
   useEffect(() => {
     if (focusedIndex >= games.length - PAGE_PREFETCH_THRESHOLD) {

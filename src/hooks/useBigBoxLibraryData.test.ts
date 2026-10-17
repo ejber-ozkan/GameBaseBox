@@ -351,6 +351,34 @@ describe('BigBox import revision', () => {
   });
 });
 
+describe('BigBox activation', () => {
+  it('issues no queries until enabled and cancels work when disabled', async () => {
+    const pending = deferred<Game[]>();
+    vi.clearAllMocks();
+    vi.mocked(getDbGames).mockReturnValue(pending.promise);
+    vi.mocked(getDbGameCount).mockResolvedValue(30000);
+    vi.mocked(getGenres).mockResolvedValue([]);
+    vi.mocked(getSubGenres).mockResolvedValue([]);
+    const props = {
+      enabled: false, activeRailIndex: 0, activePlatformId: 'c64', favorites: FAVORITE_IDS,
+      recentlyPlayedIds: RECENTLY_PLAYED_IDS, filters: EMPTY_FILTERS, searchInput: '', loadFlatLibrary: true,
+    };
+    const { result, rerender } = renderHook(useBigBoxLibraryData, { initialProps: props });
+    await act(async () => {});
+    expect(getDbGames).not.toHaveBeenCalled();
+    expect(getDbGameCount).not.toHaveBeenCalled();
+    expect(getGenres).not.toHaveBeenCalled();
+    expect(getSubGenres).not.toHaveBeenCalled();
+    rerender({ ...props, enabled: true });
+    expect(getDbGames).toHaveBeenCalledTimes(3);
+    rerender(props);
+    await act(async () => pending.resolve(mockGames));
+    expect(result.current.rails).toEqual([]);
+    expect(result.current.flatGames).toEqual([]);
+    expect(result.current.loading).toBe(false);
+  });
+});
+
 describe('BigBox complete-result continuation', () => {
   const emptyIds: string[] = [];
   beforeEach(() => {

@@ -75,19 +75,27 @@ function ImportedLibraryContent() {
   const [listGameCount, setListGameCount] = useState<number | undefined>(undefined);
   const [bigBoxSession, setBigBoxSession] = useState<BigBoxSessionState | null>(null);
   const previousFullscreenRef = useRef(settings.isFullscreen);
+  const windowDataEnabled = !settings.isFullscreen || viewMode === 'list';
   const { classicGames, favoriteGames, recentGames } = useWindowLibraryShelves({
+    enabled: !settings.isFullscreen,
     activePlatformId: settings.activePlatformId,
     favoriteIds: favorites,
     filters,
     recentlyPlayedIds: settings.recentlyPlayedIds,
-    searchInput,
+    searchInput: filters.searchQuery ?? '',
   });
 
   useEffect(() => {
-    void getGenres(settings.activePlatformId).then(setGenres);
-  }, [settings.activePlatformId]);
+    if (!windowDataEnabled) return;
+    let cancelled = false;
+    void getGenres(settings.activePlatformId).then((items) => {
+      if (!cancelled) setGenres(items);
+    });
+    return () => { cancelled = true; };
+  }, [settings.activePlatformId, windowDataEnabled]);
 
   useEffect(() => {
+    if (!windowDataEnabled) return;
     let cancelled = false;
 
     void getDbGameCount(filters, settings.activePlatformId).then((count) => {
@@ -95,9 +103,10 @@ function ImportedLibraryContent() {
     });
 
     return () => { cancelled = true; };
-  }, [filters, settings.activePlatformId]);
+  }, [filters, settings.activePlatformId, windowDataEnabled]);
 
   useEffect(() => {
+    if (!windowDataEnabled) return;
     let cancelled = false;
 
     async function loadSubGenres() {
@@ -112,7 +121,7 @@ function ImportedLibraryContent() {
     return () => {
       cancelled = true;
     };
-  }, [filters.genre, settings.activePlatformId]);
+  }, [filters.genre, settings.activePlatformId, windowDataEnabled]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {

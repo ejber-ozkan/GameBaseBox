@@ -9,6 +9,7 @@ vi.mock('../lib/tauri-bridge', () => ({
 }));
 
 import { useWindowLibraryShelves } from './useWindowLibraryShelves';
+import { act } from '@testing-library/react';
 
 describe('useWindowLibraryShelves', () => {
   afterEach(() => vi.clearAllMocks());
@@ -31,5 +32,21 @@ describe('useWindowLibraryShelves', () => {
 
     await waitFor(() => expect(mockGetDbGames).toHaveBeenCalledTimes(3));
     releaseQueries();
+  });
+
+  test('waits for activation and rejects results after deactivation', async () => {
+    let resolve!: (games: []) => void;
+    mockGetDbGames.mockReturnValue(new Promise<[]>((done) => { resolve = done; }));
+    const props = {
+      enabled: false, activePlatformId: 'c64', favoriteIds: ['2'], filters: {},
+      recentlyPlayedIds: ['1'], searchInput: '',
+    };
+    const { result, rerender } = renderHook(useWindowLibraryShelves, { initialProps: props });
+    expect(mockGetDbGames).not.toHaveBeenCalled();
+    rerender({ ...props, enabled: true });
+    expect(mockGetDbGames).toHaveBeenCalledTimes(3);
+    rerender(props);
+    await act(async () => resolve([]));
+    expect(result.current).toEqual({ recentGames: [], favoriteGames: [], classicGames: [] });
   });
 });

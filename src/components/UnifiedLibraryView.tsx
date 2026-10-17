@@ -145,6 +145,7 @@ export function UnifiedLibraryView({
 
   const layout = useFullscreenLayoutMetrics();
   const usesRailGridNavigation = theme.layout.structure === 'flat-alphabet';
+  const usesBigBoxData = settings.isFullscreen && viewMode === 'grid';
   const isC64Edition = theme.id === 'c64-edition';
   const isArcadeVoid = theme.id === 'arcade-void';
 
@@ -166,6 +167,7 @@ export function UnifiedLibraryView({
     subGenres: bigboxSubGenres,
     totalGameCount: bigboxTotalGameCount,
   } = useBigBoxLibraryData({
+    enabled: usesBigBoxData,
     activeRailIndex,
     railFocusIndices,
     activePlatformId: settings.activePlatformId,
@@ -173,12 +175,12 @@ export function UnifiedLibraryView({
     favorites,
     filters,
     recentlyPlayedIds: settings.recentlyPlayedIds,
-    searchInput,
+    searchInput: filters.searchQuery ?? '',
     loadFlatLibrary: usesRailGridNavigation,
   });
 
-  const finalGenres = settings.isFullscreen ? bigboxGenres : windowGenres;
-  const finalSubGenres = settings.isFullscreen ? bigboxSubGenres : windowSubGenres;
+  const finalGenres = usesBigBoxData ? bigboxGenres : windowGenres;
+  const finalSubGenres = usesBigBoxData ? bigboxSubGenres : windowSubGenres;
 
   const navigationRails = useMemo(
     () => usesRailGridNavigation ? getC64NavigationRails(bigboxRails, bigboxFlatGames) : bigboxRails,
@@ -682,7 +684,7 @@ export function UnifiedLibraryView({
           {viewMode === 'list' ? (
             <div className="h-full overflow-y-auto px-12 py-6 no-scrollbar" data-fullscreen-list="true">
               <ListView
-                games={bigboxFlatGames}
+                games={games}
                 onSelectGame={handleSelectGame}
                 onSort={handleSort}
                 focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
@@ -690,7 +692,7 @@ export function UnifiedLibraryView({
                 isFavorite={isFavorite}
                 onEndReached={loadNextPage}
                 activePlatformName={SUPPORTED_PLATFORMS.find((p) => p.id === settings.activePlatformId)?.displayName}
-                totalGameCount={bigboxTotalGameCount}
+                totalGameCount={listGameCount}
                 favoriteCount={favorites.length}
                 themeId={theme.id}
                 alphabetLabel={filters.letter}

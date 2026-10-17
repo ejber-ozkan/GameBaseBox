@@ -238,9 +238,7 @@ describe('useLibraryBrowserState', () => {
 
     const { result } = renderHook(() => useLibraryBrowserState());
 
-    await waitFor(() => {
-      expect(result.current.games).toHaveLength(mockGames.length);
-    });
+    await act(async () => {});
 
     mockUpdateSettings.mockClear();
 
@@ -620,5 +618,26 @@ describe('useLibraryBrowserState', () => {
     await act(async () => result.current.handleSort('year'));
     expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.objectContaining({ sortBy: 'year', sortDirection: 'desc' }), undefined);
     expect(result.current.games).toHaveLength(120);
+  });
+
+  it('starts paged queries only for a windowed presentation or fullscreen list', async () => {
+    currentSettings = { ...baseSettings, isFullscreen: true };
+    const { result } = renderHook(() => useLibraryBrowserState());
+    await act(async () => {});
+    expect(mockGetDbGames).not.toHaveBeenCalled();
+    await act(async () => result.current.setViewMode('list'));
+    expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.any(Object), undefined);
+  });
+
+  it('rejects an unfinished paged query after switching to fullscreen grid', async () => {
+    const page = deferredGames();
+    mockGetDbGames.mockReturnValue(page.promise);
+    const { result, rerender } = renderHook(() => useLibraryBrowserState());
+    currentSettings = { ...baseSettings, isFullscreen: true };
+    rerender();
+    await act(async () => page.resolve(mockGames));
+    expect(result.current.games).toEqual([]);
+    await act(async () => { await result.current.loadNextPage(); });
+    expect(mockGetDbGames).toHaveBeenCalledTimes(1);
   });
 });

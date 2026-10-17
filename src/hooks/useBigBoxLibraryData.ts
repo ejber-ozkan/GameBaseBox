@@ -17,6 +17,7 @@ export type BigBoxRailCategory = {
 };
 
 interface UseBigBoxLibraryDataProps {
+  enabled?: boolean;
   activeRailIndex: number;
   activePlatformId: string;
   favorites: string[];
@@ -73,6 +74,7 @@ export function getFlatLibraryLoadLimit(totalGameCount: number, loadFlatLibrary:
 }
 
 export function useBigBoxLibraryData({
+  enabled = true,
   activeRailIndex,
   activePlatformId,
   favorites,
@@ -98,23 +100,26 @@ export function useBigBoxLibraryData({
   const exhaustedContinuationsRef = useRef(new Set<string>());
 
   useEffect(() => {
+    if (!enabled) return;
     for (const key of LETTER_RAIL_CACHE.keys()) {
       const entry = JSON.parse(key) as { platformId: string; libraryRefreshToken: string };
       if (entry.platformId === activePlatformId && entry.libraryRefreshToken !== libraryRefreshToken) {
         LETTER_RAIL_CACHE.delete(key);
       }
     }
-  }, [activePlatformId, libraryRefreshToken]);
+  }, [activePlatformId, enabled, libraryRefreshToken]);
 
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
     void getGenres(activePlatformId).then((items) => {
       if (!cancelled) setGenres(items);
     });
     return () => { cancelled = true; };
-  }, [activePlatformId, libraryRefreshToken]);
+  }, [activePlatformId, enabled, libraryRefreshToken]);
 
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
 
     async function loadSubGenres() {
@@ -129,12 +134,13 @@ export function useBigBoxLibraryData({
     return () => {
       cancelled = true;
     };
-  }, [activePlatformId, filters.genre, libraryRefreshToken]);
+  }, [activePlatformId, enabled, filters.genre, libraryRefreshToken]);
 
   useEffect(() => {
     let cancelled = false;
     const generation = ++initializationGenerationRef.current;
     exhaustedContinuationsRef.current.clear();
+    if (!enabled) return;
 
     async function initData() {
       setLoading(true);
@@ -197,7 +203,7 @@ export function useBigBoxLibraryData({
 
     void initData();
     return () => { cancelled = true; };
-  }, [activePlatformId, favorites, filters, libraryRefreshToken, loadFlatLibrary, recentlyPlayedIds, searchInput]);
+  }, [activePlatformId, enabled, favorites, filters, libraryRefreshToken, loadFlatLibrary, recentlyPlayedIds, searchInput]);
 
   const rails = useMemo<BigBoxRailCategory[]>(() => {
     const activeSearch = searchInput.trim().length >= 2 ? searchInput : undefined;
@@ -214,7 +220,7 @@ export function useBigBoxLibraryData({
   }, [alphabetRails, classicGames, favoriteGames, recentGames, searchInput]);
 
   useEffect(() => {
-    if (activeRailIndex === -1 || alphabetRails.length === 0) {
+    if (!enabled || activeRailIndex === -1 || alphabetRails.length === 0) {
       return;
     }
 
@@ -285,12 +291,12 @@ export function useBigBoxLibraryData({
       cancelled = true;
       window.clearTimeout(timeoutId);
     };
-  }, [activePlatformId, activeRailIndex, alphabetRails.length, filters, libraryRefreshToken, rails, searchInput]);
+  }, [activePlatformId, activeRailIndex, alphabetRails.length, enabled, filters, libraryRefreshToken, rails, searchInput]);
 
   const continuationRail = rails[activeRailIndex];
   const continuationPageSize = continuationRail?.letter ? LETTER_RAIL_PAGE_SIZE : SEARCH_PAGE_SIZE;
   const continuationOffset = continuationRail?.games.length ?? 0;
-  const shouldContinue = !loading && continuationRail?.type === 'alphabet'
+  const shouldContinue = enabled && !loading && continuationRail?.type === 'alphabet'
     && continuationOffset > 0 && continuationOffset % continuationPageSize === 0
     && (railFocusIndices[continuationRail.id] ?? 0) >= continuationOffset - CONTINUATION_PREFETCH_THRESHOLD;
 
@@ -327,7 +333,7 @@ export function useBigBoxLibraryData({
   return {
     genres,
     flatGames,
-    loading,
+    loading: enabled && loading,
     rails,
     subGenres,
     totalGameCount,
