@@ -2,7 +2,7 @@ use crate::models::GameFilters;
 use rusqlite::{params_from_iter, Connection};
 use tempfile::NamedTempFile;
 
-use super::games::build_game_summary_query;
+use super::games::{build_game_detail_query, build_game_summary_query};
 use super::querying::{
     build_fts_match_query, build_game_query, load_game_count_with_fallback,
     load_ordered_game_ids_with_fallback, SearchMode,
@@ -83,13 +83,13 @@ fn create_search_fallback_fixture(conn: &Connection) {
     )
     .unwrap();
     conn.execute(
-        "CREATE TABLE Musicians (MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
+        "CREATE TABLE Musicians (platform_id TEXT DEFAULT 'c64', MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
         [],
     )
     .unwrap();
-    conn.execute("CREATE TABLE Programmers (PR_Id TEXT, Programmer TEXT)", [])
+    conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
         .unwrap();
-    conn.execute("CREATE TABLE Artists (AR_Id TEXT, Artist TEXT)", [])
+    conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
         .unwrap();
     conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
         .unwrap();
@@ -131,6 +131,102 @@ fn create_search_fallback_fixture(conn: &Connection) {
         rusqlite::params!["2", "Bubble Bobble", "bubble.d64", "Platform", "Arcade", 1, 0, 0, 0, "Studio B", "Pub B", "Musician B", "EN"],
     )
     .unwrap();
+}
+
+fn create_contributor_collision_fixture(conn: &Connection, reverse: bool) {
+    create_search_fallback_fixture(conn);
+    conn.execute_batch(
+        "DELETE FROM Games; DELETE FROM GameView; DELETE FROM Programmers; DELETE FROM Artists;",
+    )
+    .unwrap();
+    let mut platforms = ["c64", "atari800"];
+    if reverse {
+        platforms.reverse();
+    }
+    for platform in platforms {
+        conn.execute("INSERT INTO Games (platform_id, GA_Id, Name, MU_Id, PR_Id, AR_Id) VALUES (?1, '1', 'Shared Game', '1', '1', '1')", [platform]).unwrap();
+        conn.execute(
+            "INSERT INTO GameView (platformId, id, name) VALUES (?1, '1', 'Shared Game')",
+            [platform],
+        )
+        .unwrap();
+        conn.execute("INSERT INTO Musicians (platform_id, MU_Id, Musician, Photo, Nick, Grp) VALUES (?1, '1', ?2, ?3, ?4, ?5)", rusqlite::params![platform, format!("{platform} musician"), format!("{platform}.jpg"), format!("{platform} nick"), format!("{platform} group")]).unwrap();
+        conn.execute(
+            "INSERT INTO Programmers (platform_id, PR_Id, Programmer) VALUES (?1, '1', ?2)",
+            rusqlite::params![platform, format!("{platform} coder")],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO Artists (platform_id, AR_Id, Artist) VALUES (?1, '1', ?2)",
+            rusqlite::params![platform, format!("{platform} artist")],
+        )
+        .unwrap();
+    }
+}
+
+#[test]
+fn test_contributor_detail_is_platform_scoped_in_both_import_orders() {
+    for reverse in [false, true] {
+        let conn = Connection::open_in_memory().unwrap();
+        create_contributor_collision_fixture(&conn, reverse);
+        for platform in ["c64", "atari800"] {
+            let (query, params) = build_game_detail_query(platform, "1", false);
+            let mut stmt = conn.prepare(&query).unwrap();
+            let rows = stmt
+                .query_map(params_from_iter(params), |row| {
+                    Ok((
+                        row.get::<_, String>("musician_photo")?,
+                        row.get::<_, String>("musician_nick")?,
+                        row.get::<_, String>("musician_group")?,
+                        row.get::<_, String>("coder_name")?,
+                        row.get::<_, String>("graphics_name")?,
+                    ))
+                })
+                .unwrap()
+                .collect::<Result<Vec<_>, _>>()
+                .unwrap();
+            assert_eq!(
+                rows,
+                vec![(
+                    format!("{platform}.jpg"),
+                    format!("{platform} nick"),
+                    format!("{platform} group"),
+                    format!("{platform} coder"),
+                    format!("{platform} artist")
+                )],
+                "platform={platform}, reverse={reverse}"
+            );
+        }
+    }
+}
+
+#[test]
+fn test_contributor_fallback_search_is_platform_scoped_in_both_import_orders() {
+    for reverse in [false, true] {
+        let conn = Connection::open_in_memory().unwrap();
+        create_contributor_collision_fixture(&conn, reverse);
+        assert!(!sqlite_table_exists(&conn, "GameSearchIndex"));
+        for platform in ["c64", "atari800"] {
+            for contributor_platform in ["c64", "atari800"] {
+                for role in ["coder", "artist"] {
+                    let filters = Some(GameFilters {
+                        search_query: Some(format!("{contributor_platform} {role}")),
+                        ..Default::default()
+                    });
+                    let expected = if platform == contributor_platform {
+                        vec!["1".to_string()]
+                    } else {
+                        vec![]
+                    };
+                    assert_eq!(load_ordered_game_ids_with_fallback(&conn, platform, 10, 0, filters.clone()).unwrap(), expected, "platform={platform}, search={contributor_platform} {role}, reverse={reverse}");
+                    assert_eq!(
+                        load_game_count_with_fallback(&conn, platform, filters).unwrap(),
+                        expected.len()
+                    );
+                }
+            }
+        }
+    }
 }
 
 #[test]
@@ -281,13 +377,13 @@ fn test_build_game_summary_query_preserves_requested_id_order_in_sql() {
     )
     .unwrap();
     conn.execute(
-        "CREATE TABLE Musicians (MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT)",
+        "CREATE TABLE Musicians (platform_id TEXT DEFAULT 'c64', MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT)",
         [],
     )
     .unwrap();
-    conn.execute("CREATE TABLE Programmers (PR_Id TEXT, Programmer TEXT)", [])
+    conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
         .unwrap();
-    conn.execute("CREATE TABLE Artists (AR_Id TEXT, Artist TEXT)", [])
+    conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
         .unwrap();
 
     conn.execute(
@@ -519,13 +615,13 @@ async fn test_platform_scoped_queries_do_not_mix_duplicate_source_ids() {
         )
         .unwrap();
         conn.execute(
-            "CREATE TABLE Musicians (MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
+            "CREATE TABLE Musicians (platform_id TEXT DEFAULT 'c64', MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
             [],
         )
         .unwrap();
-        conn.execute("CREATE TABLE Programmers (PR_Id TEXT, Programmer TEXT)", [])
+        conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (AR_Id TEXT, Artist TEXT)", [])
+        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Extras (platform_id TEXT, GA_Id TEXT, EX_Id TEXT, Name TEXT, Path TEXT, Type TEXT, DisplayOrder INTEGER)", []).unwrap();
 
@@ -688,6 +784,14 @@ async fn test_init_database_repairs_stale_game_view_without_platform_id() {
 
     init_database().expect("database initialization should repair stale support objects");
 
+    // Initialization must upgrade genuine legacy contributor tables before queries use them.
+    let conn = Connection::open(&db_path).unwrap();
+    for table in ["Musicians", "Programmers", "Artists"] {
+        conn.prepare(&format!("SELECT platform_id FROM {table}"))
+            .expect("legacy contributor table should have platform scope after initialization");
+    }
+    drop(conn);
+
     let atari_games = get_db_games(Some(10), Some(0), None, Some("atari800".to_string()))
         .await
         .expect("atari games should load after repair");
@@ -706,13 +810,13 @@ async fn test_get_db_games() {
         conn.execute("CREATE TABLE Games (platform_id TEXT DEFAULT 'c64', GA_Id TEXT, Name TEXT, MU_Id TEXT, PR_Id TEXT, AR_Id TEXT, CR_Id TEXT, DE_Id TEXT, Adult TEXT, Control TEXT, PlayersFrom TEXT, PlayersTo TEXT, PlayersSim TEXT, Comment TEXT, ReviewRating TEXT, V_Trainers TEXT, V_Length TEXT, V_LoadingScreen TEXT, V_HighScoreSaver TEXT, V_IncludedDocs TEXT, V_TrueDriveEmu TEXT, V_PalNTSC TEXT, MemoText TEXT)", []).unwrap();
         conn.execute("CREATE TABLE GameView (platformId TEXT DEFAULT 'c64', sourceGameId TEXT, id TEXT, name TEXT, filename TEXT, gameFilename TEXT, screenshotFilename TEXT, boxFrontFilename TEXT, titlescreenFilename TEXT, videoSnapFilename TEXT, sidFilename TEXT, crc TEXT, year TEXT, isPal INTEGER, isNtsc INTEGER, trueDriveEmu INTEGER, isClassic INTEGER, parentGenre TEXT, subGenre TEXT, developer_name TEXT, publisher_name TEXT, musician_name TEXT, languages TEXT)", []).unwrap();
         conn.execute(
-            "CREATE TABLE Musicians (MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
+            "CREATE TABLE Musicians (platform_id TEXT DEFAULT 'c64', MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
             [],
         )
         .unwrap();
-        conn.execute("CREATE TABLE Programmers (PR_Id TEXT, Programmer TEXT)", [])
+        conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (AR_Id TEXT, Artist TEXT)", [])
+        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();
@@ -824,13 +928,13 @@ async fn test_get_db_games_symbol_filter() {
         conn.execute("CREATE TABLE Games (platform_id TEXT DEFAULT 'c64', GA_Id TEXT, Name TEXT, MU_Id TEXT, PR_Id TEXT, AR_Id TEXT, CR_Id TEXT, DE_Id TEXT, Adult TEXT, Control TEXT, PlayersFrom TEXT, PlayersTo TEXT, PlayersSim TEXT, Comment TEXT, ReviewRating TEXT, V_Trainers TEXT, V_Length TEXT, V_LoadingScreen TEXT, V_HighScoreSaver TEXT, V_IncludedDocs TEXT, V_TrueDriveEmu TEXT, V_PalNTSC TEXT, MemoText TEXT)", []).unwrap();
         conn.execute("CREATE TABLE GameView (platformId TEXT DEFAULT 'c64', sourceGameId TEXT, id TEXT, name TEXT, filename TEXT, gameFilename TEXT, screenshotFilename TEXT, boxFrontFilename TEXT, titlescreenFilename TEXT, videoSnapFilename TEXT, sidFilename TEXT, crc TEXT, year TEXT, isPal INTEGER, isNtsc INTEGER, trueDriveEmu INTEGER, isClassic INTEGER, parentGenre TEXT, subGenre TEXT, developer_name TEXT, publisher_name TEXT, musician_name TEXT, languages TEXT)", []).unwrap();
         conn.execute(
-            "CREATE TABLE Musicians (MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
+            "CREATE TABLE Musicians (platform_id TEXT DEFAULT 'c64', MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
             [],
         )
         .unwrap();
-        conn.execute("CREATE TABLE Programmers (PR_Id TEXT, Programmer TEXT)", [])
+        conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (AR_Id TEXT, Artist TEXT)", [])
+        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();
@@ -868,13 +972,13 @@ async fn test_get_db_games_pagination() {
         conn.execute("CREATE TABLE Games (platform_id TEXT DEFAULT 'c64', GA_Id TEXT, Name TEXT, MU_Id TEXT, PR_Id TEXT, AR_Id TEXT, CR_Id TEXT, DE_Id TEXT, Adult TEXT, Control TEXT, PlayersFrom TEXT, PlayersTo TEXT, PlayersSim TEXT, Comment TEXT, ReviewRating TEXT, V_Trainers TEXT, V_Length TEXT, V_LoadingScreen TEXT, V_HighScoreSaver TEXT, V_IncludedDocs TEXT, V_TrueDriveEmu TEXT, V_PalNTSC TEXT, MemoText TEXT)", []).unwrap();
         conn.execute("CREATE TABLE GameView (platformId TEXT DEFAULT 'c64', sourceGameId TEXT, id TEXT, name TEXT, filename TEXT, gameFilename TEXT, screenshotFilename TEXT, boxFrontFilename TEXT, titlescreenFilename TEXT, videoSnapFilename TEXT, sidFilename TEXT, crc TEXT, year TEXT, isPal INTEGER, isNtsc INTEGER, trueDriveEmu INTEGER, isClassic INTEGER, parentGenre TEXT, subGenre TEXT, developer_name TEXT, publisher_name HEX, musician_name TEXT, languages TEXT)", []).unwrap();
         conn.execute(
-            "CREATE TABLE Musicians (MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
+            "CREATE TABLE Musicians (platform_id TEXT DEFAULT 'c64', MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
             [],
         )
         .unwrap();
-        conn.execute("CREATE TABLE Programmers (PR_Id TEXT, Programmer TEXT)", [])
+        conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (AR_Id TEXT, Artist TEXT)", [])
+        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();
@@ -917,13 +1021,13 @@ async fn test_get_db_game_count() {
         conn.execute("CREATE TABLE Games (platform_id TEXT DEFAULT 'c64', GA_Id TEXT, Name TEXT, MU_Id TEXT, PR_Id TEXT, AR_Id TEXT, CR_Id TEXT, DE_Id TEXT, Adult TEXT, Control TEXT, PlayersFrom TEXT, PlayersTo TEXT, PlayersSim TEXT, Comment TEXT, ReviewRating TEXT, V_Trainers TEXT, V_Length TEXT, V_LoadingScreen TEXT, V_HighScoreSaver TEXT, V_IncludedDocs TEXT, V_TrueDriveEmu TEXT, V_PalNTSC TEXT, MemoText TEXT)", []).unwrap();
         conn.execute("CREATE TABLE GameView (platformId TEXT DEFAULT 'c64', sourceGameId TEXT, id TEXT, name TEXT, filename TEXT, gameFilename TEXT, screenshotFilename TEXT, boxFrontFilename TEXT, titlescreenFilename TEXT, videoSnapFilename TEXT, sidFilename TEXT, crc TEXT, year TEXT, isPal INTEGER, isNtsc INTEGER, trueDriveEmu INTEGER, isClassic INTEGER, parentGenre TEXT, subGenre TEXT, developer_name TEXT, publisher_name TEXT, musician_name TEXT, languages TEXT)", []).unwrap();
         conn.execute(
-            "CREATE TABLE Musicians (MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
+            "CREATE TABLE Musicians (platform_id TEXT DEFAULT 'c64', MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
             [],
         )
         .unwrap();
-        conn.execute("CREATE TABLE Programmers (PR_Id TEXT, Programmer TEXT)", [])
+        conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (AR_Id TEXT, Artist TEXT)", [])
+        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();
@@ -1088,13 +1192,13 @@ async fn test_get_db_games_preserves_filtered_id_order_after_detail_hydration() 
         conn.execute("CREATE TABLE Games (platform_id TEXT DEFAULT 'c64', GA_Id TEXT, Name TEXT, MU_Id TEXT, PR_Id TEXT, AR_Id TEXT, CR_Id TEXT, DE_Id TEXT, Adult TEXT, Control TEXT, PlayersFrom TEXT, PlayersTo TEXT, PlayersSim TEXT, Comment TEXT, ReviewRating TEXT, V_Trainers TEXT, V_Length TEXT, V_LoadingScreen TEXT, V_HighScoreSaver TEXT, V_IncludedDocs TEXT, V_TrueDriveEmu TEXT, V_PalNTSC TEXT, MemoText TEXT)", []).unwrap();
         conn.execute("CREATE TABLE GameView (platformId TEXT DEFAULT 'c64', sourceGameId TEXT, id TEXT, name TEXT, filename TEXT, gameFilename TEXT, screenshotFilename TEXT, boxFrontFilename TEXT, titlescreenFilename TEXT, videoSnapFilename TEXT, sidFilename TEXT, crc TEXT, year TEXT, isPal INTEGER, isNtsc INTEGER, trueDriveEmu INTEGER, isClassic INTEGER, parentGenre TEXT, subGenre TEXT, developer_name TEXT, publisher_name TEXT, musician_name TEXT, languages TEXT)", []).unwrap();
         conn.execute(
-            "CREATE TABLE Musicians (MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
+            "CREATE TABLE Musicians (platform_id TEXT DEFAULT 'c64', MU_Id TEXT, Photo TEXT, Nick TEXT, Grp TEXT, Musician TEXT)",
             [],
         )
         .unwrap();
-        conn.execute("CREATE TABLE Programmers (PR_Id TEXT, Programmer TEXT)", [])
+        conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (AR_Id TEXT, Artist TEXT)", [])
+        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();

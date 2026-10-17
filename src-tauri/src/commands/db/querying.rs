@@ -8,8 +8,8 @@ const FILTERED_IDS_QUERY_PREFIX: &str = "
             MIN(g.Name) as sort_name
         FROM Games g
         JOIN GameView gv ON gv.id = g.GA_Id AND gv.platformId = g.platform_id
-        LEFT JOIN Programmers pr ON g.PR_Id = pr.PR_Id
-        LEFT JOIN Artists ar ON g.AR_Id = ar.AR_Id
+        LEFT JOIN Programmers pr ON g.PR_Id = pr.PR_Id AND pr.platform_id = g.platform_id
+        LEFT JOIN Artists ar ON g.AR_Id = ar.AR_Id AND ar.platform_id = g.platform_id
         WHERE 1=1";
 
 const FILTERED_IDS_GROUP_BY: &str = "

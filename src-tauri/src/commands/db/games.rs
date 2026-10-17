@@ -95,10 +95,10 @@ pub(crate) fn build_game_detail_query(
             g.MemoText as memo
         FROM GameView gv
         JOIN Games g ON gv.id = g.GA_Id AND g.platform_id = gv.platformId
-        LEFT JOIN Musicians mu ON g.MU_Id = mu.MU_Id
+        LEFT JOIN Musicians mu ON g.MU_Id = mu.MU_Id AND mu.platform_id = g.platform_id
         {cover_join}
-        LEFT JOIN Programmers pr ON g.PR_Id = pr.PR_Id
-        LEFT JOIN Artists ar ON g.AR_Id = ar.AR_Id
+        LEFT JOIN Programmers pr ON g.PR_Id = pr.PR_Id AND pr.platform_id = g.platform_id
+        LEFT JOIN Artists ar ON g.AR_Id = ar.AR_Id AND ar.platform_id = g.platform_id
         WHERE gv.id = ?
           AND gv.platformId = ?"
     );
