@@ -34,8 +34,9 @@ export function useLibraryBrowserState() {
   const [searchInput, setSearchInput] = useState('');
   const [isRestored, setIsRestored] = useState(false);
   const [prevPlatformId, setPrevPlatformId] = useState(settings.activePlatformId);
-  const hasMorePagesRef = useRef(true);
+  const hasMorePagesRef = useRef(false);
   const isLoadingNextPageRef = useRef(false);
+  const queryGenerationRef = useRef(0);
   const shelfRef = useRef<HTMLDivElement>(null);
   const libraryRefreshToken = getLibraryRefreshToken(settings);
 
@@ -67,8 +68,14 @@ export function useLibraryBrowserState() {
   }, [focusedIndex, settings.recentlyPlayedIds.length]);
 
   useEffect(() => {
+    const generation = ++queryGenerationRef.current;
+    const isCurrent = () => queryGenerationRef.current === generation;
+    hasMorePagesRef.current = false;
+    isLoadingNextPageRef.current = false;
+
     async function fetchGames() {
       const dbGames = await getDbGames(LIBRARY_PAGE_SIZE, 0, effectiveFilters, settings.activePlatformId);
+      if (!isCurrent()) return;
       setGames(dbGames);
       hasMorePagesRef.current = dbGames.length === LIBRARY_PAGE_SIZE;
 
@@ -85,6 +92,7 @@ export function useLibraryBrowserState() {
               { favoriteIds: [settings.lastSelectedGameId] },
               settings.activePlatformId,
             );
+            if (!isCurrent()) return;
             if (single.length > 0) {
               setSelectedGame(single[0]);
             }
@@ -103,6 +111,9 @@ export function useLibraryBrowserState() {
     }
 
     void fetchGames();
+    return () => {
+      queryGenerationRef.current += 1;
+    };
   // Persisted focus and selection are read during the initial restore only; changing them locally
   // must not re-run the paged library query or reset the user back to the first page.
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,6 +131,7 @@ export function useLibraryBrowserState() {
     }
 
     isLoadingNextPageRef.current = true;
+    const generation = queryGenerationRef.current;
     try {
       const nextPage = await getDbGames(
         LIBRARY_PAGE_SIZE,
@@ -127,12 +139,15 @@ export function useLibraryBrowserState() {
         effectiveFilters,
         settings.activePlatformId,
       );
+      if (generation !== queryGenerationRef.current) return;
       hasMorePagesRef.current = nextPage.length === LIBRARY_PAGE_SIZE;
       if (nextPage.length > 0) {
-        setGames((current) => [...current, ...nextPage]);
+        setGames((current) => generation === queryGenerationRef.current ? [...current, ...nextPage] : current);
       }
     } finally {
-      isLoadingNextPageRef.current = false;
+      if (generation === queryGenerationRef.current) {
+        isLoadingNextPageRef.current = false;
+      }
     }
   }, [effectiveFilters, games.length, settings.activePlatformId]);
 

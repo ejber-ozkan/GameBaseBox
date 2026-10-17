@@ -2,6 +2,13 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
 import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
+import type { Game } from '../types/game';
+
+function deferredGames() {
+  let resolve!: (games: Game[]) => void;
+  const promise = new Promise<Game[]>((done) => { resolve = done; });
+  return { promise, resolve };
+}
 
 const mockUpdateSettings = vi.fn();
 const mockToggleFavorite = vi.fn();
@@ -437,5 +444,114 @@ describe('useLibraryBrowserState', () => {
     expect(afterImport).toContain('atari800');
     expect(afterImport).toContain('imported');
     expect(afterImport).toContain('123');
+  });
+
+  it.each(['platform', 'filter'] as const)('rejects an obsolete first page after a %s change', async (change) => {
+    const oldPage = deferredGames();
+    const newPage = [{ ...mockGames[0], id: 900 }];
+    currentSettings = { ...baseSettings, activePlatformId: 'c64', lastFocusedIndex: 3 };
+    mockGetDbGames.mockReturnValue(oldPage.promise);
+    const { result, rerender } = renderHook(() => useLibraryBrowserState());
+
+    mockGetDbGames.mockResolvedValue(newPage);
+    if (change === 'platform') {
+      currentSettings = { ...currentSettings, activePlatformId: 'atari800', lastFocusedIndex: 0 };
+      rerender();
+    } else {
+      act(() => result.current.setFilters({ letter: 'B' }));
+    }
+    await waitFor(() => expect(result.current.games).toEqual(newPage));
+    act(() => result.current.setFocusedIndex(0));
+    await act(async () => oldPage.resolve(mockGames));
+
+    expect(result.current.games).toEqual(newPage);
+    expect(result.current.focusedIndex).toBe(0);
+    expect(result.current.selectedGame).toBeNull();
+  });
+
+  it('rejects an obsolete selected-game restore lookup after switching platform', async () => {
+    const restore = deferredGames();
+    currentSettings = { ...baseSettings, activePlatformId: 'c64', lastSelectedGameId: '999' };
+    mockGetDbGames.mockImplementation((_limit, _offset, filters) => (
+      filters.favoriteIds ? restore.promise : Promise.resolve(mockGames)
+    ));
+    const { result, rerender } = renderHook(() => useLibraryBrowserState());
+    await waitFor(() => expect(mockGetDbGames).toHaveBeenCalledWith(1, 0, { favoriteIds: ['999'] }, 'c64'));
+
+    currentSettings = { ...baseSettings, activePlatformId: 'atari800', lastFocusedIndex: 2 };
+    rerender();
+    await waitFor(() => expect(result.current.focusedIndex).toBe(2));
+    await act(async () => restore.resolve([{ ...mockGames[0], id: 999 }]));
+
+    expect(result.current.selectedGame).toBeNull();
+    expect(result.current.focusedIndex).toBe(2);
+  });
+
+  it.each(['platform', 'filter'] as const)('isolates next-page results and loading ownership across a %s change', async (change) => {
+    const firstPage = Array.from({ length: 120 }, (_, i) => ({ ...mockGames[0], id: i + 1 }));
+    const newFirstPage = firstPage.map((game) => ({ ...game, id: game.id + 1000 }));
+    const oldNext = deferredGames();
+    const newNext = deferredGames();
+    let switched = false;
+    currentSettings = { ...baseSettings, activePlatformId: 'c64' };
+    mockGetDbGames.mockImplementation((_limit, offset) => offset === 0
+      ? Promise.resolve(switched ? newFirstPage : firstPage)
+      : (switched ? newNext.promise : oldNext.promise));
+    const { result, rerender } = renderHook(() => useLibraryBrowserState());
+    await waitFor(() => expect(result.current.games).toEqual(firstPage));
+    let oldRequest!: Promise<void>;
+    act(() => { oldRequest = result.current.loadNextPage(); });
+
+    switched = true;
+    if (change === 'platform') {
+      currentSettings = { ...currentSettings, activePlatformId: 'atari800' };
+      rerender();
+    } else {
+      act(() => result.current.setFilters({ letter: 'B' }));
+    }
+    await waitFor(() => expect(result.current.games).toEqual(newFirstPage));
+    let newRequest!: Promise<void>;
+    act(() => { newRequest = result.current.loadNextPage(); });
+    const nextCalls = () => mockGetDbGames.mock.calls.filter(([, offset]) => offset === 120).length;
+    expect(nextCalls()).toBe(2);
+
+    await act(async () => { oldNext.resolve(firstPage); await oldRequest; });
+    expect(result.current.games).toEqual(newFirstPage);
+    await act(async () => { await result.current.loadNextPage(); });
+    expect(nextCalls()).toBe(2);
+
+    const tail = [{ ...mockGames[0], id: 2000 }];
+    await act(async () => { newNext.resolve(tail); await newRequest; });
+    expect(result.current.games).toEqual([...newFirstPage, ...tail]);
+  });
+
+  it('does not let an obsolete empty page disable current pagination', async () => {
+    const firstPage = Array.from({ length: 120 }, (_, i) => ({ ...mockGames[0], id: i + 1 }));
+    const oldNext = deferredGames();
+    mockGetDbGames.mockImplementation((_limit, offset) => offset === 0
+      ? Promise.resolve(firstPage) : oldNext.promise);
+    const { result } = renderHook(() => useLibraryBrowserState());
+    await waitFor(() => expect(result.current.games).toEqual(firstPage));
+    let oldRequest!: Promise<void>;
+    act(() => { oldRequest = result.current.loadNextPage(); });
+    const newFirstPage = firstPage.map((game) => ({ ...game, id: game.id + 1000 }));
+    mockGetDbGames.mockResolvedValue(newFirstPage);
+    act(() => result.current.setFilters({ letter: 'B' }));
+    await waitFor(() => expect(result.current.games).toEqual(newFirstPage));
+    await act(async () => { oldNext.resolve([]); await oldRequest; });
+    const tail = [{ ...mockGames[0], id: 2000 }];
+    mockGetDbGames.mockResolvedValue(tail);
+    await act(async () => { await result.current.loadNextPage(); });
+    expect(result.current.games).toEqual([...newFirstPage, ...tail]);
+  });
+
+  it('waits for the first page before permitting pagination', async () => {
+    const page = deferredGames();
+    mockGetDbGames.mockReturnValue(page.promise);
+    const { result } = renderHook(() => useLibraryBrowserState());
+    expect(mockGetDbGames).toHaveBeenCalledTimes(1);
+    act(() => { void result.current.loadNextPage(); });
+    expect(mockGetDbGames).toHaveBeenCalledTimes(1);
+    await act(async () => page.resolve(mockGames));
   });
 });
