@@ -1,4 +1,5 @@
 use crate::models::{EmulatorProfileTestRequest, LaunchRequest, LaunchResult};
+use super::launch_archive::{with_extraction_session, DEFAULT_EXTRACTION_LIMITS};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -1527,100 +1528,34 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         == "zip";
 
     if is_zip {
-        let temp_dir = create_launch_temp_dir()?;
-
-        let mut extracted_roms = Vec::new();
-        let zip_archives = if platform_id == Some("amiga") {
-            collect_amiga_sibling_disk_archives(&rom)
-        } else {
-            vec![rom.clone()]
-        };
-
-        for archive_path in zip_archives {
-            let file = std::fs::File::open(&archive_path).map_err(|e| e.to_string())?;
-            let mut archive = zip::ZipArchive::new(file).map_err(|e| e.to_string())?;
-            let archive_stem = archive_path
-                .file_stem()
-                .and_then(|stem| stem.to_str())
-                .unwrap_or("archive");
-            let archive_extract_dir = temp_dir.join(archive_stem);
-
-            for i in 0..archive.len() {
-                let mut file = archive.by_index(i).map_err(|e| e.to_string())?;
-                let outpath = archive_extract_dir.join(file.mangled_name());
-                if (&*file.name()).ends_with('/') {
-                    std::fs::create_dir_all(&outpath).map_err(|e| e.to_string())?;
+        let (temp_dir, mut extracted_roms) = with_extraction_session(
+            &std::env::temp_dir(), DEFAULT_EXTRACTION_LIMITS, |session| {
+                let mut extracted_roms = Vec::new();
+                let zip_archives = if platform_id == Some("amiga") {
+                    collect_amiga_sibling_disk_archives(&rom)
                 } else {
-                    if let Some(p) = outpath.parent() {
-                        if !p.exists() {
-                            std::fs::create_dir_all(&p).map_err(|e| e.to_string())?;
-                        }
-                    }
-                    let mut outfile = std::fs::File::create(&outpath).map_err(|e| e.to_string())?;
-                    std::io::copy(&mut file, &mut outfile).map_err(|e| e.to_string())?;
-
-                    let ext = outpath
-                        .extension()
-                        .and_then(|e| e.to_str())
-                        .unwrap_or("")
-                        .to_lowercase();
-                    if launch_extensions_for_platform(platform_id).contains(&ext.as_str()) {
-                        extracted_roms.push(outpath.clone());
+                    vec![rom.clone()]
+                };
+                for archive_path in zip_archives {
+                    extracted_roms.extend(session.extract_archive(&archive_path, launch_extensions_for_platform(platform_id))?);
+                }
+                if extracted_roms.is_empty() {
+                    return Err(format!(
+                        "No compatible {} launch files found inside the ZIP file.",
+                        platform_display_name(platform_id)
+                    ));
+                }
+                if platform_id == Some("bbcmicro") && extracted_roms.iter().all(|path| {
+                    let ext = path.extension().and_then(|ext| ext.to_str()).unwrap_or("").to_lowercase();
+                    matches!(ext.as_str(), "uef" | "csw" | "wav")
+                }) {
+                    if let Some(companion) = find_bbcmicro_companion_disk_archive(&rom) {
+                        extracted_roms.extend(session.extract_archive(&companion, &["ssd", "dsd", "adl", "adf"])?);
                     }
                 }
-            }
-        }
-
-        if extracted_roms.is_empty() {
-            return Err(format!(
-                "No compatible {} launch files found inside the ZIP file.",
-                platform_display_name(platform_id)
-            ));
-        }
-
-        if platform_id == Some("bbcmicro")
-            && extracted_roms.iter().all(|p| {
-                let ext = p
-                    .extension()
-                    .and_then(|e| e.to_str())
-                    .unwrap_or("")
-                    .to_lowercase();
-                matches!(ext.as_str(), "uef" | "csw" | "wav")
-            })
-        {
-            if let Some(companion_disk_zip) = find_bbcmicro_companion_disk_archive(&rom) {
-                if let Ok(file) = std::fs::File::open(&companion_disk_zip) {
-                    if let Ok(mut archive) = zip::ZipArchive::new(file) {
-                        let stem = companion_disk_zip
-                            .file_stem()
-                            .and_then(|s| s.to_str())
-                            .unwrap_or("disk");
-                        let extract_dir = temp_dir.join(stem);
-                        for i in 0..archive.len() {
-                            if let Ok(mut file) = archive.by_index(i) {
-                                let outpath = extract_dir.join(file.mangled_name());
-                                if !(&*file.name()).ends_with('/') {
-                                    if let Some(p) = outpath.parent() {
-                                        let _ = std::fs::create_dir_all(p);
-                                    }
-                                    if let Ok(mut outfile) = std::fs::File::create(&outpath) {
-                                        let _ = std::io::copy(&mut file, &mut outfile);
-                                        let ext = outpath
-                                            .extension()
-                                            .and_then(|e| e.to_str())
-                                            .unwrap_or("")
-                                            .to_lowercase();
-                                        if matches!(ext.as_str(), "ssd" | "dsd" | "adl" | "adf") {
-                                            extracted_roms.push(outpath);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                Ok(extracted_roms)
+            },
+        )?;
 
         if platform_id == Some("amiga") {
             extracted_roms.sort_by_key(|path| amiga_disk_sort_key(path));
