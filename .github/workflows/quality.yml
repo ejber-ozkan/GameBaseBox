@@ -1,6 +1,19 @@
 name: Quality Gates
 
 on:
+  push:
+    branches: ['codex/**']
+    paths:
+      - 'src/**'
+      - 'src-tauri/**'
+      - 'public/**'
+      - 'e2e/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '*config*'
+      - 'tsconfig.json'
+      - '.github/workflows/quality.yml'
   pull_request:
     branches: [main]
   workflow_dispatch:
