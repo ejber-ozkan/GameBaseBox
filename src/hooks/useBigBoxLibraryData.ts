@@ -25,10 +25,14 @@ interface UseBigBoxLibraryDataProps {
   searchInput: string;
   loadFlatLibrary?: boolean;
   libraryRefreshToken?: string;
+  railFocusIndices?: Record<string, number>;
 }
 
 const LETTER_RAIL_LOAD_DELAY_MS = 450;
 const LETTER_RAIL_PAGE_SIZE = 1000;
+const SEARCH_PAGE_SIZE = 500;
+const CONTINUATION_PREFETCH_THRESHOLD = 16;
+const EMPTY_RAIL_FOCUS: Record<string, number> = {};
 const LETTER_RAIL_CACHE = new Map<string, Game[]>();
 
 /** @internal Exported for unit testing */
@@ -77,6 +81,7 @@ export function useBigBoxLibraryData({
   searchInput,
   loadFlatLibrary = false,
   libraryRefreshToken = '',
+  railFocusIndices = EMPTY_RAIL_FOCUS,
 }: UseBigBoxLibraryDataProps) {
   const [genres, setGenres] = useState<string[]>([]);
   const [subGenres, setSubGenres] = useState<string[]>([]);
@@ -88,6 +93,9 @@ export function useBigBoxLibraryData({
   const [totalGameCount, setTotalGameCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const activeLetterRequestRef = useRef(0);
+  const initializationGenerationRef = useRef(0);
+  const completedInitializationRef = useRef(0);
+  const exhaustedContinuationsRef = useRef(new Set<string>());
 
   useEffect(() => {
     for (const key of LETTER_RAIL_CACHE.keys()) {
@@ -125,6 +133,8 @@ export function useBigBoxLibraryData({
 
   useEffect(() => {
     let cancelled = false;
+    const generation = ++initializationGenerationRef.current;
+    exhaustedContinuationsRef.current.clear();
 
     async function initData() {
       setLoading(true);
@@ -157,7 +167,7 @@ export function useBigBoxLibraryData({
             }))
           );
         } else {
-          const results = await getDbGames(500, 0, libraryFilters, activePlatformId);
+          const results = await getDbGames(SEARCH_PAGE_SIZE, 0, libraryFilters, activePlatformId);
           if (cancelled) return;
           setAlphabetRails([
             {
@@ -175,10 +185,13 @@ export function useBigBoxLibraryData({
           : [];
         if (cancelled) return;
         setFlatGames(flatResults);
+        completedInitializationRef.current = generation;
       } catch (error) {
         if (!cancelled) console.error('BigBox init error:', error);
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
@@ -273,6 +286,43 @@ export function useBigBoxLibraryData({
       window.clearTimeout(timeoutId);
     };
   }, [activePlatformId, activeRailIndex, alphabetRails.length, filters, libraryRefreshToken, rails, searchInput]);
+
+  const continuationRail = rails[activeRailIndex];
+  const continuationPageSize = continuationRail?.letter ? LETTER_RAIL_PAGE_SIZE : SEARCH_PAGE_SIZE;
+  const continuationOffset = continuationRail?.games.length ?? 0;
+  const shouldContinue = !loading && continuationRail?.type === 'alphabet'
+    && continuationOffset > 0 && continuationOffset % continuationPageSize === 0
+    && (railFocusIndices[continuationRail.id] ?? 0) >= continuationOffset - CONTINUATION_PREFETCH_THRESHOLD;
+
+  useEffect(() => {
+    if (!shouldContinue || !continuationRail
+      || completedInitializationRef.current !== initializationGenerationRef.current) return;
+    const generation = initializationGenerationRef.current;
+    const cacheKey = getAlphabetRailCacheKey(continuationRail.letter ?? '', filters, searchInput, activePlatformId, libraryRefreshToken);
+    const requestKey = `${cacheKey}:${continuationOffset}`;
+    if (exhaustedContinuationsRef.current.has(requestKey)) return;
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const page = await getDbGames(continuationPageSize, continuationOffset, {
+          ...filters,
+          ...(continuationRail.letter ? { letter: continuationRail.letter } : {}),
+          searchQuery: searchInput.trim().length >= 2 ? searchInput : undefined,
+        }, activePlatformId);
+        if (cancelled || generation !== initializationGenerationRef.current) return;
+        if (page.length < continuationPageSize) exhaustedContinuationsRef.current.add(requestKey);
+        if (page.length === 0) return;
+        const games = [...continuationRail.games, ...page];
+        if (continuationRail.letter) LETTER_RAIL_CACHE.set(cacheKey, games);
+        setAlphabetRails((previous) => previous.map((rail) => rail.id === continuationRail.id
+          && rail.games.length === continuationOffset ? { ...rail, games } : rail));
+      } catch (error) {
+        if (!cancelled) console.error('Failed to continue library results:', error);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [activePlatformId, continuationOffset, continuationPageSize, continuationRail, filters, libraryRefreshToken, searchInput, shouldContinue]);
 
   return {
     genres,

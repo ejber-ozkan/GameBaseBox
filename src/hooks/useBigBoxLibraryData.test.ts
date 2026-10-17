@@ -6,7 +6,7 @@
  * when isolated in its own worker — so we test the deterministic logic here
  * as plain TypeScript instead.
  */
-import { createElement } from 'react';
+import { createElement, useState } from 'react';
 import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -19,6 +19,10 @@ import {
 import { mockGames } from '../data/mockGames';
 import { getDbGameCount, getDbGames, getGenres, getSubGenres } from '../lib/tauri-bridge';
 import type { Game } from '../types/game';
+import { useUnifiedLibraryNavigation } from './useUnifiedLibraryNavigation';
+import { useGamepad } from './useGamepad';
+
+vi.mock('./useGamepad', () => ({ useGamepad: vi.fn() }));
 
 const EMPTY_FILTERS = {};
 const FAVORITE_IDS = [mockGames[0].id.toString()];
@@ -344,5 +348,157 @@ describe('BigBox import revision', () => {
     const revisited = renderHook(useBigBoxLibraryData, { initialProps: { ...initialProps, libraryRefreshToken: 'c64:imported:361:current' } });
     await loadLetter();
     expect(revisited.result.current.rails[0].games).toEqual(newRows);
+  });
+});
+
+describe('BigBox complete-result continuation', () => {
+  const emptyIds: string[] = [];
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.clearAllMocks();
+    vi.mocked(getGenres).mockResolvedValue([]);
+    vi.mocked(getSubGenres).mockResolvedValue([]);
+    vi.mocked(getDbGameCount).mockResolvedValue(1500);
+  });
+  afterEach(() => vi.useRealTimers());
+  async function flushLoads() {
+    await act(async () => {});
+    await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+  }
+
+  it.each(['search', 'letter'] as const)('continues %s beyond its first page as focus approaches the end', async (kind) => {
+    const pageSize = kind === 'search' ? 500 : 1000;
+    const rows = Array.from({ length: pageSize + 1 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    vi.mocked(getDbGames).mockImplementation(async (limit, offset, filters) => filters?.isClassic ? [] : rows.slice(offset, offset + limit));
+    const railId = kind === 'search' ? 'search-results' : 'alpha-#';
+    const props = {
+      activeRailIndex: 0, activePlatformId: 'c64', favorites: emptyIds, recentlyPlayedIds: emptyIds,
+      filters: { genre: `Continue ${kind}` }, searchInput: kind === 'search' ? 'match' : '',
+      railFocusIndices: { [railId]: 0 },
+    };
+    const { result, rerender } = renderHook(useBigBoxLibraryData, { initialProps: props });
+    await flushLoads();
+    expect(result.current.rails[0].games).toEqual(rows.slice(0, pageSize));
+    expect(vi.mocked(getDbGames).mock.calls.every(([, offset]) => offset === 0)).toBe(true);
+    const nearEnd = { ...props, railFocusIndices: { [railId]: pageSize - 16 } };
+    rerender(nearEnd);
+    await flushLoads();
+    expect(result.current.rails[0].games).toEqual(rows);
+    expect(getDbGames).toHaveBeenCalledWith(pageSize, pageSize, expect.any(Object), 'c64');
+    const calls = vi.mocked(getDbGames).mock.calls.length;
+    rerender({ ...props, railFocusIndices: { [railId]: pageSize } });
+    await flushLoads();
+    expect(vi.mocked(getDbGames).mock.calls).toHaveLength(calls);
+    expect(nearEnd.railFocusIndices[railId]).toBe(pageSize - 16);
+  });
+
+  it('discards pending continuation when the query changes', async () => {
+    const firstPage = Array.from({ length: 500 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    const tail = deferred<Game[]>();
+    vi.mocked(getDbGames).mockImplementation((_, offset, filters) => filters?.isClassic
+      ? Promise.resolve([]) : offset === 0 ? Promise.resolve(firstPage) : tail.promise);
+    const props = {
+      activeRailIndex: 0, activePlatformId: 'c64', favorites: emptyIds, recentlyPlayedIds: emptyIds,
+      filters: EMPTY_FILTERS, searchInput: 'old match', railFocusIndices: { 'search-results': 490 },
+    };
+    const { result, rerender } = renderHook(useBigBoxLibraryData, { initialProps: props });
+    await flushLoads();
+    expect(getDbGames).toHaveBeenCalledWith(500, 500, expect.any(Object), 'c64');
+    const currentRows = [{ ...mockGames[0], id: 2000 }];
+    vi.mocked(getDbGames).mockImplementation(async (_limit, _offset, filters) => filters?.isClassic ? [] : currentRows);
+    rerender({ ...props, searchInput: 'new match' });
+    await flushLoads();
+    await act(async () => tail.resolve([{ ...mockGames[0], id: 501 }]));
+    expect(result.current.rails[0].games).toEqual(currentRows);
+  });
+
+  it('deduplicates pending pages and remembers an empty final page', async () => {
+    const rows = Array.from({ length: 500 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    const end = deferred<Game[]>();
+    vi.mocked(getDbGames).mockImplementation((_limit, offset, filters) => filters?.isClassic
+      ? Promise.resolve([]) : offset === 0 ? Promise.resolve(rows) : end.promise);
+    const props = {
+      activeRailIndex: 0, activePlatformId: 'c64', favorites: emptyIds, recentlyPlayedIds: emptyIds,
+      filters: EMPTY_FILTERS, searchInput: 'Exact page', railFocusIndices: { 'search-results': 490 },
+    };
+    const { result, rerender } = renderHook(useBigBoxLibraryData, { initialProps: props });
+    await flushLoads();
+    rerender({ ...props, railFocusIndices: { 'search-results': 491 } });
+    await flushLoads();
+    const pageCalls = () => vi.mocked(getDbGames).mock.calls.filter(([, offset]) => offset === 500).length;
+    expect(pageCalls()).toBe(1);
+    await act(async () => end.resolve([]));
+    rerender({ ...props, railFocusIndices: { 'search-results': 0 } });
+    rerender(props);
+    await flushLoads();
+    expect(pageCalls()).toBe(1);
+    expect(result.current.rails[0].games).toEqual(rows);
+  });
+
+  it('does not continue curated shelves when focus reaches their end', async () => {
+    const shelf = Array.from({ length: 100 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    vi.mocked(getDbGames).mockResolvedValue(shelf);
+    const props = {
+      activeRailIndex: 0, activePlatformId: 'c64', favorites: emptyIds, recentlyPlayedIds: emptyIds,
+      filters: { genre: 'Curated fixture' }, searchInput: '', railFocusIndices: { classics: 99 },
+    };
+    const { result } = renderHook(useBigBoxLibraryData, { initialProps: props });
+    await flushLoads();
+    expect(result.current.rails[0].type).toBe('classics');
+    expect(result.current.rails[0].games).toEqual(shelf);
+    expect(vi.mocked(getDbGames).mock.calls.every(([limit, offset]) => limit === 100 && offset === 0)).toBe(true);
+  });
+
+  it('does not continue old rows when replacement initialization fails', async () => {
+    const rows = Array.from({ length: 500 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    const errorLog = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      vi.mocked(getDbGames).mockImplementation(async (_limit, _offset, filters) => filters?.isClassic ? [] : rows);
+      const props = {
+        activeRailIndex: 0, activePlatformId: 'c64', favorites: emptyIds, recentlyPlayedIds: emptyIds,
+        filters: EMPTY_FILTERS, searchInput: 'Successful query', railFocusIndices: { 'search-results': 0 },
+      };
+      const { rerender } = renderHook(useBigBoxLibraryData, { initialProps: props });
+      await flushLoads();
+      vi.mocked(getDbGames).mockClear().mockRejectedValue(new Error('Query failed'));
+      rerender({ ...props, searchInput: 'Failing query', railFocusIndices: { 'search-results': 490 } });
+      await flushLoads();
+      expect(vi.mocked(getDbGames).mock.calls.every(([, offset]) => offset === 0)).toBe(true);
+    } finally {
+      errorLog.mockRestore();
+    }
+  });
+
+  it('preserves controller focus while appending and can open a game beyond the first search page', async () => {
+    const rows = Array.from({ length: 501 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    vi.mocked(getDbGames).mockImplementation(async (limit, offset, filters) => filters?.isClassic ? [] : rows.slice(offset, offset + limit));
+    const noop = vi.fn();
+    const { result } = renderHook(() => {
+      const [focus, setFocus] = useState({ 'search-results': 490 });
+      const [selected, setSelected] = useState<Game | null>(null);
+      const data = useBigBoxLibraryData({
+        activeRailIndex: 0, activePlatformId: 'c64', favorites: emptyIds, recentlyPlayedIds: emptyIds,
+        filters: EMPTY_FILTERS, searchInput: 'controller continuation', railFocusIndices: focus,
+      });
+      useUnifiedLibraryNavigation({
+        isFullscreen: true, viewMode: 'grid', setViewMode: noop, games: [], selectedGame: selected,
+        handleGameSelect: setSelected, filters: EMPTY_FILTERS, setFilters: noop, setSearchInput: noop,
+        focusedIndex: -1, setFocusedIndex: noop, toggleFocusedFavorite: () => false, updateSettings: noop,
+        onGamepadInput: noop, activeHeaderItemIndex: 0, setActiveHeaderItemIndex: noop,
+        activeHeaderRow: 0, setActiveHeaderRow: noop, activeRailIndex: 0, setActiveRailIndex: noop,
+        railFocusIndices: focus, setRailFocusIndices: setFocus, rails: data.rails, genres: [],
+        visibleSubGenres: [], hasOverflowSubGenres: false, gridColumns: 6,
+      });
+      return { ...data, focus, selected };
+    });
+    await flushLoads();
+    expect(result.current.rails[0].games).toHaveLength(501);
+    expect(result.current.focus['search-results']).toBe(490);
+    for (let index = 0; index < 10; index++) {
+      act(() => vi.mocked(useGamepad).mock.lastCall?.[0].onButtonDown?.('DPAD_RIGHT'));
+    }
+    expect(result.current.focus['search-results']).toBe(500);
+    act(() => vi.mocked(useGamepad).mock.lastCall?.[0].onButtonDown?.('A'));
+    expect(result.current.selected?.id).toBe(501);
   });
 });

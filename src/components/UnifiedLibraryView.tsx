@@ -167,6 +167,7 @@ export function UnifiedLibraryView({
     totalGameCount: bigboxTotalGameCount,
   } = useBigBoxLibraryData({
     activeRailIndex,
+    railFocusIndices,
     activePlatformId: settings.activePlatformId,
     libraryRefreshToken: getLibraryRefreshToken(settings),
     favorites,

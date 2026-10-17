@@ -108,6 +108,7 @@ export function BigBoxView({
   const usesRailGridNavigation = isC64Edition || isCyberpunkCrt;
 
   const { flatGames, genres, loading, rails, subGenres, totalGameCount } = useBigBoxLibraryData({
+    railFocusIndices,
     libraryRefreshToken: getLibraryRefreshToken(settings),
     activeRailIndex,
     activePlatformId: settings.activePlatformId,
