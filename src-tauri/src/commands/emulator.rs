@@ -896,6 +896,15 @@ fn load_game_launch_metadata(
     row.ok().flatten().unwrap_or_default()
 }
 
+fn write_vice_fliplist(writer: &mut impl Write, rom_files: &[PathBuf]) -> std::io::Result<()> {
+    writeln!(writer, "# Vice fliplist file")?;
+    writeln!(writer, "UNIT 8")?;
+    for rom_file in rom_files {
+        writeln!(writer, "{}", rom_file.to_string_lossy())?;
+    }
+    writer.flush()
+}
+
 fn write_retroarch_m3u(
     temp_dir: &Path,
     resolved_primary_rom: &Path,
@@ -1767,12 +1776,9 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                         .to_string_lossy()
                 ));
                 let mut fliplist =
-                    std::fs::File::create(&fliplist_path).map_err(|e| e.to_string())?;
-                writeln!(fliplist, "# Vice fliplist file").unwrap();
-                writeln!(fliplist, "UNIT 8").unwrap();
-                for rom_file in &extracted_roms {
-                    writeln!(fliplist, "{}", rom_file.to_string_lossy()).unwrap();
-                }
+                    std::fs::File::create(&fliplist_path).map_err(|error| format!("Failed to create VICE fliplist '{}': {error}", fliplist_path.display()))?;
+                write_vice_fliplist(&mut fliplist, &extracted_roms)
+                    .map_err(|error| format!("Failed to write VICE fliplist '{}': {error}", fliplist_path.display()))?;
                 args.push("-flipname".to_string());
                 args.push(fliplist_path.to_string_lossy().to_string());
             }
@@ -1932,6 +1938,55 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
 mod tests {
     use super::*;
     use crate::test_helpers::DbEnvGuard;
+
+    #[test]
+    fn test_vice_fliplist_preserves_bytes_paths_and_disk_order() {
+        let disks = vec![PathBuf::from("/media/Game Disk 1.d64"), PathBuf::from("/media/Savé Disk.d64")];
+        let mut output = Vec::new();
+        write_vice_fliplist(&mut output, &disks).unwrap();
+        assert_eq!(output, "# Vice fliplist file\nUNIT 8\n/media/Game Disk 1.d64\n/media/Savé Disk.d64\n".as_bytes());
+    }
+
+    struct FailingFliplistSink {
+        remaining: usize,
+        fail_flush: bool,
+    }
+
+    impl Write for FailingFliplistSink {
+        fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+            if self.remaining == 0 {
+                return Err(std::io::Error::new(std::io::ErrorKind::PermissionDenied, "synthetic fliplist write failure"));
+            }
+            let written = bytes.len().min(self.remaining);
+            self.remaining -= written;
+            Ok(written)
+        }
+
+        fn flush(&mut self) -> std::io::Result<()> {
+            if self.fail_flush {
+                Err(std::io::Error::other("synthetic fliplist flush failure"))
+            } else {
+                Ok(())
+            }
+        }
+    }
+
+    #[test]
+    fn test_vice_fliplist_returns_header_unit_and_disk_write_errors() {
+        for remaining in [0, 21, 28, 35] {
+            let mut sink = FailingFliplistSink { remaining, fail_flush: false };
+            let error = write_vice_fliplist(&mut sink, &[PathBuf::from("/media/Game Disk 1.d64")]).unwrap_err();
+            assert_eq!(error.kind(), std::io::ErrorKind::PermissionDenied);
+            assert!(error.to_string().contains("synthetic fliplist write failure"));
+        }
+    }
+
+    #[test]
+    fn test_vice_fliplist_returns_flush_errors() {
+        let mut sink = FailingFliplistSink { remaining: usize::MAX, fail_flush: true };
+        let error = write_vice_fliplist(&mut sink, &[]).unwrap_err();
+        assert!(error.to_string().contains("synthetic fliplist flush failure"));
+    }
 
     #[test]
     fn test_altirra_rom_args_extension_mapping() {
