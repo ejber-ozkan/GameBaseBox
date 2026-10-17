@@ -47,6 +47,24 @@ pub struct EmulatorProfileTestRequest {
     pub core_path: Option<String>,
 }
 
+#[derive(Debug, Deserialize, Default, Clone, Copy)]
+#[serde(rename_all = "camelCase")]
+pub enum GameSortColumn {
+    #[default]
+    Name,
+    Year,
+    Publisher,
+    ParentGenre,
+}
+
+#[derive(Debug, Deserialize, Default, Clone, Copy)]
+#[serde(rename_all = "lowercase")]
+pub enum GameSortDirection {
+    #[default]
+    Asc,
+    Desc,
+}
+
 #[derive(Debug, Deserialize, Default, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GameFilters {
@@ -57,6 +75,8 @@ pub struct GameFilters {
     pub favorite_ids: Option<Vec<String>>,
     pub hide_adult: Option<bool>,
     pub is_classic: Option<bool>,
+    pub sort_by: Option<GameSortColumn>,
+    pub sort_direction: Option<GameSortDirection>,
 }
 
 /// A row from the SQLite GameView

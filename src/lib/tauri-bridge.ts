@@ -740,6 +740,9 @@ export async function openFile(path: string): Promise<void> {
   return invoke<void>('open_path_with_system_default', { path });
 }
 
+export type GameSortColumn = 'name' | 'year' | 'publisher' | 'parentGenre';
+export type GameSortDirection = 'asc' | 'desc';
+
 export interface GameFilters {
   searchQuery?: string;
   letter?: string;
@@ -748,6 +751,8 @@ export interface GameFilters {
   favoriteIds?: string[];
   hideAdult?: boolean;
   isClassic?: boolean;
+  sortBy?: GameSortColumn;
+  sortDirection?: GameSortDirection;
 }
 
 export async function getGenres(platformId: string = 'c64'): Promise<string[]> {
@@ -891,6 +896,34 @@ export async function getDbGames(
       }
 
       return true;
+    });
+
+    // Match SQLite NOCASE (ASCII case folding), null placement, and identity ties.
+    const compareText = (left: string, right: string) => {
+      const fold = (value: string) => value.replace(/[A-Z]/g, (character) => character.toLowerCase());
+      const a = fold(left);
+      const b = fold(right);
+      return a === b ? 0 : a < b ? -1 : 1;
+    };
+    const sortValue = (game: import('../types/game').Game) => {
+      switch (filters?.sortBy) {
+        case 'year': return game.year ?? null;
+        case 'publisher': return game.publisher?.name ?? null;
+        case 'parentGenre': return game.parentGenre ?? null;
+        default: return game.name;
+      }
+    };
+    filteredGames.sort((a, b) => {
+      const left = sortValue(a);
+      const right = sortValue(b);
+      if (left === null && right !== null) return 1;
+      if (left !== null && right === null) return -1;
+      const primary = typeof left === 'number' && typeof right === 'number' ? left - right
+        : typeof left === 'string' && typeof right === 'string' ? compareText(left, right) : 0;
+      return (filters?.sortDirection === 'desc' ? -primary : primary)
+        || compareText(a.name, b.name)
+        || compareText(a.platformId || 'c64', b.platformId || 'c64')
+        || (String(a.id) === String(b.id) ? 0 : String(a.id) < String(b.id) ? -1 : 1);
     });
 
     return filteredGames.slice(offset, offset + limit).map((g) => ({

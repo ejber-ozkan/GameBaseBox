@@ -254,6 +254,75 @@ fn test_build_game_query_search_and_favorites() {
     assert_eq!(params[6], "10");
 }
 
+fn assert_sorted_catalog_pages(column: &str) {
+    let conn = Connection::open_in_memory().unwrap();
+    create_search_fallback_fixture(&conn);
+    conn.execute_batch("DELETE FROM Games; DELETE FROM GameView;").unwrap();
+    let mut rows = Vec::new();
+    for id in (1..=361).rev() {
+        let name = format!("Entry {}", id % 7);
+        let year = (id % 11 != 0).then_some(1979 + id % 13);
+        let publisher = (id % 9 != 0).then(|| format!("Publisher {}", id % 5));
+        let genre = format!("Genre {}", id % 3);
+        for platform in ["c64", "atari800"] {
+            conn.execute("INSERT INTO Games (platform_id, GA_Id, Name) VALUES (?1, ?2, ?3)", rusqlite::params![platform, id.to_string(), name]).unwrap();
+            conn.execute("INSERT INTO GameView (platformId, id, name, year, publisher_name, parentGenre) VALUES (?1, ?2, ?3, ?4, ?5, ?6)", rusqlite::params![platform, id.to_string(), name, year.map(|value| value.to_string()), publisher, genre]).unwrap();
+        }
+        rows.push((id.to_string(), name, year, publisher, genre));
+    }
+    for direction in ["asc", "desc"] {
+        let mut expected = rows.clone();
+        expected.sort_by(|a, b| {
+            let primary = match column {
+                "year" => match (a.2, b.2) {
+                    (None, Some(_)) => return std::cmp::Ordering::Greater,
+                    (Some(_), None) => return std::cmp::Ordering::Less,
+                    (left, right) => left.cmp(&right),
+                },
+                "publisher" => match (&a.3, &b.3) {
+                    (None, Some(_)) => return std::cmp::Ordering::Greater,
+                    (Some(_), None) => return std::cmp::Ordering::Less,
+                    (left, right) => left.cmp(&right),
+                },
+                "parentGenre" => a.4.cmp(&b.4),
+                _ => a.1.cmp(&b.1),
+            };
+            let primary = if direction == "desc" { primary.reverse() } else { primary };
+            primary.then_with(|| a.1.cmp(&b.1)).then_with(|| a.0.cmp(&b.0))
+        });
+        let expected: Vec<_> = expected.into_iter().map(|row| row.0).collect();
+        let filters: GameFilters = serde_json::from_value(serde_json::json!({
+            "sortBy": column, "sortDirection": direction,
+        })).unwrap();
+        for platform in ["c64", "atari800"] {
+            let mut actual = Vec::new();
+            for offset in [0, 120, 240, 360] {
+                actual.extend(load_ordered_game_ids_with_fallback(&conn, platform, 120, offset, Some(filters.clone())).unwrap());
+            }
+            assert_eq!(actual, expected, "{platform} {column} {direction}");
+        }
+    }
+}
+
+#[test]
+fn test_title_sort_is_global_across_pages() { assert_sorted_catalog_pages("name"); }
+
+#[test]
+fn test_year_sort_is_global_across_pages() { assert_sorted_catalog_pages("year"); }
+
+#[test]
+fn test_publisher_sort_is_global_across_pages() { assert_sorted_catalog_pages("publisher"); }
+
+#[test]
+fn test_genre_sort_is_global_across_pages() { assert_sorted_catalog_pages("parentGenre"); }
+
+#[test]
+fn test_game_sort_rejects_unrecognized_ipc_identifiers() {
+    for value in [serde_json::json!({"sortBy": "name; DROP TABLE Games"}), serde_json::json!({"sortDirection": "sideways"})] {
+        assert!(serde_json::from_value::<GameFilters>(value).is_err());
+    }
+}
+
 #[test]
 fn test_build_fts_match_query_sanitizes_terms() {
     assert_eq!(

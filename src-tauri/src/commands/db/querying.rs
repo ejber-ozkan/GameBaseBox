@@ -1,5 +1,5 @@
 use crate::database::get_db_path;
-use crate::models::GameFilters;
+use crate::models::{GameFilters, GameSortColumn, GameSortDirection};
 use rusqlite::{params_from_iter, Connection};
 
 const FILTERED_IDS_QUERY_PREFIX: &str = "
@@ -14,10 +14,6 @@ const FILTERED_IDS_QUERY_PREFIX: &str = "
 
 const FILTERED_IDS_GROUP_BY: &str = "
             GROUP BY g.platform_id, g.GA_Id";
-
-const FILTERED_IDS_QUERY_SUFFIX: &str = "
-            ORDER BY sort_name COLLATE NOCASE ASC
-            LIMIT ? OFFSET ?";
 
 const LEGACY_SEARCH_FILTER_COLUMNS: [&str; 6] = [
     "LOWER(gv.name) LIKE ?",
@@ -179,9 +175,22 @@ impl GameQueryBuilder {
         true
     }
 
-    fn finish(mut self, limit: usize, offset: usize) -> (String, Vec<String>) {
+    fn finish(mut self, limit: usize, offset: usize, column: GameSortColumn, direction: GameSortDirection) -> (String, Vec<String>) {
+        let expression = match column {
+            GameSortColumn::Name => "sort_name",
+            GameSortColumn::Year => "MIN(CAST(NULLIF(gv.year, '') AS INTEGER))",
+            GameSortColumn::Publisher => "MIN(gv.publisher_name)",
+            GameSortColumn::ParentGenre => "MIN(gv.parentGenre)",
+        };
+        let direction = match direction {
+            GameSortDirection::Asc => "ASC",
+            GameSortDirection::Desc => "DESC",
+        };
         self.filter_query.push_str(FILTERED_IDS_GROUP_BY);
-        self.filter_query.push_str(FILTERED_IDS_QUERY_SUFFIX);
+        self.filter_query.push_str(&format!("
+            ORDER BY {expression} IS NULL ASC, {expression} COLLATE NOCASE {direction},
+                     sort_name COLLATE NOCASE ASC, g.platform_id ASC, g.GA_Id ASC
+            LIMIT ? OFFSET ?"));
         self.params.push(limit.to_string());
         self.params.push(offset.to_string());
         (self.filter_query, self.params)
@@ -216,13 +225,16 @@ pub(crate) fn build_game_query(
     let mut builder = GameQueryBuilder::new(platform_id, search_mode);
     builder.push_platform_filter();
 
+    let column = filters.as_ref().and_then(|filters| filters.sort_by).unwrap_or_default();
+    let direction = filters.as_ref().and_then(|filters| filters.sort_direction).unwrap_or_default();
+
     if let Some(filters) = filters {
         if !apply_game_filters(&mut builder, filters) {
             return None;
         }
     }
 
-    Some(builder.finish(limit, offset))
+    Some(builder.finish(limit, offset, column, direction))
 }
 
 fn build_game_count_query(

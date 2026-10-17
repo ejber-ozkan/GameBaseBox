@@ -604,4 +604,21 @@ describe('useLibraryBrowserState', () => {
     rerender();
     await waitFor(() => expect(result.current.games).toEqual(newPage));
   });
+
+  it('requests sorted first and later pages instead of sorting only loaded rows', async () => {
+    const firstPage = Array.from({ length: 120 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    mockGetDbGames.mockResolvedValue(firstPage);
+    const { result } = renderHook(() => useLibraryBrowserState());
+    await waitFor(() => expect(result.current.games).toHaveLength(120));
+    mockGetDbGames.mockClear();
+    await act(async () => result.current.handleSort('year'));
+    expect(result.current.effectiveFilters).toMatchObject({ sortBy: 'year', sortDirection: 'asc' });
+    expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.objectContaining({ sortBy: 'year', sortDirection: 'asc' }), undefined);
+    await act(async () => { await result.current.loadNextPage(); });
+    expect(mockGetDbGames).toHaveBeenCalledWith(120, 120, expect.objectContaining({ sortBy: 'year', sortDirection: 'asc' }), undefined);
+    mockGetDbGames.mockClear();
+    await act(async () => result.current.handleSort('year'));
+    expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.objectContaining({ sortBy: 'year', sortDirection: 'desc' }), undefined);
+    expect(result.current.games).toHaveLength(120);
+  });
 });

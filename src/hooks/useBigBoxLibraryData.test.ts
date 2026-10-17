@@ -77,6 +77,12 @@ describe('getAlphabetRailCacheKey', () => {
     const key2 = getAlphabetRailCacheKey('A', { genre: 'Action' }, '', 'atari800');
     expect(key1).not.toBe(key2);
   });
+
+  it('separates cached letter results by sort column and direction', () => {
+    const ascending = getAlphabetRailCacheKey('A', { sortBy: 'year', sortDirection: 'asc' }, '');
+    expect(ascending).not.toBe(getAlphabetRailCacheKey('A', { sortBy: 'year', sortDirection: 'desc' }, ''));
+    expect(ascending).not.toBe(getAlphabetRailCacheKey('A', { sortBy: 'publisher', sortDirection: 'asc' }, ''));
+  });
 });
 
 describe('sortRecentGames', () => {

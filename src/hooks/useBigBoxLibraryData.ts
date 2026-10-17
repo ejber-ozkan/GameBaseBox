@@ -41,6 +41,8 @@ export function getAlphabetRailCacheKey(
     genre: filters.genre ?? null,
     subGenre: filters.subGenre ?? null,
     hideAdult: filters.hideAdult ?? null,
+    sortBy: filters.sortBy ?? 'name',
+    sortDirection: filters.sortDirection ?? 'asc',
     letter,
     platformId,
     searchInput: searchInput || null,

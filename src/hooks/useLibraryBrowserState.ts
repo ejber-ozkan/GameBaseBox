@@ -4,8 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSettings, Settings } from '../contexts/SettingsContext';
 import { useFavorites } from './useFavorites';
 import { Game } from '../types/game';
-import { GameFilters, getDbGames } from '../lib/tauri-bridge';
-import { sortGames } from '../utils/sorting';
+import { GameFilters, GameSortColumn, getDbGames } from '../lib/tauri-bridge';
 
 export type LibraryViewMode = 'grid' | 'list' | 'settings';
 const LIBRARY_PAGE_SIZE = 120;
@@ -29,7 +28,7 @@ export function useLibraryBrowserState() {
   const [filters, setFilters] = useState<GameFilters>({});
   const [games, setGames] = useState<Game[]>([]);
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [sortCol, setSortCol] = useState<keyof Game>('name');
+  const [sortCol, setSortCol] = useState<GameSortColumn>('name');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const [searchInput, setSearchInput] = useState('');
   const [isRestored, setIsRestored] = useState(false);
@@ -54,6 +53,11 @@ export function useLibraryBrowserState() {
     ...filters,
     hideAdult: settings.hideAdultContent,
   }), [filters, settings.hideAdultContent]);
+  const queryFilters = useMemo(() => ({
+    ...effectiveFilters,
+    sortBy: sortCol,
+    sortDirection: sortDir,
+  }), [effectiveFilters, sortCol, sortDir]);
 
   useEffect(() => {
     if (focusedIndex < 0 && shelfRef.current) {
@@ -75,7 +79,7 @@ export function useLibraryBrowserState() {
     isLoadingNextPageRef.current = false;
 
     async function fetchGames() {
-      const dbGames = await getDbGames(LIBRARY_PAGE_SIZE, 0, effectiveFilters, settings.activePlatformId);
+      const dbGames = await getDbGames(LIBRARY_PAGE_SIZE, 0, queryFilters, settings.activePlatformId);
       if (!isCurrent()) return;
       setGames(dbGames);
       hasMorePagesRef.current = dbGames.length === LIBRARY_PAGE_SIZE;
@@ -86,7 +90,7 @@ export function useLibraryBrowserState() {
     return () => {
       queryGenerationRef.current += 1;
     };
-  }, [effectiveFilters, settings.activePlatformId, libraryRefreshToken]);
+  }, [queryFilters, settings.activePlatformId, libraryRefreshToken]);
 
   useEffect(() => {
     if (loadedGeneration !== queryGenerationRef.current) return;
@@ -128,7 +132,7 @@ export function useLibraryBrowserState() {
     void restoreSelection();
     return () => { cancelled = true; };
   }, [
-    effectiveFilters,
+    queryFilters,
     focusedIndex,
     games,
     isRestored,
@@ -151,7 +155,7 @@ export function useLibraryBrowserState() {
       const nextPage = await getDbGames(
         LIBRARY_PAGE_SIZE,
         games.length,
-        effectiveFilters,
+        queryFilters,
         settings.activePlatformId,
       );
       if (generation !== queryGenerationRef.current) return;
@@ -164,7 +168,7 @@ export function useLibraryBrowserState() {
         isLoadingNextPageRef.current = false;
       }
     }
-  }, [effectiveFilters, games.length, settings.activePlatformId]);
+  }, [queryFilters, games.length, settings.activePlatformId]);
 
   useEffect(() => {
     if (focusedIndex >= games.length - PAGE_PREFETCH_THRESHOLD) {
@@ -261,10 +265,11 @@ export function useLibraryBrowserState() {
   }, [handleGameSelect, settings.activePlatformId]);
 
   const handleSort = useCallback((column: keyof Game) => {
+    if (column !== 'name' && column !== 'year' && column !== 'publisher' && column !== 'parentGenre') return;
     const newDirection = sortCol === column && sortDir === 'asc' ? 'desc' : 'asc';
     setSortCol(column);
     setSortDir(newDirection);
-    setGames((previous) => sortGames(previous, column, newDirection));
+    setFocusedIndex(0);
   }, [sortCol, sortDir]);
 
   const persistWindowSize = useCallback((size: { width: number; height: number }) => {
@@ -290,7 +295,7 @@ export function useLibraryBrowserState() {
   return {
     closeDetail,
     filters,
-    effectiveFilters,
+    effectiveFilters: queryFilters,
     focusedIndex,
     games,
     handleGameSelect,
