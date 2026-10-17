@@ -6,6 +6,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::Manager;
+mod mdb_export;
 
 const QUERY_SUPPORT_INDEXES: &[(&str, &[&str], &str)] = &[
     (
@@ -935,7 +936,7 @@ fn powershell_32_path() -> PathBuf {
 
 fn export_mdb_to_csv(mdb_path: &Path, export_dir: &Path) -> Result<usize, String> {
     if !cfg!(target_os = "windows") {
-        return Err("MDB import is only supported on Windows builds.".to_string());
+        return mdb_export::export_mdb_to_csv(mdb_path, export_dir, &mut || Ok(()));
     }
 
     let script_path = write_embedded_export_script(export_dir)?;
