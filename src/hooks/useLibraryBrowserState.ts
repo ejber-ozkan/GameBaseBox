@@ -33,6 +33,7 @@ export function useLibraryBrowserState() {
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const [searchInput, setSearchInput] = useState('');
   const [isRestored, setIsRestored] = useState(false);
+  const [loadedGeneration, setLoadedGeneration] = useState(0);
   const [prevPlatformId, setPrevPlatformId] = useState(settings.activePlatformId);
   const hasMorePagesRef = useRef(false);
   const isLoadingNextPageRef = useRef(false);
@@ -78,12 +79,26 @@ export function useLibraryBrowserState() {
       if (!isCurrent()) return;
       setGames(dbGames);
       hasMorePagesRef.current = dbGames.length === LIBRARY_PAGE_SIZE;
+      setLoadedGeneration(generation);
+    }
+
+    void fetchGames();
+    return () => {
+      queryGenerationRef.current += 1;
+    };
+  }, [effectiveFilters, settings.activePlatformId, libraryRefreshToken]);
+
+  useEffect(() => {
+    if (loadedGeneration !== queryGenerationRef.current) return;
+    let cancelled = false;
+
+    async function restoreSelection() {
 
       if (!isRestored) {
         if (settings.lastSelectedGameId) {
-          const found = dbGames.find((game) => game.id.toString() === settings.lastSelectedGameId);
+          const found = games.find((game) => game.id.toString() === settings.lastSelectedGameId);
           if (found) {
-            setFocusedIndex(dbGames.indexOf(found));
+            setFocusedIndex(games.indexOf(found));
             setSelectedGame(found);
           } else {
             const single = await getDbGames(
@@ -92,7 +107,7 @@ export function useLibraryBrowserState() {
               { favoriteIds: [settings.lastSelectedGameId] },
               settings.activePlatformId,
             );
-            if (!isCurrent()) return;
+            if (cancelled || loadedGeneration !== queryGenerationRef.current) return;
             if (single.length > 0) {
               setSelectedGame(single[0]);
             }
@@ -102,26 +117,26 @@ export function useLibraryBrowserState() {
         }
         setIsRestored(true);
       } else if (!selectedGame && focusedIndex >= 0) {
-        if (dbGames.length === 0) {
+        if (games.length === 0) {
           setFocusedIndex(-1);
-        } else if (focusedIndex >= dbGames.length) {
-          setFocusedIndex(dbGames.length - 1);
+        } else if (focusedIndex >= games.length) {
+          setFocusedIndex(games.length - 1);
         }
       }
     }
 
-    void fetchGames();
-    return () => {
-      queryGenerationRef.current += 1;
-    };
-  // Persisted focus and selection are read during the initial restore only; changing them locally
-  // must not re-run the paged library query or reset the user back to the first page.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    void restoreSelection();
+    return () => { cancelled = true; };
   }, [
     effectiveFilters,
+    focusedIndex,
+    games,
     isRestored,
+    loadedGeneration,
     selectedGame,
     settings.activePlatformId,
+    settings.lastFocusedIndex,
+    settings.lastSelectedGameId,
     libraryRefreshToken,
   ]);
 

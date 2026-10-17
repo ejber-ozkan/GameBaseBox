@@ -554,4 +554,54 @@ describe('useLibraryBrowserState', () => {
     expect(mockGetDbGames).toHaveBeenCalledTimes(1);
     await act(async () => page.resolve(mockGames));
   });
+
+  it('preserves three loaded pages and the late selection when opening and closing detail', async () => {
+    const catalog = Array.from({ length: 241 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    mockGetDbGames.mockImplementation(async (limit, offset) => catalog.slice(offset, offset + limit));
+    const { result } = renderHook(() => useLibraryBrowserState());
+    await waitFor(() => expect(result.current.games).toHaveLength(120));
+    await act(async () => { await result.current.loadNextPage(); });
+    await act(async () => { await result.current.loadNextPage(); });
+    expect(result.current.games).toEqual(catalog);
+    mockGetDbGames.mockClear();
+    await act(async () => result.current.handleGameSelect(catalog[240]));
+    expect(result.current.selectedGame).toBe(catalog[240]);
+    expect(result.current.games).toEqual(catalog);
+    await act(async () => result.current.closeDetail());
+    expect(result.current.selectedGame).toBeNull();
+    expect(result.current.focusedIndex).toBe(240);
+    expect(result.current.games).toEqual(catalog);
+    expect(mockGetDbGames).not.toHaveBeenCalled();
+  });
+
+  it('refreshes loaded pages when the same platform is reimported with an unchanged count', async () => {
+    const platformSettings = createDefaultPlatformSettingsMap();
+    platformSettings.c64.library = {
+      ...platformSettings.c64.library,
+      importStatus: 'imported',
+      gameCount: 241,
+      lastImportedAt: '2026-01-01T00:00:00Z',
+    };
+    currentSettings = { ...baseSettings, activePlatformId: 'c64', platformSettings };
+    const catalog = Array.from({ length: 241 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
+    mockGetDbGames.mockImplementation(async (limit, offset) => catalog.slice(offset, offset + limit));
+    const { result, rerender } = renderHook(() => useLibraryBrowserState());
+    await waitFor(() => expect(result.current.games).toHaveLength(120));
+    await act(async () => { await result.current.loadNextPage(); });
+    await act(async () => { await result.current.loadNextPage(); });
+    const newPage = catalog.slice(0, 120).map((game) => ({ ...game, name: 'Reimported' }));
+    mockGetDbGames.mockResolvedValue(newPage);
+    currentSettings = {
+      ...currentSettings,
+      platformSettings: {
+        ...platformSettings,
+        c64: {
+          ...platformSettings.c64,
+          library: { ...platformSettings.c64.library, lastImportedAt: '2026-01-02T00:00:00Z' },
+        },
+      },
+    };
+    rerender();
+    await waitFor(() => expect(result.current.games).toEqual(newPage));
+  });
 });
