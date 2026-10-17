@@ -25,6 +25,33 @@ describe('buildPlatformAssetPath', () => {
     },
   } as unknown as Settings;
 
+  it.each([
+    ['/home/user/Games', '/home/user/Games/nested/game.zip'],
+    ['/', '/nested/game.zip'],
+    ['\\\\server\\share\\Games\\', '//server/share/Games/nested/game.zip'],
+    ['  "/home/user/My Games/"  ', '/home/user/My Games/nested/game.zip'],
+    ['C:\\Games/', 'C:/Games/nested/game.zip'],
+    ['C:\\', 'C:/nested/game.zip'],
+  ])('preserves the configured base root %s', (gamesPath, expected) => {
+    const settings = structuredClone(baseSettings);
+    settings.platformSettings.atarist.folders.gamesPath = gamesPath;
+
+    expect(buildPlatformAssetPath(settings, 'roms', '/nested\\game.zip/')).toBe(expected);
+  });
+
+  it.each([
+    ['/home/user/Games/', '/home/user/Extras/nested/game.zip'],
+    ['/', '/Extras/nested/game.zip'],
+    ['\\\\server\\share\\Games', '//server/share/Extras/nested/game.zip'],
+    ['C:\\Library', 'C:/Library/Extras/nested/game.zip'],
+  ])('preserves the root of the blank-Extras fallback for %s', (gamesPath, expected) => {
+    const settings = structuredClone(baseSettings);
+    settings.platformSettings.atarist.folders.gamesPath = gamesPath;
+    settings.platformSettings.atarist.folders.extrasPath = '';
+
+    expect(buildPlatformAssetPath(settings, 'extras', 'nested\\game.zip')).toBe(expected);
+  });
+
   it('builds full extras path with normalized forward slashes', () => {
     const fullPath = buildPlatformAssetPath(
       baseSettings,

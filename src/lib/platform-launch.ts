@@ -13,13 +13,13 @@ export interface PlatformLaunchSettings {
   providerLabel: string;
 }
 
-function normalizePathSegment(segment: string | null | undefined): string {
+function normalizeBasePath(segment: string | null | undefined): string {
   if (!segment) return '';
   return segment
     .trim()
     .replace(/^["']+|["']+$/g, '')
     .replace(/\\/g, '/')
-    .replace(/^\/+|\/+$/g, '');
+    .replace(/([^/])\/+$/, '$1');
 }
 
 export function buildPlatformAssetPath(
@@ -42,10 +42,11 @@ export function buildPlatformAssetPath(
     }
   }
 
-  return [platformBasePath, relativePath]
-    .map(normalizePathSegment)
-    .filter(Boolean)
-    .join('/');
+  const basePath = normalizeBasePath(platformBasePath);
+  const relativeSegment = normalizeBasePath(relativePath).replace(/^\/+|\/+$/g, '');
+  if (!basePath) return relativeSegment;
+  if (!relativeSegment) return basePath;
+  return basePath + (basePath.endsWith('/') ? '' : '/') + relativeSegment;
 }
 
 export function getPlatformLaunchSettings(settings: Settings): PlatformLaunchSettings {
