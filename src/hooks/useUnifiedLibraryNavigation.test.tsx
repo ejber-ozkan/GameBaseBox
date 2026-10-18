@@ -5,6 +5,7 @@ import { mockGames } from '../data/mockGames';
 import { getWindowSize, type GameFilters } from '../lib/tauri-bridge';
 import { useUnifiedLibraryNavigation, type UseUnifiedLibraryNavigationProps } from './useUnifiedLibraryNavigation';
 import type { LibraryViewMode } from './useLibraryBrowserState';
+import type { BigBoxRailCategory } from './useBigBoxLibraryData';
 
 const gamepad = vi.hoisted(() => ({ onButtonDown: undefined as ((button: string) => void) | undefined }));
 vi.mock('./useGamepad', () => ({ useGamepad: (handlers: { onButtonDown: (button: string) => void }) => {
@@ -146,5 +147,67 @@ describe('active unified library input', () => {
     act(() => gamepad.onButtonDown?.('A'));
     expect(props.handleGameSelect).toHaveBeenCalledExactlyOnceWith(mockGames[1]);
     expect(props.onGamepadInput).toHaveBeenCalledTimes(2);
+  });
+
+  it('allows bumpers to advance across rails including unpopulated lazy-loaded alphabet rails in fullscreen', () => {
+    let activeRailIndex = 0;
+    const setActiveRailIndex = vi.fn((update) => {
+      activeRailIndex = typeof update === 'function' ? update(activeRailIndex) : update;
+    });
+    const setRailFocusIndices = vi.fn();
+    const rails: BigBoxRailCategory[] = [
+      { id: 'recent', title: 'Recent', games: [mockGames[0]], type: 'recent' },
+      { id: 'alpha-#', title: '0-9 & Symbols', games: [], type: 'alphabet', letter: '#' },
+      { id: 'alpha-A', title: 'Letter A', games: [], type: 'alphabet', letter: 'A' },
+    ];
+    const { rerender } = renderHook((props: UseUnifiedLibraryNavigationProps) => useUnifiedLibraryNavigation(props), {
+      initialProps: createProps({
+        isFullscreen: true,
+        activeRailIndex,
+        setActiveRailIndex,
+        setRailFocusIndices,
+        rails,
+      }),
+    });
+    act(() => gamepad.onButtonDown?.('RB'));
+    expect(setActiveRailIndex).toHaveBeenCalledWith(1);
+    rerender(createProps({
+      isFullscreen: true,
+      activeRailIndex: 1,
+      setActiveRailIndex,
+      setRailFocusIndices,
+      rails,
+    }));
+    act(() => gamepad.onButtonDown?.('RB'));
+    expect(setActiveRailIndex).toHaveBeenCalledWith(2);
+    rerender(createProps({
+      isFullscreen: true,
+      activeRailIndex: 2,
+      setActiveRailIndex,
+      setRailFocusIndices,
+      rails,
+    }));
+    act(() => gamepad.onButtonDown?.('LB'));
+    expect(setActiveRailIndex).toHaveBeenCalledWith(1);
+  });
+
+  it('supports fullscreen gamepad shortcuts: Y for favorites, START for settings, and B for back', () => {
+    const onShowSettings = vi.fn();
+    const onBack = vi.fn();
+    const toggleFocusedFavorite = vi.fn(() => true);
+    renderHook(() => useUnifiedLibraryNavigation(createProps({
+      isFullscreen: true,
+      activeRailIndex: 0,
+      rails: [{ id: 'recent', title: 'Recent', games: [mockGames[0]], type: 'recent' }],
+      onShowSettings,
+      onBack,
+      toggleFocusedFavorite,
+    })));
+    act(() => gamepad.onButtonDown?.('Y'));
+    expect(toggleFocusedFavorite).toHaveBeenCalledOnce();
+    act(() => gamepad.onButtonDown?.('START'));
+    expect(onShowSettings).toHaveBeenCalledOnce();
+    act(() => gamepad.onButtonDown?.('B'));
+    expect(onBack).toHaveBeenCalledOnce();
   });
 });
