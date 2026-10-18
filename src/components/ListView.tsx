@@ -14,6 +14,7 @@ interface ListViewProps {
   sortDirection?: GameFilters['sortDirection'];
   focusedIndex?: number;
   onFocusChange?: (index: number) => void;
+  onGameFocus?: (index: number) => void;
   isFavorite?: (gameId: string) => boolean;
   onEndReached?: () => void | Promise<void>;
   activePlatformName?: string;
@@ -36,6 +37,7 @@ export function ListView({
   sortDirection = 'asc',
   focusedIndex = -1,
   onFocusChange,
+  onGameFocus,
   isFavorite,
   onEndReached,
   activePlatformName = 'CURRENT_PLATFORM',
@@ -58,6 +60,12 @@ export function ListView({
     if (focusedIndex >= 0 && tbodyRef.current) {
       const child = tbodyRef.current.children[focusedIndex] as HTMLElement;
       child?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // Tab/Enter use native title buttons. Follow virtual arrow/controller focus
+      // only while DOM focus is already on a game, preserving sort/header focus.
+      if (tbodyRef.current.contains(document.activeElement) &&
+          document.activeElement?.matches('[data-library-game-button]')) {
+        child?.querySelector<HTMLButtonElement>('[data-library-game-button]')?.focus({ preventScroll: true });
+      }
     }
   }, [focusedIndex]);
 
@@ -182,7 +190,13 @@ export function ListView({
                   <td className="px-3 py-3 font-medium text-[var(--theme-text)]">
                     <div className="flex min-w-0 items-center gap-2">
                       <span aria-label={favorited ? 'Favorite' : 'Not favorite'} className={favorited ? 'text-[var(--theme-tertiary)]' : 'text-[var(--theme-text-muted)]'}>{favorited ? '♥' : '♡'}</span>
-                      <span className="truncate">{game.name}</span>
+                      <button type="button" data-library-game-button
+                        aria-current={isFocused ? 'true' : undefined}
+                        onFocus={() => onGameFocus?.(index)}
+                        onClick={(event) => { event.stopPropagation(); onSelectGame(game); }}
+                        className="truncate text-left focus-visible:outline-2 focus-visible:outline-[var(--theme-primary)]">
+                        {game.name}
+                      </button>
                     </div>
                   </td>
                   <td className="px-3 py-3 font-mono">{game.year || '-'}</td>

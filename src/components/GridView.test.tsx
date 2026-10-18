@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
 import { GridView } from './GridView';
@@ -15,6 +15,26 @@ vi.mock('../hooks/useFavorites', () => ({
 }));
 
 describe('GridView', () => {
+  it('keeps game activation and favorite controls separate and synchronizes game focus', () => {
+    const onSelectGame = vi.fn();
+    const onGameFocus = vi.fn();
+    const props = { games: mockGames.slice(0, 2), onSelectGame, onGameFocus };
+    const { getByRole, rerender } = render(<GridView {...props} focusedIndex={0} />);
+    const first = getByRole('button', { name: mockGames[0].name, exact: true });
+    first.focus();
+    expect(onGameFocus).toHaveBeenCalledWith(0);
+    fireEvent.click(first);
+    expect(onSelectGame).toHaveBeenCalledExactlyOnceWith(mockGames[0]);
+    rerender(<GridView {...props} focusedIndex={1} />);
+    expect(document.activeElement).toBe(getByRole('button', { name: mockGames[1].name, exact: true }));
+    const favorite = getByRole('button', { name: `Toggle favorite for ${mockGames[1].name}` });
+    favorite.focus();
+    fireEvent.click(favorite);
+    expect(onSelectGame).toHaveBeenCalledOnce();
+    rerender(<GridView {...props} focusedIndex={0} />);
+    expect(document.activeElement).toBe(favorite);
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();

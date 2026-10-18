@@ -1,9 +1,29 @@
-import { act, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
 import { ListView } from './ListView';
 
 describe('ListView', () => {
+  it('activates native game buttons once and synchronizes game focus without taking sort focus', () => {
+    const onSelectGame = vi.fn();
+    const onGameFocus = vi.fn();
+    const props = { games: mockGames.slice(0, 2), onSelectGame, onSort: vi.fn(), onGameFocus };
+    const { getByRole, rerender } = render(<ListView {...props} focusedIndex={0} />);
+    const first = getByRole('button', { name: mockGames[0].name, exact: true });
+    const second = getByRole('button', { name: mockGames[1].name, exact: true });
+    first.focus();
+    expect(onGameFocus).toHaveBeenCalledWith(0);
+    fireEvent.click(first);
+    expect(onSelectGame).toHaveBeenCalledExactlyOnceWith(mockGames[0]);
+    rerender(<ListView {...props} focusedIndex={1} />);
+    expect(document.activeElement).toBe(second);
+    expect(second.getAttribute('aria-current')).toBe('true');
+    const year = getByRole('button', { name: 'Year', exact: true });
+    year.focus();
+    rerender(<ListView {...props} focusedIndex={0} />);
+    expect(document.activeElement).toBe(year);
+  });
+
   it('provides native sorting buttons and exposes the current sort direction', () => {
     const { getByRole, rerender } = render(
       <ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} sortBy="year" sortDirection="desc" />,

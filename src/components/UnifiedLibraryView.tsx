@@ -502,7 +502,6 @@ export function UnifiedLibraryView({
     focusHeader,
     focusRailItem,
     focusSearch,
-    handleKeyDown,
     jumpToRail,
     sectionJumpDirection,
     setSectionJumpDirection,
@@ -598,7 +597,6 @@ export function UnifiedLibraryView({
         data-list-presentation={theme.layout.railStyle}
         data-bigbox-rail-style={theme.layout.railStyle}
         data-c64-presentation={isC64Edition ? 'monitor' : undefined}
-        onKeyDown={handleKeyDown}
         tabIndex={0}
       >
         <div
@@ -691,6 +689,7 @@ export function UnifiedLibraryView({
                 sortDirection={filters.sortDirection}
                 focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
                 onFocusChange={triggerListFocusChange}
+                onGameFocus={setFocusedIndex}
                 isFavorite={isFavorite}
                 onEndReached={loadNextPage}
                 activePlatformName={SUPPORTED_PLATFORMS.find((p) => p.id === settings.activePlatformId)?.displayName}
@@ -949,6 +948,7 @@ export function UnifiedLibraryView({
                 onSelectGame={handleSelectGame}
                 focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
                 onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
+                onGameFocus={setFocusedIndex}
                 onEndReached={loadNextPage}
               />
             </>
@@ -984,6 +984,7 @@ export function UnifiedLibraryView({
               sortDirection={filters.sortDirection}
               focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
               onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
+              onGameFocus={setFocusedIndex}
               isFavorite={isFavorite}
               onEndReached={loadNextPage}
               activePlatformName={SUPPORTED_PLATFORMS.find((p) => p.id === settings.activePlatformId)?.displayName}

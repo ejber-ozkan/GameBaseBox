@@ -8,10 +8,11 @@ interface GridViewProps {
   onSelectGame: (game: Game) => void;
   focusedIndex?: number;
   onFocusChange?: (index: number) => void;
+  onGameFocus?: (index: number) => void;
   onEndReached?: () => void | Promise<void>;
 }
 
-export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange, onEndReached }: GridViewProps) {
+export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange, onGameFocus, onEndReached }: GridViewProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const containerRef = useRef<HTMLDivElement>(null);
   const endSentinelRef = useRef<HTMLDivElement>(null);
@@ -21,6 +22,12 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
       const child = containerRef.current.children[focusedIndex] as HTMLElement;
       if (child) {
         child.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // Preserve focus on favorites and surrounding controls; only game title
+        // focus follows the existing arrow/controller selection.
+        if (containerRef.current.contains(document.activeElement) &&
+            document.activeElement?.matches('[data-library-game-button]')) {
+          child.querySelector<HTMLButtonElement>('[data-library-game-button]')?.focus({ preventScroll: true });
+        }
       }
     }
   }, [focusedIndex]);
@@ -67,10 +74,17 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
           </div>
           <div className="mt-auto">
              <div className="flex justify-between items-start">
-               <div className="flex-1 truncate pr-2 text-sm font-semibold text-[var(--theme-text)]" title={game.name}>
+               <button type="button" data-library-game-button
+                 aria-current={isFocused ? 'true' : undefined}
+                 onFocus={() => onGameFocus?.(index)}
+                 onClick={(event) => { event.stopPropagation(); onSelectGame(game); }}
+                 className="min-w-0 flex-1 truncate pr-2 text-left text-sm font-semibold text-[var(--theme-text)] focus-visible:outline-2 focus-visible:outline-[var(--theme-primary)]" title={game.name}>
                    {game.name}
-               </div>
+               </button>
                <button 
+                 type="button"
+                 aria-label={`Toggle favorite for ${game.name}`}
+                 aria-pressed={isFavorite(game.id.toString())}
                  onClick={(e) => { e.stopPropagation(); toggleFavorite(game.id.toString()); }}
                  className="text-lg hover:scale-125 transition-transform"
                  title="Toggle Favorite"

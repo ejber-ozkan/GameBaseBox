@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
+import { useCallback, useEffect, useEffectEvent, useState, type Dispatch, type SetStateAction } from 'react';
 import { exitApp, type GameFilters } from '../lib/tauri-bridge';
 import { useGamepad } from './useGamepad';
 import type { Game } from '../types/game';
@@ -555,14 +555,13 @@ export function useUnifiedLibraryNavigation({
   ]);
 
   // Handle keyboard listener binding
+  const handleWindowKeyDown = useEffectEvent((event: KeyboardEvent) => {
+    handleKeyDown(event);
+  });
   useEffect(() => {
-    const handleWindowKeyDown = (event: KeyboardEvent) => {
-      handleKeyDown(event);
-    };
-
     window.addEventListener('keydown', handleWindowKeyDown);
     return () => window.removeEventListener('keydown', handleWindowKeyDown);
-  }, [handleKeyDown]);
+  }, []);
 
   // 3. Gamepad Button listener mapping
   useGamepad({
