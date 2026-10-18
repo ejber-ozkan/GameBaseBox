@@ -403,6 +403,7 @@
     "step4": "4. Standardowy interfejs biblioteki uruchamia się natychmiast po ukończeniu bazy.",
     "targetSqlitePath": "Docelowa ścieżka SQLite",
     "accessEngineHelp": "Jeśli eksport się nie powiedzie, zainstaluj Microsoft Access Database Engine i spróbuj ponownie.",
+    "importPrerequisites": "On Windows, if export fails, install the Microsoft Access Database Engine and try again. On Linux and macOS, install mdbtools (mdb-tables and mdb-export) with your package manager before importing. Common Homebrew and MacPorts locations are checked automatically. For a custom installation, set GAMEBASEBOX_MDBTOOLS_DIR to the folder containing both tools in the app's environment, then restart GameBaseBox.",
     "folderWarning": "Ostrzeżenie o folderze",
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",

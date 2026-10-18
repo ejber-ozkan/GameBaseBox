@@ -390,7 +390,7 @@ export function DatabaseSetupView({
               </div>
 
               <p className="mt-6 text-sm leading-7 text-theme-text-muted/60">
-                {t('setup.accessEngineHelp')}
+                {t('setup.importPrerequisites')}
               </p>
             </section>
           </div>

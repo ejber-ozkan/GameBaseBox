@@ -126,6 +126,14 @@ function renderWithProviders(ui: React.ReactElement) {
 }
 
 describe('DatabaseSetupView', () => {
+  it('explains Windows and Unix import prerequisites before an import starts', () => {
+    renderWithProviders(<SetupImportHarness />);
+    expect(screen.getByText(/On Windows.*Microsoft Access Database Engine/)).toBeTruthy();
+    expect(screen.getByText(/Linux and macOS.*mdb-tables.*mdb-export/)).toBeTruthy();
+    expect(screen.getByText(/GAMEBASEBOX_MDBTOOLS_DIR.*restart GameBaseBox/)).toBeTruthy();
+    expect(screen.getByText(/Homebrew and MacPorts.*automatically/)).toBeTruthy();
+  });
+
   it('starts the real import flow after confirming missing media folders', async () => {
     vi.mocked(importPlatformDatabaseFromMdb).mockClear();
     vi.mocked(importPlatformDatabaseFromMdb).mockResolvedValueOnce({

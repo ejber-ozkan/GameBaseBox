@@ -403,6 +403,7 @@
     "step4": "4. 準備が完了すると、自動的にいつものゲームライブラリ画面が起動します。",
     "targetSqlitePath": "出力先 SQLite パス",
     "accessEngineHelp": "もしエラーが出る場合は、Microsoft Access Database Engine をインストールしてお試しください。",
+    "importPrerequisites": "On Windows, if export fails, install the Microsoft Access Database Engine and try again. On Linux and macOS, install mdbtools (mdb-tables and mdb-export) with your package manager before importing. Common Homebrew and MacPorts locations are checked automatically. For a custom installation, set GAMEBASEBOX_MDBTOOLS_DIR to the folder containing both tools in the app's environment, then restart GameBaseBox.",
     "folderWarning": "フォルダ未設定の確認",
     "noGamesFolderSelected": "ゲームROMフォルダが未選択です",
     "noGamesFolderWarning": "{platform} のゲームROMフォルダが選択されていません。未選択でもカタログの閲覧や検索は可能ですが、ゲーム本体を起動することはできません！",

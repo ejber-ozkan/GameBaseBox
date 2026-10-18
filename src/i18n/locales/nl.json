@@ -403,6 +403,7 @@
     "step4": "4. De normale bibliotheekinterface start zodra de database klaar is.",
     "targetSqlitePath": "Doel SQLite-pad",
     "accessEngineHelp": "Als de export mislukt, installeer dan de Microsoft Access Database Engine en probeer het opnieuw.",
+    "importPrerequisites": "On Windows, if export fails, install the Microsoft Access Database Engine and try again. On Linux and macOS, install mdbtools (mdb-tables and mdb-export) with your package manager before importing. Common Homebrew and MacPorts locations are checked automatically. For a custom installation, set GAMEBASEBOX_MDBTOOLS_DIR to the folder containing both tools in the app's environment, then restart GameBaseBox.",
     "folderWarning": "Mapwaarschuwing",
     "noGamesFolderSelected": "Geen spellenmap geselecteerd",
     "noGamesFolderWarning": "U heeft geen spellenmap geselecteerd voor {platform}. Zonder spellenmap kunt u metagegevens doorzoeken, maar kunnen er geen spellen worden gestart!",
