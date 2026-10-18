@@ -4,6 +4,20 @@ import { mockGames } from '../data/mockGames';
 import { ListView } from './ListView';
 
 describe('ListView', () => {
+  it('provides native sorting buttons and exposes the current sort direction', () => {
+    const { getByRole, rerender } = render(
+      <ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} sortBy="year" sortDirection="desc" />,
+    );
+    for (const name of ['Title', 'Year', 'Publisher', 'Genre']) {
+      expect(getByRole('button', { name }).tagName).toBe('BUTTON');
+    }
+    expect(getByRole('columnheader', { name: 'Year' }).getAttribute('aria-sort')).toBe('descending');
+    expect(getByRole('columnheader', { name: 'Title' }).hasAttribute('aria-sort')).toBe(false);
+    rerender(<ListView games={[mockGames[0]]} onSelectGame={vi.fn()} onSort={vi.fn()} sortBy="name" sortDirection="asc" />);
+    expect(getByRole('columnheader', { name: 'Title' }).getAttribute('aria-sort')).toBe('ascending');
+    expect(getByRole('columnheader', { name: 'Year' }).hasAttribute('aria-sort')).toBe(false);
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();

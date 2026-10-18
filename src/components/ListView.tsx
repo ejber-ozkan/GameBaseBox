@@ -3,12 +3,15 @@ import { useEffect, useRef } from 'react';
 import { getThemeListPresentation } from '../themes/list-presentations';
 import { getC64ViewingPath, getCyberpunkViewingPath } from '../lib/c64-viewing-path';
 import { useTranslation } from '../i18n';
+import type { GameFilters } from '../lib/tauri-bridge';
 
 
 interface ListViewProps {
   games: Game[];
   onSelectGame: (game: Game) => void;
   onSort: (column: keyof Game) => void;
+  sortBy?: GameFilters['sortBy'];
+  sortDirection?: GameFilters['sortDirection'];
   focusedIndex?: number;
   onFocusChange?: (index: number) => void;
   isFavorite?: (gameId: string) => boolean;
@@ -29,6 +32,8 @@ export function ListView({
   games,
   onSelectGame,
   onSort,
+  sortBy = 'name',
+  sortDirection = 'asc',
   focusedIndex = -1,
   onFocusChange,
   isFavorite,
@@ -137,10 +142,20 @@ export function ListView({
           <thead className={`text-xs uppercase ${headerClass}`}>
             <tr>
               <th scope="col" className="w-14 px-3 py-3 text-center">#</th>
-              <th scope="col" className="w-[32%] cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('name')}>{t('common.title')}</th>
-              <th scope="col" className="w-20 cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('year')}>{t('detail.year')}</th>
-              <th scope="col" className="w-[20%] cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('publisher')}>{t('detail.publisher')}</th>
-              <th scope="col" className="w-[18%] cursor-pointer px-3 py-3 hover:text-[var(--theme-text)]" onClick={() => onSort('parentGenre')}>{t('library.genre')}</th>
+              {([
+                ['name', t('common.title'), 'w-[32%]'],
+                ['year', t('detail.year'), 'w-20'],
+                ['publisher', t('detail.publisher'), 'w-[20%]'],
+                ['parentGenre', t('library.genre'), 'w-[18%]'],
+              ] as const).map(([column, label, width]) => (
+                <th key={column} scope="col" className={width}
+                  aria-sort={sortBy === column ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}>
+                  <button type="button" onClick={() => onSort(column)}
+                    className="w-full cursor-pointer px-3 py-3 text-left uppercase hover:text-[var(--theme-text)] focus-visible:outline-2 focus-visible:outline-[var(--theme-primary)] focus-visible:outline-offset-[-2px]">
+                    {label}
+                  </button>
+                </th>
+              ))}
               <th scope="col" className="w-[15%] px-3 py-3 text-right">{t('common.system')}</th>
             </tr>
           </thead>

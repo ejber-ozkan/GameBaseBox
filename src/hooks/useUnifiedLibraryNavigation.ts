@@ -238,6 +238,10 @@ export function useUnifiedLibraryNavigation({
   // 2. Main Key Down handler (combined)
   const handleKeyDown = useCallback((event: KeyEventLike) => {
     if (isControllerKeyboardOpen) return;
+    // Native buttons/links own activation. Arrow shortcuts and controller events
+    // still use virtual library focus; controller events have no DOM target.
+    if ((event.key === 'Enter' || event.key === ' ') && 'target' in event &&
+        event.target instanceof Element && event.target.closest('button, a[href]')) return;
     if (document.activeElement?.tagName === 'INPUT') return;
 
     if (!isFullscreen) {

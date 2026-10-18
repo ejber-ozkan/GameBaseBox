@@ -687,6 +687,8 @@ export function UnifiedLibraryView({
                 games={games}
                 onSelectGame={handleSelectGame}
                 onSort={handleSort}
+                sortBy={filters.sortBy}
+                sortDirection={filters.sortDirection}
                 focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
                 onFocusChange={triggerListFocusChange}
                 isFavorite={isFavorite}
@@ -978,6 +980,8 @@ export function UnifiedLibraryView({
               games={games}
               onSelectGame={handleSelectGame}
               onSort={handleSort}
+              sortBy={filters.sortBy}
+              sortDirection={filters.sortDirection}
               focusedIndex={focusedIndex >= 0 ? focusedIndex : -1}
               onFocusChange={isMouseMode && settings.mouseHoverSelection ? setFocusedIndex : undefined}
               isFavorite={isFavorite}
