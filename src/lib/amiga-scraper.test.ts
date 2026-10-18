@@ -85,6 +85,10 @@ describe('amiga-scraper', () => {
   });
 
   test('downloads extra via downloadMediaAsset with relative path preserved', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ result: [] }),
+    } as Response);
     const spy = vi.spyOn(bridge, 'downloadMediaAsset').mockResolvedValueOnce({
       exists: true,
       absolute_path: 'E:/Extras/WHDLoad/1/1000Miglia_v1.1b.zip',
@@ -102,6 +106,10 @@ describe('amiga-scraper', () => {
   });
 
   test('downloads extra to temp folder when downloadTarget is temp', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ result: [] }),
+    } as Response);
     const spy = vi.spyOn(bridge, 'downloadMediaAsset').mockResolvedValueOnce({
       exists: true,
       absolute_path: 'E:/Extras/.gbbox-temp/WHDLoad/1/1000Miglia_v1.1b.zip',
