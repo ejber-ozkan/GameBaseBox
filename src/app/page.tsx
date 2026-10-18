@@ -264,8 +264,8 @@ function LibraryApp() {
     handlePlatformFolderChange(folderKey, selected);
   }, [handlePlatformFolderChange]);
 
-  const handlePlatformImport = useCallback(async () => {
-    await platformImport.importPlatform();
+  const handlePlatformImport = useCallback(async (options?: { allowMissingFolders?: boolean }) => {
+    await platformImport.importPlatform(options);
   }, [platformImport]);
 
   if (activePlatformSettings.library.importStatus !== 'imported') {
@@ -374,9 +374,9 @@ export default function Home() {
     handleSetupFolderChange(folderKey, selected);
   }, [handleSetupFolderChange]);
 
-  const handleImportSetupPlatform = useCallback(async () => {
+  const handleImportSetupPlatform = useCallback(async (options?: { allowMissingFolders?: boolean }) => {
     setSetupError(null);
-    const result = await setupPlatformImport.importPlatform();
+    const result = await setupPlatformImport.importPlatform(options);
     if (result) {
       await refreshBootstrapStatus();
     }

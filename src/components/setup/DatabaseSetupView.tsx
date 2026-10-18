@@ -33,7 +33,7 @@ interface DatabaseSetupViewProps {
   onPlatformSelect?: (platformId: string) => void;
   onBrowseFolder?: (folderKey: RequiredPlatformFolderKey) => void;
   onFolderChange?: (folderKey: RequiredPlatformFolderKey, value: string) => void;
-  onImport: () => void;
+  onImport: (options?: { allowMissingFolders?: boolean }) => void;
 }
 
 function getThemeIdForPlatform(platformId?: string): string {
@@ -99,7 +99,7 @@ export function DatabaseSetupView({
 
   const handleProceedWarning = () => {
     setShowGamesWarning(false);
-    onImport();
+    onImport({ allowMissingFolders: true });
   };
 
   const handleGoBackWarning = () => {

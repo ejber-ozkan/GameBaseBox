@@ -1,10 +1,40 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { PlatformFolderSettings } from '@/types/platform';
 import { DatabaseSetupView } from './DatabaseSetupView';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { I18nProvider } from '@/i18n';
+import { usePlatformImport } from '@/hooks/usePlatformImport';
+import { createDefaultPlatformSettingsMap } from '@/lib/platform-capabilities';
+import { importPlatformDatabaseFromMdb } from '@/lib/tauri-bridge';
+
+vi.mock('@/lib/tauri-bridge', async (importOriginal) => ({
+  ...await importOriginal<typeof import('@/lib/tauri-bridge')>(),
+  importPlatformDatabaseFromMdb: vi.fn(),
+}));
+
+function SetupImportHarness({ mdbPath = '/fixtures/library.mdb' }: { mdbPath?: string }) {
+  const platformSettings = createDefaultPlatformSettingsMap();
+  platformSettings.c64.library.sourceMdbPath = mdbPath;
+  const importer = usePlatformImport({
+    platformId: 'c64',
+    platformName: 'C64',
+    platformSettings,
+    requiredFolderKeys: ['gamesPath', 'musicPath', 'screenshotsPath', 'extrasPath'],
+    updateSettings: vi.fn(),
+  });
+  return <DatabaseSetupView
+    dbPath="/isolated/gb64.sqlite"
+    error={importer.job.error}
+    folderSettings={platformSettings.c64.folders}
+    importResult={importer.job.result}
+    isImporting={importer.job.status === 'running'}
+    mdbPath={mdbPath}
+    onBrowse={vi.fn()}
+    onImport={importer.importPlatform}
+  />;
+}
 
 const atariFolders: PlatformFolderSettings = {
   platformId: 'atari800',
@@ -96,6 +126,27 @@ function renderWithProviders(ui: React.ReactElement) {
 }
 
 describe('DatabaseSetupView', () => {
+  it('starts the real import flow after confirming missing media folders', async () => {
+    vi.mocked(importPlatformDatabaseFromMdb).mockClear();
+    vi.mocked(importPlatformDatabaseFromMdb).mockResolvedValueOnce({
+      platformId: 'c64', dbPath: '/isolated/gb64.sqlite',
+      exportedTables: 12, importedTables: 12, gameCount: 1,
+    });
+    renderWithProviders(<SetupImportHarness />);
+    fireEvent.click(screen.getByRole('button', { name: 'Build Database' }));
+    expect(importPlatformDatabaseFromMdb).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: /Go Back/ }));
+    expect(importPlatformDatabaseFromMdb).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Build Database' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Proceed Anyway' }));
+    await waitFor(() => expect(importPlatformDatabaseFromMdb).toHaveBeenCalledOnce());
+    expect(importPlatformDatabaseFromMdb).toHaveBeenCalledWith(expect.objectContaining({
+      platformId: 'c64', mdbPath: '/fixtures/library.mdb',
+      folderSettings: expect.objectContaining({ gamesPath: '' }),
+    }));
+    expect(await screen.findByText(/prepared 12 tables/)).toBeTruthy();
+  });
+
   it('shows progress and allows a running import to be cancelled', () => {
     const onCancelImport = vi.fn();
 

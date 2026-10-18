@@ -1,6 +1,40 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
+import { act, renderHook } from '@testing-library/react';
 import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
-import { buildImportedPlatformSettings, createPlatformImportJobId, getMissingRequiredFolderKey } from './usePlatformImport';
+import { buildImportedPlatformSettings, createPlatformImportJobId, getMissingRequiredFolderKey, usePlatformImport } from './usePlatformImport';
+import { importPlatformDatabaseFromMdb } from '../lib/tauri-bridge';
+
+vi.mock('../lib/tauri-bridge', () => ({
+  importPlatformDatabaseFromMdb: vi.fn(),
+  cancelPlatformImport: vi.fn(),
+}));
+
+describe('import validation', () => {
+  test('requires confirmation before allowing missing folders', async () => {
+    vi.mocked(importPlatformDatabaseFromMdb).mockClear();
+    const platformSettings = createDefaultPlatformSettingsMap();
+    platformSettings.c64.library.sourceMdbPath = '/fixtures/library.mdb';
+    const { result } = renderHook(() => usePlatformImport({
+      platformName: 'C64', platformId: 'c64', platformSettings,
+      requiredFolderKeys: ['gamesPath'], updateSettings: vi.fn(),
+    }));
+    await act(async () => { await result.current.importPlatform(); });
+    expect(result.current.job).toMatchObject({ status: 'failed', error: 'Select the games folder first.' });
+    expect(importPlatformDatabaseFromMdb).not.toHaveBeenCalled();
+  });
+
+  test('still requires an MDB after missing-folder confirmation', async () => {
+    vi.mocked(importPlatformDatabaseFromMdb).mockClear();
+    const platformSettings = createDefaultPlatformSettingsMap();
+    const { result } = renderHook(() => usePlatformImport({
+      platformName: 'C64', platformId: 'c64', platformSettings,
+      requiredFolderKeys: ['gamesPath'], updateSettings: vi.fn(),
+    }));
+    await act(async () => { await result.current.importPlatform({ allowMissingFolders: true }); });
+    expect(result.current.job).toMatchObject({ status: 'failed', error: 'Select the C64 MDB file first.' });
+    expect(importPlatformDatabaseFromMdb).not.toHaveBeenCalled();
+  });
+});
 
 describe('buildImportedPlatformSettings', () => {
   test('marks only the imported platform active and retains platform-scoped folders', () => {

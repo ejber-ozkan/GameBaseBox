@@ -118,7 +118,7 @@ export function usePlatformImport({
     }
   }, [job]);
 
-  const importPlatform = useCallback(async () => {
+  const importPlatform = useCallback(async (options?: { allowMissingFolders?: boolean }) => {
     const current = platformSettings[platformId];
     if (!current.library.sourceMdbPath) {
       setJob({ status: 'failed', error: `Select the ${platformName} MDB file first.`, result: null });
@@ -126,7 +126,7 @@ export function usePlatformImport({
     }
 
     const missingFolder = getMissingRequiredFolderKey(current, requiredFolderKeys);
-    if (missingFolder) {
+    if (missingFolder && !options?.allowMissingFolders) {
       setJob({
         status: 'failed',
         error: `Select the ${String(missingFolder).replace('Path', '')} folder first.`,
