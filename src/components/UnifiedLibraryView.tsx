@@ -23,7 +23,7 @@ import { useBigBoxLibraryData } from '../hooks/useBigBoxLibraryData';
 import { useBigBoxScrollSync } from '../hooks/useBigBoxScrollSync';
 import { useFullscreenLayoutMetrics } from '../hooks/useFullscreenLayoutMetrics';
 import { SUPPORTED_PLATFORMS } from '../lib/platform-capabilities';
-import { getC64NavigationRails } from './BigBoxView';
+import { getC64NavigationRails } from '../lib/c64-navigation-rails';
 
 // Windowed Subcomponents
 import { LibraryHeader } from './library/LibraryHeader';

@@ -14,7 +14,7 @@ import { C64EditionGrid } from './library/C64EditionGrid';
 import { CyberpunkCrtGrid } from './library/CyberpunkCrtGrid';
 import { BigBoxExitPrompt } from './bigbox/BigBoxExitPrompt';
 import { HorizontalRail } from './HorizontalRail';
-import { useBigBoxLibraryData, type BigBoxRailCategory } from '../hooks/useBigBoxLibraryData';
+import { useBigBoxLibraryData } from '../hooks/useBigBoxLibraryData';
 import { getLibraryRefreshToken } from '../hooks/useLibraryBrowserState';
 import { useBigBoxNavigation } from '../hooks/useBigBoxNavigation';
 import { useBigBoxScrollSync } from '../hooks/useBigBoxScrollSync';
@@ -26,6 +26,8 @@ import { useFullscreenLayoutMetrics } from '../hooks/useFullscreenLayoutMetrics'
 import { SUPPORTED_PLATFORMS } from '../lib/platform-capabilities';
 import type { PlatformId } from '../types/platform';
 import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '../lib/library-backgrounds';
+import { getC64NavigationRails } from '../lib/c64-navigation-rails';
+export { getC64NavigationRails } from '../lib/c64-navigation-rails';
 
 interface BigBoxViewProps {
   settings: Settings;
@@ -48,29 +50,6 @@ export interface BigBoxSessionState {
   focusedGameId: string | null;
   railFocusIndices: Record<string, number>;
   railId: string | null;
-}
-
-export function getC64NavigationRails(rails: BigBoxRailCategory[], flatGames: Game[]): BigBoxRailCategory[] {
-  const gamesByLetter = new Map<string, Game[]>();
-  for (let i = 0; i < flatGames.length; i++) {
-    const game = flatGames[i];
-    const firstChar = game.name.trim().charAt(0).toUpperCase();
-    const letter = /[A-Z]/.test(firstChar) ? firstChar : '#';
-    let list = gamesByLetter.get(letter);
-    if (!list) {
-      list = [];
-      gamesByLetter.set(letter, list);
-    }
-    list.push(game);
-  }
-
-  return rails.map((rail) => {
-    if (rail.type !== 'alphabet' || !rail.letter) {
-      return rail;
-    }
-
-    return { ...rail, games: gamesByLetter.get(rail.letter) ?? [] };
-  });
 }
 
 export function BigBoxView({
