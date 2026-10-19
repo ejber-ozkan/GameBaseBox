@@ -172,7 +172,11 @@ pub async fn download_media_asset_internal(
     }
 
     let client = reqwest::Client::builder()
-        .user_agent("GameBaseBox/0.6.7 (https://github.com/ejber-ozkan/GameBaseBox)")
+        .user_agent(concat!(
+            "GameBaseBox/",
+            env!("CARGO_PKG_VERSION"),
+            " (https://github.com/ejber-ozkan/GameBaseBox)"
+        ))
         .redirect(reqwest::redirect::Policy::limited(10))
         .timeout(Duration::from_secs(300))
         .build()

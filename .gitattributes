@@ -1,3 +1,14 @@
 /.editorconfig text eol=lf
 /.gitattributes text eol=lf
 *.toml text eol=lf
+
+# Keep repository support data out of exported source archives.
+.beads export-ignore
+graphify-out export-ignore
+.claude export-ignore
+.codex export-ignore
+.agents export-ignore
+.agent export-ignore
+plans export-ignore
+AGENTS.override.md export-ignore
+handover*.md export-ignore

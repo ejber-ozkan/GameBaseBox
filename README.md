@@ -352,6 +352,8 @@ Temporary extraction and launch playlists are generated outside your source libr
 
 ## Release Notes
 
+The [0.7.0 candidate notes](RELEASE_NOTES_0.7.0.md) describe the current candidate, retained validation gaps and rollback guidance.
+
 See [CHANGELOG.md](CHANGELOG.md), [RELEASE_NOTES_0.6.7.md](RELEASE_NOTES_0.6.7.md), [RELEASE_NOTES_0.6.6.md](RELEASE_NOTES_0.6.6.md), [RELEASE_NOTES_0.6.5.md](RELEASE_NOTES_0.6.5.md), [RELEASE_NOTES_0.6.4.md](RELEASE_NOTES_0.6.4.md), [RELEASE_NOTES_0.6.3.md](RELEASE_NOTES_0.6.3.md), [RELEASE_NOTES_0.6.2.md](RELEASE_NOTES_0.6.2.md), [RELEASE_NOTES_0.6.1.md](RELEASE_NOTES_0.6.1.md), [RELEASE_NOTES_0.6.0.md](RELEASE_NOTES_0.6.0.md), [RELEASE_NOTES_0.5.4.md](RELEASE_NOTES_0.5.4.md), [RELEASE_NOTES_0.5.3.md](RELEASE_NOTES_0.5.3.md), [RELEASE_NOTES_0.5.2.md](RELEASE_NOTES_0.5.2.md), [RELEASE_NOTES_0.5.1.md](RELEASE_NOTES_0.5.1.md), [RELEASE_NOTES_0.5.0.md](RELEASE_NOTES_0.5.0.md), [RELEASE_NOTES_0.4.1.md](RELEASE_NOTES_0.4.1.md), [RELEASE_NOTES_0.4.0.md](RELEASE_NOTES_0.4.0.md), [RELEASE_NOTES_0.3.1.md](RELEASE_NOTES_0.3.1.md), [RELEASE_NOTES_0.3.0.md](RELEASE_NOTES_0.3.0.md), [RELEASE_NOTES_0.2.0.md](RELEASE_NOTES_0.2.0.md), and [RELEASE_NOTES_0.1.0.md](RELEASE_NOTES_0.1.0.md) for GBBox release notes.
 
 

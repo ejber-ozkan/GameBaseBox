@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.7.0] - Candidate
+
+### Fixed
+- Preserve rooted launch paths and isolate contributor queries by platform.
+- Ignore obsolete library requests, retain paged browsing after details, sort before pagination and invalidate data after reimport.
+- Bound archive extraction and clean failed launch sessions; report VICE fliplist write failures.
+- Improve keyboard sorting, game-title focus and fullscreen navigation.
+
+### Changed
+- Add Linux/macOS MDB import through installed mdbtools with staged cleanup and prerequisite guidance.
+- Avoid inactive library data loads and retire unused views after active-path coverage.
+- Patch selected dependency advisories and gate release publication on verified bundles and checksums.
+- Reconcile version metadata to 0.7.0 for candidate preparation. See [candidate notes](RELEASE_NOTES_0.7.0.md) for retained validation gaps and rollback guidance.
+
 ## [0.6.7] - 2026-08-31
 
 ### Added
@@ -279,7 +293,7 @@ All notable changes to this project will be documented in this file.
 - Rebranded public-facing app metadata, README copy, and app chrome from 64Box to GBBox.
 - Reset public release version metadata to `0.1.0` for the clean-history `GameBaseBox` repository.
 
-## [0.7.0] - 2026-04-19
+## Pre-reset [0.7.0] - 2026-04-19
 
 ### Added
 - Created comprehensive architecture documentation (`docs/architecture-review.md`) outlining the Summary vs Detail payload paradigm, mathematical coordinate-based navigation, and the isolated SQLite query-builder architecture.

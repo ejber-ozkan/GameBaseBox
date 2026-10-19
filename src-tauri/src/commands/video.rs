@@ -401,7 +401,11 @@ pub async fn download_archive_extra_video(
     let search_pattern = archive_search_pattern(stem);
 
     let client = reqwest::Client::builder()
-        .user_agent("GBBox/0.5.3 (https://github.com/ejber-ozkan/GameBaseBox)")
+        .user_agent(concat!(
+            "GBBox/",
+            env!("CARGO_PKG_VERSION"),
+            " (https://github.com/ejber-ozkan/GameBaseBox)"
+        ))
         .build()
         .map_err(|error| error.to_string())?;
     let bundled_identifier = bundled_archive_identifier(stem);
