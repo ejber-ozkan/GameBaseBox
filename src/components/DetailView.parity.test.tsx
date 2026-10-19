@@ -118,7 +118,7 @@ describe('active unified detail preservation', () => {
     expect(screen.getAllByText('Fixture Musician').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Fixture Programmer').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Fixture Artist').length).toBeGreaterThan(0);
-    fireEvent.click(screen.getByRole('button', { name: 'Library', exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: 'Library' }));
     expect(onBack).toHaveBeenCalledOnce();
   });
 });

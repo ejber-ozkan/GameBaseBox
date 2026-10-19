@@ -277,9 +277,11 @@ describe('ResolvedExtraMedia video compatibility', () => {
     render(<ResolvedExtraMedia extra={video} extrasPath="E:/Extras" className="media" mode="preview" />);
     const convertButton = await screen.findByRole('button', { name: /create compatible MP4 copy/i });
     let dismissMessage: (() => void) | undefined;
+    const timeoutHandle = setTimeout(() => {}, 0);
+    clearTimeout(timeoutHandle);
     const timeoutSpy = vi.spyOn(globalThis, 'setTimeout').mockImplementation((handler) => {
       dismissMessage = handler as () => void;
-      return 1 as ReturnType<typeof setTimeout>;
+      return timeoutHandle;
     });
 
     try {

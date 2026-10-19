@@ -82,7 +82,7 @@ const cyberpunkTheme = {
   displayName: 'Cyberpunk CRT',
 };
 
-let currentTheme = mockTheme;
+let currentTheme: typeof mockTheme | typeof c64Theme = mockTheme;
 
 vi.mock('../contexts/ThemeContext', () => ({
   useTheme: () => ({
@@ -192,6 +192,9 @@ function makeSettings(
     mouseHoverSelection: true,
     scrollNavigation: true,
     menuSoundEffects: false,
+    c64RasterLines: true,
+    themeId: 'arcade-void',
+    language: 'system',
     bigBoxAnimateVertical: true,
     confirmFullscreenExit: true,
     lastBigBoxRailId: null,

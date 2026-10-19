@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit --incremental false",
     "test:frontend": "vitest run",
     "test:backend": "cargo test --manifest-path src-tauri/Cargo.toml -- --test-threads=1",
     "test:e2e": "playwright test",

@@ -12,6 +12,8 @@ import { ControllerSearchKeyboard } from '../components/ControllerSearchKeyboard
 import { CyberpunkCrtGrid } from '../components/library/CyberpunkCrtGrid';
 import { PathsSettingsTab } from '../components/settings/PathsSettingsTab';
 import { vi } from 'vitest';
+import { mockGames } from '../data/mockGames';
+import type { Game } from '../types/game';
 
 vi.mock('../components/ImageSlider', () => ({
   ImageSlider: ({ alt }: { alt?: string }) => <div data-testid="image-slider">{alt}</div>,
@@ -28,13 +30,10 @@ function renderWithProviders(ui: React.ReactNode, language = 'tr') {
       value={{
         settings: customSettings,
         updateSettings: () => {},
-        resetSettings: () => {},
+        setActivePlatform: () => {},
         resolveMediaPath: (p) => p,
+        findAllVariants: async () => [],
         markAsPlayed: () => {},
-        clearHistory: () => {},
-        playedGames: [],
-        isLoading: false,
-        error: null,
       }}
     >
       <ThemeProvider>
@@ -176,13 +175,13 @@ describe('Comprehensive UI Localization Tests', () => {
   });
 
   it('renders CyberpunkCrtGrid shelf headings in Turkish (SON OYNANANLAR, FAVORİLER, KLASİKLER)', () => {
-    const mockGame = {
+    const mockGame: Game = {
+      ...mockGames[0],
       id: 101,
       name: 'Turrican',
       year: 1990,
       publisher: { id: 1, name: 'Rainbow Arts' },
       developer: { id: 1, name: 'Factor 5' },
-      genre: 'Action',
       parentGenre: 'Action',
       subGenre: 'Shooter',
       isClassic: true,

@@ -9,8 +9,8 @@ describe('ListView', () => {
     const onGameFocus = vi.fn();
     const props = { games: mockGames.slice(0, 2), onSelectGame, onSort: vi.fn(), onGameFocus };
     const { getByRole, rerender } = render(<ListView {...props} focusedIndex={0} />);
-    const first = getByRole('button', { name: mockGames[0].name, exact: true });
-    const second = getByRole('button', { name: mockGames[1].name, exact: true });
+    const first = getByRole('button', { name: mockGames[0].name });
+    const second = getByRole('button', { name: mockGames[1].name });
     first.focus();
     expect(onGameFocus).toHaveBeenCalledWith(0);
     fireEvent.click(first);
@@ -18,7 +18,7 @@ describe('ListView', () => {
     rerender(<ListView {...props} focusedIndex={1} />);
     expect(document.activeElement).toBe(second);
     expect(second.getAttribute('aria-current')).toBe('true');
-    const year = getByRole('button', { name: 'Year', exact: true });
+    const year = getByRole('button', { name: 'Year' });
     year.focus();
     rerender(<ListView {...props} focusedIndex={0} />);
     expect(document.activeElement).toBe(year);

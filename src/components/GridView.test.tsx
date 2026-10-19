@@ -20,13 +20,13 @@ describe('GridView', () => {
     const onGameFocus = vi.fn();
     const props = { games: mockGames.slice(0, 2), onSelectGame, onGameFocus };
     const { getByRole, rerender } = render(<GridView {...props} focusedIndex={0} />);
-    const first = getByRole('button', { name: mockGames[0].name, exact: true });
+    const first = getByRole('button', { name: mockGames[0].name });
     first.focus();
     expect(onGameFocus).toHaveBeenCalledWith(0);
     fireEvent.click(first);
     expect(onSelectGame).toHaveBeenCalledExactlyOnceWith(mockGames[0]);
     rerender(<GridView {...props} focusedIndex={1} />);
-    expect(document.activeElement).toBe(getByRole('button', { name: mockGames[1].name, exact: true }));
+    expect(document.activeElement).toBe(getByRole('button', { name: mockGames[1].name }));
     const favorite = getByRole('button', { name: `Toggle favorite for ${mockGames[1].name}` });
     favorite.focus();
     fireEvent.click(favorite);

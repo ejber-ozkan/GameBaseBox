@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../../data/mockGames';
 import { BigBoxAlphabetRail } from './BigBoxAlphabetRail';
-import { FullscreenLayoutMetrics } from '../../hooks/useFullscreenLayoutMetrics';
+import { buildFullscreenLayoutMetrics, type FullscreenLayoutMetrics } from '../../hooks/useFullscreenLayoutMetrics';
 
 vi.mock('../BigBoxTileMedia', () => ({
   BigBoxTileMedia: ({ enabled }: { enabled: boolean }) => (
@@ -11,6 +11,7 @@ vi.mock('../BigBoxTileMedia', () => ({
 }));
 
 const mockLayout: FullscreenLayoutMetrics = {
+  ...buildFullscreenLayoutMetrics('standard', { width: 1920, height: 1080, physicalWidth: 1920, physicalHeight: 1080, dpr: 1 }),
   gridColumns: 4,
   gridGap: 16,
   railPaddingX: 24,
@@ -22,8 +23,6 @@ const mockLayout: FullscreenLayoutMetrics = {
   tileFocusScale: 1.1,
   maxVisibleSubGenres: 5,
   headerPaddingY: 16,
-  headerTitleGap: 12,
-  badgeFontSize: 10,
 };
 
 describe('BigBoxAlphabetRail', () => {

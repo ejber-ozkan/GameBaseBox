@@ -76,6 +76,7 @@ describe('Scraper Libraries', () => {
 
       const result = await searchTheGamesDB('apikey', 'C64 Legend');
       expect(result).not.toBeNull();
+      if (result === null) throw new Error('Expected TheGamesDB result');
       expect(result.game_title).toBe('C64 Legend');
       expect(result.images).toHaveLength(1);
       expect(result.base_url).toBe('http://images.net/');

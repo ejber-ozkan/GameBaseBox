@@ -397,7 +397,7 @@ describe('BigBox complete-result continuation', () => {
   it.each(['search', 'letter'] as const)('continues %s beyond its first page as focus approaches the end', async (kind) => {
     const pageSize = kind === 'search' ? 500 : 1000;
     const rows = Array.from({ length: pageSize + 1 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
-    vi.mocked(getDbGames).mockImplementation(async (limit, offset, filters) => filters?.isClassic ? [] : rows.slice(offset, offset + limit));
+    vi.mocked(getDbGames).mockImplementation(async (limit = 50, offset = 0, filters) => filters?.isClassic ? [] : rows.slice(offset, offset + limit));
     const railId = kind === 'search' ? 'search-results' : 'alpha-#';
     const props = {
       activeRailIndex: 0, activePlatformId: 'c64', favorites: emptyIds, recentlyPlayedIds: emptyIds,
@@ -499,10 +499,10 @@ describe('BigBox complete-result continuation', () => {
 
   it('preserves controller focus while appending and can open a game beyond the first search page', async () => {
     const rows = Array.from({ length: 501 }, (_, index) => ({ ...mockGames[0], id: index + 1 }));
-    vi.mocked(getDbGames).mockImplementation(async (limit, offset, filters) => filters?.isClassic ? [] : rows.slice(offset, offset + limit));
+    vi.mocked(getDbGames).mockImplementation(async (limit = 50, offset = 0, filters) => filters?.isClassic ? [] : rows.slice(offset, offset + limit));
     const noop = vi.fn();
     const { result } = renderHook(() => {
-      const [focus, setFocus] = useState({ 'search-results': 490 });
+      const [focus, setFocus] = useState<Record<string, number>>({ 'search-results': 490 });
       const [selected, setSelected] = useState<Game | null>(null);
       const data = useBigBoxLibraryData({
         activeRailIndex: 0, activePlatformId: 'c64', favorites: emptyIds, recentlyPlayedIds: emptyIds,

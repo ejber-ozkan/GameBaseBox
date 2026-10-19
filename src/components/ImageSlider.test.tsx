@@ -77,7 +77,7 @@ describe('ImageSlider', () => {
           value: originalObserver,
         });
       } else {
-        delete globalWithObserver.IntersectionObserver;
+        Reflect.deleteProperty(globalWithObserver, 'IntersectionObserver');
       }
     }
   });

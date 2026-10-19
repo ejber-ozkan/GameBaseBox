@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
 import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
 import type { Game } from '../types/game';
+import type { Settings } from '../contexts/SettingsContext';
 
 function deferredGames() {
   let resolve!: (games: Game[]) => void;
@@ -14,7 +15,12 @@ const mockUpdateSettings = vi.fn();
 const mockToggleFavorite = vi.fn();
 const mockGetDbGames = vi.fn();
 
-const baseSettings = {
+const baseSettings: Settings = {
+  activePlatformId: 'c64',
+  lastUsedPlatformId: 'c64',
+  c64RasterLines: true,
+  themeId: 'arcade-void',
+  language: 'system',
   activeScraper: 'emumovies',
   bigBoxAnimateVertical: true,
   confirmFullscreenExit: true,
@@ -323,7 +329,7 @@ describe('useLibraryBrowserState', () => {
       120,
       0,
       expect.objectContaining({ hideAdult: false }),
-      undefined,
+      'c64',
     ]);
   });
 
@@ -339,7 +345,7 @@ describe('useLibraryBrowserState', () => {
       120,
       120,
       expect.objectContaining({ hideAdult: false }),
-      undefined,
+      'c64',
     ));
   });
 
@@ -359,7 +365,7 @@ describe('useLibraryBrowserState', () => {
       120,
       120,
       expect.objectContaining({ hideAdult: false }),
-      undefined,
+      'c64',
     );
     expect(result.current.games).toHaveLength(121);
   });
@@ -611,12 +617,12 @@ describe('useLibraryBrowserState', () => {
     mockGetDbGames.mockClear();
     await act(async () => result.current.handleSort('year'));
     expect(result.current.effectiveFilters).toMatchObject({ sortBy: 'year', sortDirection: 'asc' });
-    expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.objectContaining({ sortBy: 'year', sortDirection: 'asc' }), undefined);
+    expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.objectContaining({ sortBy: 'year', sortDirection: 'asc' }), 'c64');
     await act(async () => { await result.current.loadNextPage(); });
-    expect(mockGetDbGames).toHaveBeenCalledWith(120, 120, expect.objectContaining({ sortBy: 'year', sortDirection: 'asc' }), undefined);
+    expect(mockGetDbGames).toHaveBeenCalledWith(120, 120, expect.objectContaining({ sortBy: 'year', sortDirection: 'asc' }), 'c64');
     mockGetDbGames.mockClear();
     await act(async () => result.current.handleSort('year'));
-    expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.objectContaining({ sortBy: 'year', sortDirection: 'desc' }), undefined);
+    expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.objectContaining({ sortBy: 'year', sortDirection: 'desc' }), 'c64');
     expect(result.current.games).toHaveLength(120);
   });
 
@@ -626,7 +632,7 @@ describe('useLibraryBrowserState', () => {
     await act(async () => {});
     expect(mockGetDbGames).not.toHaveBeenCalled();
     await act(async () => result.current.setViewMode('list'));
-    expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.any(Object), undefined);
+    expect(mockGetDbGames).toHaveBeenCalledWith(120, 0, expect.any(Object), 'c64');
   });
 
   it('rejects an unfinished paged query after switching to fullscreen grid', async () => {

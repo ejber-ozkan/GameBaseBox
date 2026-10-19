@@ -6,6 +6,16 @@ const require = createRequire(import.meta.url);
 const workflow = require('js-yaml').load(readFileSync('.github/workflows/release-bundles.yml', 'utf8'));
 
 describe('release workflow', () => {
+  it('checks application and test types in both quality workflows', () => {
+    const quality = require('js-yaml').load(readFileSync('.github/workflows/quality.yml', 'utf8'));
+    const scripts = JSON.parse(readFileSync('package.json', 'utf8')).scripts;
+    expect(scripts.typecheck).toContain('tsc --noEmit');
+    for (const job of [quality.jobs.quality, workflow.jobs.quality]) {
+      const commands = job.steps.map((step: { run?: string }) => step.run || '').join('\n');
+      expect(commands).toContain('npm run typecheck');
+    }
+  });
+
   it('validates versions before quality, draft creation or platform builds', () => {
     expect(workflow.permissions).toEqual({ contents: 'read' });
     expect(workflow.jobs.validate.permissions).toEqual({ contents: 'read' });

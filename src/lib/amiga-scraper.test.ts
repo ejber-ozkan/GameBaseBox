@@ -13,27 +13,27 @@ describe('amiga-scraper', () => {
     vi.restoreAllMocks();
   });
   test('extracts filename from extra path', () => {
-    expect(getExtraFilename({ id: '1', name: 'WHDLoad', path: 'WHDLoad\\T\\Turrican2_v1.7_0029.zip' })).toBe('Turrican2_v1.7_0029.zip');
-    expect(getExtraFilename({ id: '2', name: 'SPS', path: 'SPS/1/0029_Turrican II - The Final Fight.zip' })).toBe('0029_Turrican II - The Final Fight.zip');
+    expect(getExtraFilename({ id: '1', name: 'WHDLoad', type: 'file', path: 'WHDLoad\\T\\Turrican2_v1.7_0029.zip' })).toBe('Turrican2_v1.7_0029.zip');
+    expect(getExtraFilename({ id: '2', name: 'SPS', type: 'file', path: 'SPS/1/0029_Turrican II - The Final Fight.zip' })).toBe('0029_Turrican II - The Final Fight.zip');
   });
 
   test('derives WHDLoad Archive.org download URL with encoding', () => {
-    const whdExtra = { id: '1', name: 'WHDLoad', path: 'WHDLoad\\1\\1000Miglia_v1.1b.zip' };
+    const whdExtra = { id: '1', name: 'WHDLoad', type: 'file', path: 'WHDLoad\\1\\1000Miglia_v1.1b.zip' };
     expect(getAmigaArchiveDownloadUrl(whdExtra)).toBe(
       'https://archive.org/download/Amiga_WHD_Games/1000Miglia_v1.1b.zip'
     );
   });
 
   test('derives SPS Archive.org download URL with spaces encoded', () => {
-    const spsExtra = { id: '2', name: 'SPS', path: 'SPS\\1\\0029_Turrican II - The Final Fight.zip' };
+    const spsExtra = { id: '2', name: 'SPS', type: 'file', path: 'SPS\\1\\0029_Turrican II - The Final Fight.zip' };
     expect(getAmigaArchiveDownloadUrl(spsExtra)).toBe(
       'https://archive.org/download/commodore-amiga-games-sps/0029_Turrican%20II%20-%20The%20Final%20Fight.zip'
     );
   });
 
   test('validates downloadable Amiga extras only for Amiga platform', () => {
-    const whdExtra = { id: '1', name: 'WHDLoad', path: 'WHDLoad\\T\\Turrican2.zip' };
-    const docExtra = { id: '2', name: 'Manual', path: 'Docs\\manual.pdf' };
+    const whdExtra = { id: '1', name: 'WHDLoad', type: 'file', path: 'WHDLoad\\T\\Turrican2.zip' };
+    const docExtra = { id: '2', name: 'Manual', type: 'file', path: 'Docs\\manual.pdf' };
 
     expect(isAmigaDownloadableExtra(whdExtra, 'amiga')).toBe(true);
     expect(isAmigaDownloadableExtra(whdExtra, 'c64')).toBe(false);
@@ -94,7 +94,7 @@ describe('amiga-scraper', () => {
       absolute_path: 'E:/Extras/WHDLoad/1/1000Miglia_v1.1b.zip',
     });
 
-    const whdExtra = { id: '1', name: 'WHDLoad', path: 'WHDLoad\\1\\1000Miglia_v1.1b.zip' };
+    const whdExtra = { id: '1', name: 'WHDLoad', type: 'file', path: 'WHDLoad\\1\\1000Miglia_v1.1b.zip' };
     const result = await downloadAmigaExtra(whdExtra, 'E:/Extras');
 
     expect(result.exists).toBe(true);
@@ -115,7 +115,7 @@ describe('amiga-scraper', () => {
       absolute_path: 'E:/Extras/.gbbox-temp/WHDLoad/1/1000Miglia_v1.1b.zip',
     });
 
-    const whdExtra = { id: '1', name: 'WHDLoad', path: 'WHDLoad\\1\\1000Miglia_v1.1b.zip' };
+    const whdExtra = { id: '1', name: 'WHDLoad', type: 'file', path: 'WHDLoad\\1\\1000Miglia_v1.1b.zip' };
     const result = await downloadAmigaExtra(whdExtra, 'E:/Extras', 'temp');
 
     expect(result.exists).toBe(true);
@@ -138,7 +138,7 @@ describe('amiga-scraper', () => {
       }),
     } as Response);
 
-    const spsExtra = { id: '2', name: 'SPS', path: 'SPS\\1\\0002_Commando.zip' };
+    const spsExtra = { id: '2', name: 'SPS', type: 'file', path: 'SPS\\1\\0002_Commando.zip' };
     const { resolveAmigaArchiveDownloadUrl } = await import('./amiga-scraper');
     const url = await resolveAmigaArchiveDownloadUrl(spsExtra);
 

@@ -1,21 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { buildPlatformAssetPath } from './platform-launch';
-import { Settings } from '../types';
+import { defaultSettings, type Settings } from '../contexts/SettingsContext';
+import { createDefaultPlatformSettingsMap } from './platform-capabilities';
 
 describe('buildPlatformAssetPath', () => {
   const baseSettings: Settings = {
+    ...defaultSettings,
     activePlatformId: 'atarist',
     platformSettings: {
+      ...createDefaultPlatformSettingsMap(),
       atarist: {
-        emulator: {
-          path: 'C:/emulators/Hatari/hatari.exe',
-          profileId: 'hatari-atarist',
-          corePath: '',
-          autoStartAudio: true,
-          showStatusLine: true,
-          driveSound: true,
-        },
+        ...createDefaultPlatformSettingsMap().atarist,
         folders: {
+          ...createDefaultPlatformSettingsMap().atarist.folders,
           gamesPath: 'E:\\Backups\\RETRO-BACKUPS\\AtariST\\Games',
           extrasPath: 'E:\\Backups\\RETRO-BACKUPS\\AtariST\\Extras',
           screenshotsPath: '',
@@ -23,7 +20,7 @@ describe('buildPlatformAssetPath', () => {
         },
       },
     },
-  } as unknown as Settings;
+  };
 
   it.each([
     ['/home/user/Games', '/home/user/Games/nested/game.zip'],
@@ -63,8 +60,10 @@ describe('buildPlatformAssetPath', () => {
 
   it('strips surrounding quotes and whitespace from paths copied from Windows Explorer', () => {
     const quotedSettings: Settings = {
+      ...baseSettings,
       activePlatformId: 'atarist',
       platformSettings: {
+        ...baseSettings.platformSettings,
         atarist: {
           ...baseSettings.platformSettings.atarist,
           folders: {
@@ -73,7 +72,7 @@ describe('buildPlatformAssetPath', () => {
           },
         },
       },
-    } as unknown as Settings;
+    };
 
     const fullPath = buildPlatformAssetPath(
       quotedSettings,
@@ -85,8 +84,10 @@ describe('buildPlatformAssetPath', () => {
 
   it('falls back to Games/Extras when extrasPath is blank', () => {
     const blankExtrasSettings: Settings = {
+      ...baseSettings,
       activePlatformId: 'atarist',
       platformSettings: {
+        ...baseSettings.platformSettings,
         atarist: {
           ...baseSettings.platformSettings.atarist,
           folders: {
@@ -95,7 +96,7 @@ describe('buildPlatformAssetPath', () => {
           },
         },
       },
-    } as unknown as Settings;
+    };
 
     const fullPath = buildPlatformAssetPath(
       blankExtrasSettings,

@@ -76,6 +76,7 @@ jobs:
       - name: Run required quality gates
         run: |
           npm run lint
+          npm run typecheck
           npm run test:frontend
           npm run test:backend
           npm audit --omit=dev

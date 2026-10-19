@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import { PlatformSwitcher } from './PlatformSwitcher';
-import { createDefaultPlatformSettings } from '../lib/platform-capabilities';
+import { createDefaultPlatformSettings, createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
 import type { PlatformId, PlatformSettings } from '../types/platform';
 
 describe('PlatformSwitcher', () => {
@@ -25,6 +25,7 @@ describe('PlatformSwitcher', () => {
 
   test('lists imported GameBases first and makes unimported platforms obvious in text', () => {
     const platformSettings: Record<PlatformId, PlatformSettings> = {
+      ...createDefaultPlatformSettingsMap(),
       c64: {
         ...createDefaultPlatformSettings('c64'),
         library: { ...createDefaultPlatformSettings('c64').library, importStatus: 'imported' },
