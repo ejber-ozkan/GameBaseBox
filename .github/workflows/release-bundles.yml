@@ -150,7 +150,9 @@ jobs:
   build-linux:
     needs: [validate, quality]
     if: github.event_name == 'push' || github.event.inputs.build_linux == 'true'
-    runs-on: ubuntu-latest
+    # Build against glibc 2.35; newer runners produce binaries that cannot
+    # launch on Ubuntu 22.04 (including the AppImage catalog test system).
+    runs-on: ubuntu-22.04
     permissions:
       contents: read
     timeout-minutes: 30
@@ -201,6 +203,7 @@ jobs:
           validation_dir="$(mktemp -d)"
           (cd "$validation_dir" && "$appimage" --appimage-extract > extract.log)
           node scripts/release-safety.mjs appdir "$validation_dir/squashfs-root"
+          bash scripts/validate-appimage-glibc.sh "$validation_dir/squashfs-root"
           node scripts/release-safety.mjs checksum release-assets linux
 
       - name: Upload Linux bundles

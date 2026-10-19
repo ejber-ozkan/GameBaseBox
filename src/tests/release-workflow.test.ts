@@ -6,6 +6,13 @@ const require = createRequire(import.meta.url);
 const workflow = require('js-yaml').load(readFileSync('.github/workflows/release-bundles.yml', 'utf8'));
 
 describe('release workflow', () => {
+  it('builds portable Linux bundles on the Ubuntu 22.04 glibc baseline', () => {
+    const linux = workflow.jobs['build-linux'];
+    expect(linux['runs-on']).toBe('ubuntu-22.04');
+    const commands = linux.steps.map((step: { run?: string }) => step.run || '').join('\n');
+    expect(commands).toContain('scripts/validate-appimage-glibc.sh');
+    expect(commands.indexOf('scripts/validate-appimage-glibc.sh')).toBeLessThan(commands.indexOf('scripts/release-safety.mjs checksum'));
+  });
   it('validates extracted Linux bundle metadata before checksumming and upload', () => {
     const steps = workflow.jobs['build-linux'].steps;
     const commands = steps.map((step: { run?: string }) => step.run || '').join('\n');

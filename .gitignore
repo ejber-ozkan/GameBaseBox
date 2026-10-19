@@ -84,6 +84,7 @@ design_brief.md
 !/scripts/import_gb64.sh
 !/scripts/mdb-export-all.sh
 !/scripts/release-safety.mjs
+!/scripts/validate-appimage-glibc.sh
 !/scripts/sqlite_support_config.js
 /src-tauri/test_output*.txt
 

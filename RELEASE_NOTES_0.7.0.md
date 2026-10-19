@@ -14,6 +14,7 @@ This release improves library correctness, database importing and keyboard navig
 - Retire unused library and detail implementations after adding coverage to the active views.
 - Update selected JavaScript and Rust dependencies and verify complete platform bundles and checksums before release publication.
 - Fix the Linux AppImage icon link so it works away from the build machine, and validate packaged icons, desktop entries and launch files in CI.
+- Rebuild the Linux AppImage on Ubuntu 22.04 for glibc 2.35 compatibility, checking the app and bundled libraries before upload. The replacement keeps version 0.7.0.
 - Add a saved sound-set choice in Theme & UI settings, with synthesized retro cues alongside the original samples.
 - Refresh the README with animated demos and remove the unused bundled Asterix SID test page and music file.
 
