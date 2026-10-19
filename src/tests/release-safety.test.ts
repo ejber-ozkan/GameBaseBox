@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, chmodSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -89,5 +89,56 @@ describe('release asset verification', () => {
       if (defect === 'manifest') writeFileSync(join(root, 'release-assets/SHA256SUMS'), 'invalid');
       expect(run(root, 'verify', 'release-assets').status, defect).toBe(1);
     }
+  });
+});
+
+function appdir() {
+  const root = fixture();
+  mkdirSync(join(root, 'usr/bin'), { recursive: true });
+  writeFileSync(join(root, 'AppRun'), '#!/bin/sh\n');
+  writeFileSync(join(root, 'usr/bin/gamebasebox'), 'executable');
+  chmodSync(join(root, 'AppRun'), 0o755);
+  chmodSync(join(root, 'usr/bin/gamebasebox'), 0o755);
+  const png = Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex');
+  writeFileSync(join(root, '.DirIcon'), png);
+  writeFileSync(join(root, 'gamebasebox.png'), png);
+  writeFileSync(join(root, 'GBBox.desktop'), '[Desktop Entry]\nType=Application\nName=GBBox\nExec=gamebasebox\nIcon=gamebasebox\n');
+  return root;
+}
+
+describe('AppDir validation', () => {
+  it('accepts a portable AppDir', () => {
+    expect(run(appdir(), 'appdir', '.').status).toBe(0);
+  });
+  it.each(['.DirIcon', 'AppRun', 'GBBox.desktop', 'gamebasebox.png', 'usr/bin/gamebasebox'])('rejects missing %s', (name) => {
+    const root = appdir();
+    rmSync(join(root, name));
+    const result = run(root, 'appdir', '.');
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(name);
+  });
+  it('rejects an invalid icon', () => {
+    const root = appdir();
+    writeFileSync(join(root, '.DirIcon'), 'not an icon');
+    expect(run(root, 'appdir', '.').stderr).toContain('PNG');
+  });
+  it.skipIf(process.platform === 'win32')('rejects a build-machine icon link even when its target exists', () => {
+    const root = appdir();
+    rmSync(join(root, '.DirIcon'));
+    symlinkSync(join(root, 'gamebasebox.png'), join(root, '.DirIcon'));
+    expect(run(root, 'appdir', '.').stderr).toContain('relative');
+  });
+  it.skipIf(process.platform === 'win32')('accepts relative icon links and rejects dangling links', () => {
+    const root = appdir();
+    rmSync(join(root, '.DirIcon'));
+    symlinkSync('gamebasebox.png', join(root, '.DirIcon'));
+    expect(run(root, 'appdir', '.').status).toBe(0);
+    rmSync(join(root, 'gamebasebox.png'));
+    expect(run(root, 'appdir', '.').status).toBe(1);
+  });
+  it.skipIf(process.platform === 'win32')('rejects a non-executable AppRun', () => {
+    const root = appdir();
+    chmodSync(join(root, 'AppRun'), 0o644);
+    expect(run(root, 'appdir', '.').stderr).toContain('executable');
   });
 });

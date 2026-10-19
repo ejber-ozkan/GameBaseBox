@@ -6,6 +6,13 @@ const require = createRequire(import.meta.url);
 const workflow = require('js-yaml').load(readFileSync('.github/workflows/release-bundles.yml', 'utf8'));
 
 describe('release workflow', () => {
+  it('validates extracted Linux bundle metadata before checksumming and upload', () => {
+    const steps = workflow.jobs['build-linux'].steps;
+    const commands = steps.map((step: { run?: string }) => step.run || '').join('\n');
+    expect(commands).toContain('--appimage-extract');
+    expect(commands).toContain('scripts/release-safety.mjs appdir');
+    expect(commands.indexOf('scripts/release-safety.mjs appdir')).toBeLessThan(commands.indexOf('scripts/release-safety.mjs checksum'));
+  });
   it('checks application and test types in both quality workflows', () => {
     const quality = require('js-yaml').load(readFileSync('.github/workflows/quality.yml', 'utf8'));
     const scripts = JSON.parse(readFileSync('package.json', 'utf8')).scripts;

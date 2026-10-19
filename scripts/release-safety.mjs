@@ -1,7 +1,7 @@
 import { createReadStream } from 'node:fs';
-import { lstat, readFile, readdir, writeFile } from 'node:fs/promises';
+import { lstat, readFile, readdir, writeFile, realpath, readlink, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { join } from 'node:path';
+import { join, resolve, relative, isAbsolute } from 'node:path';
 
 const assets = {
   windows: 'GBBox-Windows-x64-Setup.exe',
@@ -75,12 +75,50 @@ async function verify(directory) {
   console.log('Verified all three release bundles and SHA256SUMS');
 }
 
+async function appdir(directory) {
+  const root = await realpath(directory);
+  async function file(name, executable = false) {
+    const path = join(root, name);
+    const entry = await lstat(path).catch(() => { throw new Error(`Missing AppDir file: ${name}`); });
+    if (entry.isSymbolicLink() && isAbsolute(await readlink(path))) {
+      throw new Error(`${name}: AppDir links must be relative`);
+    }
+    const target = await realpath(path).catch(() => { throw new Error(`Broken AppDir link: ${name}`); });
+    const local = relative(root, target);
+    if (local === '..' || local.startsWith(`..${process.platform === 'win32' ? '\\' : '/'}`) || isAbsolute(local)) {
+      throw new Error(`${name}: target escapes AppDir`);
+    }
+    const info = await stat(target);
+    if (!info.isFile() || info.size === 0) throw new Error(`${name}: expected a nonempty file`);
+    if (executable && process.platform !== 'win32' && !(info.mode & 0o111)) {
+      throw new Error(`${name}: must be executable`);
+    }
+    return path;
+  }
+  async function png(name) {
+    const bytes = await readFile(await file(name));
+    if (!bytes.subarray(0, 8).equals(Buffer.from('89504e470d0a1a0a', 'hex'))) {
+      throw new Error(`${name}: expected a PNG icon`);
+    }
+  }
+  await png('.DirIcon');
+  await file('AppRun', true);
+  const desktop = await read(await file('GBBox.desktop'));
+  for (const line of ['[Desktop Entry]', 'Type=Application', 'Name=GBBox', 'Exec=gamebasebox', 'Icon=gamebasebox']) {
+    if (!desktop.split(/\r?\n/).includes(line)) throw new Error(`GBBox.desktop: missing ${line}`);
+  }
+  await png('gamebasebox.png');
+  await file('usr/bin/gamebasebox', true);
+  console.log('Validated portable AppDir icon, desktop entry and executables');
+}
+
 try {
   const [command, ...args] = process.argv.slice(2);
   if (command === 'versions' && args.length <= 1) await versions(...args);
   else if (command === 'checksum' && args.length === 2) await checksum(...args);
   else if (command === 'verify' && args.length === 1) await verify(...args);
-  else throw new Error('Usage: release-safety.mjs versions [tag] | checksum DIRECTORY PLATFORM | verify DIRECTORY');
+  else if (command === 'appdir' && args.length === 1) await appdir(resolve(args[0]));
+  else throw new Error('Usage: release-safety.mjs versions [tag] | checksum DIRECTORY PLATFORM | verify DIRECTORY | appdir DIRECTORY');
 } catch (error) {
   console.error(error.message);
   process.exitCode = 1;

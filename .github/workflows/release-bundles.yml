@@ -195,6 +195,12 @@ jobs:
             exit 1
           fi
           cp "$installer" release-assets/GBBox-Linux.AppImage
+          # Validate the shipped filesystem away from Tauri's build AppDir so
+          # build-machine icon links cannot accidentally pass on the runner.
+          appimage="$PWD/release-assets/GBBox-Linux.AppImage"
+          validation_dir="$(mktemp -d)"
+          (cd "$validation_dir" && "$appimage" --appimage-extract > extract.log)
+          node scripts/release-safety.mjs appdir "$validation_dir/squashfs-root"
           node scripts/release-safety.mjs checksum release-assets linux
 
       - name: Upload Linux bundles
