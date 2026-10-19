@@ -46,6 +46,7 @@ export interface Settings {
   mouseHoverSelection: boolean;
   scrollNavigation: boolean;
   menuSoundEffects: boolean;
+  uiSoundSet?: 'original' | 'synthesized';
   c64RasterLines: boolean;
   bigBoxAnimateVertical: boolean;
   confirmFullscreenExit: boolean;
@@ -112,6 +113,7 @@ export const defaultSettings: Settings = {
   mouseHoverSelection: true,
   scrollNavigation: true,
   menuSoundEffects: true,
+  uiSoundSet: 'original',
   c64RasterLines: true,
   bigBoxAnimateVertical: true,
   confirmFullscreenExit: true,

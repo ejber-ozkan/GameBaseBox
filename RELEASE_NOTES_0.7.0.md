@@ -1,6 +1,6 @@
-# GBBox 0.7.0 Candidate
+# GBBox 0.7.0
 
-This candidate improves library correctness, database importing and keyboard navigation while retaining the existing desktop architecture and emulator integrations.
+This release improves library correctness, database importing and keyboard navigation while retaining the existing desktop architecture and emulator integrations.
 
 ## Changes
 
@@ -13,17 +13,20 @@ This candidate improves library correctness, database importing and keyboard nav
 - Make library sorting and game titles accessible through native keyboard controls and prevent fullscreen arrow keys from moving selection twice.
 - Retire unused library and detail implementations after adding coverage to the active views.
 - Update selected JavaScript and Rust dependencies and verify complete platform bundles and checksums before release publication.
+- Fix the Linux AppImage icon link so it works away from the build machine, and validate packaged icons, desktop entries and launch files in CI.
+- Add a saved sound-set choice in Theme & UI settings, with synthesized retro cues alongside the original samples.
+- Refresh the README with animated demos and remove the unused bundled Asterix SID test page and music file.
 
-## Candidate limitations
+## Validation and known limitations
 
-Windows and macOS manual checks were reported by the maintainer before the final dependency updates. Ubuntu native testing was waived; automated builds and browser tests do not replace packaged native testing. Detailed hardware, emulator and upgrade coverage remains incomplete.
+Windows and macOS manual checks were reported by the maintainer before the final dependency updates. Ubuntu native testing was waived; Linux AppImage structure and desktop metadata were validated separately. Automated builds and browser tests do not replace packaged native testing. Detailed hardware, emulator and upgrade coverage remains incomplete.
 
-Dependency advisories and bundled-asset provenance review remain open. This candidate does not claim a clean audit or completed license review. The Rust crate remains MIT and the root GPL license is unchanged.
+Dependency advisories and bundled-asset provenance review remain open. This release does not claim a clean audit or completed license review. The Rust crate remains MIT and the root GPL license is unchanged.
 
 ## Upgrade and rollback
 
-Quit GBBox and all emulators before testing. Back up the complete existing app profile, including its database and browser-backed settings, and retain a separate copy of any writable extracted game media. Test the candidate with an isolated profile copy. Keep the existing OS account and credential-store entries available; encrypted settings can depend on them.
+Quit GBBox and all emulators before upgrading. Back up the complete existing app profile, including its database and browser-backed settings, and retain a separate copy of any writable extracted game media. Test the upgrade with an isolated profile copy. Keep the existing OS account and credential-store entries available; encrypted settings can depend on them.
 
-For rollback, quit the candidate, reinstall the previous version and restore the untouched pre-upgrade profile copy. Do not point an older version at the candidate's modified profile. Source libraries are not a substitute for a profile backup, and a profile copy does not include OS credential-store entries.
+For rollback, quit GBBox, reinstall the previous version and restore the untouched pre-upgrade profile copy. Do not point an older version at the upgraded profile. Source libraries are not a substitute for a profile backup, and a profile copy does not include OS credential-store entries.
 
-Candidate preparation does not publish a release. Distribution filenames remain `GBBox-Windows-x64-Setup.exe`, `GBBox-Linux.AppImage` and `GBBox-macOS.dmg`.
+Distribution filenames remain `GBBox-Windows-x64-Setup.exe`, `GBBox-Linux.AppImage` and `GBBox-macOS.dmg`. The release includes SHA-256 checksums for download verification.

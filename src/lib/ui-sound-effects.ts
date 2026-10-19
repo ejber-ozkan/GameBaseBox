@@ -2,6 +2,15 @@ const UI_SFX_BASE_PATH = '/sfx';
 const ROTATION_KEY_PREFIX = 'gb64_ui_sfx_rotation_';
 const SETTINGS_STORAGE_KEY = 'gb64_settings';
 
+function isSynthesizedSoundSet() {
+  try {
+    return typeof window !== 'undefined'
+      && JSON.parse(window.localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}').uiSoundSet === 'synthesized';
+  } catch {
+    return false;
+  }
+}
+
 function areMenuSoundEffectsEnabled() {
   if (typeof window === 'undefined') {
     return true;
@@ -26,6 +35,9 @@ export function getUiSoundEffectUrl(filename: string) {
   }
 
   const normalized = filename.toLowerCase().endsWith('.mp3') ? filename : `${filename}.mp3`;
+  if (isSynthesizedSoundSet()) {
+    return `${UI_SFX_BASE_PATH}/synthesized/${normalized.slice(0, -4)}.wav`;
+  }
   return `${UI_SFX_BASE_PATH}/${normalized}`;
 }
 
@@ -35,7 +47,7 @@ export function canPlayUiSoundEffects() {
   }
 
   const probe = new Audio();
-  return probe.canPlayType('audio/mpeg') !== '';
+  return probe.canPlayType(isSynthesizedSoundSet() ? 'audio/wav' : 'audio/mpeg') !== '';
 }
 
 const audioCache = new Map<string, HTMLAudioElement>();

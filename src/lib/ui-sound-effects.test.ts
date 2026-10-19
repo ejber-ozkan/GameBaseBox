@@ -7,6 +7,19 @@ import {
 } from './ui-sound-effects';
 
 describe('ui sound effects helpers', () => {
+  test('switches packs immediately and defaults safely for older or invalid settings', () => {
+    const store = new Map<string, string>();
+    vi.stubGlobal('localStorage', { getItem: (key: string) => store.get(key) ?? null });
+    try {
+      expect(getUiSoundEffectUrl('menu-move-1')).toBe('/sfx/menu-move-1.mp3');
+      store.set('gb64_settings', JSON.stringify({ uiSoundSet: 'synthesized' }));
+      expect(getUiSoundEffectUrl('menu-move-1.mp3')).toBe('/sfx/synthesized/menu-move-1.wav');
+      store.set('gb64_settings', JSON.stringify({ uiSoundSet: 'unknown' }));
+      expect(getUiSoundEffectUrl('menu-move-1')).toBe('/sfx/menu-move-1.mp3');
+      store.set('gb64_settings', 'broken');
+      expect(getUiSoundEffectUrl('menu-move-1')).toBe('/sfx/menu-move-1.mp3');
+    } finally { vi.unstubAllGlobals(); }
+  });
   test('builds urls under the public sfx directory', () => {
     expect(getUiSoundEffectUrl('menu-move-1')).toBe('/sfx/menu-move-1.mp3');
     expect(getUiSoundEffectUrl('menu-move-1.mp3')).toBe('/sfx/menu-move-1.mp3');

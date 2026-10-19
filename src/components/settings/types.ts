@@ -66,7 +66,7 @@ export function getSettingsItemCount(tabId: SettingsTabId): number {
 
   switch (tabId) {
     case 'appearance':
-      return 6;
+      return 7;
     case 'display':
       return 14;
     case 'media':
@@ -106,6 +106,7 @@ export type EditableSettings = Pick<
   | 'mouseHoverSelection'
   | 'scrollNavigation'
   | 'menuSoundEffects'
+  | 'uiSoundSet'
   | 'c64RasterLines'
   | 'bigBoxAnimateVertical'
   | 'activePlatformId'
@@ -138,6 +139,7 @@ export function getEditableSettings(settings: Settings): EditableSettings {
     mouseHoverSelection: settings.mouseHoverSelection,
     scrollNavigation: settings.scrollNavigation,
     menuSoundEffects: settings.menuSoundEffects,
+    uiSoundSet: settings.uiSoundSet === 'synthesized' ? 'synthesized' : 'original',
     c64RasterLines: settings.c64RasterLines ?? true,
     bigBoxAnimateVertical: settings.bigBoxAnimateVertical,
     activePlatformId: settings.activePlatformId,

@@ -217,6 +217,14 @@ function openSettingsTab(label: string) {
 }
 
 describe('SettingsView platform emulator settings', () => {
+  test('switches the sound set and includes it when saving settings', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    renderSettings();
+    fireEvent.click(screen.getByRole('button', { name: /Sound set: Original samples/i }));
+    expect(screen.getByRole('button', { name: /Sound set: Synthesized retro/i })).toBeTruthy();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(updateSettings).toHaveBeenCalledWith(expect.objectContaining({ uiSoundSet: 'synthesized' }));
+  });
   beforeEach(() => {
     updateSettings.mockClear();
     setTheme.mockClear();

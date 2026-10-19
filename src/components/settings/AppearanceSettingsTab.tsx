@@ -112,6 +112,16 @@ export function AppearanceSettingsTab({
             focused={isFocused(3)}
           />
         </label>
+        <button
+          type="button"
+          onClick={() => setField('uiSoundSet', draft.uiSoundSet === 'synthesized' ? 'original' : 'synthesized')}
+          onMouseEnter={() => isMouseMode && onMouseFocus(6)}
+          onFocus={() => onMouseFocus(6)}
+          className={`focus-idx-6 mt-4 min-h-11 w-full cursor-pointer border px-4 py-3 text-left text-sm text-theme-text bg-theme-background focus-visible:outline-2 focus-visible:outline-theme-primary ${theme.effects.steppedBorders ? '' : 'rounded-theme-lg'} ${isFocused(6) ? 'border-theme-primary' : 'border-theme-outline-variant'}`}
+        >
+          Sound set: {draft.uiSoundSet === 'synthesized' ? 'Synthesized retro' : 'Original samples'}
+          <span className="mt-1 block text-xs text-theme-text-muted">Select to switch sound sets. Applies when settings are saved.</span>
+        </button>
       </div>
 
       {/* Card 4: C64 Raster Lines Toggle (only when C64 Edition theme is selected) */}
