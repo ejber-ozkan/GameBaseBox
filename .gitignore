@@ -104,3 +104,15 @@ graphify-out/.graphify_root
 
 
 stitch_import/
+
+# Local agent instructions, issue tracking, generated graphs and private plans
+/.beads/
+/graphify-out/
+/AGENTS.md
+/CLAUDE.md
+/GEMINI.md
+/.github/copilot-instructions.md
+/.cursorrules
+/.graphifyignore
+/GB64_Modern_Frontend_Requirements.md
+/docs/ios-feasibility-plan.md
