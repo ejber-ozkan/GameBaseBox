@@ -92,12 +92,32 @@ function getViewportSnapshot(): ViewportSnapshot {
     return DEFAULT_VIEWPORT;
   }
 
+  const dpr = window.devicePixelRatio || 1;
+  const width = window.innerWidth || DEFAULT_VIEWPORT.width;
+  const height = window.innerHeight || DEFAULT_VIEWPORT.height;
+
+  const isFullscreen =
+    typeof document !== 'undefined' &&
+    (Boolean(document.fullscreenElement) ||
+      (typeof window.screen !== 'undefined' &&
+        window.innerWidth >= (window.screen.availWidth || window.screen.width) &&
+        window.innerHeight >= (window.screen.availHeight || window.screen.height)));
+
+  const physicalWidth =
+    isFullscreen && typeof window.screen !== 'undefined'
+      ? Math.round((window.screen.width || width) * dpr)
+      : Math.round(width * dpr);
+  const physicalHeight =
+    isFullscreen && typeof window.screen !== 'undefined'
+      ? Math.round((window.screen.height || height) * dpr)
+      : Math.round(height * dpr);
+
   return {
-    dpr: window.devicePixelRatio || 1,
-    height: window.innerHeight || DEFAULT_VIEWPORT.height,
-    physicalHeight: Math.round((window.screen.height || window.innerHeight || DEFAULT_VIEWPORT.height) * (window.devicePixelRatio || 1)),
-    physicalWidth: Math.round((window.screen.width || window.innerWidth || DEFAULT_VIEWPORT.width) * (window.devicePixelRatio || 1)),
-    width: window.innerWidth || DEFAULT_VIEWPORT.width,
+    dpr,
+    height,
+    physicalHeight,
+    physicalWidth,
+    width,
   };
 }
 
@@ -112,11 +132,11 @@ function resolveDensityMode(
   const physicalWidth = viewport.physicalWidth;
   const physicalHeight = viewport.physicalHeight;
 
-  if (physicalWidth >= 3600 || physicalHeight >= 2000) {
+  if (physicalWidth >= 3600 && physicalHeight >= 2000) {
     return 'compact';
   }
 
-  if (physicalWidth >= 3000 || physicalHeight >= 1700) {
+  if (physicalWidth >= 3000 && physicalHeight >= 1700) {
     return 'standard';
   }
 

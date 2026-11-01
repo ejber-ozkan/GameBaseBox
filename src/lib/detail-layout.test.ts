@@ -90,4 +90,35 @@ describe('detail layout spec budgets', () => {
     expect(spec.renderScale).toBe(0.5);
     expect(spec.debugLabel).toContain('WQHD');
   });
+
+  it('does not downscale on Mac Retina laptop screens (dpr=2, non-4K resolution)', () => {
+    // 14" MacBook Pro fullscreen (1512x982 CSS, 3024x1964 physical, dpr 2)
+    const macBookPro14 = makeViewport(1512, 982, 3024, 1964, 2);
+    const spec14 = buildDetailLayoutSpec(macBookPro14);
+
+    expect(spec14.displayScale).toBe(1);
+    expect(spec14.renderScale).toBe(1);
+    expect(spec14.designWidth).toBe(1512);
+    expect(spec14.designHeight).toBe(982);
+
+    // 13" MacBook Air fullscreen (1440x900 CSS, 2880x1800 physical, dpr 2)
+    const macBookAir13 = makeViewport(1440, 900, 2880, 1800, 2);
+    const specAir = buildDetailLayoutSpec(macBookAir13);
+
+    expect(specAir.displayScale).toBe(1);
+    expect(specAir.renderScale).toBe(1);
+  });
+
+  it('does not downscale or overflow in windowed mode on high-DPI screens', () => {
+    // 800x600 window on a Retina Mac laptop
+    const windowedViewport = makeViewport(800, 600, 1600, 1200, 2);
+    const spec = buildDetailLayoutSpec(windowedViewport);
+
+    expect(spec.displayScale).toBe(1);
+    expect(spec.renderScale).toBe(1);
+    expect(spec.designWidth).toBe(800);
+    expect(spec.designHeight).toBe(600);
+    expect(spec.shellMaxWidth).toBeLessThanOrEqual(spec.designWidth - spec.shellPaddingX * 2);
+    expect(spec.useStackedColumns).toBe(true);
+  });
 });

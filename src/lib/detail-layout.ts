@@ -519,11 +519,24 @@ function round(value: number) {
 }
 
 function resolveDetailDesignViewport(viewport: DetailViewportSnapshot): DetailDesignViewport {
-  const compression = Math.max(
-    viewport.physicalWidth / Math.max(viewport.width, 1),
-    viewport.physicalHeight / Math.max(viewport.height, 1),
-    viewport.dpr,
-  );
+  // Only apply compressed 4K TV/monitor design viewport scaling
+  // if the physical display resolution is at least 4K UHD (3840x2160).
+  // Standard Retina/high-DPI laptop screens (e.g. MacBook Pro 14"/16", MacBook Air)
+  // have dpr = 2 and physical dimensions < 3840x2160. Applying downscale to laptop
+  // screens makes fonts microscopic and unreadable.
+  const is4KOrHigher = viewport.physicalWidth >= 3840 && viewport.physicalHeight >= 2160;
+
+  if (!is4KOrHigher) {
+    return {
+      designWidth: viewport.width,
+      designHeight: viewport.height,
+      displayScale: 1,
+    };
+  }
+
+  const compressionX = viewport.physicalWidth / Math.max(viewport.width, 1);
+  const compressionY = viewport.physicalHeight / Math.max(viewport.height, 1);
+  const compression = Math.min(compressionX, compressionY);
 
   const displayScale = compression >= 2.5 ? 2 : compression >= 1.75 ? 1.5 : 1;
 
@@ -600,7 +613,14 @@ export function buildDetailLayoutSpec(viewport: DetailViewportSnapshot): DetailL
   const tier = resolveDetailResolutionTier(viewport);
   const definition = TIER_DEFINITIONS[tier];
   const useStackedColumns = viewport.width < 1100 && designViewport.designWidth < 1500;
-  const shellMaxWidth = round(clamp(designViewport.designWidth - definition.shellPaddingX * 2, 960, definition.shellMaxWidth));
+  const availableShellWidth = Math.max(320, designViewport.designWidth - definition.shellPaddingX * 2);
+  const shellMaxWidth = round(
+    clamp(
+      availableShellWidth,
+      Math.min(availableShellWidth, 960),
+      definition.shellMaxWidth,
+    ),
+  );
   const panelGap = definition.panelGap;
   const usableHeight = Math.max(
     designViewport.designHeight - definition.topBarHeight - definition.shellPaddingY * 2,

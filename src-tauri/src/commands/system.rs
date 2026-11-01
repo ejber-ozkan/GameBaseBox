@@ -44,12 +44,33 @@ pub async fn open_directory_dialog(app: tauri::AppHandle) -> Option<String> {
 
 #[tauri::command]
 pub async fn open_file_dialog(app: tauri::AppHandle) -> Option<String> {
-    app.dialog()
-        .file()
-        .add_filter("Executables", &["exe", "app", "bin", "sh"])
-        .add_filter("All Files", &["*"])
-        .blocking_pick_file()
-        .map(|p| p.to_string())
+    #[cfg(target_os = "windows")]
+    {
+        app.dialog()
+            .file()
+            .add_filter("Executables", &["exe", "bat", "cmd"])
+            .add_filter("All Files", &["*"])
+            .blocking_pick_file()
+            .map(|p| p.to_string())
+    }
+    #[cfg(target_os = "macos")]
+    {
+        app.dialog()
+            .file()
+            .add_filter("Applications & Executables", &["app", "exe", "bin", "sh"])
+            .add_filter("All Files", &["*"])
+            .blocking_pick_file()
+            .map(|p| p.to_string())
+    }
+    #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+    {
+        app.dialog()
+            .file()
+            .add_filter("All Files", &["*"])
+            .add_filter("Executables", &["bin", "sh", "exe"])
+            .blocking_pick_file()
+            .map(|p| p.to_string())
+    }
 }
 
 #[tauri::command]
@@ -64,7 +85,8 @@ pub async fn open_retroarch_core_file_dialog(app: tauri::AppHandle) -> Option<St
 
 #[tauri::command]
 pub fn allow_asset_path(app: tauri::AppHandle, path: String) -> Result<(), String> {
-    let asset_path = std::path::Path::new(&path);
+    let normalized = path.replace('\\', "/");
+    let asset_path = std::path::Path::new(&normalized);
     let parent = asset_path
         .parent()
         .filter(|directory| directory.is_dir())
@@ -115,22 +137,50 @@ pub async fn set_window_mode(
         .or_else(|| app.webview_windows().values().next().cloned())
         .ok_or("No application window found")?;
 
+    let is_currently_fullscreen = window.is_fullscreen().unwrap_or(false);
+
     if fullscreen {
-        window.set_fullscreen(true).map_err(|e| e.to_string())?;
+        if !is_currently_fullscreen {
+            window.set_fullscreen(true).map_err(|e| e.to_string())?;
+        }
     } else {
-        window.set_fullscreen(false).map_err(|e| e.to_string())?;
+        if is_currently_fullscreen {
+            window.set_fullscreen(false).map_err(|e| e.to_string())?;
+        }
 
         if let (Some(w), Some(h)) = (width, height) {
-            window
-                .set_size(tauri::Size::Logical(tauri::LogicalSize {
-                    width: w,
-                    height: h,
-                }))
-                .map_err(|e| e.to_string())?;
-            window.center().map_err(|e| e.to_string())?;
+            let scale_factor = window.scale_factor().unwrap_or(1.0);
+            let current_logical = window
+                .inner_size()
+                .map(|s| s.to_logical::<f64>(scale_factor))
+                .ok();
+
+            let should_resize = current_logical.map_or(true, |cur| {
+                (cur.width - w).abs() > 2.0 || (cur.height - h).abs() > 2.0
+            });
+
+            if should_resize {
+                window
+                    .set_size(tauri::Size::Logical(tauri::LogicalSize {
+                        width: w,
+                        height: h,
+                    }))
+                    .map_err(|e| e.to_string())?;
+                window.center().map_err(|e| e.to_string())?;
+            }
         }
     }
     Ok(())
+}
+
+#[tauri::command]
+pub async fn is_window_fullscreen(app: tauri::AppHandle) -> Result<bool, String> {
+    let window = app
+        .get_webview_window("main")
+        .or_else(|| app.webview_windows().values().next().cloned())
+        .ok_or("No application window found")?;
+
+    window.is_fullscreen().map_err(|e| e.to_string())
 }
 
 #[derive(serde::Serialize)]

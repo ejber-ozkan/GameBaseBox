@@ -1,11 +1,10 @@
-﻿import { render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import { MusicPlayer } from './MusicPlayer';
 
 vi.mock('../contexts/SettingsContext', () => ({
   useSettings: () => ({
     settings: {
-      scrapedMediaPath: '/media/scraped',
       activePlatformId: 'c64',
     },
     resolveMediaPath: (type: string, filename: string) => `/mocked-${type}/${filename}`,

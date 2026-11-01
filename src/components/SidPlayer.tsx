@@ -94,10 +94,8 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
       if (!filename || localUrl) return;
       try {
         const safeName = filename.replace(/\\/g, '/');
-        const roots = [
-          settings.platformSettings?.[platformId]?.folders.musicPath,
-          settings.scrapedMediaPath,
-        ].filter((value): value is string => Boolean(value));
+        const musicPath = settings.platformSettings?.[platformId]?.folders.musicPath || settings.soundsPath;
+        const roots = [musicPath].filter((value): value is string => Boolean(value));
         for (const root of roots) {
           const res = await resolveMediaPath(root, safeName);
           if (!res.exists) continue;
@@ -111,7 +109,7 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
       }
     }
     checkLocalScrape();
-  }, [filename, localUrl, platformId, settings.platformSettings, settings.scrapedMediaPath]);
+  }, [filename, localUrl, platformId, settings.platformSettings, settings.soundsPath]);
 
   // Play/Pause effect using jsSID
   useEffect(() => {
@@ -163,15 +161,16 @@ export function SidPlayer({ filename, audioUrl, compact = false }: SidPlayerProp
   }, [filename]);
 
   const handleScrape = async () => {
-    if (!filename || !settings.scrapedMediaPath) {
-      setDownloadError("Configure your Scraped Media folder in Settings first!");
+    const musicPath = settings.platformSettings?.[platformId]?.folders.musicPath || settings.soundsPath;
+    if (!filename || !musicPath) {
+      setDownloadError("Configure your Music / Sounds folder in Settings first!");
       return;
     }
     setIsDownloading(true);
     setDownloadError(null);
     try {
       const hvscUrl = `https://hvsc.c64.org/download/C64Music/${filename.replace(/\\/g, '/')}`;
-      const result = await downloadMediaAsset(hvscUrl, settings.scrapedMediaPath, filename);
+      const result = await downloadMediaAsset(hvscUrl, musicPath, filename);
       if (result.exists) {
         setLocalUrl(`file://${result.absolute_path}`);
       } else {

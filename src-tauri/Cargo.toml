@@ -1,6 +1,6 @@
 [package]
 name = "gamebasebox"
-version = "0.7.0"
+version = "0.7.1"
 description = "GBBox - GameBase Box"
 authors = ["GBBox Contributors"]
 license = "MIT"
@@ -31,11 +31,6 @@ crc32fast = "1"
 rusqlite = { version = "0.31", features = ["bundled"] }
 reqwest = { version = "0.13.2", features = ["json", "query"] }
 zip = "0.6.6"
-machine-uid = "0.3"
-aes-gcm = "0.10"
-sha2 = "0.10"
-base64 = "0.22"
-keyring = "4.1"
 tokio = { version = "1", features = ["time"] }
 
 [dev-dependencies]

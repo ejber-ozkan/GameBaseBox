@@ -47,9 +47,10 @@ fn validate_media_download_url(value: &str) -> Result<reqwest::Url, String> {
 }
 
 fn sanitize_relative_media_path(path: &str) -> Option<PathBuf> {
+    let normalized = path.replace('\\', "/");
     let mut sanitized = PathBuf::new();
 
-    for component in Path::new(path).components() {
+    for component in Path::new(&normalized).components() {
         match component {
             Component::Normal(part) => sanitized.push(part),
             Component::CurDir => {}
@@ -320,7 +321,8 @@ pub async fn read_file_bytes(path: String) -> Result<Vec<u8>, String> {
     // (see PlayButton.tsx), so no additional trust-root check is needed here.
     // We do reject directory paths to avoid undefined platform behaviour and to
     // keep the contract consistent with how emulator.rs validates its inputs.
-    let p = std::path::Path::new(&path);
+    let normalized = path.replace('\\', "/");
+    let p = std::path::Path::new(&normalized);
     if !p.exists() {
         return Err(format!("File not found: {}", path));
     }
@@ -364,6 +366,7 @@ fn get_candidate_paths(base_dir: &Path, filename: &str) -> Vec<PathBuf> {
     let mut candidates = Vec::new();
 
     // Sanitize filename to block traversal attempts (e.g. "../escape.png")
+    // and normalize Windows backslashes
     let Some(sanitized) = sanitize_relative_media_path(filename) else {
         return candidates;
     };
@@ -384,13 +387,34 @@ fn get_candidate_paths(base_dir: &Path, filename: &str) -> Vec<PathBuf> {
         candidates.push(base_dir.join(first_char.to_string()).join(&sanitized));
     }
 
+    // 3. If sanitized has a parent directory (e.g. "Z/Zaxxon_v1.png"), also try candidate paths
+    // using just the file name component (e.g. in case base_dir already points inside the partitioned folder)
+    if let Some(file_name) = sanitized.file_name() {
+        let file_name_path = Path::new(file_name);
+        if file_name_path != sanitized {
+            candidates.push(base_dir.join(file_name));
+            let file_name_str = file_name.to_string_lossy();
+            let fn_first_char = file_name_str.chars().next().unwrap_or('\0');
+            if fn_first_char.is_ascii_alphabetic() {
+                let letter = fn_first_char.to_ascii_uppercase().to_string();
+                candidates.push(base_dir.join(&letter).join(file_name));
+                let letter_lower = fn_first_char.to_ascii_lowercase().to_string();
+                candidates.push(base_dir.join(&letter_lower).join(file_name));
+            } else if fn_first_char.is_ascii_digit() {
+                candidates.push(base_dir.join("0").join(file_name));
+                candidates.push(base_dir.join(fn_first_char.to_string()).join(file_name));
+            }
+        }
+    }
+
     candidates
 }
 
 #[tauri::command]
 pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedPath {
     let base = Path::new(&base_dir);
-    let candidates = get_candidate_paths(base, &filename);
+    let normalized_filename = filename.replace('\\', "/");
+    let candidates = get_candidate_paths(base, &normalized_filename);
 
     // Fast-path: Check if any candidate path exists directly on disk
     for candidate in &candidates {
@@ -457,14 +481,15 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
     let mut results = Vec::new();
     let base = Path::new(&base_dir);
     
-    let path = Path::new(&filename);
+    let normalized_filename = filename.replace('\\', "/");
+    let path = Path::new(&normalized_filename);
     let Some(stem) = path.file_stem().and_then(|s| s.to_str()) else {
         return results;
     };
     let ext_str = path.extension().and_then(|e| e.to_str()).unwrap_or("");
     let (variant_base, detected_suffix) = split_variant_stem(stem);
 
-    let candidates = get_candidate_paths(base, &filename);
+    let candidates = get_candidate_paths(base, &normalized_filename);
     let mut checked_dirs = Vec::new();
 
     for candidate in candidates {
@@ -518,15 +543,34 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
         let check_variant = |res_list: &mut Vec<String>, var_name: &str| {
             let direct = resolved_parent.join(var_name);
             if direct.exists() && direct.is_file() {
-                res_list.push(clean_unc_prefix(direct.to_string_lossy().to_string()));
+                let path_str = clean_unc_prefix(direct.to_string_lossy().to_string());
+                if !res_list.contains(&path_str) {
+                    res_list.push(path_str);
+                }
                 true
             } else if let Some(matched) = find_case_insensitive_file(&resolved_parent, var_name) {
-                res_list.push(clean_unc_prefix(matched.to_string_lossy().to_string()));
+                let path_str = clean_unc_prefix(matched.to_string_lossy().to_string());
+                if !res_list.contains(&path_str) {
+                    res_list.push(path_str);
+                }
                 true
             } else {
                 false
             }
         };
+
+        // If detected_suffix is Some, also check the root variant_base file (e.g. barbarian2.png for barbarian2_1.png)
+        if detected_suffix.is_some() {
+            let root_name = if ext_str.is_empty() {
+                variant_base.to_string()
+            } else {
+                format!("{}.{}", variant_base, ext_str)
+            };
+            let root_path_str = clean_unc_prefix(resolved_parent.join(&root_name).to_string_lossy().to_string());
+            if !results.contains(&root_path_str) {
+                check_variant(&mut results, &root_name);
+            }
+        }
 
         // 2. Numbered variants _1 to _9
         let mut numbered_results = Vec::new();
@@ -833,5 +877,50 @@ mod tests {
         let variants = find_all_media_variants(base.clone(), "Akualabeth_1.png".to_string()).await;
         assert_eq!(variants.len(), 1);
         assert!(variants[0].to_lowercase().contains("akualabeth_1.png"));
+    }
+
+    #[tokio::test]
+    async fn test_windows_backslash_paths_cross_platform() {
+        let dir = tempdir().unwrap();
+        let base = dir.path().to_string_lossy().to_string();
+
+        let dir_z = dir.path().join("Z");
+        std::fs::create_dir(&dir_z).unwrap();
+
+        // Create Zaxxon files like in GameBase C64
+        let file_v1 = dir_z.join("Zaxxon_v1.png");
+        let file_v1_1 = dir_z.join("Zaxxon_v1_1.png");
+        let file_v4 = dir_z.join("Zaxxon_v4.png");
+        let file_v4_1 = dir_z.join("Zaxxon_v4_1.png");
+        std::fs::write(&file_v1, b"v1 contents").unwrap();
+        std::fs::write(&file_v1_1, b"v1_1 contents").unwrap();
+        std::fs::write(&file_v4, b"v4 contents").unwrap();
+        std::fs::write(&file_v4_1, b"v4_1 contents").unwrap();
+
+        // 1. resolve_media_path with Windows backslashes
+        let res_v1 = resolve_media_path(base.clone(), r"Z\Zaxxon_v1.png".to_string()).await;
+        assert!(res_v1.exists, "Failed to resolve media with Windows backslash");
+        assert!(res_v1.absolute_path.to_lowercase().ends_with("zaxxon_v1.png"));
+
+        // 2. find_all_media_variants with Windows backslashes
+        let variants_v1 = find_all_media_variants(base.clone(), r"Z\Zaxxon_v1.png".to_string()).await;
+        assert_eq!(variants_v1.len(), 2, "Expected base and variant to be found for Zaxxon_v1");
+        assert!(variants_v1.iter().any(|p| p.to_lowercase().ends_with("zaxxon_v1.png")));
+        assert!(variants_v1.iter().any(|p| p.to_lowercase().ends_with("zaxxon_v1_1.png")));
+
+        let variants_v4 = find_all_media_variants(base.clone(), r"Z\Zaxxon_v4.png".to_string()).await;
+        assert_eq!(variants_v4.len(), 2, "Expected base and variant to be found for Zaxxon_v4");
+        assert!(variants_v4.iter().any(|p| p.to_lowercase().ends_with("zaxxon_v4.png")));
+        assert!(variants_v4.iter().any(|p| p.to_lowercase().ends_with("zaxxon_v4_1.png")));
+
+        // 3. read_file_bytes with Windows backslashes
+        let test_file = dir.path().join("test_rom.bin");
+        std::fs::write(&test_file, b"rom data").unwrap();
+        let bytes = read_file_bytes(test_file.to_string_lossy().to_string()).await.unwrap();
+        assert_eq!(bytes, b"rom data");
+
+        // 4. sanitize_relative_media_path handles Windows backslashes on all platforms
+        let sanitized = sanitize_relative_media_path(r"Z\Zaxxon_v1.png").unwrap();
+        assert_eq!(sanitized, Path::new("Z").join("Zaxxon_v1.png"));
     }
 }

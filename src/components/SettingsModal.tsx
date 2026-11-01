@@ -15,7 +15,6 @@ import { InteractionSettingsTab } from './settings/InteractionSettingsTab';
 import { ContentSettingsTab } from './settings/ContentSettingsTab';
 import { MaintenanceSettingsTab } from './settings/MaintenanceSettingsTab';
 import { PathsSettingsTab } from './settings/PathsSettingsTab';
-import { ScrapersSettingsTab } from './settings/ScrapersSettingsTab';
 import {
   getEditableSettings,
   getPlatformIdFromSettingsTab,
@@ -398,8 +397,6 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
         return t('settings.content');
       case 'about':
         return t('settings.about');
-      case 'scrapers':
-        return t('settings.scrapers');
       case 'maintenance':
         return t('settings.maintenance');
       default: {
@@ -550,9 +547,6 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
                 onBrowseRetroArchCore={browseRetroArchCore}
                 {...contentNavProps}
               />
-            )}
-            {activeTab === 'scrapers' && (
-              <ScrapersSettingsTab draft={draft} setField={setField} {...contentNavProps} />
             )}
             {activeTab === 'maintenance' && <MaintenanceSettingsTab />}
             {activeTab === 'about' && (

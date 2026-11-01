@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { SidPlayer } from './SidPlayer';
 
 vi.mock('../contexts/SettingsContext', () => ({
-  useSettings: () => ({ settings: { activePlatformId: 'c64', platformSettings: {}, scrapedMediaPath: '' } }),
+  useSettings: () => ({ settings: { activePlatformId: 'c64', platformSettings: {} } }),
 }));
 vi.mock('../lib/tauri-bridge', () => ({ resolveMediaPath: vi.fn(), downloadMediaAsset: vi.fn(), getMediaUrl: vi.fn() }));
 

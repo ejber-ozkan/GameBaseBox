@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
-import { getSupportedPlatforms, getSecureSetting, saveSecureSetting, clearMediaCache } from '../lib/tauri-bridge';
+import { getSupportedPlatforms, clearMediaCache } from '../lib/tauri-bridge';
 import {
   createDefaultPlatformSettingsMap,
   isPlatformId,
@@ -18,16 +18,7 @@ export interface Settings {
   musicianPhotosPath: string;
   romsPath: string;
   emulatorPath: string;
-  emuMoviesUsername: string;
-  emuMoviesPassword: string;
-  scrapedMediaPath: string;
   extrasPath: string;
-  activeScraper: 'emumovies' | 'screenscraper' | 'thegamesdb';
-  screenScraperUsername: string;
-  screenScraperPassword: string;
-  screenScraperDevId: string;
-  screenScraperDevPassword: string;
-  theGamesDbApiKey: string;
   hideAdultContent: boolean;
   recentlyPlayedIds: string[];
   retroarchPath: string;
@@ -85,16 +76,7 @@ export const defaultSettings: Settings = {
   musicianPhotosPath: '/media/musicians',
   romsPath: '',
   emulatorPath: '',
-  emuMoviesUsername: '',
-  emuMoviesPassword: '',
-  scrapedMediaPath: '/media/scraped',
   extrasPath: '/media/extras',
-  activeScraper: 'emumovies',
-  screenScraperUsername: '',
-  screenScraperPassword: '',
-  screenScraperDevId: '',
-  screenScraperDevPassword: '',
-  theGamesDbApiKey: '',
   hideAdultContent: false,
   recentlyPlayedIds: [],
   retroarchPath: '',
@@ -133,7 +115,6 @@ export function useOptionalSettings() {
   return useContext(SettingsContext);
 }
 
-const SECURE_FIELDS = ['emuMoviesPassword', 'screenScraperPassword', 'screenScraperDevPassword', 'theGamesDbApiKey'] as const;
 const LEGACY_PATH_FIELDS = [
   'romsPath',
   'soundsPath',
@@ -296,30 +277,23 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         console.error('Failed to load settings from localStorage', e);
       }
 
-      // 2. Load secure settings from Rust/SQLite
-      const secureValues: Partial<Settings> = {};
-      for (const field of SECURE_FIELDS) {
-        try {
-          const value = await getSecureSetting(field);
-          if (value) {
-            secureValues[field] = value;
-          } else if (localValues[field]) {
-            // 3. MIGRATION: If found in localStorage but NOT in secure storage, move it
-            console.log(`Migrating ${field} to secure storage...`);
-            await saveSecureSetting(field, localValues[field] as string);
-            secureValues[field] = localValues[field];
-          }
-        } catch (err) {
-          console.error(`Error loading/migrating secure field ${field}:`, err);
-        }
-      }
-
-      // 4. Sanitize localStorage (remove secure fields)
+      // 2. Sanitize localStorage (remove legacy scraper/secure fields)
       const sanitizedLocal = { ...localValues };
       let needsSanitization = false;
-      SECURE_FIELDS.forEach(field => {
-        if (sanitizedLocal[field]) {
-          delete sanitizedLocal[field];
+      const legacyScraperFields = [
+        'emuMoviesUsername',
+        'emuMoviesPassword',
+        'screenScraperUsername',
+        'screenScraperPassword',
+        'screenScraperDevId',
+        'screenScraperDevPassword',
+        'theGamesDbApiKey',
+        'activeScraper',
+        'scrapedMediaPath',
+      ] as const;
+      legacyScraperFields.forEach((field) => {
+        if (field in sanitizedLocal) {
+          delete (sanitizedLocal as Record<string, unknown>)[field];
           needsSanitization = true;
         }
       });
@@ -335,7 +309,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         ...defaultSettings,
         ...sanitizedLocal,
         ...legacyPathValues,
-        ...secureValues
       };
       const activePlatformId = isPlatformId(combinedSettings.activePlatformId)
         ? combinedSettings.activePlatformId
@@ -372,7 +345,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           lastUsedPlatformId: startupPlatformId,
           platformSettings,
         };
-        SECURE_FIELDS.forEach((field) => delete normalizedLocal[field]);
         LEGACY_PATH_FIELDS.forEach((field) => delete normalizedLocal[field]);
         localStorage.setItem('gb64_settings', JSON.stringify(normalizedLocal));
       }
@@ -397,6 +369,25 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined') {
       initializeSettings();
     }
+  }, []);
+
+  // Listen for native OS window fullscreen transitions (e.g. Mac green zoom button)
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    import('../lib/tauri-bridge').then(({ onWindowFullscreenChange }) => {
+      onWindowFullscreenChange((isFs) => {
+        setSettings((prev) => {
+          if (prev.isFullscreen === isFs) return prev;
+          return { ...prev, isFullscreen: isFs };
+        });
+      }).then((cleanup) => {
+        unlisten = cleanup;
+      });
+    });
+
+    return () => {
+      if (unlisten) unlisten();
+    };
   }, []);
 
   // Apply window settings when they change
@@ -486,19 +477,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         }
       }
       
-      // 1. Persist sensitive fields to Secure storage (Rust/SQLite)
-      SECURE_FIELDS.forEach(field => {
-        if (scopedNewSettings[field] !== undefined) {
-          saveSecureSetting(field, scopedNewSettings[field] as string);
-        }
-      });
-
-      // 2. Persist others to localStorage (JSON)
+      // Persist to localStorage (JSON)
       if (typeof window !== 'undefined') {
         try {
           const toSave = { ...updated };
-          // Remove secure fields from localStorage object
-          SECURE_FIELDS.forEach(field => delete toSave[field as keyof Settings]);
           LEGACY_PATH_FIELDS.forEach(field => delete toSave[field]);
           localStorage.setItem('gb64_settings', JSON.stringify(toSave));
         } catch (e) {
@@ -555,7 +537,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           return '';
       }
     })();
-    return basePath ? `${basePath}/${filename}` : filename;
+    const cleanFilename = filename.replace(/\\/g, '/').replace(/^\/+/, '');
+    const cleanBasePath = basePath ? basePath.replace(/\\/g, '/').replace(/\/+$/, '') : '';
+    return cleanBasePath ? `${cleanBasePath}/${cleanFilename}` : cleanFilename;
   }, [settings.platformSettings, settings.activePlatformId]);
 
   const findAllVariants = useCallback(async (type: 'screenshot' | 'sound' | 'musician' | 'extras', filename: string): Promise<string[]> => {
@@ -581,7 +565,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
       if (!baseDir) return [resolveMediaPath(type, filename)];
 
-      const variants = await findAllMediaVariants(baseDir, filename);
+      const cleanFilename = filename.replace(/\\/g, '/');
+      const variants = await findAllMediaVariants(baseDir, cleanFilename);
       
       const urls = await Promise.all(
         variants.map(v => {

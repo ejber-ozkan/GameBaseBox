@@ -7,7 +7,6 @@ import { downloadMediaAsset, resolveMediaPath } from '../lib/tauri-bridge';
 vi.mock('../contexts/SettingsContext', () => ({
   useSettings: () => ({
     settings: {
-      scrapedMediaPath: '/media/scraped',
       activePlatformId: 'c64',
       platformSettings: {
         c64: {
@@ -127,16 +126,12 @@ describe('SidPlayer Component', () => {
     });
   });
 
-  test('offers HVSC scrape after local and scraped SID paths are both missing', async () => {
+  test('offers HVSC scrape when local SID path is missing', async () => {
     render(<SidPlayer filename={'MUSICIANS\\B\\Beben_Wally\\Hammerfist.sid'} />);
 
     await waitFor(() => {
       expect(resolveMediaPath).toHaveBeenCalledWith(
         '/media/local-music',
-        'MUSICIANS/B/Beben_Wally/Hammerfist.sid',
-      );
-      expect(resolveMediaPath).toHaveBeenCalledWith(
-        '/media/scraped',
         'MUSICIANS/B/Beben_Wally/Hammerfist.sid',
       );
     });
@@ -153,7 +148,7 @@ describe('SidPlayer Component', () => {
     await waitFor(() => {
       expect(downloadMediaAsset).toHaveBeenCalledWith(
         'https://hvsc.c64.org/download/C64Music/MUSICIANS/B/Beben_Wally/Hammerfist.sid',
-        '/media/scraped',
+        '/media/local-music',
         filename,
       );
       expect(screen.getByTestId('play-button')).not.toBeNull();

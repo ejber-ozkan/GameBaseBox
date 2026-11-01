@@ -1,8 +1,9 @@
+use tauri::Emitter;
+
 pub mod commands;
 pub mod database;
 pub mod models;
 pub mod platform_manifest;
-pub mod security;
 
 /// Shared test utilities - only compiled with `cfg(test)`.
 /// Provides a single process-wide mutex so that all test modules
@@ -137,6 +138,7 @@ pub fn run() {
             commands::system::open_path_with_system_default,
             commands::system::exit_app,
             commands::system::set_window_mode,
+            commands::system::is_window_fullscreen,
             commands::system::get_window_size,
             commands::db::get_db_games,
             commands::db::get_game_detail,
@@ -144,8 +146,6 @@ pub fn run() {
             commands::db::get_genres,
             commands::db::get_sub_genres,
             commands::db::get_game_extras,
-            commands::db::save_secure_setting,
-            commands::db::get_secure_setting,
             commands::setup::open_mdb_file_dialog,
             commands::setup::get_database_bootstrap_status,
             commands::setup::import_database_from_mdb,
@@ -158,6 +158,13 @@ pub fn run() {
             commands::system::is_debug_mode_command,
             commands::system::log_debug_message_command,
         ])
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::Resized(_) = event {
+                if let Ok(is_fs) = window.is_fullscreen() {
+                    let _ = window.emit("window-fullscreen-changed", is_fs);
+                }
+            }
+        })
         .setup(|app| {
             let db_path = database::configure_runtime_db_path(app.handle());
             if is_debug_mode() {

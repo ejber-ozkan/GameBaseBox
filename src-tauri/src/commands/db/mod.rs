@@ -1,6 +1,5 @@
 mod games;
 mod querying;
-mod secure_settings;
 
 use crate::models::{ExtraRow, GameFilters, GameRow};
 
@@ -49,16 +48,6 @@ pub async fn get_game_extras(
     platform_id: Option<String>,
 ) -> Result<Vec<ExtraRow>, String> {
     games::get_game_extras(game_id, platform_id).await
-}
-
-#[tauri::command]
-pub async fn save_secure_setting(key: String, value: String) -> Result<(), String> {
-    secure_settings::save_secure_setting(key, value).await
-}
-
-#[tauri::command]
-pub async fn get_secure_setting(key: String) -> Result<Option<String>, String> {
-    secure_settings::get_secure_setting(key).await
 }
 
 #[cfg(test)]

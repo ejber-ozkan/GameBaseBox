@@ -1,6 +1,6 @@
 {
   "name": "gamebasebox",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -65,5 +65,8 @@
     "typescript": "^5",
     "vite": "^8.1.0",
     "vitest": "^4.1.9"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-darwin-arm64": "^1.2.16"
   }
 }

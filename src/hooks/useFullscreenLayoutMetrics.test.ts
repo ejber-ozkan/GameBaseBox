@@ -39,4 +39,37 @@ describe('fullscreen layout metrics', () => {
     expect(metrics.densityMode).toBe('compact');
     expect(metrics.detailResolutionTier).toBe('wqhd1440');
   });
+
+  it('preserves appropriate density on Mac Retina laptop screens', () => {
+    // 14" MacBook Pro (3024x1964 physical) resolves to standard, avoiding 4K compact
+    const macBookPro14 = buildFullscreenLayoutMetrics('auto', {
+      dpr: 2,
+      height: 982,
+      physicalHeight: 1964,
+      physicalWidth: 3024,
+      width: 1512,
+    });
+    expect(macBookPro14.densityMode).toBe('standard');
+
+    // 16" MacBook Pro (3456x2234 physical) resolves to standard, avoiding 4K compact
+    const macBookPro16 = buildFullscreenLayoutMetrics('auto', {
+      dpr: 2,
+      height: 1117,
+      physicalHeight: 2234,
+      physicalWidth: 3456,
+      width: 1728,
+    });
+    // Physical width (3456) is under 3600, so compact 4K density is avoided
+    expect(macBookPro16.densityMode).toBe('standard');
+
+    // Windowed mode (800x600, 1600x1200 physical) resolves to comfortable
+    const windowedRetina = buildFullscreenLayoutMetrics('auto', {
+      dpr: 2,
+      height: 600,
+      physicalHeight: 1200,
+      physicalWidth: 1600,
+      width: 800,
+    });
+    expect(windowedRetina.densityMode).toBe('comfortable');
+  });
 });

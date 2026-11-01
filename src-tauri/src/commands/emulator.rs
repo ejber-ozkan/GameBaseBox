@@ -1242,6 +1242,339 @@ fn write_mame_bbcmicro_cmd(
     Ok(cmd_file_path)
 }
 
+const ALL_POSSIBLE_EXES: &[&str] = &[
+    "retroarch.exe",
+    "retroarch",
+    "RetroArch",
+    "x64sc.exe",
+    "x64sc",
+    "x64.exe",
+    "x64",
+    "vice",
+    "vice.exe",
+    "xvic.exe",
+    "xvic",
+    "x128.exe",
+    "x128",
+    "xpet.exe",
+    "xpet",
+    "xplus4.exe",
+    "xplus4",
+    "xscpu64.exe",
+    "xscpu64",
+    "x64dtv.exe",
+    "x64dtv",
+    "altirra64.exe",
+    "altirra64",
+    "altirra.exe",
+    "altirra",
+    "spectaculator.exe",
+    "spectaculator",
+    "beebem.exe",
+    "beebem",
+    "winuae64.exe",
+    "winuae.exe",
+    "winuae",
+    "fs-uae.exe",
+    "fs-uae",
+    "FS-UAE",
+    "amiberry.exe",
+    "amiberry",
+    "kegswin.exe",
+    "kegswin",
+    "kegs.exe",
+    "kegs",
+    "gsplus.exe",
+    "gsplus",
+    "hatari.exe",
+    "hatari",
+    "Hatari",
+    "steem.exe",
+    "steem",
+    "cpce.exe",
+    "cpce",
+];
+
+fn profile_candidate_binaries(
+    emulator_profile_id: Option<&str>,
+    platform_id: Option<&str>,
+) -> &'static [&'static str] {
+    match emulator_profile_id {
+        Some("vice-c64") => &[
+            "x64sc.exe", "x64sc", "x64.exe", "x64", "vice.exe", "vice", "x64dtv.exe", "x64dtv",
+        ],
+        Some("vice-vic20") => &["xvic.exe", "xvic"],
+        Some("vice-c128") => &["x128.exe", "x128"],
+        Some("vice-pet") => &["xpet.exe", "xpet"],
+        Some(id) if id.starts_with("retroarch-") => &[
+            "retroarch.exe", "retroarch", "RetroArch",
+        ],
+        Some("altirra-atari800") | Some("altirra-atari5200") => &[
+            "altirra64.exe", "altirra64", "altirra.exe", "altirra", "Altirra64.exe", "Altirra.exe",
+        ],
+        Some("spectaculator-zxspectrum") => &[
+            "spectaculator.exe", "spectaculator", "Spectaculator.exe",
+        ],
+        Some("beebem-bbcmicro") => &["beebem.exe", "beebem", "BeeBEm.exe", "BeeBEm"],
+        Some("winuae-amiga") => &[
+            "winuae64.exe", "winuae.exe", "winuae", "fs-uae.exe", "fs-uae", "FS-UAE", "amiberry.exe", "amiberry",
+        ],
+        Some("kegs-apple2gs") => &[
+            "kegswin.exe", "kegswin", "kegs.exe", "kegs", "gsplus.exe", "gsplus",
+        ],
+        Some("hatari-atarist") => &["hatari.exe", "hatari", "Hatari"],
+        Some("steem-atarist") => &["steem.exe", "steem", "Steem.exe"],
+        Some("cpce-amstradcpc") => &["cpce.exe", "cpce"],
+        _ => match platform_id {
+            Some("c64") => &[
+                "x64sc.exe", "x64sc", "x64.exe", "x64", "vice.exe", "vice", "retroarch.exe", "retroarch",
+            ],
+            Some("vic20") => &["xvic.exe", "xvic", "retroarch.exe", "retroarch"],
+            Some("c128") => &["x128.exe", "x128", "retroarch.exe", "retroarch"],
+            Some("pet") => &["xpet.exe", "xpet", "retroarch.exe", "retroarch"],
+            _ => &[],
+        },
+    }
+}
+
+fn resolve_app_bundle(
+    app_bundle: &Path,
+    emulator_profile_id: Option<&str>,
+    platform_id: Option<&str>,
+) -> Option<PathBuf> {
+    let bundle_stem = app_bundle
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("");
+
+    // 1. Companion bin directory in parent folder (e.g. VICE distribution layout on macOS:
+    //    parent folder contains x64sc.app and bin/x64sc launcher script)
+    if let Some(parent) = app_bundle.parent() {
+        let bin_dir = parent.join("bin");
+        if bin_dir.is_dir() {
+            let stem_candidate = bin_dir.join(bundle_stem);
+            if stem_candidate.is_file() {
+                return Some(stem_candidate);
+            }
+            for exe in profile_candidate_binaries(emulator_profile_id, platform_id) {
+                let candidate = bin_dir.join(exe);
+                if candidate.is_file() {
+                    return Some(candidate);
+                }
+            }
+            for exe in ALL_POSSIBLE_EXES {
+                let candidate = bin_dir.join(exe);
+                if candidate.is_file() {
+                    return Some(candidate);
+                }
+            }
+        }
+    }
+
+    // 2. Contents/MacOS in the .app bundle
+    let macos_dir = app_bundle.join("Contents").join("MacOS");
+    if macos_dir.is_dir() {
+        if let Ok(entries) = std::fs::read_dir(&macos_dir) {
+            let mut files: Vec<PathBuf> = entries
+                .flatten()
+                .map(|e| e.path())
+                .filter(|p| p.is_file())
+                .collect();
+            files.sort();
+
+            if let Some(matching) = files.iter().find(|p| {
+                p.file_stem()
+                    .and_then(|s| s.to_str())
+                    .is_some_and(|s| s.eq_ignore_ascii_case(bundle_stem))
+            }) {
+                return Some(matching.clone());
+            }
+
+            for exe in profile_candidate_binaries(emulator_profile_id, platform_id) {
+                let clean_exe = exe.strip_suffix(".exe").unwrap_or(exe);
+                if let Some(matching) = files.iter().find(|p| {
+                    p.file_name()
+                        .and_then(|s| s.to_str())
+                        .is_some_and(|s| s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe))
+                }) {
+                    return Some(matching.clone());
+                }
+            }
+
+            for exe in ALL_POSSIBLE_EXES {
+                let clean_exe = exe.strip_suffix(".exe").unwrap_or(exe);
+                if let Some(matching) = files.iter().find(|p| {
+                    p.file_name()
+                        .and_then(|s| s.to_str())
+                        .is_some_and(|s| s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe))
+                }) {
+                    return Some(matching.clone());
+                }
+            }
+
+            if let Some(first) = files.into_iter().next() {
+                return Some(first);
+            }
+        }
+    }
+
+    // 3. Contents/Resources/bin in the .app bundle (VICE internal layout if VICE.app is selected)
+    let res_bin = app_bundle.join("Contents").join("Resources").join("bin");
+    if res_bin.is_dir() {
+        if let Ok(entries) = std::fs::read_dir(&res_bin) {
+            let mut files: Vec<PathBuf> = entries
+                .flatten()
+                .map(|e| e.path())
+                .filter(|p| p.is_file())
+                .collect();
+            files.sort();
+
+            for exe in profile_candidate_binaries(emulator_profile_id, platform_id) {
+                let clean_exe = exe.strip_suffix(".exe").unwrap_or(exe);
+                if let Some(matching) = files.iter().find(|p| {
+                    p.file_name()
+                        .and_then(|s| s.to_str())
+                        .is_some_and(|s| s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe))
+                }) {
+                    return Some(matching.clone());
+                }
+            }
+
+            for exe in ALL_POSSIBLE_EXES {
+                let clean_exe = exe.strip_suffix(".exe").unwrap_or(exe);
+                if let Some(matching) = files.iter().find(|p| {
+                    p.file_name()
+                        .and_then(|s| s.to_str())
+                        .is_some_and(|s| s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe))
+                }) {
+                    return Some(matching.clone());
+                }
+            }
+        }
+    }
+
+    None
+}
+
+fn resolve_directory(
+    dir: &Path,
+    emulator_profile_id: Option<&str>,
+    platform_id: Option<&str>,
+) -> Option<PathBuf> {
+    // 1. Direct candidate files in dir (Windows / Linux / flat directories)
+    for exe in profile_candidate_binaries(emulator_profile_id, platform_id) {
+        let p = dir.join(exe);
+        if p.is_file() {
+            return Some(p);
+        }
+    }
+    for exe in ALL_POSSIBLE_EXES {
+        let p = dir.join(exe);
+        if p.is_file() {
+            return Some(p);
+        }
+    }
+
+    // 2. Look in dir/bin (e.g. vice-arm64-gtk3-3.9/bin, /usr/local/bin, /opt/vice/bin)
+    let bin_dir = dir.join("bin");
+    if bin_dir.is_dir() {
+        for exe in profile_candidate_binaries(emulator_profile_id, platform_id) {
+            let p = bin_dir.join(exe);
+            if p.is_file() {
+                return Some(p);
+            }
+        }
+        for exe in ALL_POSSIBLE_EXES {
+            let p = bin_dir.join(exe);
+            if p.is_file() {
+                return Some(p);
+            }
+        }
+    }
+
+    // 3. Look for .app bundles in dir (e.g. vice-arm64-gtk3-3.9/x64sc.app, /Applications/RetroArch.app)
+    if let Ok(entries) = std::fs::read_dir(dir) {
+        let app_bundles: Vec<PathBuf> = entries
+            .flatten()
+            .map(|e| e.path())
+            .filter(|p| {
+                p.is_dir()
+                    && p.extension()
+                        .and_then(|ext| ext.to_str())
+                        .is_some_and(|ext| ext.eq_ignore_ascii_case("app"))
+            })
+            .collect();
+
+        let candidates = profile_candidate_binaries(emulator_profile_id, platform_id);
+        for app in &app_bundles {
+            let stem = app.file_stem().and_then(|s| s.to_str()).unwrap_or("");
+            if candidates.iter().any(|c| stem.eq_ignore_ascii_case(c.strip_suffix(".exe").unwrap_or(c))) {
+                if let Some(resolved) = resolve_app_bundle(app, emulator_profile_id, platform_id) {
+                    return Some(resolved);
+                }
+            }
+        }
+
+        for app in &app_bundles {
+            let stem = app.file_stem().and_then(|s| s.to_str()).unwrap_or("");
+            if ALL_POSSIBLE_EXES.iter().any(|c| stem.eq_ignore_ascii_case(c.strip_suffix(".exe").unwrap_or(c))) {
+                if let Some(resolved) = resolve_app_bundle(app, emulator_profile_id, platform_id) {
+                    return Some(resolved);
+                }
+            }
+        }
+
+        for app in &app_bundles {
+            if let Some(resolved) = resolve_app_bundle(app, emulator_profile_id, platform_id) {
+                return Some(resolved);
+            }
+        }
+    }
+
+    None
+}
+
+fn resolve_emulator_binary(
+    raw_path_str: &str,
+    emulator_profile_id: Option<&str>,
+    platform_id: Option<&str>,
+    not_found: impl FnOnce() -> String,
+) -> Result<PathBuf, String> {
+    let clean_str = raw_path_str.trim().trim_matches('"').trim_matches('\'');
+    let raw_path = PathBuf::from(clean_str);
+
+    if !raw_path.exists() {
+        return Err(not_found());
+    }
+
+    if raw_path.is_file() {
+        return Ok(raw_path);
+    }
+
+    if raw_path.is_dir() {
+        let is_app_bundle = raw_path
+            .extension()
+            .and_then(|ext| ext.to_str())
+            .is_some_and(|ext| ext.eq_ignore_ascii_case("app"))
+            || raw_path.join("Contents/MacOS").is_dir();
+
+        if is_app_bundle {
+            if let Some(resolved) = resolve_app_bundle(&raw_path, emulator_profile_id, platform_id) {
+                return Ok(resolved);
+            }
+        } else if let Some(resolved) = resolve_directory(&raw_path, emulator_profile_id, platform_id) {
+            return Ok(resolved);
+        }
+
+        return Err(format!(
+            "No supported emulator binary found in directory: {}",
+            raw_path.display()
+        ));
+    }
+
+    Err(not_found())
+}
+
 #[tauri::command]
 pub async fn test_emulator_profile(
     request: EmulatorProfileTestRequest,
@@ -1263,8 +1596,10 @@ pub async fn test_emulator_profile(
         });
     }
 
-    if let Err(message) = require_existing_file(
-        Path::new(&request.executable_path),
+    let _resolved_emulator = match resolve_emulator_binary(
+        &request.executable_path,
+        Some(emulator_profile_id),
+        Some(platform_id),
         || {
             format!(
                 "{} {} executable path not found: {}",
@@ -1273,20 +1608,15 @@ pub async fn test_emulator_profile(
                 request.executable_path
             )
         },
-        || {
-            format!(
-                "{} {} executable path is not a file: {}",
-                platform_display_name(platform),
-                emulator_profile_display_name(profile, is_retroarch),
-                request.executable_path
-            )
-        },
     ) {
-        return Ok(LaunchResult {
-            success: false,
-            message,
-        });
-    }
+        Ok(path) => path,
+        Err(message) => {
+            return Ok(LaunchResult {
+                success: false,
+                message,
+            });
+        }
+    };
 
     if is_retroarch {
         let Some(core_path) = request.core_path.as_deref().filter(|path| !path.is_empty()) else {
@@ -1330,6 +1660,10 @@ fn resolve_existing_rom_path(rom_path_str: &str) -> PathBuf {
     }
 
     let normalized = clean_str.replace('\\', "/");
+    let normalized_path = PathBuf::from(&normalized);
+    if normalized_path.exists() {
+        return normalized_path;
+    }
 
     // 1. Check if inserting "Extras" before subfolders (WHDLoad, SPS, Disks, HardDisk, STX, etc.) resolves to an existing file
     for candidate_folder in [
@@ -1363,10 +1697,11 @@ fn resolve_existing_rom_path(rom_path_str: &str) -> PathBuf {
 
 #[tauri::command]
 pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, String> {
-    let mut emulator = PathBuf::from(&request.emulator_path);
     let platform_id = request.platform_id.as_deref();
-    require_existing_file(
-        &emulator,
+    let emulator = resolve_emulator_binary(
+        &request.emulator_path,
+        request.emulator_profile_id.as_deref(),
+        platform_id,
         || {
             format!(
                 "{} {} executable path not found: {}",
@@ -1375,66 +1710,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
                 request.emulator_path
             )
         },
-        || {
-            format!(
-                "{} {} executable path is not a file: {}",
-                platform_display_name(platform_id),
-                emulator_profile_display_name(request.emulator_profile_id.as_deref(), false),
-                request.emulator_path
-            )
-        },
-    )
-    .or_else(|err| if emulator.is_dir() { Ok(()) } else { Err(err) })?;
-
-    if emulator.is_dir() {
-        let possible_exes = [
-            "retroarch.exe",
-            "retroarch",
-            "x64sc.exe",
-            "x64sc",
-            "x64.exe",
-            "x64",
-            "vice",
-            "x64dtv.exe",
-            "xpet.exe",
-            "altirra64.exe",
-            "altirra64",
-            "altirra.exe",
-            "altirra",
-            "spectaculator.exe",
-            "spectaculator",
-            "beebem.exe",
-            "beebem",
-            "winuae64.exe",
-            "winuae.exe",
-            "winuae",
-            "fs-uae.exe",
-            "fs-uae",
-            "amiberry.exe",
-            "amiberry",
-            "kegswin.exe",
-            "kegswin",
-            "kegs.exe",
-            "kegs",
-            "gsplus.exe",
-            "gsplus",
-        ];
-        let mut found = false;
-        for exe in possible_exes {
-            let p = emulator.join(exe);
-            if p.exists() && p.is_file() {
-                emulator = p;
-                found = true;
-                break;
-            }
-        }
-        if !found {
-            return Err(format!(
-                "No supported emulator binary found in directory: {}",
-                request.emulator_path
-            ));
-        }
-    }
+    )?;
 
     let rom = resolve_existing_rom_path(&request.rom_path);
     require_existing_file(
@@ -3357,6 +3633,189 @@ mod tests {
 
         let companion = find_bbcmicro_companion_disk_archive(&tape_zip);
         assert_eq!(companion, Some(disk_zip));
+    }
+
+    #[test]
+    fn test_resolve_emulator_binary_app_bundle_with_companion_bin() {
+        let dir = tempdir().unwrap();
+        let app_dir = dir.path().join("x64sc.app");
+        let bin_dir = dir.path().join("bin");
+        std::fs::create_dir_all(&app_dir).unwrap();
+        std::fs::create_dir_all(&bin_dir).unwrap();
+
+        let companion_bin = bin_dir.join("x64sc");
+        std::fs::write(&companion_bin, b"launcher").unwrap();
+
+        let resolved = resolve_emulator_binary(
+            &app_dir.to_string_lossy(),
+            Some("vice-c64"),
+            Some("c64"),
+            || "not found".to_string(),
+        ).unwrap();
+
+        assert_eq!(resolved, companion_bin);
+    }
+
+    #[test]
+    fn test_resolve_emulator_binary_standalone_app_bundle() {
+        let dir = tempdir().unwrap();
+        let app_dir = dir.path().join("RetroArch.app");
+        let macos_dir = app_dir.join("Contents").join("MacOS");
+        std::fs::create_dir_all(&macos_dir).unwrap();
+
+        let macos_binary = macos_dir.join("RetroArch");
+        std::fs::write(&macos_binary, b"binary").unwrap();
+
+        let resolved = resolve_emulator_binary(
+            &app_dir.to_string_lossy(),
+            Some("retroarch-c64"),
+            Some("c64"),
+            || "not found".to_string(),
+        ).unwrap();
+
+        assert_eq!(resolved, macos_binary);
+    }
+
+    #[test]
+    fn test_resolve_emulator_binary_parent_directory_with_bin() {
+        let dir = tempdir().unwrap();
+        let vice_dir = dir.path().join("vice-arm64-gtk3-3.9");
+        let bin_dir = vice_dir.join("bin");
+        std::fs::create_dir_all(&bin_dir).unwrap();
+
+        let binary = bin_dir.join("x64sc");
+        std::fs::write(&binary, b"launcher").unwrap();
+
+        let resolved = resolve_emulator_binary(
+            &vice_dir.to_string_lossy(),
+            Some("vice-c64"),
+            Some("c64"),
+            || "not found".to_string(),
+        ).unwrap();
+
+        assert_eq!(resolved, binary);
+    }
+
+    #[test]
+    fn test_resolve_emulator_binary_directory_with_app_bundle() {
+        let dir = tempdir().unwrap();
+        let parent_dir = dir.path().join("emulators");
+        let app_dir = parent_dir.join("RetroArch.app");
+        let macos_dir = app_dir.join("Contents").join("MacOS");
+        std::fs::create_dir_all(&macos_dir).unwrap();
+
+        let macos_binary = macos_dir.join("RetroArch");
+        std::fs::write(&macos_binary, b"binary").unwrap();
+
+        let resolved = resolve_emulator_binary(
+            &parent_dir.to_string_lossy(),
+            Some("retroarch-c64"),
+            Some("c64"),
+            || "not found".to_string(),
+        ).unwrap();
+
+        assert_eq!(resolved, macos_binary);
+    }
+
+    #[test]
+    fn test_resolve_emulator_binary_direct_file_and_quotes() {
+        let dir = tempdir().unwrap();
+        let binary_path = dir.path().join("x64sc.exe");
+        std::fs::write(&binary_path, b"exe").unwrap();
+
+        // Direct path
+        let resolved = resolve_emulator_binary(
+            &binary_path.to_string_lossy(),
+            Some("vice-c64"),
+            Some("c64"),
+            || "not found".to_string(),
+        ).unwrap();
+        assert_eq!(resolved, binary_path);
+
+        // Quoted path
+        let quoted = format!("\"{}\"", binary_path.to_string_lossy());
+        let resolved_quoted = resolve_emulator_binary(
+            &quoted,
+            Some("vice-c64"),
+            Some("c64"),
+            || "not found".to_string(),
+        ).unwrap();
+        assert_eq!(resolved_quoted, binary_path);
+    }
+
+    #[test]
+    fn test_resolve_emulator_binary_not_found_and_empty_dir() {
+        let err = resolve_emulator_binary(
+            "/does/not/exist/at/all",
+            Some("vice-c64"),
+            Some("c64"),
+            || "Path not found custom".to_string(),
+        ).unwrap_err();
+        assert_eq!(err, "Path not found custom");
+
+        let dir = tempdir().unwrap();
+        let empty_dir = dir.path().join("empty");
+        std::fs::create_dir_all(&empty_dir).unwrap();
+
+        let err_dir = resolve_emulator_binary(
+            &empty_dir.to_string_lossy(),
+            Some("vice-c64"),
+            Some("c64"),
+            || "not found".to_string(),
+        ).unwrap_err();
+        assert!(err_dir.contains("No supported emulator binary found in directory"));
+    }
+
+    #[tokio::test]
+    async fn test_emulator_profile_c64_vice_supports_app_bundle() {
+        let dir = tempdir().unwrap();
+        let app_dir = dir.path().join("x64sc.app");
+        let bin_dir = dir.path().join("bin");
+        std::fs::create_dir_all(&app_dir).unwrap();
+        std::fs::create_dir_all(&bin_dir).unwrap();
+
+        let companion_bin = bin_dir.join("x64sc");
+        copy_test_emulator(&companion_bin);
+
+        let request = EmulatorProfileTestRequest {
+            platform_id: "c64".to_string(),
+            emulator_profile_id: "vice-c64".to_string(),
+            executable_path: app_dir.to_string_lossy().to_string(),
+            core_path: None,
+        };
+
+        let result = test_emulator_profile(request).await.unwrap();
+        assert!(result.success);
+        assert!(result.message.contains("C64 VICE"));
+    }
+
+    #[tokio::test]
+    async fn test_launch_emulator_supports_app_bundle_with_companion_bin() {
+        let dir = tempdir().unwrap();
+        let app_dir = dir.path().join("x64sc.app");
+        let bin_dir = dir.path().join("bin");
+        std::fs::create_dir_all(&app_dir).unwrap();
+        std::fs::create_dir_all(&bin_dir).unwrap();
+
+        let companion_bin = bin_dir.join("x64sc");
+        copy_test_emulator(&companion_bin);
+
+        let rom_path = dir.path().join("game.d64");
+        std::fs::write(&rom_path, b"dummy rom").unwrap();
+
+        let request = LaunchRequest {
+            platform_id: Some("c64".to_string()),
+            emulator_profile_id: Some("vice-c64".to_string()),
+            emulator_path: app_dir.to_string_lossy().to_string(),
+            rom_path: rom_path.to_string_lossy().to_string(),
+            true_drive_emulation: true,
+            is_pal: false,
+            ..Default::default()
+        };
+
+        let result = launch_emulator(request).await.unwrap();
+        assert!(result.success);
+        assert!(result.message.to_lowercase().contains("x64sc"));
     }
 }
 

@@ -1823,7 +1823,7 @@ export function UnifiedDetailLayout({
 
   return (
     <div
-      className="relative isolate h-full min-h-screen overflow-hidden text-theme-text font-sans selection:bg-theme-primary/30 selection:text-theme-text"
+      className="relative isolate h-full w-full overflow-hidden text-theme-text font-sans selection:bg-theme-primary/30 selection:text-theme-text"
       style={{
         background: bgStyle,
         backgroundColor: isC64 ? 'transparent' : 'var(--theme-background)',
@@ -1845,22 +1845,28 @@ export function UnifiedDetailLayout({
 
       {isCyberpunk && <div className="scanlines-overlay opacity-60"></div>}
 
-      <div className="relative z-10 flex h-screen items-start justify-center overflow-hidden">
+      <div className="relative z-10 flex h-full w-full items-start justify-center overflow-hidden">
         <div
           className="relative"
           style={{
-            height: `${surfaceHeight}px`,
-            width: `${surfaceWidth}px`,
+            height: renderScale === 1 ? '100%' : `${surfaceHeight}px`,
+            width: renderScale === 1 ? '100%' : `${surfaceWidth}px`,
+            maxHeight: '100%',
+            maxWidth: '100%',
           }}
         >
           <div
-            className="absolute left-0 top-0"
-            style={{
-              height: `${designHeight}px`,
-              transform: `scale(${renderScale})`,
-              transformOrigin: 'top left',
-              width: `${designWidth}px`,
-            }}
+            className={renderScale === 1 ? 'relative h-full w-full' : 'absolute left-0 top-0'}
+            style={
+              renderScale === 1
+                ? undefined
+                : {
+                    height: `${designHeight}px`,
+                    transform: `scale(${renderScale})`,
+                    transformOrigin: 'top left',
+                    width: `${designWidth}px`,
+                  }
+            }
           >
             <header
               className={`relative z-10 border-b border-theme-outline/20 backdrop-blur-xl ${

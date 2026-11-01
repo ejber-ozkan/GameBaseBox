@@ -309,24 +309,26 @@ export async function resolveMediaPath(
   baseDir: string,
   filename: string
 ): Promise<ResolvedPath> {
-  const cacheKey = `${baseDir}::${filename}`;
+  const cleanBaseDir = baseDir.replace(/\\/g, '/').replace(/\/+$/, '');
+  const cleanFilename = filename.replace(/\\/g, '/');
+  const cacheKey = `${cleanBaseDir}::${cleanFilename}`;
   let cached = resolveMediaPathCache.get(cacheKey);
   if (!cached) {
     if (await isDebugMode()) {
-      logDebugMessage(`[DEBUG] [CACHE MISS] resolveMediaPath: "${filename}" under "${baseDir}" - requesting from backend`);
+      logDebugMessage(`[DEBUG] [CACHE MISS] resolveMediaPath: "${cleanFilename}" under "${cleanBaseDir}" - requesting from backend`);
     }
     const p = (async () => {
       if (!isTauri()) {
-        return { exists: false, absolute_path: `${baseDir}/${filename}` };
+        return { exists: false, absolute_path: `${cleanBaseDir}/${cleanFilename}` };
       }
-      return invoke<ResolvedPath>('resolve_media_path', { baseDir, filename });
+      return invoke<ResolvedPath>('resolve_media_path', { baseDir: cleanBaseDir, filename: cleanFilename });
     })();
     resolveMediaPathCache.set(cacheKey, p);
     p.catch(() => resolveMediaPathCache.delete(cacheKey));
     cached = p;
   } else {
     if (await isDebugMode()) {
-      logDebugMessage(`[DEBUG] [CACHE HIT] resolveMediaPath: "${filename}" under "${baseDir}"`);
+      logDebugMessage(`[DEBUG] [CACHE HIT] resolveMediaPath: "${cleanFilename}" under "${cleanBaseDir}"`);
     }
   }
   return cached;
@@ -339,24 +341,26 @@ export async function findAllMediaVariants(
   baseDir: string,
   filename: string
 ): Promise<string[]> {
-  const cacheKey = `${baseDir}::${filename}`;
+  const cleanBaseDir = baseDir.replace(/\\/g, '/').replace(/\/+$/, '');
+  const cleanFilename = filename.replace(/\\/g, '/');
+  const cacheKey = `${cleanBaseDir}::${cleanFilename}`;
   let cached = findAllMediaVariantsCache.get(cacheKey);
   if (!cached) {
     if (await isDebugMode()) {
-      logDebugMessage(`[DEBUG] [CACHE MISS] findAllMediaVariants: "${filename}" under "${baseDir}" - requesting from backend`);
+      logDebugMessage(`[DEBUG] [CACHE MISS] findAllMediaVariants: "${cleanFilename}" under "${cleanBaseDir}" - requesting from backend`);
     }
     const p = (async () => {
       if (!isTauri()) {
-        return [`${baseDir}/${filename}`];
+        return [`${cleanBaseDir}/${cleanFilename}`];
       }
-      return invoke<string[]>('find_all_media_variants', { baseDir, filename });
+      return invoke<string[]>('find_all_media_variants', { baseDir: cleanBaseDir, filename: cleanFilename });
     })();
     findAllMediaVariantsCache.set(cacheKey, p);
     p.catch(() => findAllMediaVariantsCache.delete(cacheKey));
     cached = p;
   } else {
     if (await isDebugMode()) {
-      logDebugMessage(`[DEBUG] [CACHE HIT] findAllMediaVariants: "${filename}" under "${baseDir}"`);
+      logDebugMessage(`[DEBUG] [CACHE HIT] findAllMediaVariants: "${cleanFilename}" under "${cleanBaseDir}"`);
     }
   }
   return cached;
@@ -721,6 +725,54 @@ export async function setWindowMode(fullscreen: boolean, width?: number, height?
 }
 
 /**
+ * Check if the window is currently in fullscreen mode.
+ */
+export async function isWindowFullscreen(): Promise<boolean> {
+  if (typeof document !== 'undefined' && Boolean(document.fullscreenElement)) {
+    return true;
+  }
+  if (!isTauri()) {
+    return false;
+  }
+  try {
+    return await invoke<boolean>('is_window_fullscreen');
+  } catch (e) {
+    console.error('[tauri-bridge] isWindowFullscreen error:', e);
+    return false;
+  }
+}
+
+/**
+ * Listen for native window fullscreen state changes (e.g. Mac green button).
+ */
+export async function onWindowFullscreenChange(
+  callback: (isFullscreen: boolean) => void,
+): Promise<(() => void) | undefined> {
+  if (!isTauri()) {
+    if (typeof document !== 'undefined') {
+      const handler = () => {
+        callback(Boolean(document.fullscreenElement));
+      };
+      document.addEventListener('fullscreenchange', handler);
+      return () => {
+        document.removeEventListener('fullscreenchange', handler);
+      };
+    }
+    return undefined;
+  }
+
+  try {
+    const { listen } = await import('@tauri-apps/api/event');
+    return await listen<boolean>('window-fullscreen-changed', (event) => {
+      callback(event.payload);
+    });
+  } catch (e) {
+    console.error('[tauri-bridge] onWindowFullscreenChange error:', e);
+    return undefined;
+  }
+}
+
+/**
  * Get current window dimensions.
  */
 export async function getWindowSize(): Promise<{ width: number, height: number } | null> {
@@ -1072,27 +1124,6 @@ export async function getDbGameDetail(
     console.error('Failed to get game detail from database:', err);
     return null;
   }
-}
-
-/**
- * Save a sensitive setting encrypted in the local SQLite database.
- */
-export async function saveSecureSetting(key: string, value: string): Promise<void> {
-  if (!isTauri()) {
-    localStorage.setItem(`secure_${key}`, value);
-    return;
-  }
-  return invoke<void>('save_secure_setting', { key, value });
-}
-
-/**
- * Retrieve and decrypt a sensitive setting from the local SQLite database.
- */
-export async function getSecureSetting(key: string): Promise<string | null> {
-  if (!isTauri()) {
-    return localStorage.getItem(`secure_${key}`);
-  }
-  return invoke<string | null>('get_secure_setting', { key });
 }
 
 export interface MediaDownloadProgress {

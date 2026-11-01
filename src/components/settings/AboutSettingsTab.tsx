@@ -122,14 +122,6 @@ export function AboutSettingsTab({
           </div>
 
           <div className="space-y-1">
-            <h4 className="text-[10px] font-bold uppercase tracking-widest text-theme-primary font-mono">Media Scraping</h4>
-            <div className="text-[10px] text-theme-text-muted leading-relaxed">
-              <p className="font-bold">EmuMovies</p>
-              <p className="italic font-mono">Video snaps & assets</p>
-            </div>
-          </div>
-
-          <div className="space-y-1">
             <h4 className="text-[10px] font-bold uppercase tracking-widest text-theme-primary font-mono">Video Playback</h4>
             <div className="text-[10px] text-theme-text-muted leading-relaxed">
               <p className="font-bold">video.js</p>

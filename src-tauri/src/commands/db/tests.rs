@@ -8,8 +8,8 @@ use super::querying::{
     load_ordered_game_ids_with_fallback, SearchMode,
 };
 use super::{
-    get_db_game_count, get_db_games, get_game_extras, get_genres, get_secure_setting,
-    get_sub_genres, save_secure_setting,
+    get_db_game_count, get_db_games, get_game_extras, get_genres,
+    get_sub_genres,
 };
 use crate::database::init_database;
 use crate::test_helpers::DbEnvGuard;
@@ -488,27 +488,6 @@ fn test_build_game_summary_query_preserves_requested_id_order_in_sql() {
         .unwrap();
 
     assert_eq!(game_ids, ordered_ids);
-}
-
-#[tokio::test(flavor = "current_thread")]
-async fn test_secure_settings_roundtrip() {
-    let temp_db = NamedTempFile::new().unwrap();
-    let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
-
-    save_secure_setting("test_key".to_string(), "test_password".to_string())
-        .await
-        .expect("Failed to save");
-    let val = get_secure_setting("test_key".to_string())
-        .await
-        .expect("Failed to get");
-
-    assert_eq!(val, Some("test_password".to_string()));
-
-    let missing = get_secure_setting("unknown".to_string())
-        .await
-        .expect("Failed to get unknown");
-    assert!(missing.is_none());
 }
 
 #[tokio::test(flavor = "current_thread")]

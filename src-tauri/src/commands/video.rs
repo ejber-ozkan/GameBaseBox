@@ -108,8 +108,9 @@ fn download_progress_snapshot(
 }
 
 fn sanitize_relative_video_path(relative_path: &str) -> Result<PathBuf, String> {
+    let normalized = relative_path.replace('\\', "/");
     let mut sanitized = PathBuf::new();
-    for component in Path::new(relative_path).components() {
+    for component in Path::new(&normalized).components() {
         match component {
             Component::Normal(value) => sanitized.push(value),
             Component::CurDir => {}

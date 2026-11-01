@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Phase 3 Integration Tests: ROM Scanner & CRC Matching
  *
  * Tests the core Phase 3 requirement:
@@ -23,15 +23,7 @@ vi.mock('../lib/tauri-bridge', () => ({
   isDebugMode: vi.fn().mockResolvedValue(false),
 }));
 
-// Mock EmuMovies so tests don't hit the real API
-vi.mock('../lib/emumovies', () => ({
-  searchEmuMovies:       vi.fn(),
-  getVideoSnapUrl:       vi.fn(),
-  downloadEmuMoviesAsset: vi.fn(),
-}));
-
 import { scanRomDirectory, launchEmulator }      from '../lib/tauri-bridge';
-import { searchEmuMovies, getVideoSnapUrl }       from '../lib/emumovies';
 
 // ---------------------------------------------------------------------------
 // Helpers — replicate the CRC-matching logic that will be used in production
@@ -195,37 +187,5 @@ describe('Phase 3: Emulator Launch', () => {
 
     expect(result.success).toBe(false);
     expect(result.message).toContain('not found');
-  });
-});
-
-describe('Phase 3: EmuMovies Integration', () => {
-  beforeEach(() => vi.clearAllMocks());
-
-  it('searchEmuMovies returns video snap results', async () => {
-    vi.mocked(searchEmuMovies).mockResolvedValue([
-      { id: '001', name: 'Commando', mediaType: 'Video', url: 'https://cdn.emumovies.com/commando.mp4', previewUrl: 'https://cdn.emumovies.com/commando_thumb.jpg' },
-    ]);
-
-    const results = await searchEmuMovies('test-api-key', 'Commando', 'Video');
-    expect(results).toHaveLength(1);
-    expect(results[0].url).toContain('.mp4');
-    expect(results[0].name).toBe('Commando');
-  });
-
-  it('getVideoSnapUrl returns first result URL', async () => {
-    vi.mocked(getVideoSnapUrl).mockResolvedValue('https://cdn.emumovies.com/commando.mp4');
-    const url = await getVideoSnapUrl('test-api-key', 'Commando');
-    expect(url).toBe('https://cdn.emumovies.com/commando.mp4');
-  });
-
-  it('getVideoSnapUrl returns null when no API key provided', async () => {
-    vi.mocked(getVideoSnapUrl).mockResolvedValue(null);
-    const url = await getVideoSnapUrl('', 'Commando');
-    expect(url).toBeNull();
-  });
-
-  it('searchEmuMovies throws on invalid API key (401)', async () => {
-    vi.mocked(searchEmuMovies).mockRejectedValue(new Error('EmuMovies API key is invalid or expired.'));
-    await expect(searchEmuMovies('bad-key', 'Commando', 'Video')).rejects.toThrow('invalid or expired');
   });
 });

@@ -332,4 +332,14 @@ describe('SettingsContext', () => {
 
     expect(result.current.settings.language).toBe('de');
   });
+
+  test('normalizes Windows backslashes in media paths cross-platform', () => {
+    const { result } = renderHook(() => useSettings(), {
+      wrapper: ({ children }) => <SettingsProvider>{children}</SettingsProvider>
+    });
+
+    const resolved = result.current.resolveMediaPath('screenshot', 'Z\\Zaxxon_v1.png');
+    expect(resolved).not.toContain('\\');
+    expect(resolved).toContain('Z/Zaxxon_v1.png');
+  });
 });

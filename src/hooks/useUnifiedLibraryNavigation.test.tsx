@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { act, fireEvent, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockGames } from '../data/mockGames';
-import { getWindowSize, type GameFilters } from '../lib/tauri-bridge';
+import { getWindowSize, isWindowFullscreen, type GameFilters } from '../lib/tauri-bridge';
 import { useUnifiedLibraryNavigation, type UseUnifiedLibraryNavigationProps } from './useUnifiedLibraryNavigation';
 import type { LibraryViewMode } from './useLibraryBrowserState';
 import type { BigBoxRailCategory } from './useBigBoxLibraryData';
@@ -11,7 +11,11 @@ const gamepad = vi.hoisted(() => ({ onButtonDown: undefined as ((button: string)
 vi.mock('./useGamepad', () => ({ useGamepad: (handlers: { onButtonDown: (button: string) => void }) => {
   gamepad.onButtonDown = handlers.onButtonDown;
 } }));
-vi.mock('../lib/tauri-bridge', () => ({ exitApp: vi.fn(), getWindowSize: vi.fn() }));
+vi.mock('../lib/tauri-bridge', () => ({
+  exitApp: vi.fn(),
+  getWindowSize: vi.fn(),
+  isWindowFullscreen: vi.fn().mockResolvedValue(false),
+}));
 
 function createProps(overrides: Partial<UseUnifiedLibraryNavigationProps> = {}): UseUnifiedLibraryNavigationProps {
   return {
@@ -209,5 +213,55 @@ describe('active unified library input', () => {
     expect(onShowSettings).toHaveBeenCalledOnce();
     act(() => gamepad.onButtonDown?.('B'));
     expect(onBack).toHaveBeenCalledOnce();
+  });
+
+  it('does not persist resize dimensions when OS window is fullscreen even if isFullscreen prop is false', async () => {
+    vi.useFakeTimers();
+    vi.mocked(isWindowFullscreen).mockResolvedValue(true);
+    const persistWindowSize = vi.fn();
+    renderHook(() => useUnifiedLibraryNavigation(createProps({
+      isFullscreen: false,
+      persistWindowSize,
+    })));
+
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500);
+    });
+
+    expect(persistWindowSize).not.toHaveBeenCalled();
+  });
+
+  it('persists resize dimensions when window is not fullscreen', async () => {
+    vi.useFakeTimers();
+    vi.mocked(isWindowFullscreen).mockResolvedValue(false);
+    vi.mocked(getWindowSize).mockResolvedValue({ width: 1280, height: 720 });
+    const persistWindowSize = vi.fn();
+    renderHook(() => useUnifiedLibraryNavigation(createProps({
+      isFullscreen: false,
+      persistWindowSize,
+    })));
+
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500);
+    });
+
+    expect(persistWindowSize).toHaveBeenCalledWith({ width: 1280, height: 720 });
+  });
+
+  it('exits fullscreen on Alt+Enter when fullscreen is enabled', () => {
+    const updateSettings = vi.fn();
+    renderHook(() => useUnifiedLibraryNavigation(createProps({
+      isFullscreen: true,
+      updateSettings,
+    })));
+
+    fireEvent.keyDown(window, { key: 'Enter', altKey: true });
+    expect(updateSettings).toHaveBeenCalledWith({ isFullscreen: false });
   });
 });

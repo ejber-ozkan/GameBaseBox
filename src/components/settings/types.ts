@@ -9,7 +9,6 @@ export type SettingsTabId =
   | 'interaction'
   | 'content'
   | `platform-paths:${PlatformId}`
-  | 'scrapers'
   | 'maintenance'
   | 'about';
 
@@ -85,16 +84,7 @@ export function getSettingsItemCount(tabId: SettingsTabId): number {
 export type EditableSettings = Pick<
   Settings,
   | 'emulatorPath'
-  | 'emuMoviesUsername'
-  | 'emuMoviesPassword'
-  | 'scrapedMediaPath'
   | 'hideAdultContent'
-  | 'activeScraper'
-  | 'screenScraperUsername'
-  | 'screenScraperPassword'
-  | 'screenScraperDevId'
-  | 'screenScraperDevPassword'
-  | 'theGamesDbApiKey'
   | 'retroarchPath'
   | 'retroarchCorePath'
   | 'preferredEmulator'
@@ -118,16 +108,7 @@ export type EditableSettings = Pick<
 export function getEditableSettings(settings: Settings): EditableSettings {
   return {
     emulatorPath: settings.emulatorPath,
-    emuMoviesUsername: settings.emuMoviesUsername,
-    emuMoviesPassword: settings.emuMoviesPassword,
-    scrapedMediaPath: settings.scrapedMediaPath,
     hideAdultContent: settings.hideAdultContent,
-    activeScraper: settings.activeScraper,
-    screenScraperUsername: settings.screenScraperUsername,
-    screenScraperPassword: settings.screenScraperPassword,
-    screenScraperDevId: settings.screenScraperDevId,
-    screenScraperDevPassword: settings.screenScraperDevPassword,
-    theGamesDbApiKey: settings.theGamesDbApiKey,
     retroarchPath: settings.retroarchPath,
     retroarchCorePath: settings.retroarchCorePath,
     preferredEmulator: settings.preferredEmulator,

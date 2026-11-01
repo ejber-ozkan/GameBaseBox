@@ -236,7 +236,7 @@ All debug output and warnings are also persistently written to log files in the 
 .\tauri-build.bat
 
 # Linux/macOS
-npm run tauri build
+./tauri-build.sh
 ```
 
 Build artifacts are written under `src-tauri/target/release/bundle/`.

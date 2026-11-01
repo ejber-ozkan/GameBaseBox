@@ -394,18 +394,6 @@ fn table_columns_in_schema(
     Ok(columns)
 }
 
-fn ensure_secure_table_on_connection(conn: &Connection) -> Result<(), String> {
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS SecureSettings (
-            key TEXT PRIMARY KEY,
-            value TEXT NOT NULL
-        )",
-        [],
-    )
-    .map_err(|e| e.to_string())?;
-    Ok(())
-}
-
 fn ensure_table_platform_columns(
     conn: &Connection,
     table_name: &str,
@@ -673,7 +661,6 @@ pub fn ensure_query_support_objects(conn: &Connection) -> Result<(), String> {
 pub fn init_database() -> Result<(), String> {
     let conn = Connection::open(get_db_path()).map_err(|e| e.to_string())?;
     ensure_query_support_objects(&conn)?;
-    ensure_secure_table_on_connection(&conn)?;
     Ok(())
 }
 
@@ -689,7 +676,6 @@ pub fn is_database_ready() -> Result<bool, String> {
 
     if has_games && has_view {
         ensure_query_support_objects(&conn)?;
-        ensure_secure_table_on_connection(&conn)?;
         Ok(true)
     } else {
         Ok(false)
@@ -1309,7 +1295,6 @@ fn merge_imported_database(
         ensure_query_indexes(&conn)?;
         rebuild_cover_index(&conn)?;
         rebuild_search_index(&conn)?;
-        ensure_secure_table_on_connection(&conn)?;
         refresh_platform_libraries(&conn)?;
 
         conn.execute_batch("COMMIT")
@@ -1368,7 +1353,6 @@ where
         ensure_query_indexes(&conn)?;
         rebuild_cover_index(&conn)?;
         rebuild_search_index(&conn)?;
-        ensure_secure_table_on_connection(&conn)?;
 
         drop(conn);
         check_cancelled()?;
@@ -1440,32 +1424,11 @@ where
     })
 }
 
-pub fn init_secure_table() -> Result<(), String> {
-    let conn = Connection::open(get_db_path()).map_err(|e| e.to_string())?;
-    ensure_secure_table_on_connection(&conn)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::test_helpers::DbEnvGuard;
     use tempfile::{tempdir, NamedTempFile};
-
-    #[test]
-    fn test_init_secure_table() {
-        let temp_db = NamedTempFile::new().unwrap();
-        let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
-
-        init_secure_table().expect("Failed to init table");
-
-        let conn = Connection::open(&db_path).unwrap();
-        let mut stmt = conn
-            .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='SecureSettings'")
-            .unwrap();
-        let exists: bool = stmt.exists([]).unwrap();
-        assert!(exists);
-    }
 
     #[test]
     fn test_get_db_path_prefers_environment_variable() {

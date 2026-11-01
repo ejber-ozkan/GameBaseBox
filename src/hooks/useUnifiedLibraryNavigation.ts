@@ -317,6 +317,12 @@ export function useUnifiedLibraryNavigation({
       }
     } else {
       // ---------------- FULLSCREEN KEYBOARD NAVIGATION ----------------
+      if (event.key === 'Enter' && 'altKey' in event && (event as KeyboardEvent).altKey) {
+        if ('preventDefault' in event) (event as KeyboardEvent).preventDefault();
+        updateSettings({ isFullscreen: false });
+        return;
+      }
+
       const activeElementTag = document.activeElement?.tagName;
       const isInputFocused = activeElementTag === 'INPUT';
       const isSelectFocused = activeElementTag === 'SELECT';
@@ -671,7 +677,9 @@ export function useUnifiedLibraryNavigation({
       clearTimeout(timeoutId);
       timeoutId = setTimeout(async () => {
         if (persistWindowSize) {
-          const { getWindowSize } = await import('../lib/tauri-bridge');
+          const { getWindowSize, isWindowFullscreen } = await import('../lib/tauri-bridge');
+          const isFs = await isWindowFullscreen();
+          if (isFs) return;
           const size = await getWindowSize();
           if (size) {
             persistWindowSize(size);
