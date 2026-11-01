@@ -10,6 +10,7 @@ This patch release delivers macOS compatibility and stability fixes, including a
 - Prevent redundant fullscreen state toggles and window resizing flickers on macOS with the new `is_window_fullscreen` IPC query and state checks.
 - Add macOS/Linux convenience scripts (`tauri-build.sh`, `tauri-clean.sh`, `tauri-dev.sh`, `tauri-dev-debug.sh`) with dependency pre-flight checks and cross-platform launcher test coverage.
 - Improve SID player controls, state management, and settings tab decoupling.
+- Upgrade Next.js to 16.4.3 and resolve security advisories in production dependencies.
 
 ## Validation and known limitations
 
