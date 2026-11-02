@@ -258,7 +258,9 @@ Open **Settings** from the top header bar:
 
 ## Release Notes
 
-The [0.7.0 release notes](RELEASE_NOTES_0.7.0.md) describe the changes, known limitations and rollback guidance.
+The [0.7.2 release notes](RELEASE_NOTES_0.7.2.md) describe the C64 fixes, emulator settings, known limitations and rollback guidance.
+
+Previous notes: [0.7.1](docs/release_notes/RELEASE_NOTES_0.7.1.md) and [0.7.0](docs/release_notes/RELEASE_NOTES_0.7.0.md).
 
 See [CHANGELOG.md](CHANGELOG.md)
 

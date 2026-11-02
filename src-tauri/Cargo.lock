@@ -1142,7 +1142,7 @@ dependencies = [
 
 [[package]]
 name = "gamebasebox"
-version = "0.7.1"
+version = "0.7.2"
 dependencies = [
  "crc32fast",
  "log",
