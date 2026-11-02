@@ -213,8 +213,12 @@ SELECT
     g.SidFilename as sidFilename,
     g.CRC as crc,
     y.Year as year,
-    CASE WHEN g.V_PalNTSC = 'P' OR g.V_PalNTSC = 'B' THEN 1 ELSE 0 END as isPal,
-    CASE WHEN g.V_PalNTSC = 'N' OR g.V_PalNTSC = 'B' THEN 1 ELSE 0 END as isNtsc,
+    CASE WHEN g.platform_id = 'c64' THEN
+        CASE WHEN UPPER(TRIM(COALESCE(g.V_PalNTSC, ''))) IN ('1', '3', '4', 'P', 'B') THEN 1 ELSE 0 END
+        ELSE CASE WHEN g.V_PalNTSC IN ('P', 'B') THEN 1 ELSE 0 END END as isPal,
+    CASE WHEN g.platform_id = 'c64' THEN
+        CASE WHEN UPPER(TRIM(COALESCE(g.V_PalNTSC, ''))) IN ('2', '3', '4', 'N', 'B') THEN 1 ELSE 0 END
+        ELSE CASE WHEN g.V_PalNTSC IN ('N', 'B') THEN 1 ELSE 0 END END as isNtsc,
     CASE WHEN g.V_TrueDriveEmu = '1' THEN 1 ELSE 0 END as trueDriveEmu,
     CASE WHEN g.Classic = 'True' THEN 1 ELSE 0 END as isClassic,
     ifnull(pg.ParentGenre, 'Unknown') as parentGenre,
@@ -495,7 +499,13 @@ fn ensure_game_view(conn: &Connection) -> Result<(), String> {
     }
 
     if table_has_columns(conn, "GameView", &["platformId", "sourceGameId"])? {
-        return Ok(());
+        let view_sql: String = conn.query_row(
+            "SELECT sql FROM sqlite_master WHERE type='view' AND name='GameView'", [], |r| r.get(0),
+        ).map_err(|e| e.to_string())?;
+        // Upgrade generated region expressions without replacing unrelated/custom views.
+        if !view_sql.contains("g.V_PalNTSC") || view_sql.contains("UPPER(TRIM(COALESCE(g.V_PalNTSC") {
+            return Ok(());
+        }
     }
 
     if !table_has_columns(
@@ -1426,6 +1436,37 @@ where
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn c64_regions_refresh_existing_views_without_reimport() {
+        let conn = rusqlite::Connection::open_in_memory().unwrap();
+        conn.execute_batch("
+            CREATE TABLE Games (platform_id TEXT, source_game_id TEXT, GA_Id TEXT, Name TEXT,
+                Filename TEXT, FileToRun TEXT, ScrnshotFilename TEXT, SidFilename TEXT, CRC TEXT,
+                V_PalNTSC TEXT, V_TrueDriveEmu TEXT, Classic TEXT,
+                YE_Id TEXT, GE_Id TEXT, DE_Id TEXT, PU_Id TEXT, MU_Id TEXT, LA_Id TEXT);
+            CREATE TABLE Years (YE_Id TEXT, platform_id TEXT, Year TEXT);
+            CREATE TABLE Genres (GE_Id TEXT, platform_id TEXT, PG_Id TEXT, Genre TEXT);
+            CREATE TABLE PGenres (PG_Id TEXT, platform_id TEXT, ParentGenre TEXT);
+            CREATE TABLE Developers (DE_Id TEXT, platform_id TEXT, Developer TEXT);
+            CREATE TABLE Publishers (PU_Id TEXT, platform_id TEXT, Publisher TEXT);
+            CREATE TABLE Musicians (MU_Id TEXT, platform_id TEXT, Musician TEXT);
+            CREATE TABLE Languages (LA_Id TEXT, platform_id TEXT, Language TEXT);
+            CREATE VIEW GameView AS SELECT platform_id AS platformId, source_game_id AS sourceGameId,
+                GA_Id AS id, CASE WHEN g.V_PalNTSC = 'P' THEN 1 ELSE 0 END AS isPal,
+                CASE WHEN g.V_PalNTSC = 'N' THEN 1 ELSE 0 END AS isNtsc FROM Games g;
+        ").unwrap();
+        for (code, pal, ntsc) in [
+            ("1", 1, 0), ("2", 0, 1), ("3", 1, 1), ("4", 1, 1),
+            ("P", 1, 0), ("N", 0, 1), ("B", 1, 1), ("0", 0, 0), ("", 0, 0), (" p ", 1, 0),
+        ] {
+            conn.execute("INSERT INTO Games (platform_id, GA_Id, V_PalNTSC) VALUES ('c64', ?1, ?1)", [code]).unwrap();
+            super::ensure_game_view(&conn).unwrap();
+            let flags: (i32, i32) = conn.query_row("SELECT isPal, isNtsc FROM GameView WHERE id=?1", [code], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+            assert_eq!(flags, (pal, ntsc), "region {code:?}");
+        }
+        super::ensure_game_view(&conn).unwrap();
+        assert_eq!(conn.query_row("SELECT count(*) FROM Games", [], |r| r.get::<_, i32>(0)).unwrap(), 10);
+    }
     use super::*;
     use crate::test_helpers::DbEnvGuard;
     use tempfile::{tempdir, NamedTempFile};

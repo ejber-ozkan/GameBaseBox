@@ -10,6 +10,7 @@ export type DetailZone =
   | 'play'
   | 'play-web'
   | 'favorite'
+  | 'emulation-settings'
   | 'versions'
   | 'sid'
   | 'screenshot'

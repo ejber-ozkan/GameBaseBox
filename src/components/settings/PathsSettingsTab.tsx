@@ -3,6 +3,8 @@ import { PLATFORM_EMULATOR_PROFILES, PLATFORM_PROFILES } from '../../lib/platfor
 import type { PlatformFolderSettings, PlatformFolderType, PlatformId } from '../../types/platform';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useTranslation } from '../../i18n/I18nContext';
+import { C64OverridesEditor } from './C64OverridesEditor';
+import { C64ViceCheck } from './C64ViceCheck';
 
 interface PathsSettingsTabProps extends ContentNavProps {
   draft: EditableSettings;
@@ -401,6 +403,33 @@ export function PathsSettingsTab({
           {isC64 && (
             <div className="space-y-6 rounded-theme-xl border border-theme-outline-variant bg-theme-surface/30 p-4">
               {renderEmulatorSelector(10)}
+              <C64ViceCheck executablePath={platformEmulatorSettings.executablePaths['vice-c64'] ?? draft.emulatorPath ?? ''} />
+
+              <C64OverridesEditor value={draft.c64Emulation?.global ?? {}} scope="global" focusStart={40} onControlFocus={onMouseFocus}
+                onChange={global => setField('c64Emulation', { ...draft.c64Emulation, global, games: draft.c64Emulation?.games ?? {} })} />
+              <details className="text-xs text-theme-text-muted">
+                <summary className="focus-idx-46 min-h-11 cursor-pointer py-3 text-theme-text">Advanced C64 ROM and RetroArch settings</summary>
+                <p className="mb-3 leading-relaxed">Swedish and Danish ROM requirements use your own Kernal and character ROM files. They are not downloaded or bundled. Leave the RetroArch configuration path blank for automatic detection.</p>
+                {(['swedish', 'danish'] as const).flatMap((rom, romIndex) => (['kernal', 'chargen'] as const).map((kind, kindIndex) => (
+                  <PathRow key={`${rom}-${kind}`} label={`${rom === 'swedish' ? 'Swedish' : 'Danish'} ${kind === 'kernal' ? 'Kernal' : 'character'} ROM`}
+                    value={draft.c64Emulation?.[rom]?.[kind] ?? ''} placeholder="Select ROM file"
+                    inputIndex={47 + romIndex * 4 + kindIndex * 2} browseIndex={48 + romIndex * 4 + kindIndex * 2}
+                    onChange={path => setField('c64Emulation', {
+                      ...draft.c64Emulation, global: draft.c64Emulation?.global ?? {}, games: draft.c64Emulation?.games ?? {},
+                      [rom]: { kernal: '', chargen: '', ...draft.c64Emulation?.[rom], [kind]: path },
+                    })}
+                    onBrowse={() => void onBrowseFile().then(path => { if (path) setField('c64Emulation', {
+                      ...draft.c64Emulation, global: draft.c64Emulation?.global ?? {}, games: draft.c64Emulation?.games ?? {},
+                      [rom]: { kernal: '', chargen: '', ...draft.c64Emulation?.[rom], [kind]: path },
+                    }); })}
+                    isMouseMode={isMouseMode} onMouseFocus={onMouseFocus} isFocused={isFocused} />
+                )))}
+                <PathRow label="RetroArch configuration file (optional)" value={draft.c64Emulation?.retroarchConfig ?? ''}
+                  placeholder="Auto-detect retroarch.cfg" inputIndex={55} browseIndex={56}
+                  onChange={retroarchConfig => setField('c64Emulation', { ...draft.c64Emulation, global: draft.c64Emulation?.global ?? {}, games: draft.c64Emulation?.games ?? {}, retroarchConfig })}
+                  onBrowse={() => void onBrowseFile().then(retroarchConfig => { if (retroarchConfig) setField('c64Emulation', { ...draft.c64Emulation, global: draft.c64Emulation?.global ?? {}, games: draft.c64Emulation?.games ?? {}, retroarchConfig }); })}
+                  isMouseMode={isMouseMode} onMouseFocus={onMouseFocus} isFocused={isFocused} />
+              </details>
 
               <div className={`space-y-3 transition-opacity ${preferredC64Emulator !== 'vice' ? 'opacity-50' : ''}`}>
                 <PathRow

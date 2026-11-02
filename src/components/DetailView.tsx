@@ -82,7 +82,8 @@ export function DetailView({ game, onBack }: DetailViewProps) {
     const canPlayEmbedded = supportsEmbeddedEmulation(settings.activePlatformId);
     
     const config = {
-      'favorite':          { down: 'play' },
+      'favorite':          { down: 'play', left: settings.activePlatformId === 'c64' ? 'emulation-settings' : undefined },
+      'emulation-settings': { right: 'favorite', down: 'play' },
       'play':              { up: 'favorite', right: 'media-boxfront', down: canPlayEmbedded ? 'play-web' : (isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions') },
       'play-web':          { up: 'play', left: 'media-boxfront', down: isArcade || isC64 ? (showSoundtrack ? 'sid' : 'sidebar-tabs') : 'versions' },
       'media-gameplay':    { up: 'favorite', right: 'media-boxfront', down: 'media-extras' },

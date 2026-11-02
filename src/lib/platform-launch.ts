@@ -1,6 +1,17 @@
 import type { Settings } from '../contexts/SettingsContext';
 import type { LaunchRequest } from './tauri-bridge';
 import { PLATFORM_EMULATOR_PROFILES } from './platform-capabilities';
+import type { C64Layers, C64Preferences } from '../types/c64';
+
+export function c64Layers(preferences: C64Preferences | undefined, gameId: string): C64Layers {
+  return {
+    global: preferences?.global ?? {},
+    game: preferences?.games?.[gameId] ?? {},
+    ...(preferences?.swedish ? { swedish: preferences.swedish } : {}),
+    ...(preferences?.danish ? { danish: preferences.danish } : {}),
+    ...(preferences?.retroarchConfig ? { retroarchConfig: preferences.retroarchConfig } : {}),
+  };
+}
 
 export type LaunchSource = 'extras' | 'roms';
 
@@ -93,6 +104,8 @@ export function buildLaunchRequest(
 
   return {
     platform_id: launchSettings.platformId,
+    ...(launchSettings.platformId === 'c64' && settings.c64Emulation
+      ? { c64: c64Layers(settings.c64Emulation, game.id.toString()) } : {}),
     emulator_profile_id: launchSettings.emulatorProfileId,
     emulator_path: launchSettings.emulatorPath,
     rom_path: buildPlatformAssetPath(settings, source, relativePath),

@@ -265,7 +265,12 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
     const element = document.querySelector(`.theme-panel .focus-idx-${focusedIdx}`) as HTMLElement | null;
     if (element) {
       element.focus();
-      element.click();
+      if (element instanceof HTMLSelectElement) {
+        element.selectedIndex = (element.selectedIndex + 1) % element.options.length;
+        element.dispatchEvent(new Event('change', { bubbles: true }));
+      } else {
+        element.click();
+      }
     }
   }, [focusedIdx, handleSave, navZone, onBack, settingsTabs]);
 

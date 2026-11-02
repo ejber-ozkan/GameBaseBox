@@ -46,6 +46,18 @@ function SettingsTestComponent() {
 }
 
 describe('SettingsContext', () => {
+  test('retains C64 overrides across reload and platform import status updates', async () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => <SettingsProvider>{children}</SettingsProvider>;
+    const first = renderHook(() => useSettings(), { wrapper });
+    await waitFor(() => expect(first.result.current.settings.activePlatformId).toBe('c64'));
+    const preferences = { global: { region: 'ntsc' as const }, games: { '2813': { region: 'pal' as const, trueDrive: false } } };
+    act(() => first.result.current.updateSettings({ c64Emulation: preferences }));
+    act(() => first.result.current.updateSettings({ platformSettings: applyPlatformImportStatuses(first.result.current.settings.platformSettings, [{ platformId: 'c64', importStatus: 'imported', gameCount: 30000 }]) }));
+    expect(JSON.parse(localStorage.getItem('gb64_settings')!).c64Emulation).toEqual(preferences);
+    first.unmount();
+    const second = renderHook(() => useSettings(), { wrapper });
+    await waitFor(() => expect(second.result.current.settings.c64Emulation).toEqual(preferences));
+  });
   beforeEach(() => {
     window.localStorage.clear();
   });

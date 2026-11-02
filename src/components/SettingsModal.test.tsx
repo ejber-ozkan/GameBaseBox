@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { useGamepad } from '../hooks/useGamepad';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
 import type { Settings } from '../contexts/SettingsContext';
@@ -257,6 +258,25 @@ describe('SettingsView platform emulator settings', () => {
 
     expect(screen.getByDisplayValue('D:/GB64/Games')).toBeTruthy();
     expect(screen.queryByText('Altirra Executable (Altirra64.exe)')).toBeNull();
+  });
+
+  test('saves global C64 overrides without replacing per-game choices', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentSettings.c64Emulation = { global: {}, games: { '2813': { region: 'pal' } } };
+    openSettingsTab('C64 Platform Paths');
+    fireEvent.change(screen.getByLabelText('Region'), { target: { value: 'ntsc' } });
+    fireEvent.click(screen.getByText('Save Configuration'));
+    expect(updateSettings).toHaveBeenCalledWith(expect.objectContaining({ c64Emulation: {
+      global: { region: 'ntsc' }, games: { '2813': { region: 'pal' } },
+    } }));
+  });
+
+  test('gamepad selection changes a focused C64 override', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    openSettingsTab('C64 Platform Paths');
+    fireEvent.focus(screen.getByLabelText('Region'));
+    act(() => vi.mocked(useGamepad).mock.calls.at(-1)?.[0].onButtonDown?.('A'));
+    expect((screen.getByLabelText('Region') as HTMLSelectElement).value).toBe('pal');
   });
 
   test('shows Atari 800 path controls only from the imported Atari 800 tab', () => {

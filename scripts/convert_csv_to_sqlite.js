@@ -198,8 +198,12 @@ SELECT
   g.SidFilename as sidFilename,
   g.CRC as crc,
   y.Year as year,
-  CASE WHEN g.V_PalNTSC = 'P' OR g.V_PalNTSC = 'B' THEN 1 ELSE 0 END as isPal,
-  CASE WHEN g.V_PalNTSC = 'N' OR g.V_PalNTSC = 'B' THEN 1 ELSE 0 END as isNtsc,
+  CASE WHEN g.platform_id = 'c64' THEN
+    CASE WHEN UPPER(TRIM(COALESCE(g.V_PalNTSC, ''))) IN ('1', '3', '4', 'P', 'B') THEN 1 ELSE 0 END
+    ELSE CASE WHEN g.V_PalNTSC IN ('P', 'B') THEN 1 ELSE 0 END END as isPal,
+  CASE WHEN g.platform_id = 'c64' THEN
+    CASE WHEN UPPER(TRIM(COALESCE(g.V_PalNTSC, ''))) IN ('2', '3', '4', 'N', 'B') THEN 1 ELSE 0 END
+    ELSE CASE WHEN g.V_PalNTSC IN ('N', 'B') THEN 1 ELSE 0 END END as isNtsc,
   CASE WHEN g.V_TrueDriveEmu = '1' THEN 1 ELSE 0 END as trueDriveEmu,
   CASE WHEN g.Classic = 'True' THEN 1 ELSE 0 END as isClassic,
   ifnull(pg.ParentGenre, 'Unknown') as parentGenre,
@@ -406,6 +410,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  rebuildGameView,
   convertCsvToSqlite,
   ensureExtrasPlatformColumns,
   ensureGamesPlatformColumns,

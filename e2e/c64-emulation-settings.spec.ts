@@ -1,0 +1,33 @@
+import { test, expect } from '@playwright/test';
+import { seedImportedAtari800Settings, waitForAppReady } from './test-helpers';
+
+test('C64 global and per-game settings persist independently and keyboard stays in the dialog', async ({ page }) => {
+  await seedImportedAtari800Settings(page);
+  await page.goto('/');
+  await waitForAppReady(page);
+  await page.getByTitle('Settings').click();
+  await page.getByRole('button', { name: /C64 Platform Paths/ }).click();
+  await page.getByLabel('Region', { exact: true }).selectOption('ntsc');
+  await page.getByRole('button', { name: /Save Configuration/ }).click();
+  await page.getByRole('button', { name: /^List/ }).click();
+  await page.locator('button[data-library-game-button]').first().click();
+  await expect(page.getByTestId('detail-view')).toBeVisible();
+  await page.getByRole('button', { name: 'Emulation settings', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'C64 emulation settings' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByLabel('Region', { exact: true })).toBeFocused();
+  await dialog.getByLabel('Region', { exact: true }).selectOption('pal');
+  await dialog.getByLabel('True-drive emulation').selectOption('true');
+  await page.keyboard.press('Tab');
+  await expect(page.getByTestId('detail-view')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Emulation settings', exact: true })).toBeFocused();
+  await page.getByRole('button', { name: 'Emulation settings', exact: true }).click();
+  await expect(dialog.getByLabel('Region', { exact: true })).toHaveValue('pal');
+  await dialog.getByRole('button', { name: 'Reset overrides' }).click();
+  await expect(dialog.getByLabel('Region', { exact: true })).toHaveValue('');
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('gb64_settings')!).c64Emulation);
+  expect(saved.global.region).toBe('ntsc');
+  expect(saved.games).toEqual({});
+});

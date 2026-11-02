@@ -11,8 +11,10 @@ import type {
   PlatformImportStatus,
   PlatformSettings,
 } from '../types/platform';
+import type { C64Preferences } from '../types/c64';
 
 export interface Settings {
+  c64Emulation?: C64Preferences;
   screenshotsPath: string;
   soundsPath: string;
   musicianPhotosPath: string;

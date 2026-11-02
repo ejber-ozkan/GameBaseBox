@@ -124,6 +124,8 @@ pub fn run() {
             commands::files::scan_rom_directory,
             commands::emulator::launch_emulator,
             commands::emulator::test_emulator_profile,
+            commands::c64::get_c64_launch_settings,
+            commands::vice_compat::check_c64_vice,
             commands::files::download_media_asset,
             commands::files::read_file_bytes,
             commands::files::resolve_media_path,

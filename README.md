@@ -91,6 +91,9 @@ GameBase database (`.mdb`) files, ROMs, screenshots, music, extras, and other me
 2. Prepare your local GameBase64 folders for Games, Screenshots, Photos, Music/SID, Extras, BoxArt, and Video where available.
 3. In GBBox, import the database and configure **C64 Platform Paths** in Settings.
 
+For automatic PAL/NTSC selection, VICE version compatibility, and global or
+per-game overrides, see [C64 emulation settings](docs/C64_EMULATION.md).
+
 Same goes for other platforms, download the database from the GameBase website for the platform you want to import and follow the same steps.
 
 If a recognised Gamevideoarchive file is missing locally, its video panel can download an available Archive.org MP4 derivative into the expected Extras subfolder; the original database path is not changed. (May require local ffmpeg installed)

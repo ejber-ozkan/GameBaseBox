@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-fn create_launch_temp_dir() -> Result<PathBuf, String> {
+pub(super) fn create_launch_temp_dir() -> Result<PathBuf, String> {
     let base_dir = std::env::temp_dir();
     let process_id = std::process::id();
 
@@ -1534,7 +1534,7 @@ fn resolve_directory(
     None
 }
 
-fn resolve_emulator_binary(
+pub(super) fn resolve_emulator_binary(
     raw_path_str: &str,
     emulator_profile_id: Option<&str>,
     platform_id: Option<&str>,
@@ -1777,7 +1777,26 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
     }
 
     let mut args: Vec<String> = Vec::new();
-    if is_altirra {
+    let is_c64 = platform_id.unwrap_or("c64") == "c64";
+    let c64_layers = request.c64.clone().unwrap_or_default();
+    let c64_settings = if is_c64 {
+        let metadata = if request.game_id.is_some() {
+            super::c64::load_metadata(request.game_id.as_deref())
+        } else {
+            // Keep callers without a database game ID compatible with the legacy API.
+            super::c64::Metadata {
+                region: if request.is_pal { "P" } else { "N" }.into(),
+                true_drive: if request.true_drive_emulation { "1" } else { "0" }.into(),
+                ..Default::default()
+            }
+        };
+        Some(super::c64::resolve(&metadata, &c64_layers)?)
+    } else { None };
+    if let Some(settings) = &c64_settings {
+        if !is_retroarch {
+            args.extend(super::c64::vice_args(settings, &c64_layers)?);
+        }
+    } else if is_altirra {
         if request.is_pal {
             args.push("/pal".to_string());
         } else {
@@ -1792,6 +1811,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         }
     }
 
+    let c64_option_count = args.len();
     let launch_metadata =
         load_game_launch_metadata(request.game_id.as_deref(), request.platform_id.as_deref());
     let file_to_run = launch_metadata.file_to_run.clone();
@@ -2108,6 +2128,27 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
         }
     }
 
+    if !is_retroarch && c64_settings.is_some() {
+        // Validate/extract content before executing the emulator's help probe.
+        let content_args = args.split_off(c64_option_count);
+        args = super::vice_compat::detect(&emulator)?.launch_args(&emulator, &args)?;
+        args.extend(content_args);
+    }
+    if is_retroarch {
+        if let Some(settings) = &c64_settings {
+            let content = args.pop().ok_or("C64 launch is missing content")?;
+            let session = create_launch_temp_dir()?;
+            let (content, fragment) = super::c64::prepare_retroarch(
+                &session, &emulator, Path::new(request.core_path.as_deref().unwrap_or("")),
+                Path::new(&content), settings, &c64_layers,
+            )?;
+            if let Some(config) = c64_layers.retroarch_config.as_deref().filter(|config| !config.trim().is_empty()) {
+                args.extend(["--config".into(), config.replace('\\', "/")]);
+            }
+            args.extend([content.to_string_lossy().to_string(), "--appendconfig".into(), fragment.to_string_lossy().to_string()]);
+        }
+    }
+
     let is_debug = crate::is_debug_mode() || std::env::var("VIC40_DEBUG_LAUNCH").is_ok();
 
     if is_retroarch && is_debug {
@@ -2139,7 +2180,13 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
     {
         Ok(_) => Ok(LaunchResult {
             success: true,
-            message: format!("Launched {} successfully", exe_name),
+            message: {
+                let mut message = format!("Launched {} successfully", exe_name);
+                if let Some(settings) = &c64_settings {
+                    for warning in &settings.warnings { message.push_str(&format!("\n{warning}")); }
+                }
+                message
+            },
         }),
         Err(e) => Err(format!("Failed to launch emulator: {}", e)),
     }
@@ -2546,6 +2593,7 @@ mod tests {
 
     fn copy_test_emulator(target: &Path) {
         std::fs::copy(system_shell_executable(), target).unwrap();
+        super::super::vice_compat::seed_test_capabilities(target);
     }
 
     fn write_zip(zip_path: &Path, files: &[(&str, &[u8])]) {

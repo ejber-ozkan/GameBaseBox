@@ -103,10 +103,12 @@ export type EditableSettings = Pick<
   | 'platformSettings'
   | 'language'
   | 'amigaDownloadTarget'
+  | 'c64Emulation'
 >;
 
 export function getEditableSettings(settings: Settings): EditableSettings {
   return {
+    c64Emulation: settings.c64Emulation,
     emulatorPath: settings.emulatorPath,
     hideAdultContent: settings.hideAdultContent,
     retroarchPath: settings.retroarchPath,

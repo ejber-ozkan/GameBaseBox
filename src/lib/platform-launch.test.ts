@@ -1,9 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { buildPlatformAssetPath } from './platform-launch';
+import { buildLaunchRequest, buildPlatformAssetPath } from './platform-launch';
 import { defaultSettings, type Settings } from '../contexts/SettingsContext';
 import { createDefaultPlatformSettingsMap } from './platform-capabilities';
 
 describe('buildPlatformAssetPath', () => {
+  it('passes independent C64 global and per-game overrides to either emulator', () => {
+    const settings = { ...defaultSettings, c64Emulation: {
+      global: { region: 'ntsc' }, games: { '2813': { region: 'pal', trueDrive: false } },
+    } } as Settings;
+    const request = buildLaunchRequest(settings, 'roms', 'flimbo.zip', { id: 2813 });
+    expect(request).toHaveProperty('c64', {
+      global: { region: 'ntsc' }, game: { region: 'pal', trueDrive: false },
+    });
+    const other = buildLaunchRequest({ ...settings, activePlatformId: 'atari800' }, 'roms', 'game.atr', { id: 2813 });
+    expect(other).not.toHaveProperty('c64');
+  });
   const baseSettings: Settings = {
     ...defaultSettings,
     activePlatformId: 'atarist',

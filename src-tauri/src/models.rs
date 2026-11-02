@@ -27,6 +27,7 @@ pub struct ResolvedPath {
 /// Launch request from the frontend
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct LaunchRequest {
+    pub c64: Option<crate::commands::c64::Layers>,
     pub platform_id: Option<String>,
     pub emulator_profile_id: Option<String>,
     pub emulator_path: String,

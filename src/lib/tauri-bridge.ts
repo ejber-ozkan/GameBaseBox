@@ -81,6 +81,7 @@ export interface ScannedRom {
 }
 
 export interface LaunchRequest {
+  c64?: import('../types/c64').C64Layers;
   platform_id?: string;
   emulator_profile_id?: string;
   emulator_path: string;
@@ -95,6 +96,16 @@ export interface LaunchRequest {
 export interface LaunchResult {
   success: boolean;
   message: string;
+}
+
+export async function getC64LaunchSettings(gameId: string, layers: import('../types/c64').C64Layers): Promise<import('../types/c64').C64Resolved> {
+  if (!isTauri()) throw new Error('Effective database settings are available in the desktop app.');
+  return invoke('get_c64_launch_settings', { gameId, layers });
+}
+
+export async function checkC64Vice(executablePath: string): Promise<{ version: string; driveSwitches: string; virtualDeviceSwitches: string }> {
+  if (!isTauri()) throw new Error('VICE compatibility checks are available in the desktop app.');
+  return invoke('check_c64_vice', { executablePath });
 }
 
 export interface EmulatorProfileTestRequest {

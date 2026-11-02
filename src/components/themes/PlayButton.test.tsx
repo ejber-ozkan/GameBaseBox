@@ -4,9 +4,11 @@ import { createDefaultPlatformSettingsMap } from '../../lib/platform-capabilitie
 import type { Settings } from '../../contexts/SettingsContext';
 import { mockGames } from '../../data/mockGames';
 import { PlayButton } from './PlayButton';
+import { C64GameSettings } from '../settings/C64GameSettings';
 
 const mockLaunchEmulator = vi.fn();
 const mockMarkAsPlayed = vi.fn();
+const mockUpdateSettings = vi.fn();
 
 function makeSettings(activePlatformId: Settings['activePlatformId'] = 'c64'): Settings {
   const platformSettings = createDefaultPlatformSettingsMap();
@@ -38,12 +40,14 @@ vi.mock('../../contexts/SettingsContext', () => ({
   useSettings: () => ({
     settings: currentSettings,
     markAsPlayed: mockMarkAsPlayed,
+    updateSettings: mockUpdateSettings,
   }),
 }));
 
 vi.mock('../../lib/tauri-bridge', () => ({
   launchEmulator: (...args: unknown[]) => mockLaunchEmulator(...args),
   isDebugMode: vi.fn().mockResolvedValue(false),
+  getC64LaunchSettings: vi.fn().mockRejectedValue(new Error('Preview unavailable in fixture')),
 }));
 
 vi.mock('../WasmPlayer', () => ({
@@ -89,6 +93,17 @@ describe('PlayButton platform launch requests', () => {
     render(<PlayButton game={mockGames[0]} />);
 
     expect(screen.getByRole('button', { name: /play embedded/i })).toBeTruthy();
+  });
+
+  it('saves a per-game C64 override separately from imported data', () => {
+    currentSettings = makeSettings('c64');
+    currentSettings.c64Emulation = { global: { region: 'ntsc' }, games: { other: { reu: 512 } } };
+    render(<C64GameSettings gameId={String(mockGames[0].id)} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Emulation settings' }));
+    fireEvent.change(screen.getByLabelText('Region'), { target: { value: 'pal' } });
+    expect(mockUpdateSettings).toHaveBeenCalledWith({ c64Emulation: {
+      global: { region: 'ntsc' }, games: { other: { reu: 512 }, [String(mockGames[0].id)]: { region: 'pal' } },
+    } });
   });
 
   it('hides the embedded play button for Atari 800', () => {

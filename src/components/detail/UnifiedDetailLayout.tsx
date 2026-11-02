@@ -16,6 +16,7 @@ import { MusicianPhoto } from '../MusicianPhoto';
 import { MusicPlayer } from '../MusicPlayer';
 import { StatusRow } from '../StatusRow';
 import { PlayButton } from '../themes/PlayButton';
+import { C64GameSettings } from '../settings/C64GameSettings';
 import { WasmPlayer } from '../WasmPlayer';
 import { DetailGameTitle } from './DetailGameTitle';
 import { DetailTitleBanner } from './DetailTitleBanner';
@@ -1440,6 +1441,7 @@ export function UnifiedDetailLayout({
     nav.registerAction('play', () => document.getElementById('play-game-btn')?.click());
     nav.registerAction('play-web', () => document.getElementById('play-browser-btn')?.click());
     nav.registerAction('favorite', onToggleFavorite);
+    nav.registerAction('emulation-settings', () => document.getElementById('c64-emulation-settings')?.click());
     nav.registerAction('sid', () => (document.getElementById('sid-play-btn') ?? document.getElementById('sap-play-btn'))?.click());
     
     // Register actions for all gallery items
@@ -1922,6 +1924,7 @@ export function UnifiedDetailLayout({
                   })}
                 </nav>
 
+                {settings.activePlatformId === 'c64' && <C64GameSettings key={String(game.id)} gameId={String(game.id)} onMouseEnter={() => nav.hoverZone('emulation-settings')} className={nav.focusCls('emulation-settings')} />}
                 <button
                   onClick={onToggleFavorite}
                   onMouseEnter={() => nav.hoverZone('favorite')}
