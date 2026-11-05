@@ -50,5 +50,17 @@ pub async fn get_game_extras(
     games::get_game_extras(game_id, platform_id).await
 }
 
+/// The library ID query exactly as `get_db_games` builds it (no filters, FTS mode), for
+/// query-plan tests elsewhere in the crate.
+#[cfg(test)]
+pub(crate) fn build_game_query_for_tests(
+    platform_id: &str,
+    limit: usize,
+    offset: usize,
+) -> (String, Vec<String>) {
+    querying::build_game_query(platform_id, limit, offset, None, querying::SearchMode::Fts)
+        .expect("an unfiltered query is always built")
+}
+
 #[cfg(test)]
 mod tests;

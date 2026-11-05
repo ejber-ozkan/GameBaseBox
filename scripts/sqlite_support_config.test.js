@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { getPlatformImportConfig } from './sqlite_support_config.js';
+import { getPlatformImportConfig, performanceIndexes, sharedSql } from './sqlite_support_config.js';
+import sharedIndexes from '../src-tauri/sql/query_indexes.json';
 
 describe('sqlite_support_config', () => {
   test('has empty requiredFolders array for Atari 800 consistent with optional folders setup flow', () => {
@@ -74,5 +75,13 @@ describe('sqlite_support_config', () => {
     expect(getPlatformImportConfig('VIC-20')).toBe(getPlatformImportConfig('vic20'));
     expect(getPlatformImportConfig('Commodore VIC-20')).toBe(getPlatformImportConfig('vic20'));
     expect(getPlatformImportConfig('Commodore VIC 20')).toBe(getPlatformImportConfig('vic20'));
+  });
+
+  test('reads schema objects from the SQL shared with the app', () => {
+    expect(performanceIndexes).toHaveLength(sharedIndexes.indexes.length);
+    expect(performanceIndexes.map(([, name]) => name)).not.toContain('idx_games_platform_id');
+    expect(sharedSql.gameView).toContain('CREATE VIEW GameView');
+    expect(sharedSql.coverIndexTable).toContain('PRIMARY KEY (platform_id, GA_Id)');
+    expect(sharedSql.coverIndexPopulate).not.toContain("'atari800'");
   });
 });

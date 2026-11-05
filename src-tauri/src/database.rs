@@ -3,135 +3,32 @@ use rusqlite::{params_from_iter, Connection, OptionalExtension};
 use std::fs;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
-use std::sync::{Mutex, OnceLock};
+use std::sync::{LazyLock, Mutex, OnceLock};
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::Manager;
 pub mod connection;
 mod mdb_export;
 
-const QUERY_SUPPORT_INDEXES: &[(&str, &[&str], &str)] = &[
-    (
-        "Games",
-        &["GA_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_games_ga_id ON Games(GA_Id)",
-    ),
-    (
-        "Games",
-        &["Name"],
-        "CREATE INDEX IF NOT EXISTS idx_games_name_nocase ON Games(Name COLLATE NOCASE)",
-    ),
-    (
-        "Games",
-        &["YE_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_games_ye_id ON Games(YE_Id)",
-    ),
-    (
-        "Games",
-        &["GE_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_games_ge_id ON Games(GE_Id)",
-    ),
-    (
-        "Games",
-        &["DE_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_games_de_id ON Games(DE_Id)",
-    ),
-    (
-        "Games",
-        &["PU_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_games_pu_id ON Games(PU_Id)",
-    ),
-    (
-        "Games",
-        &["MU_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_games_mu_id ON Games(MU_Id)",
-    ),
-    (
-        "Games",
-        &["LA_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_games_la_id ON Games(LA_Id)",
-    ),
-    (
-        "Games",
-        &["PR_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_games_pr_id ON Games(PR_Id)",
-    ),
-    (
-        "Games",
-        &["AR_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_games_ar_id ON Games(AR_Id)",
-    ),
-    (
-        "Games",
-        &["Classic"],
-        "CREATE INDEX IF NOT EXISTS idx_games_classic ON Games(Classic)",
-    ),
-    (
-        "Games",
-        &["Adult"],
-        "CREATE INDEX IF NOT EXISTS idx_games_adult ON Games(Adult)",
-    ),
-    (
-        "Years",
-        &["YE_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_years_ye_id ON Years(YE_Id)",
-    ),
-    (
-        "Genres",
-        &["GE_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_genres_ge_id ON Genres(GE_Id)",
-    ),
-    (
-        "Genres",
-        &["PG_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_genres_pg_id ON Genres(PG_Id)",
-    ),
-    (
-        "PGenres",
-        &["PG_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_pgenres_pg_id ON PGenres(PG_Id)",
-    ),
-    (
-        "Developers",
-        &["DE_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_developers_de_id ON Developers(DE_Id)",
-    ),
-    (
-        "Publishers",
-        &["PU_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_publishers_pu_id ON Publishers(PU_Id)",
-    ),
-    (
-        "Musicians",
-        &["MU_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_musicians_mu_id ON Musicians(MU_Id)",
-    ),
-    (
-        "Languages",
-        &["LA_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_languages_la_id ON Languages(LA_Id)",
-    ),
-    (
-        "Programmers",
-        &["PR_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_programmers_pr_id ON Programmers(PR_Id)",
-    ),
-    (
-        "Artists",
-        &["AR_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_artists_ar_id ON Artists(AR_Id)",
-    ),
-    (
-        "Extras",
-        &["GA_Id"],
-        "CREATE INDEX IF NOT EXISTS idx_extras_ga_id ON Extras(GA_Id)",
-    ),
-    (
-        "Extras",
-        &["GA_Id", "DisplayOrder"],
-        "CREATE INDEX IF NOT EXISTS idx_extras_ga_id_display_order ON Extras(GA_Id, DisplayOrder)",
-    ),
-];
+/// One query support index from `sql/query_indexes.json`, which the Node scripts in
+/// `scripts/` read as well.
+#[derive(serde::Deserialize)]
+struct QuerySupportIndex {
+    table: String,
+    columns: Vec<String>,
+    sql: String,
+}
+
+#[derive(serde::Deserialize)]
+struct QuerySupportIndexFile {
+    indexes: Vec<QuerySupportIndex>,
+}
+
+static QUERY_SUPPORT_INDEXES: LazyLock<Vec<QuerySupportIndex>> = LazyLock::new(|| {
+    serde_json::from_str::<QuerySupportIndexFile>(include_str!("../sql/query_indexes.json"))
+        .expect("sql/query_indexes.json is valid (checked by tests)")
+        .indexes
+});
 
 const PLATFORM_SCOPED_TABLES: &[(&str, &str)] = &[
     ("Games", "GA_Id"),
@@ -147,137 +44,17 @@ const PLATFORM_SCOPED_TABLES: &[(&str, &str)] = &[
     ("Artists", "AR_Id"),
 ];
 
-const COVER_INDEX_POPULATE_SQL: &str = "
-    INSERT OR REPLACE INTO GameCoverIndex (GA_Id, platform_id, cover_path)
-    SELECT
-        Extras.GA_Id,
-        COALESCE(Extras.platform_id, Games.platform_id, 'c64') as platform_id,
-        MIN(Extras.Path) as cover_path
-    FROM Extras
-    LEFT JOIN Games ON Extras.GA_Id = Games.GA_Id
-        AND COALESCE(Extras.platform_id, 'c64') = COALESCE(Games.platform_id, 'c64')
-    WHERE (
-          LOWER(REPLACE(Path, '\\', '/')) LIKE 'cover/%'
-          OR LOWER(REPLACE(Path, '\\', '/')) LIKE 'covers/%'
-      )
-      AND (
-          LOWER(Path) LIKE '%.jpg'
-          OR LOWER(Path) LIKE '%.jpeg'
-          OR LOWER(Path) LIKE '%.png'
-          OR LOWER(Path) LIKE '%.webp'
-          OR LOWER(Path) LIKE '%.gif'
-          OR LOWER(Path) LIKE '%.bmp'
-      )
-    GROUP BY Extras.GA_Id, COALESCE(Extras.platform_id, Games.platform_id, 'c64')
-";
+// Shared SQL (also used by scripts/convert_csv_to_sqlite.js). Changing any of these
+// files requires bumping SCHEMA_VERSION.
+const COVER_INDEX_TABLE_SQL: &str = include_str!("../sql/cover_index_table.sql");
+const COVER_INDEX_POPULATE_SQL: &str = include_str!("../sql/cover_index_populate.sql");
+const SEARCH_INDEX_TABLE_SQL: &str = include_str!("../sql/search_index_table.sql");
+const FTS_INDEX_POPULATE_SQL: &str = include_str!("../sql/search_index_populate.sql");
+const GAME_VIEW_SQL: &str = include_str!("../sql/game_view.sql");
 
-const FTS_INDEX_POPULATE_SQL: &str = "
-    INSERT INTO GameSearchIndex (
-        id,
-        platform_id,
-        source_game_id,
-        name,
-        developer_name,
-        publisher_name,
-        musician_name,
-        coder_name,
-        graphics_name
-    )
-    SELECT
-        gv.id,
-        gv.platformId,
-        gv.sourceGameId,
-        gv.name,
-        COALESCE(gv.developer_name, ''),
-        COALESCE(gv.publisher_name, ''),
-        COALESCE(gv.musician_name, ''),
-        COALESCE(pr.Programmer, ''),
-        COALESCE(ar.Artist, '')
-    FROM GameView gv
-    JOIN Games g ON gv.id = g.GA_Id AND gv.platformId = g.platform_id
-    LEFT JOIN Programmers pr ON g.PR_Id = pr.PR_Id AND pr.platform_id = g.platform_id
-    LEFT JOIN Artists ar ON g.AR_Id = ar.AR_Id AND ar.platform_id = g.platform_id
-";
-
-const GAME_VIEW_SQL: &str = "
-CREATE VIEW GameView AS
-SELECT 
-    g.platform_id as platformId,
-    g.source_game_id as sourceGameId,
-    g.GA_Id as id,
-    g.Name as name,
-    g.Filename as filename,
-    CASE WHEN ifnull(g.FileToRun, '') != '' THEN g.FileToRun ELSE g.Filename END as gameFilename,
-    g.ScrnshotFilename as screenshotFilename,
-    NULL as boxFrontFilename,
-    NULL as titlescreenFilename,
-    NULL as videoSnapFilename,
-    g.SidFilename as sidFilename,
-    g.CRC as crc,
-    y.Year as year,
-    CASE WHEN g.platform_id = 'c64' THEN
-        CASE WHEN UPPER(TRIM(COALESCE(g.V_PalNTSC, ''))) IN ('1', '3', '4', 'P', 'B') THEN 1 ELSE 0 END
-        ELSE CASE WHEN g.V_PalNTSC IN ('P', 'B') THEN 1 ELSE 0 END END as isPal,
-    CASE WHEN g.platform_id = 'c64' THEN
-        CASE WHEN UPPER(TRIM(COALESCE(g.V_PalNTSC, ''))) IN ('2', '3', '4', 'N', 'B') THEN 1 ELSE 0 END
-        ELSE CASE WHEN g.V_PalNTSC IN ('N', 'B') THEN 1 ELSE 0 END END as isNtsc,
-    CASE WHEN g.V_TrueDriveEmu = '1' THEN 1 ELSE 0 END as trueDriveEmu,
-    CASE WHEN g.Classic = 'True' THEN 1 ELSE 0 END as isClassic,
-    ifnull(pg.ParentGenre, 'Unknown') as parentGenre,
-    ifnull(ge.Genre, 'Unknown') as subGenre,
-    de.Developer as developer_name,
-    pu.Publisher as publisher_name,
-    mu.Musician as musician_name,
-    la.Language as languages
-FROM Games g
-LEFT JOIN Years y ON g.YE_Id = y.YE_Id AND y.platform_id = g.platform_id
-LEFT JOIN Genres ge ON g.GE_Id = ge.GE_Id AND ge.platform_id = g.platform_id
-LEFT JOIN PGenres pg ON ge.PG_Id = pg.PG_Id AND pg.platform_id = g.platform_id
-LEFT JOIN Developers de ON g.DE_Id = de.DE_Id AND de.platform_id = g.platform_id
-LEFT JOIN Publishers pu ON g.PU_Id = pu.PU_Id AND pu.platform_id = g.platform_id
-LEFT JOIN Musicians mu ON g.MU_Id = mu.MU_Id AND mu.platform_id = g.platform_id
-LEFT JOIN Languages la ON g.LA_Id = la.LA_Id AND la.platform_id = g.platform_id;
-";
-
-const EMBEDDED_MDB_EXPORT_SCRIPT: &str = r#"
-param (
-    [Parameter(Mandatory=$true)]
-    [string]$DbPath,
-    [Parameter(Mandatory=$true)]
-    [string]$OutputDir
-)
-
-if (-not (Test-Path $OutputDir)) {
-    New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
-}
-
-$connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=$DbPath;"
-$conn = New-Object System.Data.OleDb.OleDbConnection($connString)
-
-try {
-    $conn.Open()
-    $schema = $conn.GetSchema("Tables")
-    $tables = $schema | Where-Object { $_.TABLE_TYPE -eq "TABLE" } | Select-Object -ExpandProperty TABLE_NAME
-
-    foreach ($table in $tables) {
-        $cmd = $conn.CreateCommand()
-        $cmd.CommandText = "SELECT * FROM [$table]"
-        $da = New-Object System.Data.OleDb.OleDbDataAdapter($cmd)
-        $dt = New-Object System.Data.DataTable
-        $da.Fill($dt) | Out-Null
-
-        $outFile = Join-Path -Path $OutputDir -ChildPath "$table.csv"
-        $dt | Export-Csv -Path $outFile -NoTypeInformation -Encoding UTF8
-    }
-} catch {
-    Write-Error "Failed to export MDB tables. Install the Microsoft Access Database Engine if needed.`n$($_.Exception.Message)"
-    exit 1
-} finally {
-    if ($conn.State -eq "Open") {
-        $conn.Close()
-    }
-}
-"#;
+/// MDB-to-CSV export script for Windows (Microsoft Access OLE DB provider). The same
+/// file is used by `npm run db:import` (scripts/db_pipeline.js).
+const EMBEDDED_MDB_EXPORT_SCRIPT: &str = include_str!("../../scripts/exportMdb.ps1");
 
 /// Environment variable that lets a developer or test harness point the app at a
 /// specific SQLite file. It is read once at startup and never written by the app.
@@ -604,10 +381,10 @@ fn ensure_game_view(conn: &Connection) -> Result<(), String> {
 }
 
 fn ensure_query_indexes(conn: &Connection) -> Result<(), String> {
-    for (table_name, required_columns, index_sql) in QUERY_SUPPORT_INDEXES {
-        if table_exists(conn, table_name)? && table_has_columns(conn, table_name, required_columns)?
-        {
-            conn.execute(index_sql, []).map_err(|e| e.to_string())?;
+    for index in QUERY_SUPPORT_INDEXES.iter() {
+        let columns: Vec<&str> = index.columns.iter().map(String::as_str).collect();
+        if table_exists(conn, &index.table)? && table_has_columns(conn, &index.table, &columns)? {
+            conn.execute(&index.sql, []).map_err(|e| e.to_string())?;
         }
     }
 
@@ -622,21 +399,8 @@ fn ensure_cover_index(conn: &Connection) -> Result<(), String> {
             .map_err(|e| e.to_string())?;
     }
 
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS GameCoverIndex (
-            GA_Id TEXT NOT NULL,
-            platform_id TEXT NOT NULL DEFAULT 'c64',
-            cover_path TEXT NOT NULL,
-            PRIMARY KEY (platform_id, GA_Id)
-        )",
-        [],
-    )
-    .map_err(|e| e.to_string())?;
-    conn.execute(
-        "CREATE INDEX IF NOT EXISTS idx_game_cover_index_platform_ga_id ON GameCoverIndex(platform_id, GA_Id)",
-        [],
-    )
-    .map_err(|e| e.to_string())?;
+    conn.execute_batch(COVER_INDEX_TABLE_SQL)
+        .map_err(|e| e.to_string())?;
 
     conn.execute("DELETE FROM GameCoverIndex", [])
         .map_err(|e| e.to_string())?;
@@ -645,7 +409,7 @@ fn ensure_cover_index(conn: &Connection) -> Result<(), String> {
         return Ok(());
     }
 
-    conn.execute(COVER_INDEX_POPULATE_SQL, [])
+    conn.execute_batch(COVER_INDEX_POPULATE_SQL)
         .map_err(|e| e.to_string())?;
 
     Ok(())
@@ -686,24 +450,8 @@ fn ensure_search_index(conn: &Connection) -> Result<(), String> {
             .map_err(|e| e.to_string())?;
     }
 
-    conn.execute_batch(
-        "
-        CREATE VIRTUAL TABLE IF NOT EXISTS GameSearchIndex USING fts5(
-            id UNINDEXED,
-            platform_id UNINDEXED,
-            source_game_id UNINDEXED,
-            name,
-            developer_name,
-            publisher_name,
-            musician_name,
-            coder_name,
-            graphics_name,
-            tokenize='porter unicode61 remove_diacritics 2',
-            prefix='2,3'
-        );
-        ",
-    )
-    .map_err(|e| e.to_string())?;
+    conn.execute_batch(SEARCH_INDEX_TABLE_SQL)
+        .map_err(|e| e.to_string())?;
 
     let index_count: i64 = conn
         .query_row("SELECT COUNT(*) FROM GameSearchIndex", [], |row| row.get(0))
@@ -715,7 +463,7 @@ fn ensure_search_index(conn: &Connection) -> Result<(), String> {
 
     conn.execute("DELETE FROM GameSearchIndex", [])
         .map_err(|e| e.to_string())?;
-    conn.execute(FTS_INDEX_POPULATE_SQL, [])
+    conn.execute_batch(FTS_INDEX_POPULATE_SQL)
         .map_err(|e| e.to_string())?;
     conn.execute(
         "INSERT INTO GameSearchIndex(GameSearchIndex) VALUES('optimize')",
@@ -735,10 +483,13 @@ fn rebuild_search_index(conn: &Connection) -> Result<(), String> {
 /// Version of the generated query support objects (GameView SQL, query indexes,
 /// GameCoverIndex, GameSearchIndex), stored in `PRAGMA user_version`.
 ///
-/// Bump this whenever `GAME_VIEW_SQL`, `QUERY_SUPPORT_INDEXES`, the cover index or the
-/// search index definitions change: databases with an older version are upgraded once
-/// at the next startup, and up-to-date databases skip the work entirely.
-pub const SCHEMA_VERSION: i64 = 1;
+/// Bump this whenever a file in `src-tauri/sql/` changes: databases with an older
+/// version are upgraded once at the next startup, and up-to-date databases skip the
+/// work entirely.
+///
+/// History: 1 = initial versioning; 2 = Extras(platform_id, GA_Id) index, drop the
+/// Games platform_id indexes (see `run_support_migrations`), refresh planner statistics.
+pub const SCHEMA_VERSION: i64 = 2;
 
 /// Serialises migrations between the startup thread and `get_database_bootstrap_status`.
 static MIGRATION_LOCK: Mutex<()> = Mutex::new(());
@@ -753,7 +504,24 @@ fn stamp_schema_version(conn: &Connection) -> Result<(), String> {
         .map_err(|error| error.to_string())
 }
 
+/// Lets SQLite refresh its planner statistics after bulk changes. Failure only affects
+/// query planning, so it is logged rather than returned.
+fn refresh_planner_statistics(conn: &Connection) {
+    if let Err(error) = conn.execute_batch("PRAGMA optimize") {
+        log::warn!("PRAGMA optimize failed: {error}");
+    }
+}
+
 fn run_support_migrations(conn: &Connection) -> Result<(), String> {
+    // Databases built by `npm run db:convert` before v2 carry single-column platform_id
+    // indexes on Games. Nearly every game in a library shares one platform_id, and
+    // without ANALYZE statistics SQLite joins GameView through that index, making the
+    // library query quadratic. Drop them; the GA_Id indexes serve every query.
+    conn.execute_batch(
+        "DROP INDEX IF EXISTS idx_games_platform_id;
+         DROP INDEX IF EXISTS idx_games_platform_source_game_id;",
+    )
+    .map_err(|error| error.to_string())?;
     let legacy_platform_id = infer_legacy_platform_id(conn, "c64")?;
     ensure_import_platform_columns(conn, &legacy_platform_id)?;
     ensure_game_view(conn)?;
@@ -783,9 +551,12 @@ pub fn ensure_query_support_objects(conn: &Connection) -> Result<(), String> {
         Ok(())
     });
     match result {
-        Ok(()) => conn
-            .execute_batch("COMMIT")
-            .map_err(|error| error.to_string()),
+        Ok(()) => {
+            conn.execute_batch("COMMIT")
+                .map_err(|error| error.to_string())?;
+            refresh_planner_statistics(conn);
+            Ok(())
+        }
         Err(error) => {
             let _ = conn.execute_batch("ROLLBACK");
             Err(error)
@@ -1452,6 +1223,9 @@ fn merge_imported_database(
     }
     conn.execute("DETACH DATABASE imported", [])
         .map_err(|error| error.to_string())?;
+    if merge_result.is_ok() {
+        refresh_planner_statistics(&conn);
+    }
     merge_result
 }
 
@@ -2249,6 +2023,61 @@ mod tests {
             .query_row("SELECT COUNT(*) FROM GameCoverIndex WHERE GA_Id = 'marker'", [], |row| row.get(0))
             .unwrap();
         assert_eq!(markers, 1, "startup must not rebuild an up-to-date cover index");
+    }
+
+    #[test]
+    fn shared_query_indexes_parse_and_name_real_columns() {
+        assert_eq!(QUERY_SUPPORT_INDEXES.len(), 25);
+        for index in QUERY_SUPPORT_INDEXES.iter() {
+            assert!(!index.columns.is_empty(), "{} lists its columns", index.sql);
+            for column in &index.columns {
+                assert!(index.sql.contains(column.as_str()), "{} uses {column}", index.sql);
+            }
+        }
+    }
+
+    #[test]
+    fn library_query_never_scans_games_by_platform_index() {
+        let directory = tempdir().unwrap();
+        let db = directory.path().join("live.sqlite");
+        let _env = DbPathGuard::set(db.to_str().unwrap());
+        let exports = tempdir().unwrap();
+        write_staged_import_fixture(exports.path());
+        import_csv_directory_to_sqlite(exports.path(), "c64").unwrap();
+
+        // Simulate a database built by an older `npm run db:convert` and an old app.
+        let conn = Connection::open(&db).unwrap();
+        conn.execute_batch(
+            "CREATE INDEX idx_games_platform_id ON Games(platform_id);
+             CREATE INDEX idx_games_platform_source_game_id ON Games(platform_id, source_game_id);
+             PRAGMA user_version = 1;",
+        )
+        .unwrap();
+        drop(conn);
+        init_database().unwrap();
+
+        let conn = Connection::open(&db).unwrap();
+        let platform_indexes: i64 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM sqlite_master WHERE type = 'index' AND name LIKE 'idx_games_platform%'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(platform_indexes, 0, "the v2 migration drops the Games platform_id indexes");
+
+        let (query, params) = crate::commands::db::build_game_query_for_tests("c64", 50, 0);
+        let plan: Vec<String> = conn
+            .prepare(&format!("EXPLAIN QUERY PLAN {query}"))
+            .unwrap()
+            .query_map(rusqlite::params_from_iter(params), |row| row.get::<_, String>(3))
+            .unwrap()
+            .collect::<Result<_, _>>()
+            .unwrap();
+        assert!(
+            plan.iter().all(|step| !step.contains("idx_games_platform")),
+            "library query must not use a Games platform_id index: {plan:?}"
+        );
     }
 
     #[test]

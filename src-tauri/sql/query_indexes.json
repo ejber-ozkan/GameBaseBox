@@ -1,0 +1,207 @@
+{
+  "_comment": "Query support indexes for GameBase tables. Single source for the app (src-tauri/src/database.rs) and the Node scripts (scripts/sqlite_support_config.js). Changing this list requires bumping SCHEMA_VERSION in database.rs. Do not add single-column platform_id indexes on Games: almost every game in a library shares one platform_id, and without ANALYZE statistics SQLite then joins GameView through that index and library queries become quadratic.",
+  "indexes": [
+    {
+      "table": "Games",
+      "name": "idx_games_ga_id",
+      "columns": [
+        "GA_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_ga_id ON Games(GA_Id)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_name_nocase",
+      "columns": [
+        "Name"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_name_nocase ON Games(Name COLLATE NOCASE)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_ye_id",
+      "columns": [
+        "YE_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_ye_id ON Games(YE_Id)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_ge_id",
+      "columns": [
+        "GE_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_ge_id ON Games(GE_Id)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_de_id",
+      "columns": [
+        "DE_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_de_id ON Games(DE_Id)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_pu_id",
+      "columns": [
+        "PU_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_pu_id ON Games(PU_Id)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_mu_id",
+      "columns": [
+        "MU_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_mu_id ON Games(MU_Id)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_la_id",
+      "columns": [
+        "LA_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_la_id ON Games(LA_Id)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_pr_id",
+      "columns": [
+        "PR_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_pr_id ON Games(PR_Id)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_ar_id",
+      "columns": [
+        "AR_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_ar_id ON Games(AR_Id)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_classic",
+      "columns": [
+        "Classic"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_classic ON Games(Classic)"
+    },
+    {
+      "table": "Games",
+      "name": "idx_games_adult",
+      "columns": [
+        "Adult"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_games_adult ON Games(Adult)"
+    },
+    {
+      "table": "Years",
+      "name": "idx_years_ye_id",
+      "columns": [
+        "YE_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_years_ye_id ON Years(YE_Id)"
+    },
+    {
+      "table": "Genres",
+      "name": "idx_genres_ge_id",
+      "columns": [
+        "GE_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_genres_ge_id ON Genres(GE_Id)"
+    },
+    {
+      "table": "Genres",
+      "name": "idx_genres_pg_id",
+      "columns": [
+        "PG_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_genres_pg_id ON Genres(PG_Id)"
+    },
+    {
+      "table": "PGenres",
+      "name": "idx_pgenres_pg_id",
+      "columns": [
+        "PG_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_pgenres_pg_id ON PGenres(PG_Id)"
+    },
+    {
+      "table": "Developers",
+      "name": "idx_developers_de_id",
+      "columns": [
+        "DE_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_developers_de_id ON Developers(DE_Id)"
+    },
+    {
+      "table": "Publishers",
+      "name": "idx_publishers_pu_id",
+      "columns": [
+        "PU_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_publishers_pu_id ON Publishers(PU_Id)"
+    },
+    {
+      "table": "Musicians",
+      "name": "idx_musicians_mu_id",
+      "columns": [
+        "MU_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_musicians_mu_id ON Musicians(MU_Id)"
+    },
+    {
+      "table": "Languages",
+      "name": "idx_languages_la_id",
+      "columns": [
+        "LA_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_languages_la_id ON Languages(LA_Id)"
+    },
+    {
+      "table": "Programmers",
+      "name": "idx_programmers_pr_id",
+      "columns": [
+        "PR_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_programmers_pr_id ON Programmers(PR_Id)"
+    },
+    {
+      "table": "Artists",
+      "name": "idx_artists_ar_id",
+      "columns": [
+        "AR_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_artists_ar_id ON Artists(AR_Id)"
+    },
+    {
+      "table": "Extras",
+      "name": "idx_extras_ga_id",
+      "columns": [
+        "GA_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_extras_ga_id ON Extras(GA_Id)"
+    },
+    {
+      "table": "Extras",
+      "name": "idx_extras_ga_id_display_order",
+      "columns": [
+        "GA_Id",
+        "DisplayOrder"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_extras_ga_id_display_order ON Extras(GA_Id, DisplayOrder)"
+    },
+    {
+      "table": "Extras",
+      "name": "idx_extras_platform_ga_id",
+      "columns": [
+        "platform_id",
+        "GA_Id"
+      ],
+      "sql": "CREATE INDEX IF NOT EXISTS idx_extras_platform_ga_id ON Extras(platform_id, GA_Id)"
+    }
+  ]
+}
