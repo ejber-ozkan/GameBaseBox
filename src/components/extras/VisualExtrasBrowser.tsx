@@ -15,11 +15,18 @@ export function VisualExtrasBrowser({
   previewHeight,
   thumbColumns = 5,
   thumbnailLimit,
+  fillHeight = false,
   onRegisterNavigation,
 }: {
   extras: Extra[];
   extrasPath: string;
   previewHeight?: number;
+  /**
+   * Fit inside a parent with a definite height (the details page panels): the preview
+   * takes the remaining height and the thumbnail strip is capped, so nothing overflows
+   * the panel. Without it the preview uses `previewHeight` and the browser grows.
+   */
+  fillHeight?: boolean;
   thumbColumns?: number;
   thumbnailLimit?: number;
   onRegisterNavigation?: (navigation: ExtrasBigscreenNavigation | null) => void;
@@ -164,8 +171,8 @@ export function VisualExtrasBrowser({
   }
 
   return (
-    <div className="min-w-0 space-y-3">
-      <div className="rounded-[18px] border border-white/8 bg-black/20 p-3">
+    <div className={fillHeight ? 'flex h-full min-h-0 min-w-0 flex-col gap-3' : 'min-w-0 space-y-3'}>
+      <div className={`rounded-[18px] border border-white/8 bg-black/20 p-3 ${fillHeight ? 'flex min-h-0 flex-1 flex-col' : ''}`}>
         <div className="mb-2 flex items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="truncate text-sm font-semibold text-white">{selectedExtra.name}</div>
@@ -194,8 +201,10 @@ export function VisualExtrasBrowser({
         </div>
         <div
           onClick={() => setFullscreenIndex(safeSelectedIndex)}
-          className="group relative block w-full overflow-hidden rounded-xl border border-gray-800 bg-gray-950 text-left transition-colors hover:border-blue-500/50"
-          style={previewHeight ? { height: `${previewHeight}px` } : undefined}
+          className={`group relative block w-full overflow-hidden rounded-xl border border-gray-800 bg-gray-950 text-left transition-colors hover:border-blue-500/50 ${
+            fillHeight ? 'min-h-[72px] flex-1' : ''
+          }`}
+          style={!fillHeight && previewHeight ? { height: `${previewHeight}px` } : undefined}
         >
           <ResolvedExtraMedia
             extra={selectedExtra}
@@ -222,8 +231,11 @@ export function VisualExtrasBrowser({
         </div>
       </div>
 
+      {(!fillHeight || visibleExtras.length > 1) && (
       <div
-        className="grid min-w-0 gap-2.5 max-h-[170px] overflow-y-auto custom-scrollbar p-1"
+        className={`grid min-w-0 gap-2.5 overflow-y-auto custom-scrollbar p-1 ${
+          fillHeight ? 'max-h-[min(150px,25%)] shrink-0' : 'max-h-[170px]'
+        }`}
         style={{ gridTemplateColumns: `repeat(${thumbColumns}, minmax(0,1fr))` }}
       >
         {visibleExtras.map((item, index) => (
@@ -242,6 +254,7 @@ export function VisualExtrasBrowser({
           </button>
         ))}
       </div>
+      )}
 
       {isFullscreen && fullscreenExtra && typeof document !== 'undefined' ? createPortal((
         <div

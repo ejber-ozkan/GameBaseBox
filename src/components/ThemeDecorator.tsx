@@ -14,11 +14,11 @@ export function ThemeDecorator({ children }: ThemeDecoratorProps) {
   // Render C64 outer border if active
   const content = outerBorder ? (
     <div
-      className="min-h-screen w-screen flex flex-col bg-theme-secondary p-4 sm:p-6 md:p-8 box-border transition-colors duration-250 relative"
+      className="flex-1 min-h-0 w-screen flex flex-col bg-theme-secondary p-4 sm:p-6 md:p-8 box-border transition-colors duration-250 relative"
       data-testid="theme-decorator-outer-border"
     >
       <div
-        className="flex-1 flex flex-col overflow-hidden relative isolate"
+        className="flex-1 min-h-0 flex flex-col overflow-hidden relative isolate"
         style={{
           backgroundColor: theme.id === 'c64-edition' ? 'transparent' : 'var(--theme-background)'
         }}
@@ -28,7 +28,7 @@ export function ThemeDecorator({ children }: ThemeDecoratorProps) {
     </div>
   ) : (
     <div
-      className="min-h-screen w-screen flex flex-col bg-theme-background transition-colors duration-250 relative"
+      className="flex-1 min-h-0 w-screen flex flex-col bg-theme-background transition-colors duration-250 relative"
       data-testid="theme-decorator-normal-container"
     >
       {children}
@@ -49,7 +49,9 @@ export function ThemeDecorator({ children }: ThemeDecoratorProps) {
       )}
 
       {/* Main themed viewport container */}
-      <div className="relative z-10 min-h-screen w-screen flex flex-col">
+      {/* A definite viewport height (not min-height) so views below can size with
+          h-full / flex-1 and "fit by design"; scrolling views scroll inside themselves. */}
+      <div className="relative z-10 h-screen w-screen flex flex-col overflow-hidden">
         {content}
       </div>
 

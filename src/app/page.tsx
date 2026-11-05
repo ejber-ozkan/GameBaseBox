@@ -153,7 +153,7 @@ function ImportedLibraryContent() {
     return (
       <>
         {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <main className="min-h-screen bg-theme-background text-theme-text font-sans selection:bg-theme-primary/30 flex flex-col">
+        <main className="flex-1 min-h-0 bg-theme-background text-theme-text font-sans selection:bg-theme-primary/30 flex flex-col">
           <SettingsView onBack={handleBackFromSettings} onOpenTigerHeli={openTigerHeliFromSettings} />
         </main>
       </>
@@ -164,7 +164,7 @@ function ImportedLibraryContent() {
     return (
       <>
         {showLaunchSplash ? <AppLaunchSplash /> : null}
-        <main className="min-h-screen bg-[var(--theme-background)] text-[var(--theme-text)] font-sans selection:bg-[var(--theme-primary-container)]">
+        <main className="flex-1 min-h-0 overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] font-sans selection:bg-[var(--theme-primary-container)]">
           <DetailView game={selectedGame} onBack={handleBackFromDetail} />
         </main>
       </>
@@ -387,8 +387,8 @@ export default function Home() {
 
   if (isCheckingSetup || bootstrapStatus === null) {
     return (
-      <main className="min-h-screen bg-[#06080f] text-white">
-        <div className="flex min-h-screen items-center justify-center">
+      <main className="flex-1 min-h-0 bg-[#06080f] text-white">
+        <div className="flex h-full items-center justify-center">
           <div className="flex flex-col items-center gap-5">
             <div className="h-14 w-14 rounded-full border-4 border-cyan-400/15 border-t-cyan-300 animate-spin" />
             <div className="text-sm font-black uppercase tracking-[0.24em] text-cyan-200/75">

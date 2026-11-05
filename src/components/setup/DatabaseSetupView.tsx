@@ -140,8 +140,8 @@ export function DatabaseSetupView({
   const showPlatformPicker = platformOptions.length > 1 && selectedPlatformId && onPlatformSelect;
 
   return (
-    <main className="min-h-screen bg-theme-background px-6 py-10 text-theme-text font-sans transition-colors duration-250 flex items-center justify-center relative">
-      <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl w-full items-center justify-center">
+    <main className="flex-1 min-h-0 overflow-y-auto bg-theme-background px-6 py-10 text-theme-text font-sans transition-colors duration-250 relative">
+      <div className="mx-auto flex min-h-full max-w-6xl w-full items-center justify-center">
         <div 
           className={`w-full max-w-4xl p-8 md:p-12 transition-all duration-250 ${
             theme.effects.steppedBorders ? 'border-4 border-theme-outline rounded-theme-xl' :

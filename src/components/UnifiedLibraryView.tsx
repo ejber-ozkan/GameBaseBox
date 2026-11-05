@@ -819,7 +819,7 @@ export function UnifiedLibraryView({
   // RENDER WINDOWED LAYOUT
   return (
     <main
-      className={`h-screen overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] flex flex-col font-sans transition-all`}
+      className={`h-full min-h-0 overflow-hidden bg-[var(--theme-background)] text-[var(--theme-text)] flex flex-col font-sans transition-all`}
     >
       <div
         aria-hidden="true"

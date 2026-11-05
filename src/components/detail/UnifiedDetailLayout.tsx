@@ -590,7 +590,10 @@ export function UnifiedDetailLayout({
   const heroPaddingX = detailLayout?.panelPadding ?? 18;
   const heroPaddingY = detailLayout?.panelPadding ?? 18;
   const heroMinHeight = detailLayout?.heroHeight ?? 280;
-  const c64TitlePanelHeight = Math.round(heroMinHeight * 1.25);
+  // The C64 bezel banner is taller than other heroes, but the layout spec is computed
+  // for the whole window while the C64 theme also draws its outer border. On shorter
+  // screens keep the banner at the hero height so the panels below still fit.
+  const c64TitlePanelHeight = Math.round(heroMinHeight * ((detailLayout?.designHeight ?? 900) < 900 ? 1 : 1.25));
   const detailTitleMax = detailLayout?.titleSize ?? 50;
   const compactButtons = (detailLayout?.sidCompact ?? Boolean(fullscreenLayout)) || settings.isFullscreen;
   const sidebarWidth = detailLayout?.sidebarWidth ?? 320;
@@ -872,7 +875,7 @@ export function UnifiedDetailLayout({
           </section>
         )}
 
-        <section className={panelCls + " shrink-0"}>
+        <section className={panelCls + " min-h-0 shrink overflow-y-auto custom-scrollbar"}>
           <div className="flex h-full min-h-0 flex-col" style={{ gap: Math.max(10, panelPadding - 2), padding: panelPadding }}>
             <SectionHeading title={t('detail.versionDetails')} />
             <div className="grid gap-1.5 mt-2">
@@ -899,7 +902,7 @@ export function UnifiedDetailLayout({
         </section>
 
         {/* Tabbed Panel */}
-        <section className={panelCls + " flex-1 min-h-0 flex flex-col"}>
+        <section className={panelCls + " flex-1 min-h-[132px] flex flex-col"}>
           <div className="flex border-b border-theme-outline/20 shrink-0 select-none">
             <button
               type="button"
@@ -2544,7 +2547,8 @@ export function UnifiedDetailLayout({
                   </DetailTitleBanner>
 
                   <div
-                    className="grid min-h-0 items-stretch"
+                    /* pb-16 keeps the panels clear of the fixed BigBoxFooter hint bar, as the C64 and Cyberpunk layouts do. */
+                    className="grid min-h-0 items-stretch pb-16"
                     style={{
                       gap: panelGap,
                       gridTemplateColumns: useStackedColumns ? '1fr' : `minmax(0,1fr) ${sidebarWidth}px`,
@@ -2699,7 +2703,7 @@ export function UnifiedDetailLayout({
                         <section
                           className={`${panelCls} flex h-full min-h-0 min-w-0 flex-col ${largePanelFocusCls} overflow-hidden`}
                         >
-                          <div onMouseEnter={() => nav.hoverZone('media-extras')} className="h-full min-h-0 min-w-0" style={{ padding: panelPadding }}>
+                          <div onMouseEnter={() => nav.hoverZone('media-extras')} className="h-full min-h-0 min-w-0 overflow-y-auto custom-scrollbar" style={{ padding: panelPadding }}>
                             <ExtrasDetail
                               game={game}
                               extras={archiveExtras}

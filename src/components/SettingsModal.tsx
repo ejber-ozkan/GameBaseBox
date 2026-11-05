@@ -417,7 +417,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
   };
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-theme-background text-theme-text font-sans select-none">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-theme-background text-theme-text font-sans select-none">
       <div
         className={`sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 border-b ${
           theme.effects.steppedBorders ? 'border-theme-outline border-b-4' : 'border-theme-outline-variant'

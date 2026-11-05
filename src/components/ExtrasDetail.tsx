@@ -283,7 +283,13 @@ export function ExtrasDetail({
 
   if (enableBigscreenGalleryUX && layoutSpec) {
     return (
-      <div ref={scrollContainerRef} className="grid h-full min-h-0 min-w-0" style={{ gap: layoutSpec.panelInnerGap, gridTemplateRows: 'minmax(0,1fr) auto auto' }}>
+      <div
+        ref={scrollContainerRef}
+        className="grid h-full min-h-0 min-w-0"
+        // The gallery takes the remaining height but never less than 150px; on very short
+        // windows the panel (not the page) scrolls instead of crushing the preview.
+        style={{ gap: layoutSpec.panelInnerGap, gridTemplateRows: 'minmax(150px,1fr) auto auto' }}
+      >
         {launchStatus && (
           <div className="fixed bottom-8 right-8 z-[110] rounded-full border border-blue-500 bg-blue-900/90 px-6 py-3 text-white shadow-2xl backdrop-blur-md animate-in slide-in-from-bottom-4 duration-300">
             {launchStatus}
@@ -291,11 +297,12 @@ export function ExtrasDetail({
         )}
 
         {galleryExtras.length > 0 ? (
-          <div className="min-h-0">
+          <div className="min-h-0 overflow-hidden">
             <VisualExtrasBrowser
               extras={galleryExtras}
               extrasPath={settings.platformSettings[settings.activePlatformId].folders.extrasPath}
               previewHeight={layoutSpec.extrasPreviewHeight}
+              fillHeight
               thumbColumns={layoutSpec.extrasThumbColumns}
               onRegisterNavigation={(navigation) => {
                 visualNavigationRef.current = navigation;
@@ -309,12 +316,12 @@ export function ExtrasDetail({
         )}
 
         {docsExtras.length > 0 ? (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-3">
               <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">{t('extras.documentsAndManuals')}</h3>
               <div className="h-px flex-1 bg-gradient-to-r from-gray-700/50 to-transparent"></div>
             </div>
-            <div className="grid grid-cols-2 gap-3 max-h-[140px] overflow-y-auto custom-scrollbar p-1" id="extras-docs-container">
+            <div className="grid grid-cols-2 gap-2 max-h-[64px] overflow-y-auto custom-scrollbar p-1" id="extras-docs-container">
               {docsExtras.map((item, index) => {
                 const isFocused = nav && nav.isFocused('extras-docs') && focusedDocIndex === index;
                 return (
@@ -334,13 +341,13 @@ export function ExtrasDetail({
                         nav.hoverZone('extras-docs');
                       }
                     }}
-                    className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${
+                    className={`flex items-center gap-2.5 rounded-xl border px-2.5 py-1.5 text-left transition-all ${
                       isFocused
                         ? 'ring-2 ring-[var(--theme-tertiary)] border-[var(--theme-tertiary)] bg-gray-800/80 shadow-[0_0_12px_var(--theme-tertiary)] scale-[1.01]'
                         : 'border-gray-800 bg-gray-900/40 hover:border-gray-600 hover:bg-gray-800/60'
                     }`}
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-red-500/20 bg-red-950/30 text-red-400">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-500/20 bg-red-950/30 text-red-400">
                       {item.path.toLowerCase().endsWith('.pdf') ? '📄' : '📝'}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -355,12 +362,12 @@ export function ExtrasDetail({
         ) : null}
 
         {mediaExtras.length > 0 ? (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-3">
               <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">{t('extras.mediaAssets')}</h3>
               <div className="h-px flex-1 bg-gradient-to-r from-gray-700/50 to-transparent"></div>
             </div>
-            <div className="grid grid-cols-2 gap-3 max-h-[140px] overflow-y-auto custom-scrollbar p-1" id="extras-media-container">
+            <div className="grid grid-cols-2 gap-2 max-h-[64px] overflow-y-auto custom-scrollbar p-1" id="extras-media-container">
               {mediaExtras.map((item, index) => {
                 const isFocused = nav && nav.isFocused('extras-media') && focusedMediaIndex === index;
                 return (
@@ -380,13 +387,13 @@ export function ExtrasDetail({
                         nav.hoverZone('extras-media');
                       }
                     }}
-                    className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${
+                    className={`flex items-center gap-2.5 rounded-xl border px-2.5 py-1.5 text-left transition-all ${
                       isFocused
                         ? 'ring-2 ring-[var(--theme-tertiary)] border-[var(--theme-tertiary)] bg-purple-900/50 shadow-[0_0_12px_var(--theme-tertiary)] scale-[1.01]'
                         : 'border-purple-900/30 bg-purple-950/20 hover:border-purple-500/50 hover:bg-purple-900/40'
                     }`}
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-purple-500/30 bg-purple-500/10 text-purple-400">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-purple-500/30 bg-purple-500/10 text-purple-400">
                       {item.path.toLowerCase().endsWith('.mp3') ? '🎵' : '🎬'}
                     </div>
                     <div className="min-w-0 flex-1">
