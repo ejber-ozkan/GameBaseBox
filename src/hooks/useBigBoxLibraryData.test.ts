@@ -255,6 +255,23 @@ describe('useBigBoxLibraryData request lifetime', () => {
     );
   }
 
+  it('replaceRailGames updates one alphabet rail immutably', async () => {
+    vi.mocked(getDbGames).mockResolvedValue(mockGames.slice(0, 3));
+    const { result } = renderHook(useBigBoxLibraryData, { initialProps: props });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    const before = result.current.rails;
+    const target = before.find((rail) => rail.type === 'alphabet');
+    expect(target).toBeDefined();
+    const replacement = mockGames.slice(1, 2);
+
+    act(() => result.current.replaceRailGames(target!.id, replacement));
+
+    const after = result.current.rails;
+    expect(after).not.toBe(before);
+    expect(after.find((rail) => rail.id === target!.id)?.games).toBe(replacement);
+    expect(target!.games).not.toBe(replacement);
+  });
+
   it('keeps the current initialization loading when obsolete initialization finishes', async () => {
     const oldGames = deferred<Game[]>();
     const currentGames = deferred<Game[]>();

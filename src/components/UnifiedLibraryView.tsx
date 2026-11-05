@@ -40,6 +40,11 @@ import { CyberpunkCrtGrid } from './library/CyberpunkCrtGrid';
 // Unified Traversal Hook
 import { useUnifiedLibraryNavigation } from '../hooks/useUnifiedLibraryNavigation';
 import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '../lib/library-backgrounds';
+
+/** Rows loaded past a random game so it is not the last row of the list. */
+const RANDOM_FOCUS_PAGE = 120;
+/** Most extra rows the random-game action will load just to move the list cursor. */
+const RANDOM_FOCUS_MAX_EXTRA_ROWS = 2000;
 import { playRotatingUiSoundEffect, playUiSoundEffect, playUiSoundEffectAndWait } from '../lib/ui-sound-effects';
 
 export interface BigBoxSessionState {
@@ -164,6 +169,7 @@ export function UnifiedLibraryView({
     genres: bigboxGenres,
     loading: bigboxLoading,
     rails: bigboxRails,
+    replaceRailGames,
     subGenres: bigboxSubGenres,
     totalGameCount: bigboxTotalGameCount,
   } = useBigBoxLibraryData({
@@ -412,6 +418,7 @@ export function UnifiedLibraryView({
         );
 
         let targetRail = targetRailIndex >= 0 ? navigationRails[targetRailIndex] : null;
+        let targetRailGames = targetRail?.games ?? [];
 
         if (!targetRail) {
           const letter = getGameLetter(randomGame.name);
@@ -421,8 +428,9 @@ export function UnifiedLibraryView({
           );
           if (targetRailIndex >= 0) {
             targetRail = navigationRails[targetRailIndex];
-            if (!targetRail.games.some((g) => g.id === randomGame.id)) {
-              const letterGames = await getDbGames(
+            targetRailGames = targetRail.games;
+            if (!targetRailGames.some((g) => g.id === randomGame.id)) {
+              targetRailGames = await getDbGames(
                 1000,
                 0,
                 {
@@ -432,13 +440,14 @@ export function UnifiedLibraryView({
                 },
                 platformId,
               );
-              targetRail.games = letterGames;
+              // Update through the data hook's state; rails must not be mutated in place.
+              replaceRailGames(targetRail.id, targetRailGames);
             }
           }
         }
 
         if (targetRailIndex >= 0 && targetRail) {
-          const gameIndex = targetRail.games.findIndex((g) => g.id === randomGame.id);
+          const gameIndex = targetRailGames.findIndex((g) => g.id === randomGame.id);
           const resolvedIndex = Math.max(0, gameIndex);
           setActiveRailIndex(targetRailIndex);
           setRailFocusIndices((prev) => ({ ...prev, [targetRail.id]: resolvedIndex }));
@@ -460,8 +469,10 @@ export function UnifiedLibraryView({
         const existingIndex = games.findIndex((g) => g.id === randomGame.id);
         if (existingIndex >= 0) {
           setFocusedIndex(existingIndex);
-        } else {
-          const loadedGames = await getDbGames(randomOffset + 120, 0, filters, platformId);
+        } else if (randomOffset + RANDOM_FOCUS_PAGE - games.length <= RANDOM_FOCUS_MAX_EXTRA_ROWS) {
+          // The list is index-based, so focusing the game needs every row before it.
+          // Only extend the list when that is a modest load; otherwise just open the game.
+          const loadedGames = await getDbGames(randomOffset + RANDOM_FOCUS_PAGE, 0, filters, platformId);
           if (loadedGames.length > 0) {
             if (setGames) {
               setGames(loadedGames);
@@ -488,6 +499,7 @@ export function UnifiedLibraryView({
     navigationRails,
     onSessionChange,
     railFocusIndices,
+    replaceRailGames,
     searchInput,
     setActiveRailIndex,
     setFocusedIndex,

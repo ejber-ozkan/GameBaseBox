@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Settings } from '../contexts/SettingsContext';
 import { Game } from '../types/game';
 import { GameFilters, getDbGameCount, getDbGames, getGenres, getSubGenres } from '../lib/tauri-bridge';
@@ -330,11 +330,35 @@ export function useBigBoxLibraryData({
     return () => { cancelled = true; };
   }, [activePlatformId, continuationOffset, continuationPageSize, continuationRail, filters, libraryRefreshToken, searchInput, shouldContinue]);
 
+  /**
+   * Replaces one alphabet rail's games through state (and the letter cache), e.g. after
+   * loading a letter page so a randomly chosen game can be focused. Callers must not
+   * mutate rail objects directly: they are React state.
+   */
+  const replaceRailGames = useCallback((railId: string, games: Game[]) => {
+    setAlphabetRails((previous) => {
+      let changed = false;
+      const next = previous.map((rail) => {
+        if (rail.id !== railId || rail.games === games) return rail;
+        changed = true;
+        if (rail.letter) {
+          LETTER_RAIL_CACHE.set(
+            getAlphabetRailCacheKey(rail.letter, filters, searchInput, activePlatformId, libraryRefreshToken),
+            games,
+          );
+        }
+        return { ...rail, games };
+      });
+      return changed ? next : previous;
+    });
+  }, [activePlatformId, filters, libraryRefreshToken, searchInput]);
+
   return {
     genres,
     flatGames,
     loading: enabled && loading,
     rails,
+    replaceRailGames,
     subGenres,
     totalGameCount,
   };
