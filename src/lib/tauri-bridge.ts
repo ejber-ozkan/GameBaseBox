@@ -1,5 +1,7 @@
 "use client";
 
+import { BlobUrlCache } from './blob-url-cache';
+
 /**
  * tauri-bridge.ts
  *
@@ -298,21 +300,18 @@ export async function testEmulatorProfile(request: EmulatorProfileTestRequest): 
  */
 const resolveMediaPathCache = new Map<string, Promise<ResolvedPath>>();
 const findAllMediaVariantsCache = new Map<string, Promise<string[]>>();
-const mediaUrlCache = new Map<string, Promise<string>>();
+// Blob URLs for music files (SID/SAP/AY). Bounded so browsing many games does not keep
+// every tune's bytes alive; players load the bytes when playback starts, so revoking an
+// evicted URL does not interrupt a tune that is already playing.
+const MEDIA_URL_CACHE_LIMIT = 48;
+const mediaUrlCache = new BlobUrlCache(MEDIA_URL_CACHE_LIMIT);
 const assetUrlCache = new Map<string, Promise<string>>();
 
 export function clearMediaCache(): void {
-  // Revoke all ObjectURLs in the cache to avoid memory leaks
-  for (const promise of mediaUrlCache.values()) {
-    promise.then(url => {
-      if (url && url.startsWith('blob:')) {
-        URL.revokeObjectURL(url);
-      }
-    }).catch(() => {});
-  }
+  // Revokes every cached ObjectURL to avoid memory leaks.
+  mediaUrlCache.clear();
   resolveMediaPathCache.clear();
   findAllMediaVariantsCache.clear();
-  mediaUrlCache.clear();
   assetUrlCache.clear();
 }
 
@@ -511,7 +510,8 @@ export async function readFileBytes(absolutePath: string): Promise<Uint8Array> {
     const arrayBuffer = await res.arrayBuffer();
     return new Uint8Array(arrayBuffer);
   }
-  const bytes = await invoke<number[]>('read_file_bytes', { path: absolutePath });
+  // The command returns a raw IPC payload, which arrives as an ArrayBuffer.
+  const bytes = await invoke<ArrayBuffer>('read_file_bytes', { path: absolutePath });
   return new Uint8Array(bytes);
 }
 
@@ -539,7 +539,7 @@ export async function getMediaUrl(absolutePath: string): Promise<string> {
       isDebugMode().then(debug => {
         if (debug) logDebugMessage(`[DEBUG WARNING] getMediaUrl failed for "${absolutePath}": ${err}`);
       });
-      mediaUrlCache.delete(absolutePath);
+      mediaUrlCache.delete(absolutePath, p);
     });
     cached = p;
   } else {

@@ -1,5 +1,5 @@
 use crate::database::{
-    configure_runtime_db_path, get_db_path, import_mdb_to_sqlite, import_mdb_to_sqlite_for_platform_with_cancellation,
+    configure_runtime_db_path, run_blocking, get_db_path, import_mdb_to_sqlite, import_mdb_to_sqlite_for_platform_with_cancellation,
     is_database_ready, normalize_platform_id,
 };
 use crate::models::{
@@ -52,11 +52,19 @@ pub async fn open_mdb_file_dialog(app: tauri::AppHandle) -> Option<String> {
         .map(|path| path.to_string())
 }
 
+// Long-running commands below are `async` and hand their work to `run_blocking`:
+// commands declared without `async` run on the main thread in Tauri 2, which froze the
+// window during imports and queued `cancel_platform_import` behind the import itself.
+
 #[tauri::command]
-pub fn get_database_bootstrap_status(
+pub async fn get_database_bootstrap_status(
     app: tauri::AppHandle,
 ) -> Result<DatabaseBootstrapStatus, String> {
     let _ = configure_runtime_db_path(&app)?;
+    run_blocking("Database status", database_bootstrap_status).await
+}
+
+fn database_bootstrap_status() -> Result<DatabaseBootstrapStatus, String> {
     let db_path = get_db_path();
     let ready = is_database_ready()?;
     Ok(DatabaseBootstrapStatus {
@@ -71,11 +79,15 @@ pub fn get_database_bootstrap_status(
 }
 
 #[tauri::command]
-pub fn import_database_from_mdb(
+pub async fn import_database_from_mdb(
     app: tauri::AppHandle,
     mdb_path: String,
 ) -> Result<DatabaseImportResult, String> {
     let _ = configure_runtime_db_path(&app)?;
+    run_blocking("Database import", move || import_database_from_mdb_blocking(mdb_path)).await
+}
+
+fn import_database_from_mdb_blocking(mdb_path: String) -> Result<DatabaseImportResult, String> {
     match import_mdb_to_sqlite(&mdb_path) {
         Ok(res) => Ok(res),
         Err(err) => {
@@ -93,8 +105,15 @@ pub fn get_platform_import_status(platform_id: String) -> Result<PlatformImportS
 }
 
 #[tauri::command]
-pub fn import_platform_database_from_mdb(
+pub async fn import_platform_database_from_mdb(
     app: tauri::AppHandle,
+    request: ImportPlatformDatabaseRequest,
+) -> Result<PlatformDatabaseImportResult, String> {
+    let _ = configure_runtime_db_path(&app)?;
+    run_blocking("Platform import", move || import_platform_database_blocking(request)).await
+}
+
+fn import_platform_database_blocking(
     request: ImportPlatformDatabaseRequest,
 ) -> Result<PlatformDatabaseImportResult, String> {
     let platform_id = normalize_platform_id(Some(&request.platform_id))?;
@@ -104,7 +123,6 @@ pub fn import_platform_database_from_mdb(
         }
         return Err(err);
     }
-    let _ = configure_runtime_db_path(&app)?;
     let job_id = request.job_id.as_deref().unwrap_or_default();
     let result = import_mdb_to_sqlite_for_platform_with_cancellation(
         &request.mdb_path,

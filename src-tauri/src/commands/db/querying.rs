@@ -1,4 +1,4 @@
-use crate::database::get_db_path;
+use crate::database::connection::{checkout, PooledConnection};
 use crate::models::{GameFilters, GameSortColumn, GameSortDirection};
 use rusqlite::{params_from_iter, Connection};
 
@@ -272,7 +272,7 @@ pub(crate) fn load_ordered_game_ids_with_fallback(
             };
 
             let mut stmt = conn
-                .prepare(&query)
+                .prepare_cached(&query)
                 .map_err(|e| format!("Prepare error: {e}"))?;
             let id_iter = stmt
                 .query_map(params_from_iter(params), |row| row.get::<_, String>(0))
@@ -306,7 +306,7 @@ pub(crate) fn load_game_count_with_fallback(
             };
 
             let mut stmt = conn
-                .prepare(&query)
+                .prepare_cached(&query)
                 .map_err(|e| format!("Prepare error: {e}"))?;
 
             stmt.query_row(params_from_iter(params), |row| row.get::<_, usize>(0))
@@ -322,8 +322,8 @@ pub(crate) fn load_game_count_with_fallback(
     }
 }
 
-pub(crate) fn open_db_connection(context: &str) -> Result<Connection, String> {
-    Connection::open(get_db_path()).map_err(|error| format!("{context}: {error}"))
+pub(crate) fn open_db_connection(db_path: &str, context: &str) -> Result<PooledConnection, String> {
+    checkout(db_path).map_err(|error| format!("{context}: {error}"))
 }
 
 pub(crate) fn sqlite_table_exists(conn: &Connection, table_name: &str) -> Result<bool, String> {

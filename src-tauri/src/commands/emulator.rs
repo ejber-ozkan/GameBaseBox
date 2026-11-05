@@ -850,9 +850,9 @@ fn load_game_launch_metadata(
     };
 
     use crate::database::get_db_path;
-    use rusqlite::{Connection, OptionalExtension};
+    use rusqlite::OptionalExtension;
 
-    let Ok(conn) = Connection::open(get_db_path()) else {
+    let Ok(conn) = crate::database::connection::open_connection(get_db_path()) else {
         return GameLaunchMetadata::default();
     };
 
@@ -1697,6 +1697,11 @@ fn resolve_existing_rom_path(rom_path_str: &str) -> PathBuf {
 
 #[tauri::command]
 pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, String> {
+    // Archive extraction, launcher-file writes and process spawning are blocking work.
+    crate::database::run_blocking("Emulator launch", move || launch_emulator_blocking(request)).await
+}
+
+fn launch_emulator_blocking(request: LaunchRequest) -> Result<LaunchResult, String> {
     let platform_id = request.platform_id.as_deref();
     let emulator = resolve_emulator_binary(
         &request.emulator_path,
@@ -2195,7 +2200,7 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_helpers::DbEnvGuard;
+    use crate::test_helpers::DbPathGuard;
 
     #[test]
     fn test_vice_fliplist_preserves_bytes_paths_and_disk_order() {
@@ -2531,7 +2536,7 @@ mod tests {
     fn test_launch_metadata_loads_platform_scoped_gemus() {
         let temp_db = NamedTempFile::new().unwrap();
         let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
+        let _env = DbPathGuard::set(&db_path);
         let conn = Connection::open(temp_db.path()).unwrap();
         conn.execute(
             "CREATE TABLE Games (GA_Id TEXT, platform_id TEXT, FileToRun TEXT, Gemus TEXT)",
@@ -2845,7 +2850,7 @@ mod tests {
 
         let temp_db = NamedTempFile::new().unwrap();
         let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
+        let _env = DbPathGuard::set(&db_path);
         let conn = Connection::open(temp_db.path()).unwrap();
         conn.execute("CREATE TABLE Games (GA_Id TEXT, FileToRun TEXT)", [])
             .unwrap();

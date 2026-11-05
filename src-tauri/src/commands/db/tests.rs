@@ -12,7 +12,7 @@ use super::{
     get_sub_genres,
 };
 use crate::database::init_database;
-use crate::test_helpers::DbEnvGuard;
+use crate::test_helpers::DbPathGuard;
 
 fn sqlite_table_exists(conn: &Connection, table_name: &str) -> bool {
     conn.query_row(
@@ -494,7 +494,7 @@ fn test_build_game_summary_query_preserves_requested_id_order_in_sql() {
 async fn test_get_genres() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -525,7 +525,7 @@ async fn test_get_genres() {
 async fn test_get_sub_genres() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -565,7 +565,7 @@ async fn test_get_sub_genres() {
 async fn test_get_game_extras() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -602,7 +602,7 @@ async fn test_get_game_extras() {
 async fn test_platform_scoped_queries_do_not_mix_duplicate_source_ids() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -723,7 +723,7 @@ async fn test_platform_scoped_queries_do_not_mix_duplicate_source_ids() {
 async fn test_init_database_repairs_stale_game_view_without_platform_id() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -851,7 +851,7 @@ async fn test_init_database_repairs_stale_game_view_without_platform_id() {
 async fn test_get_db_games() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -969,7 +969,7 @@ async fn test_get_db_games() {
 async fn test_get_db_games_symbol_filter() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -1013,7 +1013,7 @@ async fn test_get_db_games_symbol_filter() {
 async fn test_get_db_games_pagination() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -1062,7 +1062,7 @@ async fn test_get_db_games_pagination() {
 async fn test_get_db_game_count() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -1203,7 +1203,7 @@ fn test_load_ordered_game_ids_deduplicates_repeated_game_view_rows() {
 async fn test_get_db_games_deduplicates_repeated_game_view_rows() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -1233,7 +1233,7 @@ async fn test_get_db_games_deduplicates_repeated_game_view_rows() {
 async fn test_get_db_games_preserves_filtered_id_order_after_detail_hydration() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -1277,5 +1277,54 @@ async fn test_get_db_games_preserves_filtered_id_order_after_detail_hydration() 
     assert_eq!(
         games.iter().map(|game| game.id.clone()).collect::<Vec<_>>(),
         vec!["2".to_string(), "1".to_string()]
+    );
+}
+
+/// Whole-library loads (BigBox grids) request every game at once and are hydrated in
+/// chunks; rows must come back complete and in the ID query's order across chunks.
+#[tokio::test(flavor = "current_thread")]
+async fn test_get_db_games_whole_library_load_spans_chunks_in_order() {
+    let directory = tempfile::tempdir().unwrap();
+    let db_path = directory.path().join("large.sqlite");
+    let _env = DbPathGuard::set(db_path.to_str().unwrap());
+    let exports = tempfile::tempdir().unwrap();
+
+    let game_count = super::games::SUMMARY_ID_CHUNK_SIZE * 2 + 500;
+    let mut games_csv = String::from(
+        "GA_Id,Name,Filename,FileToRun,ScrnshotFilename,SidFilename,CRC,YE_Id,GE_Id,DE_Id,PU_Id,MU_Id,LA_Id,PR_Id,AR_Id,V_PalNTSC,V_TrueDriveEmu,Classic,Adult\n",
+    );
+    for id in 1..=game_count {
+        games_csv.push_str(&format!(
+            "{id},Game {id:05},g{id}.zip,,g{id}.png,,crc,1,1,1,1,1,1,1,1,P,0,False,False\n"
+        ));
+    }
+    let tables = [
+        ("Games.csv", games_csv.as_str()),
+        ("Years.csv", "YE_Id,Year\n1,1988\n"),
+        ("Genres.csv", "GE_Id,Genre,PG_Id\n1,Shooter,1\n"),
+        ("PGenres.csv", "PG_Id,ParentGenre\n1,Arcade\n"),
+        ("Developers.csv", "DE_Id,Developer\n1,Dev\n"),
+        ("Publishers.csv", "PU_Id,Publisher\n1,Pub\n"),
+        ("Musicians.csv", "MU_Id,Musician,Photo,Nick,Grp\n1,Composer,,,\n"),
+        ("Languages.csv", "LA_Id,Language\n1,English\n"),
+        ("Programmers.csv", "PR_Id,Programmer\n1,Coder\n"),
+        ("Artists.csv", "AR_Id,Artist\n1,Artist\n"),
+        ("Extras.csv", "GA_Id,DisplayOrder,Path\n1,1,Cover/one.png\n"),
+    ];
+    for (filename, contents) in tables {
+        std::fs::write(exports.path().join(filename), contents).unwrap();
+    }
+    crate::database::import_csv_directory_to_sqlite(exports.path(), "c64").unwrap();
+
+    let games = get_db_games(Some(game_count + 10), Some(0), None, Some("c64".to_string()))
+        .await
+        .expect("whole-library load should succeed");
+
+    assert_eq!(games.len(), game_count);
+    assert_eq!(games.first().unwrap().name, "Game 00001");
+    assert_eq!(games.last().unwrap().name, format!("Game {game_count:05}"));
+    assert!(
+        games.windows(2).all(|pair| pair[0].name <= pair[1].name),
+        "rows keep the ID query's order across chunks"
     );
 }

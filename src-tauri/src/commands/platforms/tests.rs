@@ -2,7 +2,7 @@ use super::{
     get_active_platform, get_platform_import_status_sync, get_supported_platforms,
     set_active_platform,
 };
-use crate::test_helpers::DbEnvGuard;
+use crate::test_helpers::DbPathGuard;
 use rusqlite::Connection;
 use tempfile::NamedTempFile;
 
@@ -12,7 +12,7 @@ async fn test_get_supported_platforms_includes_atari800_capabilities() {
     // insert atari800 as "imported" into the shared DB env.
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let platforms = get_supported_platforms().await.unwrap();
     let atari800 = platforms
@@ -40,7 +40,7 @@ async fn test_get_supported_platforms_includes_atari800_capabilities() {
 async fn test_get_supported_platforms_includes_importable_atari2600_capabilities() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let platforms = get_supported_platforms().await.unwrap();
     let atari2600 = platforms
@@ -65,7 +65,7 @@ async fn test_get_supported_platforms_includes_importable_atari2600_capabilities
 async fn test_get_supported_platforms_includes_zxspectrum_capabilities() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let platforms = get_supported_platforms().await.unwrap();
     let zxspectrum = platforms
@@ -105,7 +105,7 @@ async fn test_get_supported_platforms_includes_zxspectrum_capabilities() {
 async fn test_get_supported_platforms_includes_bbc_micro_capabilities() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let platforms = get_supported_platforms().await.unwrap();
     let bbc = platforms
@@ -143,7 +143,7 @@ async fn test_get_supported_platforms_includes_bbc_micro_capabilities() {
 async fn test_get_supported_platforms_includes_amiga_capabilities() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let platforms = get_supported_platforms().await.unwrap();
     let amiga = platforms
@@ -181,7 +181,7 @@ async fn test_get_supported_platforms_includes_amiga_capabilities() {
 async fn test_get_supported_platforms_uses_persisted_import_status() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
     let conn = Connection::open(&db_path).unwrap();
     conn.execute(
         "CREATE TABLE PlatformLibraries (
@@ -213,7 +213,7 @@ async fn test_get_supported_platforms_uses_persisted_import_status() {
 async fn test_get_supported_platforms_includes_atari_st_capabilities() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let platforms = get_supported_platforms().await.unwrap();
     let atari_st = platforms
@@ -252,7 +252,7 @@ async fn test_get_supported_platforms_includes_atari_st_capabilities() {
 async fn test_get_supported_platforms_includes_vic20_capabilities() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let platforms = get_supported_platforms().await.unwrap();
     let vic20 = platforms
@@ -287,7 +287,7 @@ async fn test_get_supported_platforms_includes_vic20_capabilities() {
 async fn test_get_supported_platforms_includes_new_gamebase_platforms() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let platforms = get_supported_platforms().await.unwrap();
     
@@ -323,7 +323,7 @@ async fn test_get_supported_platforms_includes_new_gamebase_platforms() {
 async fn test_active_platform_defaults_to_c64() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let active = get_active_platform().await.unwrap();
 
@@ -336,7 +336,7 @@ async fn test_active_platform_defaults_to_c64() {
 async fn test_set_active_platform_routes_unimported_atari800_to_import() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let response = set_active_platform("atari800".to_string()).await.unwrap();
 
@@ -349,7 +349,7 @@ async fn test_set_active_platform_routes_unimported_atari800_to_import() {
 fn test_platform_import_status_is_platform_scoped() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     let status = get_platform_import_status_sync("atari800").unwrap();
 
@@ -362,7 +362,7 @@ fn test_platform_import_status_is_platform_scoped() {
 fn test_platform_import_status_reads_imported_sqlite_library() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();
@@ -415,7 +415,7 @@ fn test_platform_import_status_reads_imported_sqlite_library() {
 fn test_platform_import_status_treats_missing_library_row_as_not_imported() {
     let temp_db = NamedTempFile::new().unwrap();
     let db_path = temp_db.path().to_string_lossy().to_string();
-    let _env = DbEnvGuard::set(&db_path);
+    let _env = DbPathGuard::set(&db_path);
 
     {
         let conn = Connection::open(&db_path).unwrap();

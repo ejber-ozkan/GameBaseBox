@@ -1,6 +1,7 @@
 use crate::models::{ExtraRow, GameFilters, GameRow};
 use rusqlite::{params_from_iter, Row};
 
+use crate::database::get_db_path;
 use super::querying::{
     load_game_count_with_fallback, load_ordered_game_ids_with_fallback, open_db_connection,
     sqlite_table_exists,
@@ -160,11 +161,33 @@ fn map_game_detail_row(row: &Row<'_>) -> rusqlite::Result<GameDetailRow> {
     })
 }
 
+/// Game IDs hydrated per summary query. Whole-library loads (BigBox grids) request
+/// every game at once; chunking keeps each statement a bounded, reusable size (two SQL
+/// variables per ID) instead of one statement as large as the library.
+pub(crate) const SUMMARY_ID_CHUNK_SIZE: usize = 2_000;
+
+/// Runs blocking database work off the async runtime. The database path is resolved
+/// here, on the calling thread, before the work moves to a blocking worker.
+async fn run_db_task<T, F>(label: &'static str, task: F) -> Result<T, String>
+where
+    T: Send + 'static,
+    F: FnOnce(String) -> Result<T, String> + Send + 'static,
+{
+    let db_path = get_db_path();
+    tauri::async_runtime::spawn_blocking(move || task(db_path))
+        .await
+        .map_err(|error| format!("{label} worker failed: {error}"))?
+}
+
 pub async fn get_genres(platform_id: Option<String>) -> Result<Vec<String>, String> {
+    run_db_task("Genre query", move |db_path| get_genres_blocking(&db_path, platform_id)).await
+}
+
+fn get_genres_blocking(db_path: &str, platform_id: Option<String>) -> Result<Vec<String>, String> {
     let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
-    let conn = open_db_connection("DB error")?;
+    let conn = open_db_connection(db_path, "DB error")?;
     let mut stmt = conn
-        .prepare("SELECT DISTINCT parentGenre FROM GameView WHERE platformId = ?1 AND parentGenre != '' ORDER BY parentGenre")
+        .prepare_cached("SELECT DISTINCT parentGenre FROM GameView WHERE platformId = ?1 AND parentGenre != '' ORDER BY parentGenre")
         .map_err(|e| e.to_string())?;
     let genres: Vec<String> = stmt
         .query_map([platform_id], |row| row.get(0))
@@ -181,11 +204,21 @@ pub async fn get_sub_genres(
     let Some(selected_genre) = genre.filter(|value| !value.trim().is_empty()) else {
         return Ok(Vec::new());
     };
-    let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
+    run_db_task("Sub-genre query", move |db_path| {
+        get_sub_genres_blocking(&db_path, selected_genre, platform_id)
+    })
+    .await
+}
 
-    let conn = open_db_connection("DB error")?;
+fn get_sub_genres_blocking(
+    db_path: &str,
+    selected_genre: String,
+    platform_id: Option<String>,
+) -> Result<Vec<String>, String> {
+    let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
+    let conn = open_db_connection(db_path, "DB error")?;
     let mut stmt = conn
-        .prepare(
+        .prepare_cached(
             "SELECT DISTINCT subGenre
              FROM GameView
              WHERE platformId = ?1
@@ -209,19 +242,21 @@ pub async fn get_db_games(
     filters: Option<GameFilters>,
     platform_id: Option<String>,
 ) -> Result<Vec<GameRow>, String> {
-    tauri::async_runtime::spawn_blocking(move || get_db_games_blocking(limit, offset, filters, platform_id))
-        .await
-        .map_err(|error| format!("Game query worker failed: {error}"))?
+    run_db_task("Game query", move |db_path| {
+        get_db_games_blocking(&db_path, limit, offset, filters, platform_id)
+    })
+    .await
 }
 
 fn get_db_games_blocking(
+    db_path: &str,
     limit: Option<usize>,
     offset: Option<usize>,
     filters: Option<GameFilters>,
     platform_id: Option<String>,
 ) -> Result<Vec<GameRow>, String> {
     let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
-    let conn = open_db_connection("Database error")?;
+    let conn = open_db_connection(db_path, "Database error")?;
     let ordered_ids = load_ordered_game_ids_with_fallback(
         &conn,
         &platform_id,
@@ -235,18 +270,20 @@ fn get_db_games_blocking(
     }
 
     let include_cover_index = sqlite_table_exists(&conn, "GameCoverIndex")?;
-    let (details_query, detail_params) =
-        build_game_summary_query(&platform_id, &ordered_ids, include_cover_index);
-    let mut details_stmt = conn
-        .prepare(&details_query)
-        .map_err(|e| format!("Prepare error: {e}"))?;
-    let game_iter = details_stmt
-        .query_map(params_from_iter(detail_params), map_game_row)
-        .map_err(|e| e.to_string())?;
-
     let mut games = Vec::with_capacity(ordered_ids.len());
-    for game in game_iter {
-        games.push(game.map_err(|e| e.to_string())?);
+    // Chunks are hydrated in order, so the overall ordering from the ID query is kept.
+    for id_chunk in ordered_ids.chunks(SUMMARY_ID_CHUNK_SIZE) {
+        let (details_query, detail_params) =
+            build_game_summary_query(&platform_id, id_chunk, include_cover_index);
+        let mut details_stmt = conn
+            .prepare_cached(&details_query)
+            .map_err(|e| format!("Prepare error: {e}"))?;
+        let game_iter = details_stmt
+            .query_map(params_from_iter(detail_params), map_game_row)
+            .map_err(|e| e.to_string())?;
+        for game in game_iter {
+            games.push(game.map_err(|e| e.to_string())?);
+        }
     }
 
     Ok(games)
@@ -256,22 +293,27 @@ pub async fn get_game_detail(
     game_id: String,
     platform_id: Option<String>,
 ) -> Result<Option<GameDetailRow>, String> {
-    tauri::async_runtime::spawn_blocking(move || get_game_detail_blocking(game_id, platform_id))
-        .await
-        .map_err(|error| format!("Game detail worker failed: {error}"))?
+    run_db_task("Game detail", move |db_path| {
+        get_game_detail_blocking(&db_path, game_id, platform_id)
+    })
+    .await
 }
 
-fn get_game_detail_blocking(game_id: String, platform_id: Option<String>) -> Result<Option<GameDetailRow>, String> {
+fn get_game_detail_blocking(
+    db_path: &str,
+    game_id: String,
+    platform_id: Option<String>,
+) -> Result<Option<GameDetailRow>, String> {
     let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
-    let conn = open_db_connection("Database error")?;
+    let conn = open_db_connection(db_path, "Database error")?;
     let include_cover_index = sqlite_table_exists(&conn, "GameCoverIndex")?;
     let (query, params) = build_game_detail_query(&platform_id, &game_id, include_cover_index);
-    
-    let mut stmt = conn.prepare(&query).map_err(|e| format!("Prepare error: {e}"))?;
-    
+
+    let mut stmt = conn.prepare_cached(&query).map_err(|e| format!("Prepare error: {e}"))?;
+
     let mut iter = stmt.query_map(params_from_iter(params), map_game_detail_row)
         .map_err(|e| e.to_string())?;
-        
+
     if let Some(row) = iter.next() {
         Ok(Some(row.map_err(|e| e.to_string())?))
     } else {
@@ -283,14 +325,19 @@ pub async fn get_db_game_count(
     filters: Option<GameFilters>,
     platform_id: Option<String>,
 ) -> Result<usize, String> {
-    tauri::async_runtime::spawn_blocking(move || get_db_game_count_blocking(filters, platform_id))
-        .await
-        .map_err(|error| format!("Game count worker failed: {error}"))?
+    run_db_task("Game count", move |db_path| {
+        get_db_game_count_blocking(&db_path, filters, platform_id)
+    })
+    .await
 }
 
-fn get_db_game_count_blocking(filters: Option<GameFilters>, platform_id: Option<String>) -> Result<usize, String> {
+fn get_db_game_count_blocking(
+    db_path: &str,
+    filters: Option<GameFilters>,
+    platform_id: Option<String>,
+) -> Result<usize, String> {
     let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
-    let conn = open_db_connection("Database error")?;
+    let conn = open_db_connection(db_path, "Database error")?;
     load_game_count_with_fallback(&conn, &platform_id, filters)
 }
 
@@ -298,16 +345,21 @@ pub async fn get_game_extras(
     game_id: String,
     platform_id: Option<String>,
 ) -> Result<Vec<ExtraRow>, String> {
-    tauri::async_runtime::spawn_blocking(move || get_game_extras_blocking(game_id, platform_id))
-        .await
-        .map_err(|error| format!("Game extras worker failed: {error}"))?
+    run_db_task("Game extras", move |db_path| {
+        get_game_extras_blocking(&db_path, game_id, platform_id)
+    })
+    .await
 }
 
-fn get_game_extras_blocking(game_id: String, platform_id: Option<String>) -> Result<Vec<ExtraRow>, String> {
+fn get_game_extras_blocking(
+    db_path: &str,
+    game_id: String,
+    platform_id: Option<String>,
+) -> Result<Vec<ExtraRow>, String> {
     let platform_id = platform_id.unwrap_or_else(|| "c64".to_string());
-    let conn = open_db_connection("DB error")?;
+    let conn = open_db_connection(db_path, "DB error")?;
     let mut stmt = conn
-        .prepare(
+        .prepare_cached(
             "SELECT e.EX_Id, e.Name, e.Path, e.Type
              FROM Extras e
              WHERE e.GA_Id = ?1

@@ -1,6 +1,6 @@
 use crate::models::{ActivePlatformState, PlatformImportStatus, PlatformProfile, SetActivePlatformResponse};
 use crate::platform_manifest::{find_platform, supported_platforms};
-use rusqlite::{Connection, OptionalExtension};
+use rusqlite::OptionalExtension;
 
 const C64_PLATFORM_ID: &str = "c64";
 
@@ -46,7 +46,7 @@ pub fn get_platform_import_status_sync(platform_id: &str) -> Result<PlatformImpo
     let platform = find_platform(platform_id)?
         .ok_or_else(|| format!("Unsupported platform: {platform_id}"))?;
 
-    if let Ok(conn) = Connection::open(crate::database::get_db_path()) {
+    if let Ok(conn) = crate::database::connection::open_connection(crate::database::get_db_path()) {
         let has_platform_libraries = conn
             .query_row(
                 "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'PlatformLibraries' LIMIT 1",

@@ -314,8 +314,17 @@ pub async fn download_media_asset(
     download_media_asset_internal(Some(&app), url, dest_dir, filename).await
 }
 
+/// Returns a file's bytes as a raw IPC payload. A `Vec<u8>` return value would be
+/// serialized as a JSON array of numbers (several times larger and slow to parse);
+/// `tauri::ipc::Response` reaches the frontend as an `ArrayBuffer`.
 #[tauri::command]
-pub async fn read_file_bytes(path: String) -> Result<Vec<u8>, String> {
+pub async fn read_file_bytes(path: String) -> Result<tauri::ipc::Response, String> {
+    crate::database::run_blocking("File read", move || load_file_bytes(&path))
+        .await
+        .map(tauri::ipc::Response::new)
+}
+
+fn load_file_bytes(path: &str) -> Result<Vec<u8>, String> {
     // read_file_bytes is used by WasmPlayer to stream a ROM into the in-browser emulator.
     // The path is always constructed from the user's own configured romsPath / extrasPath base
     // (see PlayButton.tsx), so no additional trust-root check is needed here.
@@ -746,9 +755,7 @@ mod tests {
         let file_path = dir.path().join("test.bin");
         std::fs::write(&file_path, b"hello").unwrap();
 
-        let bytes = read_file_bytes(file_path.to_string_lossy().to_string())
-            .await
-            .unwrap();
+        let bytes = load_file_bytes(&file_path.to_string_lossy()).unwrap();
         assert_eq!(bytes, b"hello");
     }
 
@@ -758,15 +765,13 @@ mod tests {
         let file_path = dir.path().join("empty.bin");
         File::create(&file_path).unwrap();
 
-        let bytes = read_file_bytes(file_path.to_string_lossy().to_string())
-            .await
-            .unwrap();
+        let bytes = load_file_bytes(&file_path.to_string_lossy()).unwrap();
         assert!(bytes.is_empty());
     }
 
     #[tokio::test]
     async fn test_read_file_bytes_rejects_non_existent_path() {
-        let res = read_file_bytes("/non/existent/gbbox/rom.d64".to_string()).await;
+        let res = load_file_bytes("/non/existent/gbbox/rom.d64");
         assert!(res.is_err());
         let msg = res.unwrap_err();
         assert!(msg.contains("not found") || msg.contains("no such file"), "unexpected error: {}", msg);
@@ -777,7 +782,7 @@ mod tests {
         // read_file_bytes must reject a directory path so that the contract mirrors
         // emulator.rs require_existing_file and avoids undefined platform behaviour.
         let dir = tempdir().unwrap();
-        let res = read_file_bytes(dir.path().to_string_lossy().to_string()).await;
+        let res = load_file_bytes(&dir.path().to_string_lossy());
         assert!(res.is_err());
         let msg = res.unwrap_err();
         assert!(msg.contains("not a file"), "expected 'not a file' error, got: {}", msg);
@@ -916,7 +921,7 @@ mod tests {
         // 3. read_file_bytes with Windows backslashes
         let test_file = dir.path().join("test_rom.bin");
         std::fs::write(&test_file, b"rom data").unwrap();
-        let bytes = read_file_bytes(test_file.to_string_lossy().to_string()).await.unwrap();
+        let bytes = load_file_bytes(&test_file.to_string_lossy()).unwrap();
         assert_eq!(bytes, b"rom data");
 
         // 4. sanitize_relative_media_path handles Windows backslashes on all platforms

@@ -3,9 +3,11 @@ use rusqlite::{params_from_iter, Connection, OptionalExtension};
 use std::fs;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
+use std::sync::{Mutex, OnceLock};
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::Manager;
+pub mod connection;
 mod mdb_export;
 
 const QUERY_SUPPORT_INDEXES: &[(&str, &[&str], &str)] = &[
@@ -277,16 +279,87 @@ try {
 }
 "#;
 
-pub fn get_db_path() -> String {
-    std::env::var("VIC40_DB_PATH").unwrap_or_else(|_| {
-        if Path::new("../gb64.sqlite").exists() {
-            "../gb64.sqlite".to_string()
-        } else if Path::new("gb64.sqlite").exists() {
-            "gb64.sqlite".to_string()
-        } else {
-            "../../gb64.sqlite".to_string()
-        }
+/// Environment variable that lets a developer or test harness point the app at a
+/// specific SQLite file. It is read once at startup and never written by the app.
+const DB_PATH_OVERRIDE_ENV: &str = "VIC40_DB_PATH";
+
+/// Database location chosen at startup (`configure_runtime_db_path`). Set once and then
+/// read-only, so commands never mutate process-wide environment variables.
+static RUNTIME_DB_PATH: OnceLock<PathBuf> = OnceLock::new();
+
+#[cfg(test)]
+thread_local! {
+    /// Per-test-thread database path, installed by `crate::test_helpers::DbPathGuard`.
+    /// Commands resolve the path on the calling thread before any `spawn_blocking`, so
+    /// tests can run in parallel with their own databases.
+    pub(crate) static TEST_DB_PATH: std::cell::RefCell<Option<PathBuf>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// Runs blocking work (SQLite, file extraction, process launches) on a blocking worker
+/// instead of the async runtime or the main thread. In tests the caller's per-thread
+/// database path is carried over to the worker.
+pub async fn run_blocking<T, F>(label: &'static str, task: F) -> Result<T, String>
+where
+    T: Send + 'static,
+    F: FnOnce() -> Result<T, String> + Send + 'static,
+{
+    #[cfg(test)]
+    let test_db_path = TEST_DB_PATH.with(|cell| cell.borrow().clone());
+    tauri::async_runtime::spawn_blocking(move || {
+        #[cfg(test)]
+        let _db_path = test_db_path
+            .map(|path| crate::test_helpers::DbPathGuard::set(&path.to_string_lossy()));
+        task()
     })
+    .await
+    .map_err(|error| format!("{label} worker failed: {error}"))?
+}
+
+/// Candidate files a development checkout may already contain, relative to `base_dir`
+/// (the working directory: `src-tauri/` under `tauri dev`, or the repo root).
+fn dev_db_candidates(base_dir: &Path) -> [PathBuf; 3] {
+    [
+        base_dir.join("../gb64.sqlite"),
+        base_dir.join("gb64.sqlite"),
+        base_dir.join("../../gb64.sqlite"),
+    ]
+}
+
+/// Development-only convenience: reuse a `gb64.sqlite` that sits next to the checkout.
+/// Release builds never look outside the app data directory.
+fn existing_dev_db(base_dir: &Path) -> Option<PathBuf> {
+    if !cfg!(debug_assertions) {
+        return None;
+    }
+    dev_db_candidates(base_dir)
+        .into_iter()
+        .find(|candidate| candidate.is_file())
+}
+
+fn explicit_db_override() -> Option<PathBuf> {
+    std::env::var_os(DB_PATH_OVERRIDE_ENV)
+        .filter(|value| !value.is_empty())
+        .map(PathBuf::from)
+}
+
+/// The SQLite database the app reads and imports into.
+pub fn get_db_path() -> String {
+    #[cfg(test)]
+    if let Some(path) = TEST_DB_PATH.with(|cell| cell.borrow().clone()) {
+        return path.to_string_lossy().to_string();
+    }
+
+    if let Some(path) = RUNTIME_DB_PATH.get() {
+        return path.to_string_lossy().to_string();
+    }
+
+    // Not configured yet (unit tests, or a call before Tauri setup ran).
+    explicit_db_override()
+        .or_else(|| std::env::current_dir().ok().and_then(|dir| existing_dev_db(&dir)))
+        .unwrap_or_else(|| PathBuf::from("gb64.sqlite"))
+        .to_string_lossy()
+        .to_string()
 }
 
 pub fn normalize_platform_id(platform_id: Option<&str>) -> Result<String, String> {
@@ -313,22 +386,23 @@ fn create_runtime_db_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
     Ok(app_data_dir.join("gb64.sqlite"))
 }
 
+/// Chooses the database location once per process: explicit `VIC40_DB_PATH` override,
+/// then (debug builds only) a `gb64.sqlite` beside the checkout, then the app's local
+/// data directory. Later calls return the same path.
 pub fn configure_runtime_db_path(app: &tauri::AppHandle) -> Result<String, String> {
-    if let Ok(existing) = std::env::var("VIC40_DB_PATH") {
-        return Ok(existing);
+    if let Some(path) = RUNTIME_DB_PATH.get() {
+        return Ok(path.to_string_lossy().to_string());
     }
 
-    if Path::new("../gb64.sqlite").exists()
-        || Path::new("gb64.sqlite").exists()
-        || Path::new("../../gb64.sqlite").exists()
+    let chosen = match explicit_db_override()
+        .or_else(|| std::env::current_dir().ok().and_then(|dir| existing_dev_db(&dir)))
     {
-        return Ok(get_db_path());
-    }
+        Some(path) => path,
+        None => create_runtime_db_path(app)?,
+    };
 
-    let runtime_db_path = create_runtime_db_path(app)?;
-    let runtime_db_path_string = runtime_db_path.to_string_lossy().to_string();
-    std::env::set_var("VIC40_DB_PATH", &runtime_db_path_string);
-    Ok(runtime_db_path_string)
+    let path = RUNTIME_DB_PATH.get_or_init(|| chosen);
+    Ok(path.to_string_lossy().to_string())
 }
 
 fn table_exists(conn: &Connection, table_name: &str) -> Result<bool, String> {
@@ -658,7 +732,28 @@ fn rebuild_search_index(conn: &Connection) -> Result<(), String> {
     ensure_search_index(conn)
 }
 
-pub fn ensure_query_support_objects(conn: &Connection) -> Result<(), String> {
+/// Version of the generated query support objects (GameView SQL, query indexes,
+/// GameCoverIndex, GameSearchIndex), stored in `PRAGMA user_version`.
+///
+/// Bump this whenever `GAME_VIEW_SQL`, `QUERY_SUPPORT_INDEXES`, the cover index or the
+/// search index definitions change: databases with an older version are upgraded once
+/// at the next startup, and up-to-date databases skip the work entirely.
+pub const SCHEMA_VERSION: i64 = 1;
+
+/// Serialises migrations between the startup thread and `get_database_bootstrap_status`.
+static MIGRATION_LOCK: Mutex<()> = Mutex::new(());
+
+pub fn schema_version(conn: &Connection) -> Result<i64, String> {
+    conn.query_row("PRAGMA user_version", [], |row| row.get(0))
+        .map_err(|error| error.to_string())
+}
+
+fn stamp_schema_version(conn: &Connection) -> Result<(), String> {
+    conn.execute_batch(&format!("PRAGMA user_version = {SCHEMA_VERSION}"))
+        .map_err(|error| error.to_string())
+}
+
+fn run_support_migrations(conn: &Connection) -> Result<(), String> {
     let legacy_platform_id = infer_legacy_platform_id(conn, "c64")?;
     ensure_import_platform_columns(conn, &legacy_platform_id)?;
     ensure_game_view(conn)?;
@@ -668,8 +763,47 @@ pub fn ensure_query_support_objects(conn: &Connection) -> Result<(), String> {
     Ok(())
 }
 
+/// Brings the generated query support objects up to `SCHEMA_VERSION`.
+///
+/// Fast path: a database already at the current version is left untouched, so normal
+/// startups no longer drop and repopulate the cover index. The version is only stamped
+/// once a game library exists, so an empty database is checked again after import.
+pub fn ensure_query_support_objects(conn: &Connection) -> Result<(), String> {
+    let _migration = MIGRATION_LOCK.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+    if schema_version(conn)? >= SCHEMA_VERSION {
+        return Ok(());
+    }
+
+    conn.execute_batch("BEGIN IMMEDIATE")
+        .map_err(|error| error.to_string())?;
+    let result = run_support_migrations(conn).and_then(|()| {
+        if table_exists(conn, "Games")? && sqlite_object_exists(conn, "GameView", &["view", "table"])? {
+            stamp_schema_version(conn)?;
+        }
+        Ok(())
+    });
+    match result {
+        Ok(()) => conn
+            .execute_batch("COMMIT")
+            .map_err(|error| error.to_string()),
+        Err(error) => {
+            let _ = conn.execute_batch("ROLLBACK");
+            Err(error)
+        }
+    }
+}
+
+/// Startup check of the configured database. Runs on a background thread (see
+/// `lib.rs`), so a first-launch upgrade of a large library never blocks the window.
 pub fn init_database() -> Result<(), String> {
-    let conn = Connection::open(get_db_path()).map_err(|e| e.to_string())?;
+    let db_path = get_db_path();
+    if !Path::new(&db_path).exists() {
+        // Nothing imported yet; the setup flow creates the database on first import.
+        return Ok(());
+    }
+    let conn = connection::open_connection(&db_path)?;
+    conn.query_row("PRAGMA journal_mode = WAL", [], |_| Ok(()))
+        .map_err(|error| error.to_string())?;
     ensure_query_support_objects(&conn)?;
     Ok(())
 }
@@ -680,7 +814,7 @@ pub fn is_database_ready() -> Result<bool, String> {
         return Ok(false);
     }
 
-    let conn = Connection::open(&db_path).map_err(|e| e.to_string())?;
+    let conn = connection::open_connection(&db_path)?;
     let has_games = table_exists(&conn, "Games")?;
     let has_view = sqlite_object_exists(&conn, "GameView", &["view"])?;
 
@@ -1280,7 +1414,7 @@ fn merge_imported_database(
     live_db_path: &Path,
     platform_id: &str,
 ) -> Result<(), String> {
-    let conn = Connection::open(live_db_path).map_err(|error| error.to_string())?;
+    let conn = connection::open_connection(live_db_path)?;
     conn.execute_batch("PRAGMA journal_mode = WAL;")
         .map_err(|error| error.to_string())?;
     conn.execute(
@@ -1306,6 +1440,7 @@ fn merge_imported_database(
         rebuild_cover_index(&conn)?;
         rebuild_search_index(&conn)?;
         refresh_platform_libraries(&conn)?;
+        stamp_schema_version(&conn)?;
 
         conn.execute_batch("COMMIT")
             .map_err(|error| error.to_string())?;
@@ -1321,7 +1456,7 @@ fn merge_imported_database(
 }
 
 #[cfg(test)]
-fn import_csv_directory_to_sqlite(
+pub(crate) fn import_csv_directory_to_sqlite(
     export_dir: &Path,
     platform_id: &str,
 ) -> Result<usize, String> {
@@ -1342,7 +1477,7 @@ where
     remove_sqlite_artifacts(&temp_db_path)?;
 
     let import_result = (|| -> Result<usize, String> {
-        let mut conn = Connection::open(&temp_db_path).map_err(|error| error.to_string())?;
+        let mut conn = connection::open_connection(&temp_db_path)?;
         conn.execute_batch("PRAGMA journal_mode = WAL;")
             .map_err(|error| error.to_string())?;
         let csv_files = list_csv_files(export_dir)?;
@@ -1468,18 +1603,18 @@ mod tests {
         assert_eq!(conn.query_row("SELECT count(*) FROM Games", [], |r| r.get::<_, i32>(0)).unwrap(), 10);
     }
     use super::*;
-    use crate::test_helpers::DbEnvGuard;
+    use crate::test_helpers::DbPathGuard;
     use tempfile::{tempdir, NamedTempFile};
 
     #[test]
     fn test_get_db_path_prefers_environment_variable() {
-        let _env = DbEnvGuard::set("custom.sqlite");
+        let _env = DbPathGuard::set("custom.sqlite");
         assert_eq!(get_db_path(), "custom.sqlite");
     }
 
     #[test]
     fn test_platform_db_helpers_default_to_c64_and_validate_platforms() {
-        let _env = DbEnvGuard::set("custom.sqlite");
+        let _env = DbPathGuard::set("custom.sqlite");
 
         assert_eq!(get_platform_db_scope(None).unwrap(), "c64");
         assert_eq!(get_platform_db_scope(Some("atari800")).unwrap(), "atari800");
@@ -1501,38 +1636,45 @@ mod tests {
     }
 
     #[test]
-    fn test_get_db_path_falls_back_to_local_files() {
-        let _guard = crate::test_helpers::DB_ENV_MUTEX
-            .lock()
-            .unwrap_or_else(|e| e.into_inner());
-        // Ensure VIC40_DB_PATH is unset so we exercise the fallback logic
-        let saved = std::env::var("VIC40_DB_PATH").ok();
-        std::env::remove_var("VIC40_DB_PATH");
-
+    fn test_dev_db_lookup_finds_checkout_database_without_changing_cwd() {
         let temp_dir = tempdir().unwrap();
-        let original_dir = std::env::current_dir().unwrap();
-        let child_dir = temp_dir.path().join("workspace");
-        std::fs::create_dir_all(&child_dir).unwrap();
-        std::env::set_current_dir(&child_dir).unwrap();
+        let workspace = temp_dir.path().join("workspace");
+        std::fs::create_dir_all(&workspace).unwrap();
 
-        std::fs::write("gb64.sqlite", b"db").unwrap();
-        assert_eq!(get_db_path(), "gb64.sqlite");
+        assert_eq!(existing_dev_db(&workspace), None);
 
-        std::fs::remove_file("gb64.sqlite").unwrap();
-        std::fs::write("../gb64.sqlite", b"db").unwrap();
-        assert_eq!(get_db_path(), "../gb64.sqlite");
+        std::fs::write(workspace.join("gb64.sqlite"), b"db").unwrap();
+        assert_eq!(
+            existing_dev_db(&workspace),
+            Some(workspace.join("gb64.sqlite"))
+        );
 
-        std::env::set_current_dir(original_dir).unwrap();
-        if let Some(v) = saved {
-            std::env::set_var("VIC40_DB_PATH", v);
-        }
+        // A database one level up (repo root when running from src-tauri/) wins.
+        std::fs::write(temp_dir.path().join("gb64.sqlite"), b"db").unwrap();
+        assert_eq!(
+            existing_dev_db(&workspace),
+            Some(workspace.join("../gb64.sqlite"))
+        );
+    }
+
+    #[test]
+    fn test_db_path_guard_is_thread_local() {
+        let _env = DbPathGuard::set("main-thread.sqlite");
+        let other = std::thread::spawn(|| {
+            let _env = DbPathGuard::set("other-thread.sqlite");
+            get_db_path()
+        })
+        .join()
+        .unwrap();
+        assert_eq!(other, "other-thread.sqlite");
+        assert_eq!(get_db_path(), "main-thread.sqlite");
     }
 
     #[test]
     fn test_init_database_creates_cover_index_and_query_indexes() {
         let temp_db = NamedTempFile::new().unwrap();
         let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
+        let _env = DbPathGuard::set(&db_path);
 
         let conn = Connection::open(&db_path).unwrap();
         conn.execute("CREATE TABLE Games (GA_Id TEXT, Name TEXT, GE_Id TEXT, PR_Id TEXT, AR_Id TEXT, MU_Id TEXT, DE_Id TEXT, PU_Id TEXT, LA_Id TEXT, YE_Id TEXT, Classic TEXT, Adult TEXT, platform_id TEXT, source_game_id TEXT)", []).unwrap();
@@ -1613,7 +1755,7 @@ mod tests {
     fn test_init_database_refreshes_stale_support_indexes() {
         let temp_db = NamedTempFile::new().unwrap();
         let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
+        let _env = DbPathGuard::set(&db_path);
 
         let conn = Connection::open(&db_path).unwrap();
         conn.execute("CREATE TABLE Games (GA_Id TEXT, Name TEXT, GE_Id TEXT, PR_Id TEXT, AR_Id TEXT, MU_Id TEXT, DE_Id TEXT, PU_Id TEXT, LA_Id TEXT, YE_Id TEXT, Classic TEXT, Adult TEXT, platform_id TEXT, source_game_id TEXT)", []).unwrap();
@@ -1718,7 +1860,7 @@ mod tests {
     fn test_is_database_ready_returns_false_without_base_tables() {
         let temp_db = NamedTempFile::new().unwrap();
         let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
+        let _env = DbPathGuard::set(&db_path);
 
         assert!(!is_database_ready().unwrap());
     }
@@ -1727,7 +1869,7 @@ mod tests {
     fn test_import_csv_directory_to_sqlite_builds_ready_database() {
         let temp_db = NamedTempFile::new().unwrap();
         let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
+        let _env = DbPathGuard::set(&db_path);
 
         let export_dir = tempdir().unwrap();
         let tables = [
@@ -1767,7 +1909,7 @@ mod tests {
     fn test_import_csv_directory_to_sqlite_preserves_requested_platform_scope() {
         let temp_db = NamedTempFile::new().unwrap();
         let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
+        let _env = DbPathGuard::set(&db_path);
 
         let export_dir = tempdir().unwrap();
         let tables = [
@@ -1825,7 +1967,7 @@ mod tests {
     fn test_import_csv_directory_to_sqlite_merges_platforms_without_replacing_existing_library() {
         let temp_db = NamedTempFile::new().unwrap();
         let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
+        let _env = DbPathGuard::set(&db_path);
 
         let c64_export_dir = tempdir().unwrap();
         let c64_tables = [
@@ -2023,7 +2165,7 @@ mod tests {
     fn test_import_csv_directory_to_sqlite_is_atomic_on_failure() {
         let temp_db = NamedTempFile::new().unwrap();
         let db_path = temp_db.path().to_string_lossy().to_string();
-        let _env = DbEnvGuard::set(&db_path);
+        let _env = DbPathGuard::set(&db_path);
 
         {
             let conn = Connection::open(&db_path).unwrap();
@@ -2079,10 +2221,83 @@ mod tests {
     }
 
     #[test]
+    fn import_stamps_schema_version_and_restart_keeps_support_objects() {
+        let directory = tempdir().unwrap();
+        let db = directory.path().join("live.sqlite");
+        let _env = DbPathGuard::set(db.to_str().unwrap());
+        let exports = tempdir().unwrap();
+        write_staged_import_fixture(exports.path());
+
+        import_csv_directory_to_sqlite(exports.path(), "c64").unwrap();
+        let conn = Connection::open(&db).unwrap();
+        assert_eq!(schema_version(&conn).unwrap(), SCHEMA_VERSION);
+
+        // A marker row survives a restart: the cover index is not dropped and
+        // repopulated when the database is already at the current version.
+        conn.execute(
+            "INSERT INTO GameCoverIndex (GA_Id, platform_id, cover_path) VALUES ('marker', 'c64', 'marker.png')",
+            [],
+        )
+        .unwrap();
+        drop(conn);
+
+        init_database().unwrap();
+        assert!(is_database_ready().unwrap());
+
+        let conn = Connection::open(&db).unwrap();
+        let markers: i64 = conn
+            .query_row("SELECT COUNT(*) FROM GameCoverIndex WHERE GA_Id = 'marker'", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(markers, 1, "startup must not rebuild an up-to-date cover index");
+    }
+
+    #[test]
+    fn outdated_schema_version_is_upgraded_once() {
+        let directory = tempdir().unwrap();
+        let db = directory.path().join("live.sqlite");
+        let _env = DbPathGuard::set(db.to_str().unwrap());
+        let exports = tempdir().unwrap();
+        write_staged_import_fixture(exports.path());
+        import_csv_directory_to_sqlite(exports.path(), "c64").unwrap();
+
+        let conn = Connection::open(&db).unwrap();
+        conn.execute_batch("PRAGMA user_version = 0; DELETE FROM GameCoverIndex;").unwrap();
+        drop(conn);
+
+        init_database().unwrap();
+
+        let conn = Connection::open(&db).unwrap();
+        assert_eq!(schema_version(&conn).unwrap(), SCHEMA_VERSION);
+        let covers: i64 = conn
+            .query_row("SELECT COUNT(*) FROM GameCoverIndex", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(covers, 1, "an outdated database gets its support objects rebuilt");
+        let journal_mode: String = conn
+            .query_row("PRAGMA journal_mode", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(journal_mode.to_lowercase(), "wal");
+    }
+
+    #[test]
+    fn init_database_without_a_library_does_not_create_or_stamp_one() {
+        let directory = tempdir().unwrap();
+        let db = directory.path().join("missing.sqlite");
+        let _env = DbPathGuard::set(db.to_str().unwrap());
+        init_database().unwrap();
+        assert!(!db.exists());
+
+        let conn = Connection::open(&db).unwrap();
+        drop(conn);
+        init_database().unwrap();
+        let conn = Connection::open(&db).unwrap();
+        assert_eq!(schema_version(&conn).unwrap(), 0, "empty databases are re-checked after import");
+    }
+
+    #[test]
     fn cancelled_after_staging_preserves_live_database_and_removes_staging() {
         let directory = tempdir().unwrap();
         let db = directory.path().join("live.sqlite");
-        let _env = DbEnvGuard::set(db.to_str().unwrap());
+        let _env = DbPathGuard::set(db.to_str().unwrap());
         let original = b"prior library bytes";
         fs::write(&db, original).unwrap();
         let exports = tempdir().unwrap();
@@ -2102,7 +2317,7 @@ mod tests {
     fn failed_merge_preserves_live_database_and_removes_staging() {
         let directory = tempdir().unwrap();
         let db = directory.path().join("live.sqlite");
-        let _env = DbEnvGuard::set(db.to_str().unwrap());
+        let _env = DbPathGuard::set(db.to_str().unwrap());
         let original = b"prior unreadable library bytes";
         fs::write(&db, original).unwrap();
         let exports = tempdir().unwrap();

@@ -6,41 +6,31 @@ pub mod models;
 pub mod platform_manifest;
 
 /// Shared test utilities - only compiled with `cfg(test)`.
-/// Provides a single process-wide mutex so that all test modules
-/// serialise their `VIC40_DB_PATH` env-var mutations, preventing
-/// parallel test threads from corrupting each other or the production DB.
 #[cfg(test)]
 pub mod test_helpers {
-    use std::sync::Mutex;
+    use std::path::PathBuf;
 
-    /// Process-wide mutex serialising every test that touches `VIC40_DB_PATH`.
-    pub static DB_ENV_MUTEX: Mutex<()> = Mutex::new(());
-
-    /// RAII guard: acquires `DB_ENV_MUTEX`, sets `VIC40_DB_PATH`, restores on drop.
-    pub struct DbEnvGuard {
-        _lock: std::sync::MutexGuard<'static, ()>,
-        previous: Option<std::ffi::OsString>,
+    /// RAII guard that points `database::get_db_path()` at a test database for the
+    /// current thread only, restoring the previous value on drop. Because the path is
+    /// thread-local, tests with their own databases can run in parallel.
+    pub struct DbPathGuard {
+        previous: Option<PathBuf>,
     }
 
-    impl DbEnvGuard {
+    impl DbPathGuard {
         pub fn set(path: &str) -> Self {
-            let lock = DB_ENV_MUTEX.lock().unwrap_or_else(|e| e.into_inner());
-            let previous = std::env::var_os("VIC40_DB_PATH");
-            std::env::set_var("VIC40_DB_PATH", path);
-            DbEnvGuard {
-                _lock: lock,
-                previous,
-            }
+            let previous = crate::database::TEST_DB_PATH
+                .with(|cell| cell.replace(Some(PathBuf::from(path))));
+            DbPathGuard { previous }
         }
     }
 
-    impl Drop for DbEnvGuard {
+    impl Drop for DbPathGuard {
         fn drop(&mut self) {
-            if let Some(previous) = &self.previous {
-                std::env::set_var("VIC40_DB_PATH", previous);
-            } else {
-                std::env::remove_var("VIC40_DB_PATH");
-            }
+            let previous = self.previous.take();
+            crate::database::TEST_DB_PATH.with(|cell| {
+                *cell.borrow_mut() = previous;
+            });
         }
     }
 }
@@ -168,11 +158,22 @@ pub fn run() {
             }
         })
         .setup(|app| {
-            let db_path = database::configure_runtime_db_path(app.handle());
-            if is_debug_mode() {
-                println!("[DEBUG] Database path configured: {:?}", db_path);
+            match database::configure_runtime_db_path(app.handle()) {
+                Ok(db_path) => {
+                    if is_debug_mode() {
+                        println!("[DEBUG] Database path configured: {:?}", db_path);
+                    }
+                }
+                Err(error) => log::error!("Could not configure the database path: {error}"),
             }
-            let _ = database::init_database();
+            // Schema checks run off the main thread so a first-launch upgrade of a large
+            // library never delays the window. Failures are logged; the setup screen
+            // reports them again through get_database_bootstrap_status.
+            std::thread::spawn(|| {
+                if let Err(error) = database::init_database() {
+                    log::error!("Database startup check failed: {error}");
+                }
+            });
             if let Some(window) = app.get_webview_window("main") {
                 if let Some(icon) = app.default_window_icon().cloned() {
                     let _ = window.set_icon(icon);
