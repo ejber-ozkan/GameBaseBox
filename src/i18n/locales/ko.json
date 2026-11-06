@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "라이브러리 데이터베이스",
+      "importedSummary": "게임 {count}개 · {date}에 가져옴",
+      "button": "MDB 다시 가져오기…",
+      "dialogTitle": "{platform}을(를) 다시 가져올까요?",
+      "dialogBody": "라이브러리 데이터베이스의 모든 {platform} 게임, 추가 자료, 참조 항목이 다음에 선택하는 MDB의 내용으로 바뀝니다. 다른 플랫폼에는 영향이 없습니다.",
+      "dialogKept": "폴더, 에뮬레이터 설정, 게임별 설정은 유지됩니다. 즐겨찾기와 최근 플레이 목록도 유지되지만, 새 MDB의 번호 체계가 다르면 다른 게임을 가리킬 수 있습니다.",
+      "dialogSafety": "가져오기에 실패하거나 취소하면 현재 라이브러리는 그대로 유지됩니다.",
+      "confirm": "가져오기로 계속"
+    }
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "ゲームROMフォルダが未選択です",
     "noGamesFolderWarning": "{platform} のゲームROMフォルダが選択されていません。未選択でもカタログの閲覧や検索は可能ですが、ゲーム本体を起動することはできません！",
     "goBackAndAddGames": "戻ってフォルダを指定する",
-    "proceedAnyway": "このまま続行"
+    "proceedAnyway": "このまま続行",
+    "reimportTitle": "{platform} 다시 가져오기",
+    "reimportDescription": "가져올 MDB를 선택한 다음 데이터베이스 만들기를 선택하세요. 새 가져오기가 끝날 때까지 현재 {platform} 라이브러리는 그대로 유지됩니다."
   }
 }

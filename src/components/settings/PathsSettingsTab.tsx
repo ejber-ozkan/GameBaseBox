@@ -13,7 +13,12 @@ interface PathsSettingsTabProps extends ContentNavProps {
   onBrowseDirectory: () => Promise<string | null>;
   onBrowseFile: () => Promise<string | null>;
   onBrowseRetroArchCore: () => Promise<string | null>;
+  /** Asks to reimport this platform's MDB; omitted where reimport isn't available. */
+  onRequestReimport?: (platformId: PlatformId) => void;
 }
+
+/** Focus index of the reimport button: outside the ranges the path rows use. */
+export const REIMPORT_FOCUS_INDEX = 90;
 
 interface PathRowProps extends ContentNavProps {
   label: string;
@@ -82,11 +87,13 @@ export function PathsSettingsTab({
   onBrowseDirectory,
   onBrowseFile,
   onBrowseRetroArchCore,
+  onRequestReimport,
   isMouseMode,
   onMouseFocus,
   isFocused,
 }: PathsSettingsTabProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const platformProfile = PLATFORM_PROFILES[platformId];
   const platformSettings = draft.platformSettings[platformId];
   const platformFolders = platformSettings.folders;
@@ -1190,6 +1197,43 @@ export function PathsSettingsTab({
 
         </div>
       </div>
+      {onRequestReimport && platformSettings.library.importStatus === 'imported' && (
+        <div
+          className={`flex flex-wrap items-center justify-between gap-4 p-5 ${theme.effects.steppedBorders ? 'border-2' : 'rounded-theme-xl border'} border-theme-outline-variant bg-theme-surface/30`}
+          data-testid="platform-reimport-card"
+        >
+          <div className="min-w-0">
+            <div className="text-xs font-bold uppercase tracking-widest text-theme-primary font-mono">
+              {t('settings.reimport.sectionTitle')}
+            </div>
+            <div className="mt-1.5 break-all font-mono text-xs text-theme-text">
+              {platformSettings.library.sourceMdbPath || platformProfile.displayName}
+            </div>
+            {platformSettings.library.lastImportedAt && (
+              <div className="mt-1 text-[10px] text-theme-text-muted">
+                {t('settings.reimport.importedSummary', {
+                  count: platformSettings.library.gameCount.toLocaleString(),
+                  date: new Date(platformSettings.library.lastImportedAt).toLocaleDateString(),
+                })}
+              </div>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => onRequestReimport(platformId)}
+            onMouseEnter={() => isMouseMode && onMouseFocus(REIMPORT_FOCUS_INDEX)}
+            className={`focus-idx-${REIMPORT_FOCUS_INDEX} shrink-0 border px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
+              theme.effects.steppedBorders ? 'border-2' : 'rounded-theme'
+            } ${
+              isFocused(REIMPORT_FOCUS_INDEX)
+                ? 'border-amber-400 bg-amber-400 text-black'
+                : 'border-amber-500/60 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20'
+            }`}
+          >
+            {t('settings.reimport.button')}
+          </button>
+        </div>
+      )}
       <p className="text-[10px] text-theme-text-muted mt-auto pt-2">
         ✅ {t('settings.browseHelp')}
       </p>

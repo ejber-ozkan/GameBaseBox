@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST 資料夾指南",
     "atariStInstructions": "HardDisk 與 STX 檔案應位於 Extras 資料夾中（Extras/HardDisk、Extras/STX）。D-Bug 與 Automation 合集屬於 Games 資料夾（Games/DBUG、Games/Automation）。所有變體都會顯示在替代版本/附加內容中。",
     "atariStBootDisk": "Atari ST 開機磁碟 (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk 遊戲需要開機磁碟 (boot.st)。請在 Atari ST 設定中設定 boot.st 路徑。"
+    "atariStBootDiskMissingWarning": "HardDisk 遊戲需要開機磁碟 (boot.st)。請在 Atari ST 設定中設定 boot.st 路徑。",
+    "reimport": {
+      "sectionTitle": "遊戲庫資料庫",
+      "importedSummary": "{count} 款遊戲 · 匯入於 {date}",
+      "button": "重新匯入 MDB…",
+      "dialogTitle": "重新匯入 {platform}？",
+      "dialogBody": "遊戲庫資料庫中所有 {platform} 遊戲、附加內容和查詢資料都會被替換成你接下來選擇的 MDB 內容。其他平台不受影響。",
+      "dialogKept": "你的資料夾、模擬器設定和個別遊戲設定會保留。我的最愛和最近遊玩也會保留，但如果新 MDB 的編號不同，可能會指向其他遊戲。",
+      "dialogSafety": "如果匯入失敗或你取消匯入，目前的遊戲庫保持不變。",
+      "confirm": "繼續匯入"
+    }
   },
   "media": {
     "noScreenshots": "暂无截图",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "未选择游戏 ROM 目录",
     "noGamesFolderWarning": "您尚未为 {platform} 指定游戏 ROM 目录。未设置游戏目录仍可浏览所有元数据，但无法直接启动游戏！",
     "goBackAndAddGames": "返回并添加游戏目录",
-    "proceedAnyway": "仍然继续"
+    "proceedAnyway": "仍然继续",
+    "reimportTitle": "重新匯入 {platform}",
+    "reimportDescription": "選擇要匯入的 MDB，然後選擇「建立資料庫」。在新匯入完成前，目前的 {platform} 遊戲庫保持不變。"
   }
 }

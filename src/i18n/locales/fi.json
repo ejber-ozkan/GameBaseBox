@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Kirjaston tietokanta",
+      "importedSummary": "{count} peliä · tuotu {date}",
+      "button": "Tuo MDB uudelleen…",
+      "dialogTitle": "Tuodaanko {platform} uudelleen?",
+      "dialogBody": "Kaikki kirjaston tietokannan {platform}-pelit, lisät ja hakutiedot korvataan seuraavaksi valitsemasi MDB:n sisällöllä. Muut alustat eivät muutu.",
+      "dialogKept": "Kansiot, emulaattoriasetukset ja pelikohtaiset asetukset säilyvät. Suosikit ja viimeksi pelatut säilyvät myös, mutta ne voivat osoittaa eri peleihin, jos uusi MDB numeroi ne eri tavalla.",
+      "dialogSafety": "Jos tuonti epäonnistuu tai peruutat sen, nykyinen kirjasto pysyy ennallaan.",
+      "confirm": "Jatka tuontiin"
+    }
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Ingen spelmapp har valts",
     "noGamesFolderWarning": "Du har inte valt någon spelmapp för {platform}. Utan spelmapp kan du bläddra i metadata, men inga spel kan startas!",
     "goBackAndAddGames": "Gå tillbaka och välj spelmapp",
-    "proceedAnyway": "Fortsätt ändå"
+    "proceedAnyway": "Fortsätt ändå",
+    "reimportTitle": "Tuo {platform} uudelleen",
+    "reimportDescription": "Valitse tuotava MDB ja valitse sitten Rakenna tietokanta. Nykyinen {platform}-kirjasto säilyy, kunnes uusi tuonti on valmis."
   }
 }

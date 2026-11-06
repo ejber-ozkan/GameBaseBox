@@ -15,6 +15,9 @@ import { InteractionSettingsTab } from './settings/InteractionSettingsTab';
 import { ContentSettingsTab } from './settings/ContentSettingsTab';
 import { MaintenanceSettingsTab } from './settings/MaintenanceSettingsTab';
 import { PathsSettingsTab } from './settings/PathsSettingsTab';
+import { ReimportConfirmDialog, type ReimportChoice } from './settings/ReimportConfirmDialog';
+import { useRequestPlatformReimport } from '../contexts/PlatformReimportContext';
+import type { PlatformId } from '../types/platform';
 import {
   getEditableSettings,
   getPlatformIdFromSettingsTab,
@@ -46,6 +49,9 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
   const [focusedIdx, setFocusedIdx] = useState(0);
   const settingsTabs = useMemo(() => getSettingsTabs(settings), [settings]);
   const activePlatformPathsId = getPlatformIdFromSettingsTab(activeTab);
+  const requestPlatformReimport = useRequestPlatformReimport();
+  const [reimportConfirm, setReimportConfirm] = useState<PlatformId | null>(null);
+  const [reimportChoice, setReimportChoice] = useState<ReimportChoice>('cancel');
 
   const isC64Theme = theme.id === 'c64-edition';
 
@@ -69,6 +75,28 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
     updateSettings(draft);
     onBack();
   }, [draft, onBack, updateSettings]);
+
+  const openReimportConfirm = useCallback((platformId: PlatformId) => {
+    void playUiSoundEffect('menu-move-1', 0.28);
+    setReimportChoice('cancel');
+    setReimportConfirm(platformId);
+  }, []);
+
+  const cancelReimport = useCallback(() => setReimportConfirm(null), []);
+
+  const confirmReimport = useCallback(() => {
+    if (!reimportConfirm || !requestPlatformReimport) return;
+    // Keep edits made on this screen (e.g. new folders) for the import.
+    updateSettings(draft);
+    setReimportConfirm(null);
+    requestPlatformReimport(reimportConfirm);
+  }, [draft, reimportConfirm, requestPlatformReimport, updateSettings]);
+
+  const handleReimportDialogInput = useCallback((input: 'LEFT' | 'RIGHT' | 'SELECT' | 'BACK') => {
+    if (input === 'BACK') cancelReimport();
+    else if (input === 'SELECT') (reimportChoice === 'confirm' ? confirmReimport : cancelReimport)();
+    else setReimportChoice(input === 'RIGHT' ? 'confirm' : 'cancel');
+  }, [cancelReimport, confirmReimport, reimportChoice]);
 
   const focusContent = useCallback(
     (index: number) => {
@@ -278,6 +306,19 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
     const handleKeyDown = (event: KeyboardEvent) => {
       onGamepadInput();
 
+      if (reimportConfirm) {
+        const input = event.key === 'Escape' ? 'BACK'
+          : event.key === 'Enter' ? 'SELECT'
+          : event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? 'LEFT'
+          : event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 'RIGHT'
+          : null;
+        if (input) {
+          event.preventDefault();
+          handleReimportDialogInput(input);
+        }
+        return;
+      }
+
       if (isC64Theme) {
         if (event.key === 'F1') {
           event.preventDefault();
@@ -349,11 +390,18 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave, handleSelect, moveFocus, onGamepadInput, isC64Theme, settingsTabs]);
+  }, [handleSave, handleSelect, handleReimportDialogInput, moveFocus, onGamepadInput, isC64Theme, reimportConfirm, settingsTabs]);
 
   useGamepad({
     onButtonDown: (button) => {
       onGamepadInput();
+      if (reimportConfirm) {
+        if (button === 'B') handleReimportDialogInput('BACK');
+        if (button === 'A') handleReimportDialogInput('SELECT');
+        if (button === 'LEFT' || button === 'UP') handleReimportDialogInput('LEFT');
+        if (button === 'RIGHT' || button === 'DOWN') handleReimportDialogInput('RIGHT');
+        return;
+      }
       if (button === 'B' || button === 'START') handleSave();
       if (button === 'UP' || button === 'DOWN' || button === 'LEFT' || button === 'RIGHT') moveFocus(button);
       if (button === 'A') handleSelect();
@@ -550,6 +598,7 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
                 onBrowseDirectory={browseDirectory}
                 onBrowseFile={browseFile}
                 onBrowseRetroArchCore={browseRetroArchCore}
+                onRequestReimport={requestPlatformReimport ? openReimportConfirm : undefined}
                 {...contentNavProps}
               />
             )}
@@ -560,6 +609,15 @@ export function SettingsView({ onBack, onOpenTigerHeli }: SettingsViewProps) {
           </div>
         </div>
       </div>
+      {reimportConfirm && (
+        <ReimportConfirmDialog
+          platformName={PLATFORM_PROFILES[reimportConfirm].displayName}
+          choice={reimportChoice}
+          onChoiceChange={setReimportChoice}
+          onCancel={cancelReimport}
+          onConfirm={confirmReimport}
+        />
+      )}
     </div>
   );
 }

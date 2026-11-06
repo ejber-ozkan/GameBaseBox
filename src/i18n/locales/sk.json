@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Databáza knižnice",
+      "importedSummary": "{count} hier · importované {date}",
+      "button": "Znova importovať MDB…",
+      "dialogTitle": "Znova importovať {platform}?",
+      "dialogBody": "Všetky hry, doplnky a číselníkové záznamy {platform} v databáze knižnice sa nahradia obsahom MDB, ktorý vyberiete v ďalšom kroku. Ostatné platformy sa nezmenia.",
+      "dialogKept": "Vaše priečinky, nastavenia emulátorov a nastavenia jednotlivých hier zostanú zachované. Obľúbené a naposledy hrané tiež, no môžu ukazovať na iné hry, ak nový MDB čísluje hry inak.",
+      "dialogSafety": "Ak import zlyhá alebo ho zrušíte, súčasná knižnica zostane nezmenená.",
+      "confirm": "Pokračovať na import"
+    }
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",
     "goBackAndAddGames": "Wróć i wskaż folder z grami",
-    "proceedAnyway": "Kontynuuj mimo to"
+    "proceedAnyway": "Kontynuuj mimo to",
+    "reimportTitle": "Znova importovať {platform}",
+    "reimportDescription": "Vyberte MDB na import a potom zvoľte Vytvoriť databázu. Súčasná knižnica {platform} zostane zachovaná, kým sa nový import nedokončí."
   }
 }

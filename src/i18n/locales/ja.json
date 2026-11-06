@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST フォルダガイド",
     "atariStInstructions": "HardDisk および STX ファイルは Extras フォルダ（Extras/HardDisk、Extras/STX）に配置します。D-Bug および Automation コンピレーションは Games フォルダ（Games/DBUG、Games/Automation）に配置します。すべてのバリアントが代替バージョン／エキストラに表示されます。",
     "atariStBootDisk": "Atari ST ブートディスク (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk ゲームにはブートディスク (boot.st) が必要です。Atari ST 設定で boot.st のパスを設定してください。"
+    "atariStBootDiskMissingWarning": "HardDisk ゲームにはブートディスク (boot.st) が必要です。Atari ST 設定で boot.st のパスを設定してください。",
+    "reimport": {
+      "sectionTitle": "ライブラリデータベース",
+      "importedSummary": "{count} 本 · {date} にインポート",
+      "button": "MDB を再インポート…",
+      "dialogTitle": "{platform} を再インポートしますか？",
+      "dialogBody": "ライブラリデータベース内の {platform} のゲーム、追加コンテンツ、参照データはすべて、次に選択する MDB の内容に置き換えられます。他のプラットフォームには影響しません。",
+      "dialogKept": "フォルダー、エミュレーター設定、ゲームごとの設定は保持されます。お気に入りと最近プレイしたゲームも残りますが、新しい MDB の番号付けが異なる場合は別のゲームを指すことがあります。",
+      "dialogSafety": "インポートに失敗した場合やキャンセルした場合、現在のライブラリは変更されません。",
+      "confirm": "インポートへ進む"
+    }
   },
   "media": {
     "noScreenshots": "スクリーンショットがありません",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "ゲームROMフォルダが未選択です",
     "noGamesFolderWarning": "{platform} のゲームROMフォルダが選択されていません。未選択でもカタログの閲覧や検索は可能ですが、ゲーム本体を起動することはできません！",
     "goBackAndAddGames": "戻ってフォルダを指定する",
-    "proceedAnyway": "このまま続行"
+    "proceedAnyway": "このまま続行",
+    "reimportTitle": "{platform} を再インポート",
+    "reimportDescription": "インポートする MDB を選び、「データベースを作成」を選択してください。新しいインポートが完了するまで、現在の {platform} ライブラリはそのまま使えます。"
   }
 }

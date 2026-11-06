@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Database tal-librerija",
+      "importedSummary": "{count} logħba · importati fil-{date}",
+      "button": "Erġa' importa l-MDB…",
+      "dialogTitle": "Terġa' timporta {platform}?",
+      "dialogBody": "Il-logħob, l-extras u l-entrati ta' referenza kollha ta' {platform} fid-database tal-librerija jiġu sostitwiti bil-kontenut tal-MDB li tagħżel wara. Pjattaformi oħra mhumiex affettwati.",
+      "dialogKept": "Il-folders, is-settings tal-emulaturi u s-settings għal kull logħba jinżammu. Il-favoriti u l-logħob riċenti jibqgħu wkoll, iżda jistgħu jindikaw logħob ieħor jekk l-MDB il-ġdid jinnumerahom b'mod differenti.",
+      "dialogSafety": "Jekk l-importazzjoni tfalli jew tikkanċellaha, il-librerija attwali tibqa' l-istess.",
+      "confirm": "Kompli għall-importazzjoni"
+    }
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Ingen spelmapp har valts",
     "noGamesFolderWarning": "Du har inte valt någon spelmapp för {platform}. Utan spelmapp kan du bläddra i metadata, men inga spel kan startas!",
     "goBackAndAddGames": "Gå tillbaka och välj spelmapp",
-    "proceedAnyway": "Fortsätt ändå"
+    "proceedAnyway": "Fortsätt ändå",
+    "reimportTitle": "Erġa' importa {platform}",
+    "reimportDescription": "Agħżel l-MDB li trid timporta, imbagħad agħżel Ibni d-Database. Il-librerija attwali ta' {platform} tibqa' sakemm tintemm l-importazzjoni l-ġdida."
   }
 }

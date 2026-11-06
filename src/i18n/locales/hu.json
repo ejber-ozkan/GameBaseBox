@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Könyvtár-adatbázis",
+      "importedSummary": "{count} játék · importálva: {date}",
+      "button": "MDB újraimportálása…",
+      "dialogTitle": "Újraimportálod: {platform}?",
+      "dialogBody": "A könyvtár-adatbázisban az összes {platform} játék, extra és törzsadat lecserélődik a következő lépésben kiválasztott MDB tartalmára. A többi platform nem változik.",
+      "dialogKept": "A mappák, az emulátor-beállítások és a játékonkénti beállítások megmaradnak. A kedvencek és a nemrég játszottak is, de más játékra mutathatnak, ha az új MDB másként számozza őket.",
+      "dialogSafety": "Ha az importálás sikertelen, vagy megszakítod, a jelenlegi könyvtár változatlan marad.",
+      "confirm": "Tovább az importáláshoz"
+    }
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",
     "goBackAndAddGames": "Wróć i wskaż folder z grami",
-    "proceedAnyway": "Kontynuuj mimo to"
+    "proceedAnyway": "Kontynuuj mimo to",
+    "reimportTitle": "{platform} újraimportálása",
+    "reimportDescription": "Válaszd ki az importálandó MDB-t, majd válaszd az Adatbázis létrehozása lehetőséget. A jelenlegi {platform} könyvtár az új importálás végéig megmarad."
   }
 }

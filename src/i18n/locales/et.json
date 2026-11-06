@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Teegi andmebaas",
+      "importedSummary": "{count} mängu · imporditud {date}",
+      "button": "Impordi MDB uuesti…",
+      "dialogTitle": "Kas importida {platform} uuesti?",
+      "dialogBody": "Teegi andmebaasi kõik {platform} mängud, lisad ja otsingukirjed asendatakse järgmisena valitava MDB sisuga. Teisi platvorme see ei mõjuta.",
+      "dialogKept": "Sinu kaustad, emulaatori seaded ja mängupõhised seaded jäävad alles. Lemmikud ja hiljuti mängitud jäävad samuti, kuid võivad viidata teistele mängudele, kui uus MDB nummerdab neid teisiti.",
+      "dialogSafety": "Kui import ebaõnnestub või tühistad selle, jääb praegune teek muutmata.",
+      "confirm": "Jätka importimisega"
+    }
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Ingen spelmapp har valts",
     "noGamesFolderWarning": "Du har inte valt någon spelmapp för {platform}. Utan spelmapp kan du bläddra i metadata, men inga spel kan startas!",
     "goBackAndAddGames": "Gå tillbaka och välj spelmapp",
-    "proceedAnyway": "Fortsätt ändå"
+    "proceedAnyway": "Fortsätt ändå",
+    "reimportTitle": "Impordi {platform} uuesti",
+    "reimportDescription": "Vali imporditav MDB ja seejärel Loo andmebaas. Praegune {platform} teek jääb alles, kuni uus import on lõpetatud."
   }
 }

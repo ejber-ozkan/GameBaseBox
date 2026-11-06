@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Bunachar sonraí na leabharlainne",
+      "importedSummary": "{count} cluiche · iompórtáilte {date}",
+      "button": "Athiompórtáil MDB…",
+      "dialogTitle": "{platform} a athiompórtáil?",
+      "dialogBody": "Cuirfear ábhar an MDB a roghnóidh tú ina dhiaidh seo in ionad gach cluiche, breise agus iontráil tagartha {platform} i mbunachar sonraí na leabharlainne. Ní dhéantar difear d'ardáin eile.",
+      "dialogKept": "Coinnítear d'fhillteáin, socruithe aithriseora agus socruithe in aghaidh an chluiche. Fanann ceanáin agus cluichí a imríodh le déanaí freisin, ach d'fhéadfadh siad pointeáil ar chluichí eile má uimhríonn an MDB nua iad ar bhealach difriúil.",
+      "dialogSafety": "Má theipeann ar an iompórtáil nó má chealaíonn tú í, ní athraítear an leabharlann reatha.",
+      "confirm": "Ar aghaidh chuig an iompórtáil"
+    }
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Ingen spelmapp har valts",
     "noGamesFolderWarning": "Du har inte valt någon spelmapp för {platform}. Utan spelmapp kan du bläddra i metadata, men inga spel kan startas!",
     "goBackAndAddGames": "Gå tillbaka och välj spelmapp",
-    "proceedAnyway": "Fortsätt ändå"
+    "proceedAnyway": "Fortsätt ändå",
+    "reimportTitle": "Athiompórtáil {platform}",
+    "reimportDescription": "Roghnaigh an MDB le hiompórtáil, ansin roghnaigh Tóg an Bunachar Sonraí. Fanann an leabharlann {platform} reatha ann go dtí go mbeidh an iompórtáil nua críochnaithe."
   }
 }

@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Baza danych biblioteki",
+      "importedSummary": "{count} gier · zaimportowano {date}",
+      "button": "Zaimportuj MDB ponownie…",
+      "dialogTitle": "Zaimportować {platform} ponownie?",
+      "dialogBody": "Wszystkie gry, dodatki i wpisy słownikowe {platform} w bazie danych biblioteki zostaną zastąpione zawartością pliku MDB, który wybierzesz w następnym kroku. Inne platformy pozostaną bez zmian.",
+      "dialogKept": "Twoje foldery, ustawienia emulatorów i ustawienia poszczególnych gier zostaną zachowane. Ulubione i ostatnio grane również, ale mogą wskazywać inne gry, jeśli nowy plik MDB numeruje je inaczej.",
+      "dialogSafety": "Jeśli import się nie powiedzie lub go anulujesz, obecna biblioteka pozostanie bez zmian.",
+      "confirm": "Przejdź do importu"
+    }
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",
     "goBackAndAddGames": "Wróć i wskaż folder z grami",
-    "proceedAnyway": "Kontynuuj mimo to"
+    "proceedAnyway": "Kontynuuj mimo to",
+    "reimportTitle": "Zaimportuj {platform} ponownie",
+    "reimportDescription": "Wybierz plik MDB do zaimportowania, a następnie wybierz Utwórz bazę danych. Obecna biblioteka {platform} pozostaje dostępna do zakończenia nowego importu."
   }
 }

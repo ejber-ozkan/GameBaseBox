@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "База данни на библиотеката",
+      "importedSummary": "{count} игри · импортирани на {date}",
+      "button": "Повторен импорт на MDB…",
+      "dialogTitle": "Повторен импорт на {platform}?",
+      "dialogBody": "Всички игри, допълнения и справочни записи за {platform} в базата данни на библиотеката ще бъдат заменени със съдържанието на MDB файла, който изберете след това. Другите платформи не се засягат.",
+      "dialogKept": "Папките, настройките на емулаторите и настройките за отделните игри се запазват. Любимите и наскоро играните също, но може да сочат към други игри, ако новият MDB ги номерира различно.",
+      "dialogSafety": "Ако импортът не успее или го откажете, текущата библиотека остава непроменена.",
+      "confirm": "Продължи към импорта"
+    }
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",
     "goBackAndAddGames": "Wróć i wskaż folder z grami",
-    "proceedAnyway": "Kontynuuj mimo to"
+    "proceedAnyway": "Kontynuuj mimo to",
+    "reimportTitle": "Повторен импорт на {platform}",
+    "reimportDescription": "Изберете MDB файла за импорт и след това изберете Създай база данни. Текущата библиотека {platform} остава, докато новият импорт приключи."
   }
 }

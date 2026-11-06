@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "База даних бібліотеки",
+      "importedSummary": "Ігор: {count} · імпорт {date}",
+      "button": "Повторно імпортувати MDB…",
+      "dialogTitle": "Повторно імпортувати {platform}?",
+      "dialogBody": "Усі ігри, додатки та довідкові записи {platform} у базі даних бібліотеки буде замінено вмістом MDB, який ви виберете далі. Інші платформи не змінюються.",
+      "dialogKept": "Ваші папки, налаштування емуляторів і налаштування окремих ігор зберігаються. Обране й нещодавно запущені також, але вони можуть вказувати на інші ігри, якщо в новому MDB інша нумерація.",
+      "dialogSafety": "Якщо імпорт не вдасться або ви його скасуєте, поточна бібліотека залишиться без змін.",
+      "confirm": "Перейти до імпорту"
+    }
   },
   "media": {
     "noScreenshots": "Скриншоты отсутствуют",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Папка с играми не выбрана",
     "noGamesFolderWarning": "Вы не выбрали папку с играми для {platform}. Без папки с играми вы сможете просматривать метаданные, но запуск игр будет невозможен!",
     "goBackAndAddGames": "Вернуться и указать папку",
-    "proceedAnyway": "Всё равно продолжить"
+    "proceedAnyway": "Всё равно продолжить",
+    "reimportTitle": "Повторний імпорт {platform}",
+    "reimportDescription": "Виберіть MDB для імпорту, потім натисніть «Створити базу даних». Поточна бібліотека {platform} зберігається, доки новий імпорт не завершиться."
   }
 }

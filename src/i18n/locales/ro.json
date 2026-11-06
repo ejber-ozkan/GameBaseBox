@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Baza de date a bibliotecii",
+      "importedSummary": "{count} jocuri · importate pe {date}",
+      "button": "Reimportă MDB…",
+      "dialogTitle": "Reimporți {platform}?",
+      "dialogBody": "Toate jocurile, extrasele și intrările de referință {platform} din baza de date a bibliotecii vor fi înlocuite cu conținutul fișierului MDB pe care îl alegi în continuare. Celelalte platforme nu sunt afectate.",
+      "dialogKept": "Folderele, setările emulatoarelor și setările per joc se păstrează. Favoritele și jocurile recente rămân și ele, dar pot indica alte jocuri dacă noul MDB le numerotează diferit.",
+      "dialogSafety": "Dacă importul eșuează sau îl anulezi, biblioteca actuală rămâne neschimbată.",
+      "confirm": "Continuă la import"
+    }
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",
     "goBackAndAddGames": "Wróć i wskaż folder z grami",
-    "proceedAnyway": "Kontynuuj mimo to"
+    "proceedAnyway": "Kontynuuj mimo to",
+    "reimportTitle": "Reimportă {platform}",
+    "reimportDescription": "Alege fișierul MDB de importat, apoi selectează Creează baza de date. Biblioteca {platform} actuală rămâne până la finalizarea noului import."
   }
 }

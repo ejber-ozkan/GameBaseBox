@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Mappenhandleiding",
     "atariStInstructions": "HardDisk- en STX-bestanden horen in uw Extras-map (Extras/HardDisk, Extras/STX). D-Bug- en Automation-compilaties horen in uw Games-map (Games/DBUG, Games/Automation). Alle varianten verschijnen in Alternatieve versies / Extra's.",
     "atariStBootDisk": "Atari ST Opstartdiskette (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk-spellen vereisen een opstartdiskette (boot.st). Stel het pad naar boot.st in via de Atari ST Instellingen."
+    "atariStBootDiskMissingWarning": "HardDisk-spellen vereisen een opstartdiskette (boot.st). Stel het pad naar boot.st in via de Atari ST Instellingen.",
+    "reimport": {
+      "sectionTitle": "Bibliotheekdatabase",
+      "importedSummary": "{count} games · geïmporteerd op {date}",
+      "button": "MDB opnieuw importeren…",
+      "dialogTitle": "{platform} opnieuw importeren?",
+      "dialogBody": "Hiermee worden alle {platform}-games, extra's en opzoekgegevens in de bibliotheekdatabase vervangen door de inhoud van de MDB die je hierna kiest. Andere platforms blijven ongewijzigd.",
+      "dialogKept": "Je mappen, emulatorinstellingen en instellingen per game blijven behouden. Favorieten en recent gespeeld ook, maar ze kunnen naar andere games wijzen als de nieuwe MDB ze anders nummert.",
+      "dialogSafety": "Als het importeren mislukt of je het annuleert, blijft de huidige bibliotheek ongewijzigd.",
+      "confirm": "Doorgaan naar importeren"
+    }
   },
   "media": {
     "noScreenshots": "Geen screenshots beschikbaar",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Geen spellenmap geselecteerd",
     "noGamesFolderWarning": "U heeft geen spellenmap geselecteerd voor {platform}. Zonder spellenmap kunt u metagegevens doorzoeken, maar kunnen er geen spellen worden gestart!",
     "goBackAndAddGames": "Ga terug en voeg spellenmap toe",
-    "proceedAnyway": "Toch doorgaan"
+    "proceedAnyway": "Toch doorgaan",
+    "reimportTitle": "{platform} opnieuw importeren",
+    "reimportDescription": "Kies de MDB om te importeren en selecteer daarna Database bouwen. De huidige {platform}-bibliotheek blijft staan tot de nieuwe import klaar is."
   }
 }

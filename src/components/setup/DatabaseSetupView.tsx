@@ -34,6 +34,8 @@ interface DatabaseSetupViewProps {
   onBrowseFolder?: (folderKey: RequiredPlatformFolderKey) => void;
   onFolderChange?: (folderKey: RequiredPlatformFolderKey, value: string) => void;
   onImport: (options?: { allowMissingFolders?: boolean }) => void;
+  /** Reimporting an already imported platform from Settings: shows a way back. */
+  reimport?: { onBack: () => void };
 }
 
 function getThemeIdForPlatform(platformId?: string): string {
@@ -73,6 +75,7 @@ export function DatabaseSetupView({
   onBrowseFolder,
   onFolderChange,
   onImport,
+  reimport,
 }: DatabaseSetupViewProps) {
   useSettings();
   const { theme, setTheme } = useTheme();
@@ -137,7 +140,7 @@ export function DatabaseSetupView({
       ? allFolderKeys.filter((key) => key in folderSettings && folderSettings[key] !== undefined)
       : [];
   const hasFoldersToDisplay = displayFolderKeys.length > 0 && folderSettings;
-  const showPlatformPicker = platformOptions.length > 1 && selectedPlatformId && onPlatformSelect;
+  const showPlatformPicker = !reimport && platformOptions.length > 1 && selectedPlatformId && onPlatformSelect;
 
   return (
     <main className="flex-1 min-h-0 overflow-y-auto bg-theme-background px-6 py-10 text-theme-text font-sans transition-colors duration-250 relative">
@@ -162,8 +165,19 @@ export function DatabaseSetupView({
           )}
 
           <div className="mb-10">
+            {reimport ? (
+              <button
+                type="button"
+                onClick={reimport.onBack}
+                disabled={isImporting}
+                className="mb-6 rounded-theme-md border border-theme-outline/30 bg-theme-surface/50 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-theme-text-muted transition-all hover:bg-theme-surface hover:text-theme-text disabled:cursor-not-allowed disabled:opacity-45"
+                style={{ borderWidth: theme.effects.steppedBorders ? '2px' : '1px' }}
+              >
+                ← {t('common.backToLibrary')}
+              </button>
+            ) : null}
             <div className="mb-4 text-[12px] font-black uppercase tracking-[0.34em] text-theme-primary">
-              {t('setup.firstRunSetup')}
+              {reimport ? t('settings.reimport.sectionTitle') : t('setup.firstRunSetup')}
             </div>
             <h1 
               className="text-4xl font-black tracking-tight text-theme-text md:text-5xl"
@@ -171,8 +185,15 @@ export function DatabaseSetupView({
                 textShadow: theme.id === 'cyberpunk-crt' ? `0 0 8px ${theme.colors.primary}cc` : undefined
               }}
             >
-              {t('setup.buildDatabaseTitle', { platform: platformName })}
+              {reimport
+                ? t('setup.reimportTitle', { platform: platformName })
+                : t('setup.buildDatabaseTitle', { platform: platformName })}
             </h1>
+            {reimport ? (
+              <p className="mt-4 max-w-3xl text-base leading-8 text-theme-text">
+                {t('setup.reimportDescription', { platform: platformName })}
+              </p>
+            ) : null}
             <p className="mt-4 max-w-3xl text-base leading-8 text-theme-text-muted">
               {t('setup.descriptionPrefix')}{' '}
               <span className="font-bold text-theme-primary">{platformName}</span>{' '}

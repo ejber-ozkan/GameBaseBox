@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Guida alle cartelle Atari ST",
     "atariStInstructions": "I file HardDisk e STX si trovano nella cartella Extras (Extras/HardDisk, Extras/STX). Le raccolte D-Bug e Automation appartengono alla cartella Games (Games/DBUG, Games/Automation). Tutte le varianti appariranno in Versioni alternative / Extra.",
     "atariStBootDisk": "Disco di avvio Atari ST (boot.st)",
-    "atariStBootDiskMissingWarning": "I giochi HardDisk richiedono un disco di avvio (boot.st). Configura il percorso di boot.st nelle impostazioni Atari ST."
+    "atariStBootDiskMissingWarning": "I giochi HardDisk richiedono un disco di avvio (boot.st). Configura il percorso di boot.st nelle impostazioni Atari ST.",
+    "reimport": {
+      "sectionTitle": "Database della libreria",
+      "importedSummary": "{count} giochi · importati il {date}",
+      "button": "Reimporta MDB…",
+      "dialogTitle": "Reimportare {platform}?",
+      "dialogBody": "Tutti i giochi, gli extra e le voci di riferimento di {platform} nel database della libreria verranno sostituiti con il contenuto dell'MDB che sceglierai. Le altre piattaforme non sono interessate.",
+      "dialogKept": "Cartelle, impostazioni degli emulatori e impostazioni per gioco vengono mantenute. Anche preferiti e giocati di recente restano, ma potrebbero indicare giochi diversi se il nuovo MDB li numera in modo diverso.",
+      "dialogSafety": "Se l'importazione non riesce o la annulli, la libreria attuale resta invariata.",
+      "confirm": "Continua con l'importazione"
+    }
   },
   "media": {
     "noScreenshots": "Nessuno screenshot disponibile",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nessuna cartella giochi selezionata",
     "noGamesFolderWarning": "Non hai selezionato una cartella Giochi per {platform}. Senza una cartella Giochi potrai esplorare i metadati ma nessun gioco potrà essere avviato!",
     "goBackAndAddGames": "Torna indietro e aggiungi cartella",
-    "proceedAnyway": "Procedi comunque"
+    "proceedAnyway": "Procedi comunque",
+    "reimportTitle": "Reimporta {platform}",
+    "reimportDescription": "Scegli l'MDB da importare, poi seleziona Crea database. La libreria {platform} attuale resta disponibile finché la nuova importazione non è completata."
   }
 }

@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Zbirka podatkov knjižnice",
+      "importedSummary": "{count} iger · uvoženo {date}",
+      "button": "Ponovno uvozi MDB…",
+      "dialogTitle": "Ponovno uvozim {platform}?",
+      "dialogBody": "Vse igre, dodatki in vnosi šifrantov za {platform} v zbirki podatkov knjižnice bodo zamenjani z vsebino MDB, ki ga izberete v naslednjem koraku. Druge platforme ostanejo nespremenjene.",
+      "dialogKept": "Vaše mape, nastavitve emulatorjev in nastavitve posameznih iger ostanejo. Priljubljene in nedavno igrane prav tako, vendar lahko kažejo na druge igre, če jih novi MDB oštevilči drugače.",
+      "dialogSafety": "Če uvoz ne uspe ali ga prekličete, trenutna knjižnica ostane nespremenjena.",
+      "confirm": "Nadaljuj na uvoz"
+    }
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",
     "goBackAndAddGames": "Wróć i wskaż folder z grami",
-    "proceedAnyway": "Kontynuuj mimo to"
+    "proceedAnyway": "Kontynuuj mimo to",
+    "reimportTitle": "Ponovno uvozi {platform}",
+    "reimportDescription": "Izberite MDB za uvoz, nato izberite Ustvari zbirko podatkov. Trenutna knjižnica {platform} ostane na voljo, dokler se novi uvoz ne konča."
   }
 }

@@ -23,6 +23,8 @@ import { AppLaunchSplash } from '@/components/AppLaunchSplash';
 import { DatabaseSetupView } from '@/components/setup/DatabaseSetupView';
 import { useWindowLibraryShelves } from '@/hooks/useWindowLibraryShelves';
 import { usePlatformImport } from '@/hooks/usePlatformImport';
+import { PlatformReimportProvider } from '@/contexts/PlatformReimportContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { PLATFORM_PROFILES, SUPPORTED_PLATFORMS } from '@/lib/platform-capabilities';
 import {
   getPlatformAliases,
@@ -43,6 +45,10 @@ type SetupFolderKey = keyof Pick<
 function getRequiredPlatformFolderKeys(platformId: keyof typeof PLATFORM_PROFILES): SetupFolderKey[] {
   return getManifestRequiredPlatformFolderKeys(platformId) as SetupFolderKey[];
 }
+
+// The launch splash plays once per app session, not each time the library remounts
+// (for example after reimporting a platform).
+let launchSplashShown = false;
 
 function ImportedLibraryContent() {
   const { settings, updateSettings, setActivePlatform } = useSettings();
@@ -71,7 +77,7 @@ function ImportedLibraryContent() {
   } = useLibraryBrowserState();
   const [genres, setGenres] = useState<string[]>([]);
   const [subGenres, setSubGenres] = useState<string[]>([]);
-  const [showLaunchSplash, setShowLaunchSplash] = useState(true);
+  const [showLaunchSplash, setShowLaunchSplash] = useState(() => !launchSplashShown);
   const [listGameCount, setListGameCount] = useState<number | undefined>(undefined);
   const [bigBoxSession, setBigBoxSession] = useState<BigBoxSessionState | null>(null);
   const previousFullscreenRef = useRef(settings.isFullscreen);
@@ -124,6 +130,7 @@ function ImportedLibraryContent() {
   }, [filters.genre, settings.activePlatformId, windowDataEnabled]);
 
   useEffect(() => {
+    launchSplashShown = true;
     const timeoutId = window.setTimeout(() => {
       setShowLaunchSplash(false);
     }, 5000);
@@ -228,6 +235,11 @@ function ImportedLibraryContent() {
 
 function LibraryApp() {
   const { settings, updateSettings, setActivePlatform } = useSettings();
+  const { setTheme } = useTheme();
+  // Platform being reimported from Settings; its import page shows until the import
+  // succeeds or the user goes back. The live library stays intact until then.
+  const [reimport, setReimport] = useState<{ platformId: PlatformId; returnPlatformId: PlatformId } | null>(null);
+  const reimportPlatformId = reimport?.platformId ?? null;
   const activePlatform = PLATFORM_PROFILES[settings.activePlatformId];
   const activePlatformSettings = settings.platformSettings[settings.activePlatformId];
   const platformImport = usePlatformImport({
@@ -264,15 +276,49 @@ function LibraryApp() {
     handlePlatformFolderChange(folderKey, selected);
   }, [handlePlatformFolderChange]);
 
-  const handlePlatformImport = useCallback(async (options?: { allowMissingFolders?: boolean }) => {
-    await platformImport.importPlatform(options);
-  }, [platformImport]);
+  // Switch to the platform being reimported after Settings has saved its draft, so the
+  // switch builds on the saved settings rather than overwriting them.
+  useEffect(() => {
+    if (reimportPlatformId && settings.activePlatformId !== reimportPlatformId) {
+      setActivePlatform(reimportPlatformId);
+    }
+  }, [reimportPlatformId, setActivePlatform, settings.activePlatformId]);
 
-  if (activePlatformSettings.library.importStatus !== 'imported') {
+  const finishReimport = useCallback((outcome: 'imported' | 'back') => {
+    // After a successful import the reimported platform stays active; going back
+    // returns to the platform the user was browsing.
+    if (outcome === 'back' && reimport && reimport.returnPlatformId !== reimport.platformId) {
+      setActivePlatform(reimport.returnPlatformId);
+    }
+    setReimport(null);
+    platformImport.reset();
+    // The import page previews the platform's theme; restore the user's own.
+    setTheme(settings.themeId || 'arcade-void', false);
+  }, [platformImport, reimport, setActivePlatform, setTheme, settings.themeId]);
+
+  const handlePlatformImport = useCallback(async (options?: { allowMissingFolders?: boolean }) => {
+    const result = await platformImport.importPlatform(options);
+    if (result && reimport) {
+      finishReimport('imported');
+    }
+  }, [finishReimport, platformImport, reimport]);
+
+  const requestReimport = useCallback((platformId: PlatformId) => {
+    platformImport.reset();
+    setReimport({ platformId, returnPlatformId: settings.activePlatformId });
+  }, [platformImport, settings.activePlatformId]);
+
+  if (reimportPlatformId && settings.activePlatformId !== reimportPlatformId) {
+    return null;
+  }
+
+  const isReimporting = reimportPlatformId !== null;
+  if (isReimporting || activePlatformSettings.library.importStatus !== 'imported') {
     return (
       <DatabaseSetupView
+        reimport={isReimporting ? { onBack: () => finishReimport('back') } : undefined}
         dbPath={activePlatformSettings.library.sqliteScope}
-        error={platformImport.job.error ?? `${activePlatform.displayName} has not been imported yet.`}
+        error={platformImport.job.error ?? (isReimporting ? null : `${activePlatform.displayName} has not been imported yet.`)}
         folderSettings={activePlatformSettings.folders}
         importProgress={platformImport.job.status === 'running' ? platformImport.job.progress : null}
         importResult={platformImport.job.result}
@@ -302,7 +348,11 @@ function LibraryApp() {
     );
   }
 
-  return <ImportedLibraryContent />;
+  return (
+    <PlatformReimportProvider value={requestReimport}>
+      <ImportedLibraryContent />
+    </PlatformReimportProvider>
+  );
 }
 
 export default function Home() {

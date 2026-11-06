@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST 文件夹指南",
     "atariStInstructions": "HardDisk 和 STX 文件应位于 Extras 文件夹中（Extras/HardDisk、Extras/STX）。D-Bug 和 Automation 合集位于 Games 文件夹中（Games/DBUG、Games/Automation）。所有变体都将显示在备选版本/附加内容中。",
     "atariStBootDisk": "Atari ST 引导磁盘 (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk 游戏需要引导磁盘 (boot.st)。请在 Atari ST 设置中配置 boot.st 路径。"
+    "atariStBootDiskMissingWarning": "HardDisk 游戏需要引导磁盘 (boot.st)。请在 Atari ST 设置中配置 boot.st 路径。",
+    "reimport": {
+      "sectionTitle": "游戏库数据库",
+      "importedSummary": "{count} 款游戏 · 导入于 {date}",
+      "button": "重新导入 MDB…",
+      "dialogTitle": "重新导入 {platform}？",
+      "dialogBody": "游戏库数据库中所有 {platform} 游戏、附加内容和查询数据都将被替换为你接下来选择的 MDB 的内容。其他平台不受影响。",
+      "dialogKept": "你的文件夹、模拟器设置和单个游戏设置会保留。收藏和最近游玩也会保留，但如果新 MDB 的编号不同，它们可能指向其他游戏。",
+      "dialogSafety": "如果导入失败或你取消导入，当前游戏库保持不变。",
+      "confirm": "继续导入"
+    }
   },
   "media": {
     "noScreenshots": "暂无截图",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "未选择游戏 ROM 目录",
     "noGamesFolderWarning": "您尚未为 {platform} 指定游戏 ROM 目录。未设置游戏目录仍可浏览所有元数据，但无法直接启动游戏！",
     "goBackAndAddGames": "返回并添加游戏目录",
-    "proceedAnyway": "仍然继续"
+    "proceedAnyway": "仍然继续",
+    "reimportTitle": "重新导入 {platform}",
+    "reimportDescription": "选择要导入的 MDB，然后选择“构建数据库”。在新导入完成前，当前的 {platform} 游戏库保持不变。"
   }
 }

@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Basis data pustaka",
+      "importedSummary": "{count} game · diimpor {date}",
+      "button": "Impor ulang MDB…",
+      "dialogTitle": "Impor ulang {platform}?",
+      "dialogBody": "Semua game, ekstra, dan entri referensi {platform} di basis data pustaka akan diganti dengan isi MDB yang Anda pilih berikutnya. Platform lain tidak terpengaruh.",
+      "dialogKept": "Folder, pengaturan emulator, dan pengaturan per game tetap disimpan. Favorit dan yang baru dimainkan juga tetap ada, tetapi bisa menunjuk ke game lain jika MDB baru memberi nomor yang berbeda.",
+      "dialogSafety": "Jika impor gagal atau Anda membatalkannya, pustaka saat ini tidak berubah.",
+      "confirm": "Lanjut ke impor"
+    }
   },
   "media": {
     "noScreenshots": "Tidak ada tangkapan layar",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Folder Game Belum Dipilih",
     "noGamesFolderWarning": "Anda belum memilih folder Game untuk {platform}. Tanpa folder Game, Anda tetap dapat mencari dan melihat katalog metadata, tetapi game tidak dapat dimainkan!",
     "goBackAndAddGames": "Kembali & Pilih Folder Game",
-    "proceedAnyway": "Lanjutkan Saja"
+    "proceedAnyway": "Lanjutkan Saja",
+    "reimportTitle": "Impor ulang {platform}",
+    "reimportDescription": "Pilih MDB yang akan diimpor, lalu pilih Bangun Basis Data. Pustaka {platform} saat ini tetap ada sampai impor baru selesai."
   }
 }

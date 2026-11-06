@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Databáze knihovny",
+      "importedSummary": "{count} her · importováno {date}",
+      "button": "Znovu importovat MDB…",
+      "dialogTitle": "Znovu importovat {platform}?",
+      "dialogBody": "Všechny hry, doplňky a číselníkové záznamy {platform} v databázi knihovny budou nahrazeny obsahem MDB, který vyberete v dalším kroku. Ostatní platformy zůstanou beze změny.",
+      "dialogKept": "Vaše složky, nastavení emulátorů a nastavení jednotlivých her zůstanou zachována. Oblíbené a naposledy hrané také, ale mohou ukazovat na jiné hry, pokud nový MDB čísluje hry jinak.",
+      "dialogSafety": "Pokud import selže nebo jej zrušíte, současná knihovna zůstane beze změny.",
+      "confirm": "Pokračovat k importu"
+    }
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",
     "goBackAndAddGames": "Wróć i wskaż folder z grami",
-    "proceedAnyway": "Kontynuuj mimo to"
+    "proceedAnyway": "Kontynuuj mimo to",
+    "reimportTitle": "Znovu importovat {platform}",
+    "reimportDescription": "Vyberte MDB k importu a poté zvolte Vytvořit databázi. Současná knihovna {platform} zůstane zachována, dokud nový import neskončí."
   }
 }

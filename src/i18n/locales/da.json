@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Biblioteksdatabase",
+      "importedSummary": "{count} spil · importeret {date}",
+      "button": "Genimportér MDB…",
+      "dialogTitle": "Genimportér {platform}?",
+      "dialogBody": "Alle {platform}-spil, ekstramaterialer og opslagsposter i biblioteksdatabasen erstattes med indholdet af den MDB, du vælger nu. Andre platforme påvirkes ikke.",
+      "dialogKept": "Dine mapper, emulatorindstillinger og indstillinger pr. spil bevares. Favoritter og senest spillede bevares også, men kan pege på andre spil, hvis den nye MDB nummererer dem anderledes.",
+      "dialogSafety": "Hvis importen mislykkes, eller du annullerer den, forbliver det nuværende bibliotek uændret.",
+      "confirm": "Fortsæt til import"
+    }
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Ingen spelmapp har valts",
     "noGamesFolderWarning": "Du har inte valt någon spelmapp för {platform}. Utan spelmapp kan du bläddra i metadata, men inga spel kan startas!",
     "goBackAndAddGames": "Gå tillbaka och välj spelmapp",
-    "proceedAnyway": "Fortsätt ändå"
+    "proceedAnyway": "Fortsätt ändå",
+    "reimportTitle": "Genimportér {platform}",
+    "reimportDescription": "Vælg den MDB, der skal importeres, og vælg derefter Byg database. Det nuværende {platform}-bibliotek bevares, indtil den nye import er færdig."
   }
 }

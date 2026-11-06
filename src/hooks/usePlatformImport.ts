@@ -185,7 +185,10 @@ export function usePlatformImport({
           ...platformSettings[platformId],
           library: {
             ...platformSettings[platformId].library,
-            importStatus: cancelled ? current.library.importStatus : 'failed',
+            // The merge is atomic: a failed reimport leaves the existing library intact.
+            importStatus: cancelled || current.library.importStatus === 'imported'
+              ? current.library.importStatus
+              : 'failed',
             lastImportError: cancelled ? null : message,
             lastImportJob: {
               id: jobId,

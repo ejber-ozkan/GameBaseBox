@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { createDefaultPlatformSettingsMap } from '../lib/platform-capabilities';
 import type { Settings } from '../contexts/SettingsContext';
 import { SettingsView } from './SettingsModal';
+import { PlatformReimportProvider } from '../contexts/PlatformReimportContext';
 
 const updateSettings = vi.fn();
 const setTheme = vi.fn();
@@ -461,3 +462,74 @@ describe('SettingsView platform emulator settings', () => {
   });
 });
 
+describe('SettingsView platform reimport', () => {
+  beforeEach(() => {
+    updateSettings.mockClear();
+    currentTheme = mockTheme;
+  });
+
+  function renderWithReimport(requestReimport = vi.fn()) {
+    render(
+      <PlatformReimportProvider value={requestReimport}>
+        <SettingsView onBack={vi.fn()} />
+      </PlatformReimportProvider>,
+    );
+    return requestReimport;
+  }
+
+  test('offers reimport only on an imported platform page and only where the shell supports it', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    currentSettings.platformSettings.c64.library.sourceMdbPath = 'D:/GB64/GBC_v19.mdb';
+
+    openSettingsTab('C64 Platform Paths');
+    expect(screen.queryByTestId('platform-reimport-card')).toBeNull();
+  });
+
+  test('warns first, then saves pending edits and hands the platform to the import page', () => {
+    currentSettings = makeSettings('c64', ['c64', 'atari800']);
+    currentSettings.platformSettings.atari800.library.sourceMdbPath = 'E:/Atari/Atari 800 v12.mdb';
+    const requestReimport = renderWithReimport();
+
+    fireEvent.click(screen.getByText('Atari 800 Platform Paths'));
+    expect(screen.getByText('E:/Atari/Atari 800 v12.mdb')).toBeTruthy();
+    fireEvent.change(screen.getByDisplayValue('E:/Atari/Games'), { target: { value: 'E:/NewAtari/Games' } });
+
+    fireEvent.click(screen.getByText('Reimport MDB…'));
+    expect(screen.getByTestId('reimport-confirm-dialog')).toBeTruthy();
+    expect(screen.getByText('Reimport Atari 800?')).toBeTruthy();
+    expect(requestReimport).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText('Continue to Import'));
+
+    expect(updateSettings).toHaveBeenCalledWith(expect.objectContaining({
+      platformSettings: expect.objectContaining({
+        atari800: expect.objectContaining({
+          folders: expect.objectContaining({ gamesPath: 'E:/NewAtari/Games' }),
+        }),
+      }),
+    }));
+    expect(requestReimport).toHaveBeenCalledWith('atari800');
+    expect(screen.queryByTestId('reimport-confirm-dialog')).toBeNull();
+  });
+
+  test('keyboard: Escape cancels the warning without leaving settings; arrows and Enter confirm', () => {
+    currentSettings = makeSettings('c64', ['c64']);
+    const requestReimport = renderWithReimport();
+    fireEvent.click(screen.getByText('C64 Platform Paths'));
+
+    fireEvent.click(screen.getByText('Reimport MDB…'));
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByTestId('reimport-confirm-dialog')).toBeNull();
+    expect(updateSettings).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText('Reimport MDB…'));
+    fireEvent.keyDown(window, { key: 'Enter' });
+    expect(requestReimport).not.toHaveBeenCalled();
+    expect(screen.queryByTestId('reimport-confirm-dialog')).toBeNull();
+
+    fireEvent.click(screen.getByText('Reimport MDB…'));
+    fireEvent.keyDown(window, { key: 'ArrowRight' });
+    fireEvent.keyDown(window, { key: 'Enter' });
+    expect(requestReimport).toHaveBeenCalledWith('c64');
+  });
+});

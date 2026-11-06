@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Library Database",
+      "importedSummary": "{count} games · imported {date}",
+      "button": "Reimport MDB…",
+      "dialogTitle": "Reimport {platform}?",
+      "dialogBody": "This replaces every {platform} game, extra and lookup entry in the library database with the contents of the MDB you choose next. Other platforms are not affected.",
+      "dialogKept": "Your folders, emulator settings and per-game overrides are kept. Favourites and recently played stay too, but may point to different games if the new MDB numbers them differently.",
+      "dialogSafety": "If the import fails or you cancel it, the current library is left unchanged.",
+      "confirm": "Continue to Import"
+    }
   },
   "media": {
     "noScreenshots": "No screenshots available",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "No Games Folder Selected",
     "noGamesFolderWarning": "You haven't selected a Games folder for {platform}. Without a Games folder, you will be able to search and browse the database metadata, but no games will be launchable!",
     "goBackAndAddGames": "Go Back & Add Games Folder",
-    "proceedAnyway": "Proceed Anyway"
+    "proceedAnyway": "Proceed Anyway",
+    "reimportTitle": "Reimport {platform}",
+    "reimportDescription": "Choose the MDB to import, then select Build Database. The current {platform} library stays in place until the new import finishes."
   }
 }

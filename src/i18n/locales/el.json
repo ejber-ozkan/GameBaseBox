@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Βάση δεδομένων βιβλιοθήκης",
+      "importedSummary": "{count} παιχνίδια · εισήχθησαν στις {date}",
+      "button": "Επανεισαγωγή MDB…",
+      "dialogTitle": "Επανεισαγωγή {platform};",
+      "dialogBody": "Όλα τα παιχνίδια, τα πρόσθετα και οι εγγραφές αναφοράς {platform} στη βάση δεδομένων της βιβλιοθήκης θα αντικατασταθούν με το περιεχόμενο του MDB που θα επιλέξετε στη συνέχεια. Οι άλλες πλατφόρμες δεν επηρεάζονται.",
+      "dialogKept": "Οι φάκελοι, οι ρυθμίσεις εξομοιωτών και οι ρυθμίσεις ανά παιχνίδι διατηρούνται. Τα αγαπημένα και τα πρόσφατα παιχνίδια επίσης, αλλά μπορεί να δείχνουν σε άλλα παιχνίδια αν το νέο MDB τα αριθμεί διαφορετικά.",
+      "dialogSafety": "Αν η εισαγωγή αποτύχει ή την ακυρώσετε, η τρέχουσα βιβλιοθήκη μένει αμετάβλητη.",
+      "confirm": "Συνέχεια στην εισαγωγή"
+    }
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",
     "goBackAndAddGames": "Wróć i wskaż folder z grami",
-    "proceedAnyway": "Kontynuuj mimo to"
+    "proceedAnyway": "Kontynuuj mimo to",
+    "reimportTitle": "Επανεισαγωγή {platform}",
+    "reimportDescription": "Επιλέξτε το MDB για εισαγωγή και μετά επιλέξτε Δημιουργία βάσης δεδομένων. Η τρέχουσα βιβλιοθήκη {platform} παραμένει μέχρι να ολοκληρωθεί η νέα εισαγωγή."
   }
 }

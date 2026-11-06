@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Baza podataka knjižnice",
+      "importedSummary": "{count} igara · uvezeno {date}",
+      "button": "Ponovno uvezi MDB…",
+      "dialogTitle": "Ponovno uvesti {platform}?",
+      "dialogBody": "Sve igre, dodaci i zapisi šifrarnika za {platform} u bazi podataka knjižnice bit će zamijenjeni sadržajem MDB-a koji odaberete u sljedećem koraku. Ostale platforme ostaju nepromijenjene.",
+      "dialogKept": "Vaše mape, postavke emulatora i postavke pojedinih igara ostaju sačuvane. Omiljene i nedavno igrane također, ali mogu upućivati na druge igre ako ih novi MDB drukčije numerira.",
+      "dialogSafety": "Ako uvoz ne uspije ili ga otkažete, trenutna knjižnica ostaje nepromijenjena.",
+      "confirm": "Nastavi na uvoz"
+    }
   },
   "media": {
     "noScreenshots": "Brak dostępnych zrzutów ekranu",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Nie wybrano folderu z grami",
     "noGamesFolderWarning": "Nie wybrano folderu z grami dla platformy {platform}. Bez tego folderu można przeglądać metadane, ale uruchamianie gier będzie niemożliwe!",
     "goBackAndAddGames": "Wróć i wskaż folder z grami",
-    "proceedAnyway": "Kontynuuj mimo to"
+    "proceedAnyway": "Kontynuuj mimo to",
+    "reimportTitle": "Ponovno uvezi {platform}",
+    "reimportDescription": "Odaberite MDB za uvoz, a zatim odaberite Izradi bazu podataka. Trenutna knjižnica {platform} ostaje dok novi uvoz ne završi."
   }
 }

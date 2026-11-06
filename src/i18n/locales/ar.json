@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "قاعدة بيانات المكتبة",
+      "importedSummary": "{count} لعبة · استُوردت في {date}",
+      "button": "إعادة استيراد MDB…",
+      "dialogTitle": "إعادة استيراد {platform}؟",
+      "dialogBody": "سيتم استبدال كل ألعاب {platform} وإضافاتها وإدخالاتها المرجعية في قاعدة بيانات المكتبة بمحتوى ملف MDB الذي تختاره بعد ذلك. لا تتأثر المنصات الأخرى.",
+      "dialogKept": "تُحفظ مجلداتك وإعدادات المحاكيات والإعدادات الخاصة بكل لعبة. تبقى المفضلة والألعاب التي لُعبت مؤخرًا أيضًا، لكنها قد تشير إلى ألعاب أخرى إذا رقّم ملف MDB الجديد الألعاب بشكل مختلف.",
+      "dialogSafety": "إذا فشل الاستيراد أو ألغيته، تبقى المكتبة الحالية دون تغيير.",
+      "confirm": "متابعة إلى الاستيراد"
+    }
   },
   "media": {
     "noScreenshots": "لا توجد لقطات شاشة متاحة",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "No Games Folder Selected",
     "noGamesFolderWarning": "You haven't selected a Games folder for {platform}. Without a Games folder, you will be able to search and browse the database metadata, but no games will be launchable!",
     "goBackAndAddGames": "Go Back & Add Games Folder",
-    "proceedAnyway": "Proceed Anyway"
+    "proceedAnyway": "Proceed Anyway",
+    "reimportTitle": "إعادة استيراد {platform}",
+    "reimportDescription": "اختر ملف MDB المراد استيراده، ثم اختر إنشاء قاعدة البيانات. تبقى مكتبة {platform} الحالية كما هي حتى ينتهي الاستيراد الجديد."
   }
 }

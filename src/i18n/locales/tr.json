@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Klasör Rehberi",
     "atariStInstructions": "HardDisk ve STX dosyaları Extras klasöründe yer alır (Extras/HardDisk, Extras/STX). D-Bug ve Automation derlemeleri Games klasörünüzde bulunur (Games/DBUG, Games/Automation). Tüm sürümler Alternatif Sürümler / Ekstralar panelinde görünür.",
     "atariStBootDisk": "Atari ST Başlatma Diski (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk oyunları başlatma diski (boot.st) gerektirir. Lütfen Atari ST Ayarlarından boot.st yolunu yapılandırın."
+    "atariStBootDiskMissingWarning": "HardDisk oyunları başlatma diski (boot.st) gerektirir. Lütfen Atari ST Ayarlarından boot.st yolunu yapılandırın.",
+    "reimport": {
+      "sectionTitle": "Kitaplık veritabanı",
+      "importedSummary": "{count} oyun · {date} tarihinde içe aktarıldı",
+      "button": "MDB'yi yeniden içe aktar…",
+      "dialogTitle": "{platform} yeniden içe aktarılsın mı?",
+      "dialogBody": "Kitaplık veritabanındaki tüm {platform} oyunları, ekleri ve başvuru kayıtları, bir sonraki adımda seçeceğiniz MDB'nin içeriğiyle değiştirilir. Diğer platformlar etkilenmez.",
+      "dialogKept": "Klasörleriniz, emülatör ayarlarınız ve oyun bazlı ayarlarınız korunur. Favoriler ve son oynananlar da kalır, ancak yeni MDB oyunları farklı numaralandırıyorsa başka oyunları gösterebilir.",
+      "dialogSafety": "İçe aktarma başarısız olursa veya iptal ederseniz mevcut kitaplık değişmez.",
+      "confirm": "İçe aktarmaya devam et"
+    }
   },
   "media": {
     "noScreenshots": "Ekran görüntüsü yok",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Oyunlar Klasörü Seçilmedi",
     "noGamesFolderWarning": "{platform} için bir Oyunlar klasörü seçmediniz. Oyunlar klasörü olmadan veritabanı meta verilerini arayabilir ve göz atabilirsiniz ancak hiçbir oyun başlatılamaz!",
     "goBackAndAddGames": "Geri Dön ve Oyunlar Klasörü Ekle",
-    "proceedAnyway": "Yine de Devam Et"
+    "proceedAnyway": "Yine de Devam Et",
+    "reimportTitle": "{platform} yeniden içe aktar",
+    "reimportDescription": "İçe aktarılacak MDB'yi seçin, ardından Veritabanı Oluştur'u seçin. Mevcut {platform} kitaplığı yeni içe aktarma bitene kadar yerinde kalır."
   }
 }

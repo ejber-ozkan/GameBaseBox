@@ -155,6 +155,50 @@ describe('DatabaseSetupView', () => {
     expect(await screen.findByText(/prepared 12 tables/)).toBeTruthy();
   });
 
+  it('reimport mode explains the reimport, hides the platform picker and offers a way back', () => {
+    const onBack = vi.fn();
+    renderWithProviders(
+      <DatabaseSetupView
+        dbPath="/isolated/gb64.sqlite"
+        error={null}
+        importResult={null}
+        isImporting={false}
+        mdbPath="E:/Atari/Atari 800 v12.mdb"
+        platformName="Atari 800"
+        selectedPlatformId="atari800"
+        platformOptions={[
+          { id: 'c64', displayName: 'Commodore 64', importStatus: 'imported' },
+          { id: 'atari800', displayName: 'Atari 800', importStatus: 'imported' },
+        ]}
+        onPlatformSelect={vi.fn()}
+        onBrowse={vi.fn()}
+        onImport={vi.fn()}
+        reimport={{ onBack }}
+      />,
+    );
+    expect(screen.getByRole('heading', { name: 'Reimport Atari 800' })).toBeTruthy();
+    expect(screen.getByText(/current Atari 800 library stays in place/)).toBeTruthy();
+    expect(screen.queryByRole('combobox')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /Back to Library/ }));
+    expect(onBack).toHaveBeenCalledOnce();
+  });
+
+  it('cannot leave reimport mode while the import is running', () => {
+    renderWithProviders(
+      <DatabaseSetupView
+        dbPath="/isolated/gb64.sqlite"
+        error={null}
+        importResult={null}
+        isImporting
+        mdbPath="E:/Atari/Atari 800 v12.mdb"
+        onBrowse={vi.fn()}
+        onImport={vi.fn()}
+        reimport={{ onBack: vi.fn() }}
+      />,
+    );
+    expect((screen.getByRole('button', { name: /Back to Library/ }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
   it('shows progress and allows a running import to be cancelled', () => {
     const onCancelImport = vi.fn();
 

@@ -36,6 +36,36 @@ describe('import validation', () => {
   });
 });
 
+describe('reimport failure', () => {
+  test('a failed reimport keeps the platform imported, since the live library is untouched', async () => {
+    vi.mocked(importPlatformDatabaseFromMdb).mockRejectedValueOnce('Export failed: table Games');
+    const platformSettings = createDefaultPlatformSettingsMap();
+    platformSettings.c64.library.sourceMdbPath = '/fixtures/library.mdb';
+    platformSettings.c64.library.importStatus = 'imported';
+    const updateSettings = vi.fn();
+    const { result } = renderHook(() => usePlatformImport({
+      platformName: 'C64', platformId: 'c64', platformSettings, updateSettings,
+    }));
+    await act(async () => { await result.current.importPlatform(); });
+    expect(result.current.job).toMatchObject({ status: 'failed', error: 'Export failed: table Games' });
+    const saved = updateSettings.mock.calls.at(-1)?.[0].platformSettings.c64.library;
+    expect(saved).toMatchObject({ importStatus: 'imported', lastImportError: 'Export failed: table Games' });
+  });
+
+  test('a failed first import is still marked failed', async () => {
+    vi.mocked(importPlatformDatabaseFromMdb).mockRejectedValueOnce('Export failed');
+    const platformSettings = createDefaultPlatformSettingsMap();
+    platformSettings.c64.library.sourceMdbPath = '/fixtures/library.mdb';
+    platformSettings.c64.library.importStatus = 'notImported';
+    const updateSettings = vi.fn();
+    const { result } = renderHook(() => usePlatformImport({
+      platformName: 'C64', platformId: 'c64', platformSettings, updateSettings,
+    }));
+    await act(async () => { await result.current.importPlatform(); });
+    expect(updateSettings.mock.calls.at(-1)?.[0].platformSettings.c64.library.importStatus).toBe('failed');
+  });
+});
+
 describe('buildImportedPlatformSettings', () => {
   test('marks only the imported platform active and retains platform-scoped folders', () => {
     const platformSettings = createDefaultPlatformSettingsMap();

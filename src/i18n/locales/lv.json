@@ -348,7 +348,17 @@
     "atariStInstructionsTitle": "Atari ST Folders Guide",
     "atariStInstructions": "HardDisk and STX files are expected in your Extras folder (Extras/HardDisk, Extras/STX). D-Bug and Automation compilations belong in your Games folder (Games/DBUG, Games/Automation). All variants will appear in Alternative Versions / Extras.",
     "atariStBootDisk": "Atari ST Boot Disk (boot.st)",
-    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings."
+    "atariStBootDiskMissingWarning": "HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.",
+    "reimport": {
+      "sectionTitle": "Bibliotēkas datubāze",
+      "importedSummary": "{count} spēles · importētas {date}",
+      "button": "Importēt MDB atkārtoti…",
+      "dialogTitle": "Importēt {platform} atkārtoti?",
+      "dialogBody": "Visas {platform} spēles, papildmateriāli un uzziņu ieraksti bibliotēkas datubāzē tiks aizstāti ar tās MDB saturu, ko izvēlēsieties tālāk. Citas platformas netiek ietekmētas.",
+      "dialogKept": "Jūsu mapes, emulatora iestatījumi un iestatījumi katrai spēlei tiek saglabāti. Izlase un nesen spēlētās arī paliek, taču var norādīt uz citām spēlēm, ja jaunā MDB tās numurē citādi.",
+      "dialogSafety": "Ja importēšana neizdodas vai jūs to atceļat, pašreizējā bibliotēka paliek nemainīga.",
+      "confirm": "Turpināt importēšanu"
+    }
   },
   "media": {
     "noScreenshots": "Inga skärmdumpar tillgängliga",
@@ -408,6 +418,8 @@
     "noGamesFolderSelected": "Ingen spelmapp har valts",
     "noGamesFolderWarning": "Du har inte valt någon spelmapp för {platform}. Utan spelmapp kan du bläddra i metadata, men inga spel kan startas!",
     "goBackAndAddGames": "Gå tillbaka och välj spelmapp",
-    "proceedAnyway": "Fortsätt ändå"
+    "proceedAnyway": "Fortsätt ändå",
+    "reimportTitle": "Importēt {platform} atkārtoti",
+    "reimportDescription": "Izvēlieties importējamo MDB un pēc tam atlasiet Izveidot datubāzi. Pašreizējā {platform} bibliotēka saglabājas, līdz jaunā importēšana ir pabeigta."
   }
 }
