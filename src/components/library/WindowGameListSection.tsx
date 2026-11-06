@@ -57,7 +57,7 @@ export function WindowGameListSection({
         />
       </div>
 
-      <div className="overflow-hidden rounded-[var(--theme-radius-lg)] border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)]">
+      <div className="overflow-hidden rounded-[var(--theme-radius-lg)] border border-[var(--theme-outline-variant)] bg-[color-mix(in_srgb,var(--theme-surface)_65%,transparent)]">
         {games.map((game, index) => {
           const studio =
             game.publisher?.name && game.publisher.name !== '(Not Published)'

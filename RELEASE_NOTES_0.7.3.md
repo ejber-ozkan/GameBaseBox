@@ -29,7 +29,8 @@ and tightens which files the app will read or launch.
   per app start.
 - Platform background images behind the library are clearly visible in every theme.
   The image layer is stronger, the windowed shading no longer covers the lower half of
-  the screen, and the Arcade Void game grid no longer sits on a solid panel.
+  the screen, and the Arcade Void game grid and the list view tables no longer sit
+  on solid panels.
 - Picking a random game no longer disturbs the library rails, and in list view it
   no longer loads the whole library to reach a game far down the list.
 - Command-line dev scripts no longer break on messages containing parentheses.

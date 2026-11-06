@@ -79,11 +79,12 @@ export function ListView({
     return () => observer.disconnect();
   }, [onEndReached]);
 
+  // Translucent panels let the platform background show through behind the rows.
   const shellClass = isC64
-    ? 'border-4 border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] p-3'
+    ? 'border-4 border-[var(--theme-outline-variant)] bg-[color-mix(in_srgb,var(--theme-surface)_65%,transparent)] p-3'
     : isCyberpunk
-      ? 'border border-[var(--theme-outline-variant)] bg-[var(--theme-surface)] shadow-[2px_2px_0_var(--theme-primary)]'
-      : 'theme-panel rounded-[var(--theme-radius-xl)] p-4 shadow-2xl';
+      ? 'border border-[var(--theme-outline-variant)] bg-[color-mix(in_srgb,var(--theme-surface)_65%,transparent)] shadow-[2px_2px_0_var(--theme-primary)]'
+      : 'rounded-[var(--theme-radius-xl)] border border-[var(--theme-outline-variant)] bg-[color-mix(in_srgb,var(--theme-surface)_65%,transparent)] p-4 shadow-2xl backdrop-blur-[2px]';
   const headerClass = isC64
     ? 'bg-[var(--theme-outline-variant)] text-[var(--theme-tertiary)] border-b-4 border-[var(--theme-outline-variant)]'
     : isCyberpunk
