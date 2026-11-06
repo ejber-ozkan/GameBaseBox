@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ImageSlider } from '../ImageSlider';
 import type { Game } from '../../types/game';
 import { useTranslation } from '../../i18n/I18nContext';
+import { followFocusedCard } from '../../lib/rail-scroll';
 
 interface CyberpunkCrtGridProps {
   activeAlphabetRailId?: string | null;
@@ -59,10 +60,7 @@ function CyberpunkRail({ games, focusedGameId, onFocusGame, onSelectGame, railId
     const rail = railScrollRef.current;
     const focusedCard = rail?.querySelector(`[data-game-id="${focusedGameId}"]`);
     if (rail && focusedCard instanceof HTMLElement) {
-      rail.scrollTo({
-        behavior: 'smooth',
-        left: focusedCard.offsetLeft - (rail.clientWidth - focusedCard.clientWidth) / 2,
-      });
+      followFocusedCard(rail, focusedCard);
     }
   }, [focusedGameId]);
 

@@ -5,6 +5,7 @@ import { useSettings, Settings } from '../contexts/SettingsContext';
 import { useFavorites } from './useFavorites';
 import { Game } from '../types/game';
 import { GameFilters, GameSortColumn, getDbGames } from '../lib/tauri-bridge';
+import { followFocusedCard } from '../lib/rail-scroll';
 
 export type LibraryViewMode = 'grid' | 'list' | 'settings';
 const LIBRARY_PAGE_SIZE = 120;
@@ -69,7 +70,7 @@ export function useLibraryBrowserState() {
 
       const shelfIdx = focusedIndex + recentCount;
       const child = shelfRef.current.children[shelfIdx] as HTMLElement | undefined;
-      child?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      if (child) followFocusedCard(shelfRef.current, child);
     }
   }, [focusedIndex, settings.recentlyPlayedIds.length]);
 

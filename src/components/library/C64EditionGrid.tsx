@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ImageSlider } from '../ImageSlider';
 import type { Game } from '../../types/game';
 import { useTranslation } from '../../i18n/I18nContext';
+import { followFocusedCard } from '../../lib/rail-scroll';
 
 interface C64EditionGridProps {
   activeAlphabetRailId?: string | null;
@@ -54,9 +55,10 @@ function C64Rail({ games, focusedGameId, onFocusGame, onSelectGame, railId, titl
 
   useEffect(() => {
     if (!focusedGameId) return;
-    const focusedCard = railScrollRef.current?.querySelector(`[data-game-id="${focusedGameId}"]`);
-    if (focusedCard instanceof HTMLElement) {
-      focusedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    const rail = railScrollRef.current;
+    const focusedCard = rail?.querySelector(`[data-game-id="${focusedGameId}"]`);
+    if (rail && focusedCard instanceof HTMLElement) {
+      followFocusedCard(rail, focusedCard);
     }
   }, [focusedGameId]);
 

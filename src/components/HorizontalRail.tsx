@@ -5,6 +5,7 @@ import { Game } from '../types/game';
 import { BigBoxTileMedia } from './BigBoxTileMedia';
 import { getPrimaryStudioLabel } from '../lib/game-display';
 import { FullscreenLayoutMetrics } from '../hooks/useFullscreenLayoutMetrics';
+import { revealDelta } from '../lib/rail-scroll';
 
 interface HorizontalRailProps {
   title: string;
@@ -59,6 +60,9 @@ export function HorizontalRail({
   const hasInitializedLoopPositionRef = useRef(false);
   const currentCloneBaseRef = useRef(1);
   const previousFocusedIndexRef = useRef(focusedIndex);
+  // Tile (index into displayGames) the pointer last entered; consumed by the scroll effect.
+  const hoveredTileRef = useRef<number | null>(null);
+  const railInset = layout?.horizontalRailPaddingX ?? 64;
   
   // For infinite looping, we triple the items
   const displayGames = loop ? [...games, ...games, ...games] : games;
@@ -72,6 +76,21 @@ export function HorizontalRail({
 
   // Scroll into view logic
   useEffect(() => {
+    const hoveredTile = hoveredTileRef.current;
+    hoveredTileRef.current = null;
+    if (isActive && scrollRef.current && hoveredTile !== null && hasInitializedLoopPositionRef.current
+      && (loop ? hoveredTile % originalCount : hoveredTile) === focusedIndex) {
+      // Focus came from the mouse. Centring would slide another tile under the pointer
+      // and chain into a runaway scroll, so only nudge this tile fully into view, and
+      // continue keyboard navigation from the copy the pointer is over.
+      const parent = scrollRef.current;
+      if (loop && originalCount > 0) currentCloneBaseRef.current = Math.floor(hoveredTile / originalCount);
+      const child = parent.children[hoveredTile] as HTMLElement | undefined;
+      const delta = child ? revealDelta(parent, child, railInset) : 0;
+      if (Math.abs(delta) >= 1) parent.scrollBy({ left: delta, behavior: 'smooth' });
+      previousFocusedIndexRef.current = focusedIndex;
+      return;
+    }
     if (isActive && scrollRef.current) {
       const parent = scrollRef.current;
       let targetIndex = internalSelectedIndex;
@@ -126,7 +145,7 @@ export function HorizontalRail({
 
       previousFocusedIndexRef.current = focusedIndex;
     }
-  }, [focusedIndex, internalSelectedIndex, isActive, loop, originalCount]);
+  }, [focusedIndex, internalSelectedIndex, isActive, loop, originalCount, railInset]);
 
   if (games.length === 0) return null;
 
@@ -196,6 +215,7 @@ export function HorizontalRail({
               key={`${game.id}-${idx}`}
               onClick={() => onSelectGame(game)}
               onMouseEnter={() => {
+                hoveredTileRef.current = idx;
                 if (loop) {
                   // Normalize back to original index
                   onFocusChange(idx % originalCount);

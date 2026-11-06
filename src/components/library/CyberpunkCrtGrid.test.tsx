@@ -7,6 +7,18 @@ vi.mock('../ImageSlider', () => ({
   ImageSlider: ({ alt }: { alt: string }) => <div data-testid="image-slider">{alt}</div>,
 }));
 
+/** Rails span 0-1000px; every game card spans 900-1200px. */
+function mockCardsOffToTheRight() {
+  const original = HTMLElement.prototype.getBoundingClientRect;
+  HTMLElement.prototype.getBoundingClientRect = function (this: HTMLElement) {
+    const [left, width] = this.dataset.gameId ? [900, 300] : [0, 1000];
+    return { left, right: left + width, width, top: 0, bottom: 100, height: 100, x: left, y: 0, toJSON: () => ({}) } as DOMRect;
+  };
+  return () => {
+    HTMLElement.prototype.getBoundingClientRect = original;
+  };
+}
+
 describe('CyberpunkCrtGrid', () => {
   it('renders the CRT terminal presenter with the requested content rails', () => {
     render(
@@ -148,9 +160,10 @@ describe('CyberpunkCrtGrid', () => {
   });
 
   it('keeps focus scrolling inside the active rail rather than using browser-wide scrollIntoView', () => {
-    const scrollTo = vi.fn();
+    const scrollBy = vi.fn();
     const scrollIntoView = vi.fn();
-    Object.defineProperty(HTMLElement.prototype, 'scrollTo', { configurable: true, value: scrollTo });
+    const restoreRect = mockCardsOffToTheRight();
+    Object.defineProperty(HTMLElement.prototype, 'scrollBy', { configurable: true, value: scrollBy });
     Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', { configurable: true, value: scrollIntoView });
 
     const { rerender } = render(
@@ -181,8 +194,39 @@ describe('CyberpunkCrtGrid', () => {
       />,
     );
 
-    expect(scrollTo).toHaveBeenCalled();
+    expect(scrollBy).toHaveBeenCalledWith({ left: 550, behavior: 'smooth' });
     expect(scrollIntoView).not.toHaveBeenCalled();
+    restoreRect();
+  });
+
+  it('only nudges a card the mouse is over instead of centring it, so the rail cannot run away', () => {
+    const scrollBy = vi.fn();
+    const restoreRect = mockCardsOffToTheRight();
+    Object.defineProperty(HTMLElement.prototype, 'scrollBy', { configurable: true, value: scrollBy });
+    const originalMatches = HTMLElement.prototype.matches;
+    HTMLElement.prototype.matches = function (this: HTMLElement, selector: string) {
+      if (selector === ':hover') return this.dataset.gameId === mockGames[1].id.toString();
+      return originalMatches.call(this, selector);
+    };
+
+    const props = {
+      focusedRailId: 'recent',
+      games: [],
+      recentGames: [mockGames[0], mockGames[1]],
+      favoriteGames: [],
+      classicGames: [],
+      isFavorite: () => false,
+      onSelectGame: vi.fn(),
+      toggleFavorite: vi.fn(),
+    };
+    const { rerender } = render(<CyberpunkCrtGrid {...props} focusedGameId={mockGames[0].id.toString()} />);
+    scrollBy.mockClear();
+    rerender(<CyberpunkCrtGrid {...props} focusedGameId={mockGames[1].id.toString()} />);
+
+    // Card spans 900-1200 in a 0-1000 rail: reveal by 200, not centre by 550.
+    expect(scrollBy).toHaveBeenCalledWith({ left: 200, behavior: 'smooth' });
+    HTMLElement.prototype.matches = originalMatches;
+    restoreRect();
   });
 
   it('omits RECENT, FAVOURITE, and CLASSICS rails when a search query is active so search results display at the top', () => {
