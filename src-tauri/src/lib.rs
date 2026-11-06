@@ -138,6 +138,8 @@ pub fn run() {
             commands::db::get_genres,
             commands::db::get_sub_genres,
             commands::db::get_game_extras,
+            commands::settings::load_settings,
+            commands::settings::save_settings,
             commands::setup::open_mdb_file_dialog,
             commands::setup::get_database_bootstrap_status,
             commands::setup::import_database_from_mdb,

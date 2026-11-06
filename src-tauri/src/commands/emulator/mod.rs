@@ -25,6 +25,24 @@ use metadata::*;
 use platform::*;
 
 pub(super) use binary::resolve_emulator_binary;
+use super::settings::ensure_allowed_path;
+
+/// Every path a launch request asks the backend to read or execute must come from the
+/// folders and files configured in Settings (see `commands::settings`).
+fn ensure_launch_paths_allowed(request: &LaunchRequest) -> Result<(), String> {
+    ensure_allowed_path(&request.emulator_path, "Emulator")?;
+    ensure_allowed_path(&request.rom_path, "Game")?;
+    for (path, what) in [
+        (request.core_path.as_deref(), "RetroArch core"),
+        (request.boot_disk_path.as_deref(), "Boot disk"),
+        (request.c64.as_ref().and_then(|c64| c64.retroarch_config.as_deref()), "RetroArch config"),
+    ] {
+        if let Some(path) = path.filter(|path| !path.trim().is_empty()) {
+            ensure_allowed_path(path, what)?;
+        }
+    }
+    Ok(())
+}
 
 use crate::models::{EmulatorProfileTestRequest, LaunchRequest, LaunchResult};
 
@@ -85,6 +103,10 @@ fn is_retroarch_profile(profile_id: &str) -> bool {
 pub async fn test_emulator_profile(
     request: EmulatorProfileTestRequest,
 ) -> Result<LaunchResult, String> {
+    ensure_allowed_path(&request.executable_path, "Emulator")?;
+    if let Some(core) = request.core_path.as_deref().filter(|core| !core.trim().is_empty()) {
+        ensure_allowed_path(core, "RetroArch core")?;
+    }
     let platform_id = request.platform_id.as_str();
     let emulator_profile_id = request.emulator_profile_id.as_str();
     let platform = Some(platform_id);
@@ -203,6 +225,7 @@ fn resolve_existing_rom_path(rom_path_str: &str) -> PathBuf {
 
 #[tauri::command]
 pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, String> {
+    ensure_launch_paths_allowed(&request)?;
     // Archive extraction, launcher-file writes and process spawning are blocking work.
     crate::database::run_blocking("Emulator launch", move || launch_emulator_blocking(request)).await
 }

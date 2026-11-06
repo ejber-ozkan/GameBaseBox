@@ -85,6 +85,7 @@ pub async fn open_retroarch_core_file_dialog(app: tauri::AppHandle) -> Option<St
 
 #[tauri::command]
 pub fn allow_asset_path(app: tauri::AppHandle, path: String) -> Result<(), String> {
+    super::settings::ensure_allowed_path(&path, "Media")?;
     let normalized = path.replace('\\', "/");
     let asset_path = std::path::Path::new(&normalized);
     let parent = asset_path
@@ -254,6 +255,7 @@ pub async fn open_path_with_system_default(
     app: tauri::AppHandle,
     path: String,
 ) -> Result<(), String> {
+    super::settings::ensure_allowed_path(&path, "File")?;
     // open_path_with_system_default is used by ExtrasDetail and useSteamDetailViewModel
     // to open a local extras file (PDF, image, video, audio) with the OS default app.
     // The path is always constructed from settings.extrasPath + extra.path from the DB.

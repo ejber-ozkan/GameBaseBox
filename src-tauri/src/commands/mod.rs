@@ -4,6 +4,7 @@ pub mod emulator;
 pub mod files;
 mod launch_archive;
 pub mod platforms;
+pub mod settings;
 pub mod setup;
 pub mod system;
 pub mod video;

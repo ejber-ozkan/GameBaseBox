@@ -319,6 +319,7 @@ pub async fn download_media_asset(
 /// `tauri::ipc::Response` reaches the frontend as an `ArrayBuffer`.
 #[tauri::command]
 pub async fn read_file_bytes(path: String) -> Result<tauri::ipc::Response, String> {
+    super::settings::ensure_allowed_path(&path, "File")?;
     crate::database::run_blocking("File read", move || load_file_bytes(&path))
         .await
         .map(tauri::ipc::Response::new)

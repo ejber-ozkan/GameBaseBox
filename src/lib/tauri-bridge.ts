@@ -1156,3 +1156,18 @@ export async function listenMediaDownloadProgress(
   const { listen } = await import('@tauri-apps/api/event');
   return listen<MediaDownloadProgress>('media-asset-download-progress', (event) => listener(event.payload));
 }
+
+/**
+ * Settings persisted by the backend (settings.json in the app config folder). Returns
+ * null outside the desktop app or before anything was saved.
+ */
+export async function loadBackendSettings(): Promise<Record<string, unknown> | null> {
+  if (!isTauri()) return null;
+  return invoke<Record<string, unknown> | null>('load_settings');
+}
+
+/** Saves settings to the backend, which also derives its allowed file locations from them. */
+export async function saveBackendSettings(settings: Record<string, unknown>): Promise<void> {
+  if (!isTauri()) return;
+  await invoke('save_settings', { settings });
+}

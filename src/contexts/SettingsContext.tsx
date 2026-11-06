@@ -1,5 +1,6 @@
 "use client";
 
+import { loadPersistedSettings, persistSettings } from '../lib/settings-store';
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { getSupportedPlatforms, clearMediaCache } from '../lib/tauri-bridge';
 import {
@@ -268,16 +269,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   // Initialize and load
   useEffect(() => {
     async function initializeSettings() {
-      // 1. Load basic settings from localStorage
-      let localValues: Partial<Settings> = {};
-      try {
-        const saved = localStorage.getItem('gb64_settings');
-        if (saved) {
-          localValues = JSON.parse(saved);
-        }
-      } catch (e) {
-        console.error('Failed to load settings from localStorage', e);
-      }
+      // 1. Load saved settings (backend in the desktop app, localStorage mirror otherwise)
+      const localValues = (await loadPersistedSettings()) as Partial<Settings>;
 
       // 2. Sanitize localStorage (remove legacy scraper/secure fields)
       const sanitizedLocal = { ...localValues };
@@ -348,7 +341,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           platformSettings,
         };
         LEGACY_PATH_FIELDS.forEach((field) => delete normalizedLocal[field]);
-        localStorage.setItem('gb64_settings', JSON.stringify(normalizedLocal));
+        persistSettings(normalizedLocal);
       }
 
       // 5. Set final combined state
@@ -479,15 +472,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         }
       }
       
-      // Persist to localStorage (JSON)
+      // Persist (backend + localStorage mirror)
       if (typeof window !== 'undefined') {
-        try {
-          const toSave = { ...updated };
-          LEGACY_PATH_FIELDS.forEach(field => delete toSave[field]);
-          localStorage.setItem('gb64_settings', JSON.stringify(toSave));
-        } catch (e) {
-          console.error('Failed to save settings to localStorage', e);
-        }
+        const toSave = { ...updated };
+        LEGACY_PATH_FIELDS.forEach(field => delete toSave[field]);
+        persistSettings(toSave);
       }
       return updated;
     });
@@ -606,7 +595,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       
       const updated = { ...prev, recentlyPlayedIds: newList, platformSettings };
       if (typeof window !== 'undefined') {
-        localStorage.setItem('gb64_settings', JSON.stringify(updated));
+        persistSettings(updated);
       }
       return updated;
     });

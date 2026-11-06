@@ -1670,3 +1670,35 @@ async fn test_launch_emulator_supports_app_bundle_with_companion_bin() {
     assert!(result.success);
     assert!(result.message.to_lowercase().contains("x64sc"));
 }
+
+#[tokio::test(flavor = "current_thread")]
+async fn test_launch_emulator_rejects_paths_outside_configured_settings() {
+    let dir = tempfile::tempdir().unwrap();
+    let emulator = dir.path().join("emu").join("hatari");
+    let games = dir.path().join("games");
+    let outside = dir.path().join("elsewhere");
+    for folder in [emulator.parent().unwrap(), games.as_path(), outside.as_path()] {
+        std::fs::create_dir_all(folder).unwrap();
+    }
+    std::fs::write(&emulator, b"#!/bin/sh\n").unwrap();
+    std::fs::write(games.join("Game.st"), b"rom").unwrap();
+    std::fs::write(outside.join("Other.st"), b"rom").unwrap();
+
+    let _allowed = crate::commands::settings::AllowedPathsGuard::set(&serde_json::json!({
+        "platformSettings": { "atarist": {
+            "folders": { "gamesPath": games.to_string_lossy() },
+            "emulator": { "executablePaths": { "hatari-atarist": emulator.to_string_lossy() } }
+        } }
+    }));
+    let request = |rom: PathBuf| LaunchRequest {
+        platform_id: Some("atarist".into()),
+        emulator_profile_id: Some("hatari-atarist".into()),
+        emulator_path: emulator.to_string_lossy().to_string(),
+        rom_path: rom.to_string_lossy().to_string(),
+        ..Default::default()
+    };
+
+    let error = launch_emulator(request(outside.join("Other.st"))).await.unwrap_err();
+    assert!(error.contains("outside the folders configured in Settings"), "{error}");
+    assert!(plan_launch(&request(games.join("Game.st"))).is_ok());
+}
