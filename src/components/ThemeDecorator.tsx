@@ -11,27 +11,25 @@ export function ThemeDecorator({ children }: ThemeDecoratorProps) {
   const { theme } = useTheme();
   const { scanlines, outerBorder, ambientGlow, tvNoise } = theme.effects;
 
-  // Render C64 outer border if active
-  const content = outerBorder ? (
+  // Keep the same element tree for every theme: swapping wrapper elements when the
+  // outer border toggles would remount the whole app (and replay the launch splash).
+  const content = (
     <div
-      className="flex-1 min-h-0 w-screen flex flex-col bg-theme-secondary p-4 sm:p-6 md:p-8 box-border transition-colors duration-250 relative"
-      data-testid="theme-decorator-outer-border"
+      className={
+        outerBorder
+          ? 'flex-1 min-h-0 w-screen flex flex-col bg-theme-secondary p-4 sm:p-6 md:p-8 box-border transition-colors duration-250 relative'
+          : 'flex-1 min-h-0 w-screen flex flex-col bg-theme-background transition-colors duration-250 relative'
+      }
+      data-testid={outerBorder ? 'theme-decorator-outer-border' : 'theme-decorator-normal-container'}
     >
       <div
-        className="flex-1 min-h-0 flex flex-col overflow-hidden relative isolate"
-        style={{
+        className={outerBorder ? 'flex-1 min-h-0 flex flex-col overflow-hidden relative isolate' : 'flex-1 min-h-0 flex flex-col relative'}
+        style={outerBorder ? {
           backgroundColor: theme.id === 'c64-edition' ? 'transparent' : 'var(--theme-background)'
-        }}
+        } : undefined}
       >
         {children}
       </div>
-    </div>
-  ) : (
-    <div
-      className="flex-1 min-h-0 w-screen flex flex-col bg-theme-background transition-colors duration-250 relative"
-      data-testid="theme-decorator-normal-container"
-    >
-      {children}
     </div>
   );
 

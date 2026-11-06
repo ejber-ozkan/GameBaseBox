@@ -89,4 +89,34 @@ describe('ThemeDecorator', () => {
     expect(screen.queryByTestId('theme-decorator-noise')).toBeNull();
     expect(screen.queryByTestId('theme-decorator-normal-container')).toBeNull();
   });
+
+  test('keeps children mounted across every theme switch', async () => {
+    let mounts = 0;
+    function MountCounter() {
+      React.useEffect(() => {
+        mounts += 1;
+      }, []);
+      return null;
+    }
+
+    render(
+      <SettingsProvider>
+        <ThemeProvider>
+          <ThemeDecorator>
+            <MountCounter />
+            <ThemeSwitcherComponent />
+          </ThemeDecorator>
+        </ThemeProvider>
+      </SettingsProvider>
+    );
+    expect(mounts).toBe(1);
+
+    for (const id of ['btn-cyberpunk', 'btn-c64', 'btn-arcade', 'btn-c64', 'btn-cyberpunk']) {
+      fireEvent.click(screen.getByTestId(id));
+    }
+    await waitFor(() => {
+      expect(screen.queryByTestId('theme-decorator-scanlines')).not.toBeNull();
+    });
+    expect(mounts).toBe(1);
+  });
 });
