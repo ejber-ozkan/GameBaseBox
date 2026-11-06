@@ -6,7 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ## [0.7.3] - Candidate
 
+### Added
+- Reimport an imported platform's MDB from its Platform Paths settings page, behind a warning overlay; the reimport clears that platform's rows from every imported table, including tables the new MDB lacks.
+
 ### Fixed
+- Mouse hover no longer chains rail scrolling into a runaway; hovered cards are only nudged into view.
+- Switching to or from the C64 Edition theme no longer remounts the app and replays the launch splash; the splash plays once per app session.
 - Game details page fits the window in every theme; imports no longer freeze the window and can be cancelled.
 - Random game selection no longer mutates rail state or loads the whole list prefix.
 

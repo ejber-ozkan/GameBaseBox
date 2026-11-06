@@ -1,8 +1,18 @@
 # GBBox 0.7.3
 
-This maintenance release makes startup, browsing and imports faster and more
-responsive, fixes the game details page overflowing the window, and tightens which
-files the app will read or launch.
+This release adds reimporting a platform's MDB from Settings, makes startup, browsing
+and imports faster and more responsive, fixes several layout and navigation issues,
+and tightens which files the app will read or launch.
+
+## New
+
+- **Reimport a platform's MDB.** Each imported platform's **Platform Paths** page in
+  Settings has a **Library Database** section with **Reimport MDB…**. After a warning,
+  it opens that platform's import page. The import replaces only that platform's games,
+  extras and lookup data; folders, emulator settings and per-game overrides are kept.
+  If the import fails or you cancel it, or you choose **Back to Library**, the current
+  library stays as it was. Favourites and recently played are kept, but may point to
+  different games if the new MDB numbers them differently.
 
 ## Fixes
 
@@ -10,6 +20,13 @@ files the app will read or launch.
   screenshot could sit below the fold and the whole page had to be scrolled.
 - Database imports no longer freeze the window, and **Cancel** now works while an
   import is running.
+- Moving the mouse along a rail no longer makes it race off sideways. Hovering a
+  card now only nudges it into view; keyboard and gamepad navigation still centre
+  the focused card. This applies to the fullscreen rails and the windowed C64,
+  Cyberpunk and Arcade Void rails.
+- Switching to or from the C64 Edition theme no longer reloads the app and replays
+  the intro screen; every theme switch is now seamless. The intro screen plays once
+  per app start.
 - Picking a random game no longer disturbs the library rails, and in list view it
   no longer loads the whole library to reach a game far down the list.
 - Command-line dev scripts no longer break on messages containing parentheses.
