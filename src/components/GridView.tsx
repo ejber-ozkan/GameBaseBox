@@ -48,7 +48,7 @@ export function GridView({ games, onSelectGame, focusedIndex = -1, onFocusChange
   }, [onEndReached]);
 
   return (
-    <div ref={containerRef} className="grid grid-cols-2 gap-4 rounded-[var(--theme-radius-xl)] bg-[var(--theme-background)] p-4 md:grid-cols-4 lg:grid-cols-6">
+    <div ref={containerRef} className="grid grid-cols-2 gap-4 rounded-[var(--theme-radius-xl)] bg-[color-mix(in_srgb,var(--theme-background)_55%,transparent)] p-4 md:grid-cols-4 lg:grid-cols-6">
       {games.map((game, index) => {
         const isFocused = focusedIndex === index;
         return (

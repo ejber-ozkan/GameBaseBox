@@ -4,8 +4,15 @@ export type LibraryViewMode = 'grid' | 'list';
 
 const BACKGROUND_BASE_PATH = '/docs/images/backgrounds';
 
-// Original layer 0.13, raised 20% and then a further 10% for visibility.
-export const LIBRARY_BACKGROUND_OPACITY = 0.1716;
+// Original layer 0.13, raised over time for visibility (0.156, then +10 points).
+export const LIBRARY_BACKGROUND_OPACITY = 0.26;
+
+/**
+ * Windowed views shade the background towards the theme colour so text stays readable.
+ * Percentages of theme background at the top and bottom of the window; the bottom used
+ * to reach 100%, which hid the image across the lower half of every grid.
+ */
+export const LIBRARY_BACKGROUND_SHADE = { top: 35, bottom: 70 } as const;
 
 const PLATFORM_BACKGROUND_POOLS: Partial<Record<PlatformId, readonly string[]>> = {
   c64: [

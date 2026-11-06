@@ -27,7 +27,9 @@ and tightens which files the app will read or launch.
 - Switching to or from the C64 Edition theme no longer reloads the app and replays
   the intro screen; every theme switch is now seamless. The intro screen plays once
   per app start.
-- Platform background images behind the library are 10% more visible in every theme.
+- Platform background images behind the library are clearly visible in every theme.
+  The image layer is stronger, the windowed shading no longer covers the lower half of
+  the screen, and the Arcade Void game grid no longer sits on a solid panel.
 - Picking a random game no longer disturbs the library rails, and in list view it
   no longer loads the whole library to reach a game far down the list.
 - Command-line dev scripts no longer break on messages containing parentheses.

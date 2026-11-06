@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import {
   LIBRARY_BACKGROUND_OPACITY,
+  LIBRARY_BACKGROUND_SHADE,
   getLibraryBackgroundForPlatform,
   getLibraryBackgroundPool,
   getLibraryBackgroundPoolForPlatform,
@@ -65,7 +66,9 @@ describe('library-backgrounds', () => {
     expect(resolveLibraryBackground('bbcmicro', 'list', 1)).toBe('/docs/images/backgrounds/Acorn_BBC_Micro_1.webp');
   });
 
-  test('sets the library background visibility 20% and then another 10% above the original layer', () => {
-    expect(LIBRARY_BACKGROUND_OPACITY).toBeCloseTo(0.13 * 1.2 * 1.1, 4);
+  test('keeps the library background visible: opacity 0.26 and a shade that never fully covers it', () => {
+    expect(LIBRARY_BACKGROUND_OPACITY).toBeCloseTo(0.26, 4);
+    expect(LIBRARY_BACKGROUND_SHADE.top).toBeLessThan(LIBRARY_BACKGROUND_SHADE.bottom);
+    expect(LIBRARY_BACKGROUND_SHADE.bottom).toBeLessThan(100);
   });
 });

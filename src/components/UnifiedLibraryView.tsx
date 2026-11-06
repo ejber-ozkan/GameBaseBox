@@ -39,7 +39,7 @@ import { CyberpunkCrtGrid } from './library/CyberpunkCrtGrid';
 
 // Unified Traversal Hook
 import { useUnifiedLibraryNavigation } from '../hooks/useUnifiedLibraryNavigation';
-import { LIBRARY_BACKGROUND_OPACITY, resolveLibraryBackground } from '../lib/library-backgrounds';
+import { LIBRARY_BACKGROUND_OPACITY, LIBRARY_BACKGROUND_SHADE, resolveLibraryBackground } from '../lib/library-backgrounds';
 
 /** Rows loaded past a random game so it is not the last row of the list. */
 const RANDOM_FOCUS_PAGE = 120;
@@ -846,7 +846,7 @@ export function UnifiedLibraryView({
         className="pointer-events-none fixed inset-0 z-0"
         style={{
           background:
-            'linear-gradient(180deg, color-mix(in srgb, var(--theme-background) 58%, transparent), var(--theme-background))',
+            `linear-gradient(180deg, color-mix(in srgb, var(--theme-background) ${LIBRARY_BACKGROUND_SHADE.top}%, transparent), color-mix(in srgb, var(--theme-background) ${LIBRARY_BACKGROUND_SHADE.bottom}%, transparent))`,
         }}
       />
       <LibraryHeader
