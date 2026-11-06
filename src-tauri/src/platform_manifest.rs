@@ -1,13 +1,14 @@
 use crate::models::{PlatformCapabilities, PlatformProfile};
 use serde::Deserialize;
+use std::sync::LazyLock;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 struct PlatformManifest {
     platforms: Vec<ManifestPlatform>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 struct ManifestPlatform {
     id: String,
@@ -23,7 +24,7 @@ struct ManifestPlatform {
     emulator_profiles: Vec<ManifestEmulatorProfile>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 struct ManifestMediaCapabilities {
     screenshots: bool,
     photos: bool,
@@ -32,15 +33,74 @@ struct ManifestMediaCapabilities {
     videos: bool,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 struct ManifestEmulatorProfile {
     id: String,
+    display_name: String,
+    emulator_type: String,
     default: Option<bool>,
 }
 
-fn manifest() -> Result<PlatformManifest, String> {
+/// Parsed once per process; the manifest is compiled into the binary.
+static MANIFEST: LazyLock<Result<PlatformManifest, String>> = LazyLock::new(|| {
     serde_json::from_str(include_str!("../../platform-manifest.json"))
         .map_err(|error| format!("Invalid platform manifest: {error}"))
+});
+
+fn manifest() -> Result<PlatformManifest, String> {
+    MANIFEST.clone()
+}
+
+fn manifest_ref() -> Option<&'static PlatformManifest> {
+    MANIFEST.as_ref().ok()
+}
+
+fn platform_entry(platform_id: &str) -> Option<&'static ManifestPlatform> {
+    manifest_ref()?.platforms.iter().find(|platform| platform.id == platform_id)
+}
+
+/// Display name from the manifest, e.g. "Commodore Amiga".
+pub fn display_name(platform_id: &str) -> Option<&'static str> {
+    platform_entry(platform_id).map(|platform| platform.display_name.as_str())
+}
+
+/// Whether `profile_id` is one of the platform's emulator profiles.
+pub fn supports_emulator_profile(platform_id: &str, profile_id: &str) -> bool {
+    platform_entry(platform_id)
+        .is_some_and(|platform| platform.emulator_profiles.iter().any(|profile| profile.id == profile_id))
+}
+
+/// Short emulator name for messages: "RetroArch" and "VICE" for those families,
+/// otherwise the profile's display name (e.g. "Altirra", "WinUAE / UAE").
+pub fn emulator_profile_short_name(profile_id: &str) -> Option<&'static str> {
+    manifest_ref()?
+        .platforms
+        .iter()
+        .flat_map(|platform| platform.emulator_profiles.iter())
+        .find(|profile| profile.id == profile_id)
+        .map(|profile| match profile.emulator_type.as_str() {
+            "retroarch" => "RetroArch",
+            "vice" => "VICE",
+            _ => profile.display_name.as_str(),
+        })
+}
+
+/// File extensions (lowercase, without the dot) to take out of a ZIP when launching:
+/// the platform's launch extensions minus containers and playlists, which are never
+/// handed to an emulator from inside an archive.
+pub fn archive_member_extensions(platform_id: &str) -> Vec<&'static str> {
+    const CONTAINERS: &[&str] = &["zip", "7z", "m3u", "vfl"];
+    platform_entry(platform_id)
+        .map(|platform| {
+            platform
+                .launch_extensions
+                .iter()
+                .map(|extension| extension.trim_start_matches('.'))
+                .filter(|extension| !CONTAINERS.contains(extension))
+                .collect()
+        })
+        .unwrap_or_default()
 }
 
 fn normalized_key(value: &str) -> String {
