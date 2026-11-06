@@ -1,7 +1,4 @@
-import {
-  getManifestPlatformProfile,
-  MANIFEST_PLATFORM_PROFILES,
-} from './platform-manifest';
+import { MANIFEST_PLATFORM_PROFILES } from './platform-manifest';
 import type {
   PlatformEmulatorProfile,
   PlatformFolderSettings,
@@ -11,11 +8,6 @@ import type {
   PlatformProfile,
   PlatformSettings,
 } from '../types/platform';
-
-export const ATARI800_REFERENCE_MDB_PATH =
-  getManifestPlatformProfile('atari800').referenceMdbPath ?? '';
-export const ZXSPECTRUM_REFERENCE_MDB_PATH =
-  getManifestPlatformProfile('zxspectrum').referenceMdbPath ?? '';
 
 export const PLATFORM_EMULATOR_PROFILES: Record<string, PlatformEmulatorProfile> = Object.fromEntries(
   MANIFEST_PLATFORM_PROFILES.flatMap((platform) => platform.emulatorProfiles.map((profile) => [

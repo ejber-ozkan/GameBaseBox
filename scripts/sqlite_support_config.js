@@ -33,74 +33,22 @@ const requiredPlatformColumns = ["platform_id", "source_game_id"];
 
 const platformManifest = require("../platform-manifest.json");
 
-// Retained as an explicit migration reference until the next release removes it.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const legacyPlatformImportConfigs = {
-  c64: {
-    platformId: "c64",
-    displayName: "Commodore 64",
-    status: "available",
-    defaultImported: true,
-    sourceMdbName: "GBC_v19.mdb",
-    requiredFolders: ["gamesPath", "musicPath", "photosPath", "screenshotsPath", "extrasPath"],
-    musicExtensions: [".sid"],
-    launchExtensions: [".d64", ".t64", ".tap", ".prg", ".crt", ".g64", ".zip", ".7z", ".m3u", ".vfl"],
-  },
-  atari800: {
-    platformId: "atari800",
-    displayName: "Atari 800",
-    status: "available",
-    defaultImported: false,
-    sourceMdbName: "Atari 800 v12.mdb",
-    referenceMdbPath: "E:\\Backups\\RETRO-BACKUPS\\Atari8bit\\Atari 800\\Atari 800 v12.mdb",
-    requiredFolders: ["gamesPath", "musicPath", "photosPath", "screenshotsPath"],
-    musicExtensions: [".sap"],
-    launchExtensions: [".atr", ".xfd", ".atx", ".cas", ".car", ".rom", ".bin", ".xex", ".com", ".m3u", ".zip", ".7z"],
-  },
-  atari2600: {
-    platformId: "atari2600",
-    displayName: "Atari 2600",
-    status: "available",
-    defaultImported: false,
-    sourceMdbName: "Atari 2600.mdb",
-    requiredFolders: ["gamesPath", "screenshotsPath", "extrasPath"],
-    musicExtensions: [],
-    launchExtensions: [".a26", ".bin", ".rom", ".zip", ".7z"],
-  },
-  zxspectrum: {
-    platformId: "zxspectrum",
-    displayName: "ZX Spectrum",
-    status: "available",
-    defaultImported: false,
-    sourceMdbName: "Sinclair ZX Spectrum v6.mdb",
-    referenceMdbPath: "E:\\Backups\\RETRO-BACKUPS\\ZXSpectrum\\Sinclair ZX Spectrum v6\\Sinclair ZX Spectrum v6.mdb",
-    aliases: ["GameBaseZX", "SpeccyMania"],
-    requiredFolders: ["extrasPath", "gamesPath", "screenshotsPath", "photosPath", "musicPath"],
-    musicExtensions: [".ay"],
-    launchExtensions: [".tzx", ".tap", ".z80", ".sna", ".szx", ".trd", ".dsk", ".zip", ".7z"],
-  },
-  atarist: {
-    platformId: "atarist",
-    displayName: "Atari ST",
-    status: "available",
-    defaultImported: false,
-    sourceMdbName: "Atari ST.mdb",
-    requiredFolders: ["extrasPath", "gamesPath", "screenshotsPath", "musicPath"],
-    musicExtensions: [],
-    launchExtensions: [".st", ".msa", ".stx", ".dim", ".ipf", ".m3u", ".zip", ".7z"],
-  },
-  vic20: {
-    platformId: "vic20",
-    displayName: "Commodore VIC-20",
-    status: "available",
-    defaultImported: false,
-    sourceMdbName: "Vic20_v03.mdb",
-    aliases: ["VIC-20", "VIC 20", "Commodore VIC-20", "Commodore VIC 20", "GameBase VIC-20"],
-    requiredFolders: ["extrasPath", "gamesPath", "screenshotsPath", "musicPath"],
-    musicExtensions: [],
-    launchExtensions: [".d64", ".t64", ".tap", ".prg", ".crt", ".a0", ".20", ".40", ".60", ".zip", ".7z"],
-  },
-};
+// Machine-specific MDB locations live in platform-paths.local.json (git-ignored), never in the manifest.
+const localPathsFile = path.join(__dirname, "..", "platform-paths.local.json");
+
+function loadLocalPaths(file = localPathsFile) {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8")).referenceMdbPaths ?? {};
+  } catch (error) {
+    if (error.code === "ENOENT") return {};
+    throw new Error(`Could not read ${file}: ${error.message}`);
+  }
+}
+
+function resolveReferenceMdbPath(platformId, localPaths = loadLocalPaths()) {
+  const config = getPlatformImportConfig(platformId);
+  return localPaths[config.platformId] || null;
+}
 
 const folderKeyByType = {
   games: "gamesPath",
@@ -165,4 +113,6 @@ module.exports = {
   requiredPlatformColumns,
   platformImportConfigs,
   getPlatformImportConfig,
+  loadLocalPaths,
+  resolveReferenceMdbPath,
 };

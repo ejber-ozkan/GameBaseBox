@@ -24,8 +24,8 @@ describe('buildPlatformAssetPath', () => {
         ...createDefaultPlatformSettingsMap().atarist,
         folders: {
           ...createDefaultPlatformSettingsMap().atarist.folders,
-          gamesPath: 'E:\\Backups\\RETRO-BACKUPS\\AtariST\\Games',
-          extrasPath: 'E:\\Backups\\RETRO-BACKUPS\\AtariST\\Extras',
+          gamesPath: 'D:\\GameBase\\AtariST\\Games',
+          extrasPath: 'D:\\GameBase\\AtariST\\Extras',
           screenshotsPath: '',
           musicPath: '',
         },
@@ -66,7 +66,7 @@ describe('buildPlatformAssetPath', () => {
       'extras',
       'HardDisk\\AFTERBUR.ZIP',
     );
-    expect(fullPath).toBe('E:/Backups/RETRO-BACKUPS/AtariST/Extras/HardDisk/AFTERBUR.ZIP');
+    expect(fullPath).toBe('D:/GameBase/AtariST/Extras/HardDisk/AFTERBUR.ZIP');
   });
 
   it('strips surrounding quotes and whitespace from paths copied from Windows Explorer', () => {
@@ -79,7 +79,7 @@ describe('buildPlatformAssetPath', () => {
           ...baseSettings.platformSettings.atarist,
           folders: {
             ...baseSettings.platformSettings.atarist.folders,
-            extrasPath: '  "E:\\Backups\\RETRO-BACKUPS\\AtariST\\Extras"  ',
+            extrasPath: '  "D:\\GameBase\\AtariST\\Extras"  ',
           },
         },
       },
@@ -90,7 +90,7 @@ describe('buildPlatformAssetPath', () => {
       'extras',
       'HardDisk\\AFTERBUR.ZIP',
     );
-    expect(fullPath).toBe('E:/Backups/RETRO-BACKUPS/AtariST/Extras/HardDisk/AFTERBUR.ZIP');
+    expect(fullPath).toBe('D:/GameBase/AtariST/Extras/HardDisk/AFTERBUR.ZIP');
   });
 
   it('falls back to Games/Extras when extrasPath is blank', () => {
@@ -114,6 +114,6 @@ describe('buildPlatformAssetPath', () => {
       'extras',
       'STX\\Afterburner.zip',
     );
-    expect(fullPath).toBe('E:/Backups/RETRO-BACKUPS/AtariST/Extras/STX/Afterburner.zip');
+    expect(fullPath).toBe('D:/GameBase/AtariST/Extras/STX/Afterburner.zip');
   });
 });

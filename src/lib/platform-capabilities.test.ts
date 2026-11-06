@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest';
 import {
-  ATARI800_REFERENCE_MDB_PATH,
   EMBEDDED_EMULATION_PLATFORM_IDS,
   PLATFORM_EMULATOR_PROFILES,
   PLATFORM_PROFILES,
@@ -47,7 +46,6 @@ describe('platform-capabilities', () => {
       expect.arrayContaining(['.atr', '.cas', '.xex', '.bin', '.m3u', '.zip']),
     );
     expect(PLATFORM_PROFILES.c64.launchExtensions).not.toEqual(expect.arrayContaining(['.cas', '.xex']));
-    expect(ATARI800_REFERENCE_MDB_PATH).toContain('Atari 800 v12.mdb');
   });
 
   test('defines Atari 2600 as an importable RetroArch platform', () => {

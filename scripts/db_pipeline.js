@@ -3,7 +3,7 @@ const fs = require("fs");
 const readline = require("readline");
 const { spawnSync } = require("child_process");
 
-const { getPlatformImportConfig } = require("./sqlite_support_config");
+const { getPlatformImportConfig, resolveReferenceMdbPath } = require("./sqlite_support_config");
 
 function hasFlag(flag, argv = process.argv) {
   return argv.includes(flag);
@@ -37,7 +37,7 @@ function resolvePipelineConfig({
     platformConfig,
     mdbPath: resolvePathValue(
       getArgValue("--mdb", argv) || env.GB64_MDB_PATH || env.GAMEBASE_MDB_PATH,
-      platformConfig.referenceMdbPath || path.join(projectRoot, platformConfig.sourceMdbName || "GBC_v19.mdb")
+      resolveReferenceMdbPath(platformId) || path.join(projectRoot, platformConfig.sourceMdbName || "GBC_v19.mdb")
     ),
     exportDir: resolvePathValue(
       getArgValue("--export-dir", argv) || env.GB64_EXPORT_DIR || env.GAMEBASE_EXPORT_DIR,

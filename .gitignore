@@ -117,3 +117,6 @@ stitch_import/
 /.graphifyignore
 /GB64_Modern_Frontend_Requirements.md
 /docs/ios-feasibility-plan.md
+
+# Machine-specific paths (see scripts/sqlite_support_config.js)
+platform-paths.local.json

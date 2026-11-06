@@ -1,8 +1,21 @@
 import { describe, expect, test } from 'vitest';
-import { getPlatformImportConfig, performanceIndexes, sharedSql } from './sqlite_support_config.js';
+import { getPlatformImportConfig, performanceIndexes, resolveReferenceMdbPath, sharedSql } from './sqlite_support_config.js';
+import platformManifest from '../platform-manifest.json';
 import sharedIndexes from '../src-tauri/sql/query_indexes.json';
 
 describe('sqlite_support_config', () => {
+  test('keeps machine-specific MDB paths out of the manifest', () => {
+    for (const platform of platformManifest.platforms) {
+      expect(platform).not.toHaveProperty('referenceMdbPath');
+    }
+  });
+
+  test('resolves reference MDB paths from local overrides by canonical platform id', () => {
+    const local = { zxspectrum: 'X:\\mdb\\zx.mdb' };
+    expect(resolveReferenceMdbPath('GameBaseZX', local)).toBe('X:\\mdb\\zx.mdb');
+    expect(resolveReferenceMdbPath('atari800', local)).toBeNull();
+  });
+
   test('has empty requiredFolders array for Atari 800 consistent with optional folders setup flow', () => {
     expect(getPlatformImportConfig('atari800').requiredFolders).toEqual([]);
   });
@@ -12,9 +25,7 @@ describe('sqlite_support_config', () => {
 
     expect(config.displayName).toBe('ZX Spectrum');
     expect(config.sourceMdbName).toBe('Sinclair ZX Spectrum v6.mdb');
-    expect(config.referenceMdbPath).toBe(
-      'E:\\Backups\\RETRO-BACKUPS\\ZXSpectrum\\Sinclair ZX Spectrum v6\\Sinclair ZX Spectrum v6.mdb',
-    );
+    expect(config).not.toHaveProperty('referenceMdbPath');
     expect(config.aliases).toEqual(expect.arrayContaining(['GameBaseZX', 'SpeccyMania']));
     expect(config.requiredFolders).toEqual([]);
     expect(config.musicExtensions).toEqual(['.ay']);

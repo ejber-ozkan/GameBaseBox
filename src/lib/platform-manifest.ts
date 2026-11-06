@@ -26,7 +26,6 @@ export interface ManifestPlatformProfile {
   status: PlatformStatus;
   defaultImported: boolean;
   sourceMdbName: string;
-  referenceMdbPath?: string;
   requiredFolderTypes: PlatformFolderType[];
   folderTypes: PlatformFolderType[];
   mediaCapabilities: PlatformMediaCapabilities;

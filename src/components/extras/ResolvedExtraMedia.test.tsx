@@ -336,14 +336,14 @@ describe('ResolvedExtraMedia non-video compatibility', () => {
     };
 
     mockGetAssetUrl.mockRejectedValue(
-      new Error('Asset parent directory does not exist: E:/Backups/RETRO-BACKUPS/C64/gb64v19/Games/Extras/Magcover/Golden_Disk_64/Golden_Disk_64_(1994-01).jpg')
+      new Error('Asset parent directory does not exist: D:/GameBase/C64/gb64v19/Games/Extras/Magcover/Golden_Disk_64/Golden_Disk_64_(1994-01).jpg')
     );
     mockIsDebugMode.mockResolvedValue(false);
 
     render(
       <ResolvedExtraMedia
         extra={imageExtra}
-        extrasPath="E:/Backups/RETRO-BACKUPS/C64/gb64v19/Games/Extras"
+        extrasPath="D:/GameBase/C64/gb64v19/Games/Extras"
         className="media"
       />
     );
@@ -363,13 +363,13 @@ describe('ResolvedExtraMedia non-video compatibility', () => {
 
     mockIsDebugMode.mockResolvedValue(true);
     mockGetAssetUrl.mockRejectedValue(
-      new Error('Asset parent directory does not exist: E:/Backups/RETRO-BACKUPS/C64/gb64v19/Games/Extras/Magcover/Golden_Disk_64/Golden_Disk_64_(1994-01).jpg')
+      new Error('Asset parent directory does not exist: D:/GameBase/C64/gb64v19/Games/Extras/Magcover/Golden_Disk_64/Golden_Disk_64_(1994-01).jpg')
     );
 
     render(
       <ResolvedExtraMedia
         extra={imageExtra}
-        extrasPath="E:/Backups/RETRO-BACKUPS/C64/gb64v19/Games/Extras"
+        extrasPath="D:/GameBase/C64/gb64v19/Games/Extras"
         className="media"
       />
     );

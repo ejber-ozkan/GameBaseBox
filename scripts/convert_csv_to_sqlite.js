@@ -5,6 +5,7 @@ const Database = require("better-sqlite3");
 
 const {
   getPlatformImportConfig,
+  resolveReferenceMdbPath,
   performanceIndexes,
   requiredPlatformColumns,
   sharedSql,
@@ -144,7 +145,7 @@ function rebuildPlatformLibraries(db, platformId, platformConfig) {
   `).run(
     platformId,
     platformConfig.displayName,
-    platformConfig.referenceMdbPath || platformConfig.sourceMdbName || null,
+    resolveReferenceMdbPath(platformId) || platformConfig.sourceMdbName || null,
     gameCount
   );
 }
