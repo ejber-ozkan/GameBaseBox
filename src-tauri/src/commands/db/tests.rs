@@ -7,10 +7,7 @@ use super::querying::{
     build_fts_match_query, build_game_query, load_game_count_with_fallback,
     load_ordered_game_ids_with_fallback, SearchMode,
 };
-use super::{
-    get_db_game_count, get_db_games, get_game_extras, get_genres,
-    get_sub_genres,
-};
+use super::{get_db_game_count, get_db_games, get_game_extras, get_genres, get_sub_genres};
 use crate::database::init_database;
 use crate::test_helpers::DbPathGuard;
 
@@ -87,10 +84,16 @@ fn create_search_fallback_fixture(conn: &Connection) {
         [],
     )
     .unwrap();
-    conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
-        .unwrap();
-    conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
-        .unwrap();
+    conn.execute(
+        "CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)",
+        [],
+    )
+    .unwrap();
+    conn.execute(
+        "CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)",
+        [],
+    )
+    .unwrap();
     conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
         .unwrap();
     conn.execute(
@@ -257,7 +260,8 @@ fn test_build_game_query_search_and_favorites() {
 fn assert_sorted_catalog_pages(column: &str) {
     let conn = Connection::open_in_memory().unwrap();
     create_search_fallback_fixture(&conn);
-    conn.execute_batch("DELETE FROM Games; DELETE FROM GameView;").unwrap();
+    conn.execute_batch("DELETE FROM Games; DELETE FROM GameView;")
+        .unwrap();
     let mut rows = Vec::new();
     for id in (1..=361).rev() {
         let name = format!("Entry {}", id % 7);
@@ -265,7 +269,11 @@ fn assert_sorted_catalog_pages(column: &str) {
         let publisher = (id % 9 != 0).then(|| format!("Publisher {}", id % 5));
         let genre = format!("Genre {}", id % 3);
         for platform in ["c64", "atari800"] {
-            conn.execute("INSERT INTO Games (platform_id, GA_Id, Name) VALUES (?1, ?2, ?3)", rusqlite::params![platform, id.to_string(), name]).unwrap();
+            conn.execute(
+                "INSERT INTO Games (platform_id, GA_Id, Name) VALUES (?1, ?2, ?3)",
+                rusqlite::params![platform, id.to_string(), name],
+            )
+            .unwrap();
             conn.execute("INSERT INTO GameView (platformId, id, name, year, publisher_name, parentGenre) VALUES (?1, ?2, ?3, ?4, ?5, ?6)", rusqlite::params![platform, id.to_string(), name, year.map(|value| value.to_string()), publisher, genre]).unwrap();
         }
         rows.push((id.to_string(), name, year, publisher, genre));
@@ -282,22 +290,38 @@ fn assert_sorted_catalog_pages(column: &str) {
                 "publisher" => match (&a.3, &b.3) {
                     (None, Some(_)) => return std::cmp::Ordering::Greater,
                     (Some(_), None) => return std::cmp::Ordering::Less,
-                    (left, right) => left.cmp(&right),
+                    (left, right) => left.cmp(right),
                 },
                 "parentGenre" => a.4.cmp(&b.4),
                 _ => a.1.cmp(&b.1),
             };
-            let primary = if direction == "desc" { primary.reverse() } else { primary };
-            primary.then_with(|| a.1.cmp(&b.1)).then_with(|| a.0.cmp(&b.0))
+            let primary = if direction == "desc" {
+                primary.reverse()
+            } else {
+                primary
+            };
+            primary
+                .then_with(|| a.1.cmp(&b.1))
+                .then_with(|| a.0.cmp(&b.0))
         });
         let expected: Vec<_> = expected.into_iter().map(|row| row.0).collect();
         let filters: GameFilters = serde_json::from_value(serde_json::json!({
             "sortBy": column, "sortDirection": direction,
-        })).unwrap();
+        }))
+        .unwrap();
         for platform in ["c64", "atari800"] {
             let mut actual = Vec::new();
             for offset in [0, 120, 240, 360] {
-                actual.extend(load_ordered_game_ids_with_fallback(&conn, platform, 120, offset, Some(filters.clone())).unwrap());
+                actual.extend(
+                    load_ordered_game_ids_with_fallback(
+                        &conn,
+                        platform,
+                        120,
+                        offset,
+                        Some(filters.clone()),
+                    )
+                    .unwrap(),
+                );
             }
             assert_eq!(actual, expected, "{platform} {column} {direction}");
         }
@@ -305,20 +329,31 @@ fn assert_sorted_catalog_pages(column: &str) {
 }
 
 #[test]
-fn test_title_sort_is_global_across_pages() { assert_sorted_catalog_pages("name"); }
+fn test_title_sort_is_global_across_pages() {
+    assert_sorted_catalog_pages("name");
+}
 
 #[test]
-fn test_year_sort_is_global_across_pages() { assert_sorted_catalog_pages("year"); }
+fn test_year_sort_is_global_across_pages() {
+    assert_sorted_catalog_pages("year");
+}
 
 #[test]
-fn test_publisher_sort_is_global_across_pages() { assert_sorted_catalog_pages("publisher"); }
+fn test_publisher_sort_is_global_across_pages() {
+    assert_sorted_catalog_pages("publisher");
+}
 
 #[test]
-fn test_genre_sort_is_global_across_pages() { assert_sorted_catalog_pages("parentGenre"); }
+fn test_genre_sort_is_global_across_pages() {
+    assert_sorted_catalog_pages("parentGenre");
+}
 
 #[test]
 fn test_game_sort_rejects_unrecognized_ipc_identifiers() {
-    for value in [serde_json::json!({"sortBy": "name; DROP TABLE Games"}), serde_json::json!({"sortDirection": "sideways"})] {
+    for value in [
+        serde_json::json!({"sortBy": "name; DROP TABLE Games"}),
+        serde_json::json!({"sortDirection": "sideways"}),
+    ] {
         assert!(serde_json::from_value::<GameFilters>(value).is_err());
     }
 }
@@ -450,10 +485,16 @@ fn test_build_game_summary_query_preserves_requested_id_order_in_sql() {
         [],
     )
     .unwrap();
-    conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
-        .unwrap();
-    conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
-        .unwrap();
+    conn.execute(
+        "CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)",
+        [],
+    )
+    .unwrap();
+    conn.execute(
+        "CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)",
+        [],
+    )
+    .unwrap();
 
     conn.execute(
         "INSERT INTO Games (GA_Id, Name, Adult) VALUES (?, ?, ?)",
@@ -669,8 +710,11 @@ async fn test_platform_scoped_queries_do_not_mix_duplicate_source_ids() {
         .unwrap();
         conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
-            .unwrap();
+        conn.execute(
+            "CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)",
+            [],
+        )
+        .unwrap();
         conn.execute("CREATE TABLE Extras (platform_id TEXT, GA_Id TEXT, EX_Id TEXT, Name TEXT, Path TEXT, Type TEXT, DisplayOrder INTEGER)", []).unwrap();
 
         for (platform_id, game_name, genre, extra_name) in [
@@ -864,8 +908,11 @@ async fn test_get_db_games() {
         .unwrap();
         conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
-            .unwrap();
+        conn.execute(
+            "CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)",
+            [],
+        )
+        .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Extras (GA_Id TEXT, Path TEXT)", [])
@@ -982,8 +1029,11 @@ async fn test_get_db_games_symbol_filter() {
         .unwrap();
         conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
-            .unwrap();
+        conn.execute(
+            "CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)",
+            [],
+        )
+        .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Extras (GA_Id TEXT, Path TEXT)", [])
@@ -1026,8 +1076,11 @@ async fn test_get_db_games_pagination() {
         .unwrap();
         conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
-            .unwrap();
+        conn.execute(
+            "CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)",
+            [],
+        )
+        .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Extras (GA_Id TEXT, Path TEXT)", [])
@@ -1075,8 +1128,11 @@ async fn test_get_db_game_count() {
         .unwrap();
         conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
-            .unwrap();
+        conn.execute(
+            "CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)",
+            [],
+        )
+        .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Extras (GA_Id TEXT, Path TEXT)", [])
@@ -1246,8 +1302,11 @@ async fn test_get_db_games_preserves_filtered_id_order_after_detail_hydration() 
         .unwrap();
         conn.execute("CREATE TABLE Programmers (platform_id TEXT DEFAULT 'c64', PR_Id TEXT, Programmer TEXT)", [])
             .unwrap();
-        conn.execute("CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)", [])
-            .unwrap();
+        conn.execute(
+            "CREATE TABLE Artists (platform_id TEXT DEFAULT 'c64', AR_Id TEXT, Artist TEXT)",
+            [],
+        )
+        .unwrap();
         conn.execute("CREATE TABLE Developers (DE_Id TEXT, Developer TEXT)", [])
             .unwrap();
         conn.execute("CREATE TABLE Extras (GA_Id TEXT, Path TEXT)", [])
@@ -1305,7 +1364,10 @@ async fn test_get_db_games_whole_library_load_spans_chunks_in_order() {
         ("PGenres.csv", "PG_Id,ParentGenre\n1,Arcade\n"),
         ("Developers.csv", "DE_Id,Developer\n1,Dev\n"),
         ("Publishers.csv", "PU_Id,Publisher\n1,Pub\n"),
-        ("Musicians.csv", "MU_Id,Musician,Photo,Nick,Grp\n1,Composer,,,\n"),
+        (
+            "Musicians.csv",
+            "MU_Id,Musician,Photo,Nick,Grp\n1,Composer,,,\n",
+        ),
         ("Languages.csv", "LA_Id,Language\n1,English\n"),
         ("Programmers.csv", "PR_Id,Programmer\n1,Coder\n"),
         ("Artists.csv", "AR_Id,Artist\n1,Artist\n"),
@@ -1316,9 +1378,14 @@ async fn test_get_db_games_whole_library_load_spans_chunks_in_order() {
     }
     crate::database::import_csv_directory_to_sqlite(exports.path(), "c64").unwrap();
 
-    let games = get_db_games(Some(game_count + 10), Some(0), None, Some("c64".to_string()))
-        .await
-        .expect("whole-library load should succeed");
+    let games = get_db_games(
+        Some(game_count + 10),
+        Some(0),
+        None,
+        Some("c64".to_string()),
+    )
+    .await
+    .expect("whole-library load should succeed");
 
     assert_eq!(games.len(), game_count);
     assert_eq!(games.first().unwrap().name, "Game 00001");

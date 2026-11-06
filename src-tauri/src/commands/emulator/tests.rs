@@ -1,13 +1,19 @@
 use super::*;
-use std::io::Write;
 use crate::test_helpers::DbPathGuard;
+use std::io::Write;
 
 #[test]
 fn test_vice_fliplist_preserves_bytes_paths_and_disk_order() {
-    let disks = vec![PathBuf::from("/media/Game Disk 1.d64"), PathBuf::from("/media/Savé Disk.d64")];
+    let disks = vec![
+        PathBuf::from("/media/Game Disk 1.d64"),
+        PathBuf::from("/media/Savé Disk.d64"),
+    ];
     let mut output = Vec::new();
     write_vice_fliplist(&mut output, &disks).unwrap();
-    assert_eq!(output, "# Vice fliplist file\nUNIT 8\n/media/Game Disk 1.d64\n/media/Savé Disk.d64\n".as_bytes());
+    assert_eq!(
+        output,
+        "# Vice fliplist file\nUNIT 8\n/media/Game Disk 1.d64\n/media/Savé Disk.d64\n".as_bytes()
+    );
 }
 
 struct FailingFliplistSink {
@@ -18,7 +24,10 @@ struct FailingFliplistSink {
 impl Write for FailingFliplistSink {
     fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
         if self.remaining == 0 {
-            return Err(std::io::Error::new(std::io::ErrorKind::PermissionDenied, "synthetic fliplist write failure"));
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::PermissionDenied,
+                "synthetic fliplist write failure",
+            ));
         }
         let written = bytes.len().min(self.remaining);
         self.remaining -= written;
@@ -37,18 +46,29 @@ impl Write for FailingFliplistSink {
 #[test]
 fn test_vice_fliplist_returns_header_unit_and_disk_write_errors() {
     for remaining in [0, 21, 28, 35] {
-        let mut sink = FailingFliplistSink { remaining, fail_flush: false };
-        let error = write_vice_fliplist(&mut sink, &[PathBuf::from("/media/Game Disk 1.d64")]).unwrap_err();
+        let mut sink = FailingFliplistSink {
+            remaining,
+            fail_flush: false,
+        };
+        let error =
+            write_vice_fliplist(&mut sink, &[PathBuf::from("/media/Game Disk 1.d64")]).unwrap_err();
         assert_eq!(error.kind(), std::io::ErrorKind::PermissionDenied);
-        assert!(error.to_string().contains("synthetic fliplist write failure"));
+        assert!(error
+            .to_string()
+            .contains("synthetic fliplist write failure"));
     }
 }
 
 #[test]
 fn test_vice_fliplist_returns_flush_errors() {
-    let mut sink = FailingFliplistSink { remaining: usize::MAX, fail_flush: true };
+    let mut sink = FailingFliplistSink {
+        remaining: usize::MAX,
+        fail_flush: true,
+    };
     let error = write_vice_fliplist(&mut sink, &[]).unwrap_err();
-    assert!(error.to_string().contains("synthetic fliplist flush failure"));
+    assert!(error
+        .to_string()
+        .contains("synthetic fliplist flush failure"));
 }
 
 #[test]
@@ -71,7 +91,7 @@ fn test_altirra_rom_args_extension_mapping() {
     for (filename, expected) in test_cases {
         let mut args = Vec::new();
         let path = Path::new(filename);
-        push_altirra_rom_args(&mut args, &path);
+        push_altirra_rom_args(&mut args, path);
         let expected_strs: Vec<String> = expected.iter().map(|s| s.to_string()).collect();
         assert_eq!(args, expected_strs, "Failed for {}", filename);
     }
@@ -158,13 +178,17 @@ fn test_kegs_slot5_disk_mapping_and_config_generation() {
 
     // Write existing config.kegs with hard drive in s7d1
     let config_file = dir.path().join("config.kegs");
-    std::fs::write(&config_file, "s7d1 = NUCLEUS03.gz\r\ns5d1 = xmas_demo.gz\r\n").unwrap();
+    std::fs::write(
+        &config_file,
+        "s7d1 = NUCLEUS03.gz\r\ns5d1 = xmas_demo.gz\r\n",
+    )
+    .unwrap();
 
     let mut args = Vec::new();
     prepare_kegs_launch(
         Some(dir.path()),
         &mut args,
-        &[disk1.clone()],
+        std::slice::from_ref(&disk1),
         &disk1,
         "",
     );
@@ -192,7 +216,7 @@ fn test_kegs_mounts_floppy_system_disk_when_gemus_has_boot_no() {
     let disk1 = dir.path().join("DejaVu_Disk1.2mg");
     let sys5 = dir.path().join("system5.2mg");
     std::fs::write(&disk1, b"disk1").unwrap();
-    std::fs::write(&sys5, &[0u8; 819200]).unwrap(); // standard 800KB 3.5" disk
+    std::fs::write(&sys5, [0u8; 819200]).unwrap(); // standard 800KB 3.5" disk
 
     let config_file = dir.path().join("config.kegs");
     std::fs::write(&config_file, "s7d1 = \r\ns5d1 = \r\n").unwrap();
@@ -201,7 +225,7 @@ fn test_kegs_mounts_floppy_system_disk_when_gemus_has_boot_no() {
     prepare_kegs_launch(
         Some(dir.path()),
         &mut args,
-        &[disk1.clone()],
+        std::slice::from_ref(&disk1),
         &disk1,
         "boot=no\r\nrom=1",
     );
@@ -239,7 +263,7 @@ fn test_kegs_mounts_hard_drive_boot_disk_when_gemus_has_boot_no() {
     prepare_kegs_launch(
         Some(dir.path()),
         &mut args,
-        &[disk1.clone()],
+        std::slice::from_ref(&disk1),
         &disk1,
         "boot=no\r\nrom=3",
     );
@@ -270,7 +294,7 @@ fn test_kegs_mounts_system_disk_when_disk_lacks_prodos_even_if_gemus_empty() {
     let mut non_boot_disk = vec![0u8; 819200];
     non_boot_disk[0..4].copy_from_slice(b"2IMG");
     std::fs::write(&disk1, &non_boot_disk).unwrap();
-    std::fs::write(&sys5, &[0u8; 819200]).unwrap();
+    std::fs::write(&sys5, [0u8; 819200]).unwrap();
 
     let config_file = dir.path().join("config.kegs");
     std::fs::write(&config_file, "s7d1 = \r\ns5d1 = \r\n").unwrap();
@@ -280,7 +304,7 @@ fn test_kegs_mounts_system_disk_when_disk_lacks_prodos_even_if_gemus_empty() {
     prepare_kegs_launch(
         Some(dir.path()),
         &mut args,
-        &[disk1.clone()],
+        std::slice::from_ref(&disk1),
         &disk1,
         "",
     );
@@ -305,13 +329,13 @@ fn test_kegs_mounts_system_disk_when_disk_lacks_prodos_even_if_gemus_empty() {
 fn test_kegs_slot6_mapping_for_525_disks() {
     let dir = tempdir().unwrap();
     let disk1 = dir.path().join("Game.dsk");
-    std::fs::write(&disk1, &[0u8; 143360]).unwrap(); // standard 140KB 5.25" disk
+    std::fs::write(&disk1, [0u8; 143360]).unwrap(); // standard 140KB 5.25" disk
 
     let mut args = Vec::new();
     prepare_kegs_launch(
         Some(dir.path()),
         &mut args,
-        &[disk1.clone()],
+        std::slice::from_ref(&disk1),
         &disk1,
         "",
     );
@@ -383,7 +407,7 @@ fn test_retroarch_m3u_lists_extracted_amiga_disks_in_order() {
 }
 use rusqlite::Connection;
 use tempfile::{tempdir, NamedTempFile};
-use zip::write::FileOptions;
+use zip::write::SimpleFileOptions as FileOptions;
 
 fn system_shell_executable() -> PathBuf {
     if cfg!(windows) {
@@ -558,7 +582,7 @@ fn test_write_mame_apple2gs_cmd_for_floppies_and_boot_disks() {
     let sys5 = dir.path().join("system5.2mg");
     std::fs::write(&disk1, b"disk1").unwrap();
     std::fs::write(&disk2, b"disk2").unwrap();
-    std::fs::write(&sys5, &[0u8; 819200]).unwrap();
+    std::fs::write(&sys5, [0u8; 819200]).unwrap();
 
     // 1. Boot=no with System floppy -> flop3 = system5, flop4 = disk1
     let cmd_path = write_mame_apple2gs_cmd(
@@ -579,17 +603,12 @@ fn test_write_mame_apple2gs_cmd_for_floppies_and_boot_disks() {
     // 2. Standard 5.25" disk -> flop1 = game, flop2 = disk2
     let dsk1 = dir.path().join("Game_SideA.dsk");
     let dsk2 = dir.path().join("Game_SideB.dsk");
-    std::fs::write(&dsk1, &[0u8; 143360]).unwrap();
-    std::fs::write(&dsk2, &[0u8; 143360]).unwrap();
+    std::fs::write(&dsk1, [0u8; 143360]).unwrap();
+    std::fs::write(&dsk2, [0u8; 143360]).unwrap();
 
-    let cmd_path525 = write_mame_apple2gs_cmd(
-        dir.path(),
-        &dsk1,
-        &[dsk1.clone(), dsk2.clone()],
-        "",
-        None,
-    )
-    .unwrap();
+    let cmd_path525 =
+        write_mame_apple2gs_cmd(dir.path(), &dsk1, &[dsk1.clone(), dsk2.clone()], "", None)
+            .unwrap();
 
     let content525 = std::fs::read_to_string(cmd_path525).unwrap();
     assert!(content525.starts_with("apple2gs"));
@@ -610,8 +629,7 @@ fn test_find_matching_primary_rom_with_directory_prefix() {
         Some(PathBuf::from("temp/The Bard's Tale 2/Bard's Tale II.2mg"))
     );
 
-    let matched_by_filename =
-        find_matching_primary_rom(&roms, "Subfolder\\Bard's Tale II.2mg");
+    let matched_by_filename = find_matching_primary_rom(&roms, "Subfolder\\Bard's Tale II.2mg");
     assert_eq!(
         matched_by_filename,
         Some(PathBuf::from("temp/The Bard's Tale 2/Bard's Tale II.2mg"))
@@ -1233,7 +1251,9 @@ fn test_push_uae_rom_args_mounts_whdload_slave_directory() {
     push_uae_rom_args(&mut args, &[slave]);
 
     assert!(args.contains(&"-G".to_string()));
-    assert!(args.iter().any(|arg| arg.contains("filesystem2=rw,DH1:DH1:")));
+    assert!(args
+        .iter()
+        .any(|arg| arg.contains("filesystem2=rw,DH1:DH1:")));
     assert!(args.iter().any(|arg| arg.contains("filesystem=rw,DH1:")));
 }
 
@@ -1246,11 +1266,7 @@ fn test_resolve_existing_rom_path_finds_extras_subfolder() {
     std::fs::write(&zip_file, b"test zip").unwrap();
 
     // Path missing the "Extras" segment
-    let missing_extras_path = temp
-        .path()
-        .join("WHDLoad")
-        .join("T")
-        .join("Turrican2.zip");
+    let missing_extras_path = temp.path().join("WHDLoad").join("T").join("Turrican2.zip");
     let resolved = resolve_existing_rom_path(&missing_extras_path.to_string_lossy());
 
     assert_eq!(resolved, zip_file);
@@ -1319,11 +1335,20 @@ fn test_write_mame_bbcmicro_cmd_floppy_disk_and_multi_disk() {
 
     let content = std::fs::read_to_string(cmd_path).unwrap();
     assert!(content.starts_with("bbcb"));
-    assert!(content.contains(&format!("-rompath \"{}\"", dir.path().to_string_lossy().replace('\\', "/"))));
+    assert!(content.contains(&format!(
+        "-rompath \"{}\"",
+        dir.path().to_string_lossy().replace('\\', "/")
+    )));
     assert!(content.contains("-autoboot_delay 2"));
     assert!(content.contains("-autoboot_command \"*EXEC !BOOT\\n\""));
-    assert!(content.contains(&format!("-flop1 \"{}\"", disk1.to_string_lossy().replace('\\', "/"))));
-    assert!(content.contains(&format!("-flop2 \"{}\"", disk2.to_string_lossy().replace('\\', "/"))));
+    assert!(content.contains(&format!(
+        "-flop1 \"{}\"",
+        disk1.to_string_lossy().replace('\\', "/")
+    )));
+    assert!(content.contains(&format!(
+        "-flop2 \"{}\"",
+        disk2.to_string_lossy().replace('\\', "/")
+    )));
 }
 
 #[test]
@@ -1332,20 +1357,17 @@ fn test_write_mame_bbcmicro_cmd_cassette_uef() {
     let tape = dir.path().join("AticAtac_RUN_B.hq.uef");
     std::fs::write(&tape, b"tape").unwrap();
 
-    let cmd_path = write_mame_bbcmicro_cmd(
-        dir.path(),
-        &tape,
-        &[tape.clone()],
-        "",
-        None,
-    )
-    .unwrap();
+    let cmd_path =
+        write_mame_bbcmicro_cmd(dir.path(), &tape, std::slice::from_ref(&tape), "", None).unwrap();
 
     let content = std::fs::read_to_string(cmd_path).unwrap();
     assert!(content.starts_with("bbcb"));
     assert!(content.contains("-autoboot_delay 2"));
     assert!(content.contains("-autoboot_command \"*TAPE\\nPAGE=&E00\\n*RUN\\n\""));
-    assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy().replace('\\', "/"))));
+    assert!(content.contains(&format!(
+        "-cass \"{}\"",
+        tape.to_string_lossy().replace('\\', "/")
+    )));
 }
 
 #[test]
@@ -1357,7 +1379,7 @@ fn test_write_mame_bbcmicro_cmd_electron_gemus() {
     let cmd_path = write_mame_bbcmicro_cmd(
         dir.path(),
         &tape,
-        &[tape.clone()],
+        std::slice::from_ref(&tape),
         "emu=ElectrEm\r\ntape=normal",
         None,
     )
@@ -1367,7 +1389,10 @@ fn test_write_mame_bbcmicro_cmd_electron_gemus() {
     assert!(content.starts_with("electron"));
     assert!(content.contains("-autoboot_delay 2"));
     assert!(content.contains("-autoboot_command \"*TAPE\\n*RUN\\n\""));
-    assert!(content.contains(&format!("-cass \"{}\"", tape.to_string_lossy().replace('\\', "/"))));
+    assert!(content.contains(&format!(
+        "-cass \"{}\"",
+        tape.to_string_lossy().replace('\\', "/")
+    )));
 }
 
 #[test]
@@ -1379,7 +1404,7 @@ fn test_write_mame_bbcmicro_cmd_model_master_and_disk_cat() {
     let cmd_path = write_mame_bbcmicro_cmd(
         dir.path(),
         &disk,
-        &[disk.clone()],
+        std::slice::from_ref(&disk),
         "model=05\r\ndisk=cat",
         None,
     )
@@ -1389,7 +1414,10 @@ fn test_write_mame_bbcmicro_cmd_model_master_and_disk_cat() {
     assert!(content.starts_with("bbcm"));
     assert!(content.contains("-autoboot_delay 2"));
     assert!(content.contains("-autoboot_command \"*CAT\\n\""));
-    assert!(content.contains(&format!("-flop1 \"{}\"", disk.to_string_lossy().replace('\\', "/"))));
+    assert!(content.contains(&format!(
+        "-flop1 \"{}\"",
+        disk.to_string_lossy().replace('\\', "/")
+    )));
 }
 
 #[tokio::test]
@@ -1473,16 +1501,10 @@ async fn test_bbcmicro_companion_disk_resolution() {
     std::fs::create_dir_all(&extras_disks_dir).unwrap();
 
     let tape_zip = games_dir.join("AticAtac_RUN_B.zip");
-    write_zip(
-        &tape_zip,
-        &[("AticAtac_RUN_B.hq.uef", b"tape data")],
-    );
+    write_zip(&tape_zip, &[("AticAtac_RUN_B.hq.uef", b"tape data")]);
 
     let disk_zip = extras_disks_dir.join("AticAtac_B.zip");
-    write_zip(
-        &disk_zip,
-        &[("AticAtac.ssd", b"disk data")],
-    );
+    write_zip(&disk_zip, &[("AticAtac.ssd", b"disk data")]);
 
     let companion = find_bbcmicro_companion_disk_archive(&tape_zip);
     assert_eq!(companion, Some(disk_zip));
@@ -1504,7 +1526,8 @@ fn test_resolve_emulator_binary_app_bundle_with_companion_bin() {
         Some("vice-c64"),
         Some("c64"),
         || "not found".to_string(),
-    ).unwrap();
+    )
+    .unwrap();
 
     assert_eq!(resolved, companion_bin);
 }
@@ -1524,7 +1547,8 @@ fn test_resolve_emulator_binary_standalone_app_bundle() {
         Some("retroarch-c64"),
         Some("c64"),
         || "not found".to_string(),
-    ).unwrap();
+    )
+    .unwrap();
 
     assert_eq!(resolved, macos_binary);
 }
@@ -1544,7 +1568,8 @@ fn test_resolve_emulator_binary_parent_directory_with_bin() {
         Some("vice-c64"),
         Some("c64"),
         || "not found".to_string(),
-    ).unwrap();
+    )
+    .unwrap();
 
     assert_eq!(resolved, binary);
 }
@@ -1565,7 +1590,8 @@ fn test_resolve_emulator_binary_directory_with_app_bundle() {
         Some("retroarch-c64"),
         Some("c64"),
         || "not found".to_string(),
-    ).unwrap();
+    )
+    .unwrap();
 
     assert_eq!(resolved, macos_binary);
 }
@@ -1582,17 +1608,16 @@ fn test_resolve_emulator_binary_direct_file_and_quotes() {
         Some("vice-c64"),
         Some("c64"),
         || "not found".to_string(),
-    ).unwrap();
+    )
+    .unwrap();
     assert_eq!(resolved, binary_path);
 
     // Quoted path
     let quoted = format!("\"{}\"", binary_path.to_string_lossy());
-    let resolved_quoted = resolve_emulator_binary(
-        &quoted,
-        Some("vice-c64"),
-        Some("c64"),
-        || "not found".to_string(),
-    ).unwrap();
+    let resolved_quoted = resolve_emulator_binary(&quoted, Some("vice-c64"), Some("c64"), || {
+        "not found".to_string()
+    })
+    .unwrap();
     assert_eq!(resolved_quoted, binary_path);
 }
 
@@ -1603,7 +1628,8 @@ fn test_resolve_emulator_binary_not_found_and_empty_dir() {
         Some("vice-c64"),
         Some("c64"),
         || "Path not found custom".to_string(),
-    ).unwrap_err();
+    )
+    .unwrap_err();
     assert_eq!(err, "Path not found custom");
 
     let dir = tempdir().unwrap();
@@ -1615,7 +1641,8 @@ fn test_resolve_emulator_binary_not_found_and_empty_dir() {
         Some("vice-c64"),
         Some("c64"),
         || "not found".to_string(),
-    ).unwrap_err();
+    )
+    .unwrap_err();
     assert!(err_dir.contains("No supported emulator binary found in directory"));
 }
 
@@ -1677,7 +1704,11 @@ async fn test_launch_emulator_rejects_paths_outside_configured_settings() {
     let emulator = dir.path().join("emu").join("hatari");
     let games = dir.path().join("games");
     let outside = dir.path().join("elsewhere");
-    for folder in [emulator.parent().unwrap(), games.as_path(), outside.as_path()] {
+    for folder in [
+        emulator.parent().unwrap(),
+        games.as_path(),
+        outside.as_path(),
+    ] {
         std::fs::create_dir_all(folder).unwrap();
     }
     std::fs::write(&emulator, b"#!/bin/sh\n").unwrap();
@@ -1698,7 +1729,12 @@ async fn test_launch_emulator_rejects_paths_outside_configured_settings() {
         ..Default::default()
     };
 
-    let error = launch_emulator(request(outside.join("Other.st"))).await.unwrap_err();
-    assert!(error.contains("outside the folders configured in Settings"), "{error}");
+    let error = launch_emulator(request(outside.join("Other.st")))
+        .await
+        .unwrap_err();
+    assert!(
+        error.contains("outside the folders configured in Settings"),
+        "{error}"
+    );
     assert!(plan_launch(&request(games.join("Game.st"))).is_ok());
 }

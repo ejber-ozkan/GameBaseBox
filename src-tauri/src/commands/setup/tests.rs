@@ -1,4 +1,7 @@
-use super::{clear_platform_import_cancellation, is_platform_import_cancelled, request_platform_import_cancellation, validate_platform_import_request};
+use super::{
+    clear_platform_import_cancellation, is_platform_import_cancelled,
+    request_platform_import_cancellation, validate_platform_import_request,
+};
 use crate::models::{ImportPlatformDatabaseRequest, PlatformFolderSettings};
 use std::fs;
 use tempfile::tempdir;
@@ -217,7 +220,11 @@ fn rejects_zxspectrum_import_request_missing_musician_photos_folder() {
         .join("Missing Musician Photos")
         .to_string_lossy()
         .to_string();
-    let request = request_with_paths("zxspectrum", mdb_path.to_string_lossy().to_string(), folders);
+    let request = request_with_paths(
+        "zxspectrum",
+        mdb_path.to_string_lossy().to_string(),
+        folders,
+    );
 
     let error = validate_platform_import_request(&request).unwrap_err();
     assert!(error.contains("Musician Photos folder does not exist"));

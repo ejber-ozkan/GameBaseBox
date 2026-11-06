@@ -350,7 +350,7 @@ mod tests {
         make_tools(&bin);
         let explicit = MdbTools::discover_in(Some(&bin), &[], &[]).unwrap();
         assert_eq!(explicit.tables, bin.join("mdb-tables"));
-        let finder = MdbTools::discover_in(None, &[], &[bin.clone()]).unwrap();
+        let finder = MdbTools::discover_in(None, &[], std::slice::from_ref(&bin)).unwrap();
         assert_eq!(finder.export, bin.join("mdb-export"));
     }
 

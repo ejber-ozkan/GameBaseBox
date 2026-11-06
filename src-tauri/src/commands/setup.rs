@@ -1,13 +1,14 @@
 use crate::database::{
-    configure_runtime_db_path, run_blocking, get_db_path, import_mdb_to_sqlite, import_mdb_to_sqlite_for_platform_with_cancellation,
-    is_database_ready, normalize_platform_id,
+    configure_runtime_db_path, get_db_path, import_mdb_to_sqlite,
+    import_mdb_to_sqlite_for_platform_with_cancellation, is_database_ready, normalize_platform_id,
+    run_blocking,
 };
 use crate::models::{
     DatabaseBootstrapStatus, DatabaseImportResult, ImportPlatformDatabaseRequest,
     PlatformDatabaseImportResult, PlatformImportStatus,
 };
-use std::path::Path;
 use std::collections::HashSet;
+use std::path::Path;
 use std::sync::{LazyLock, Mutex};
 use tauri_plugin_dialog::DialogExt;
 
@@ -84,7 +85,10 @@ pub async fn import_database_from_mdb(
     mdb_path: String,
 ) -> Result<DatabaseImportResult, String> {
     let _ = configure_runtime_db_path(&app)?;
-    run_blocking("Database import", move || import_database_from_mdb_blocking(mdb_path)).await
+    run_blocking("Database import", move || {
+        import_database_from_mdb_blocking(mdb_path)
+    })
+    .await
 }
 
 fn import_database_from_mdb_blocking(mdb_path: String) -> Result<DatabaseImportResult, String> {
@@ -110,7 +114,10 @@ pub async fn import_platform_database_from_mdb(
     request: ImportPlatformDatabaseRequest,
 ) -> Result<PlatformDatabaseImportResult, String> {
     let _ = configure_runtime_db_path(&app)?;
-    run_blocking("Platform import", move || import_platform_database_blocking(request)).await
+    run_blocking("Platform import", move || {
+        import_platform_database_blocking(request)
+    })
+    .await
 }
 
 fn import_platform_database_blocking(
@@ -119,7 +126,10 @@ fn import_platform_database_blocking(
     let platform_id = normalize_platform_id(Some(&request.platform_id))?;
     if let Err(err) = validate_platform_import_request(&request) {
         if std::env::var("VIC40_DEBUG_LAUNCH").is_ok() {
-            eprintln!("[DEBUG IMPORT ERROR] Validation failed for {}: {}", request.platform_id, err);
+            eprintln!(
+                "[DEBUG IMPORT ERROR] Validation failed for {}: {}",
+                request.platform_id, err
+            );
         }
         return Err(err);
     }
@@ -139,7 +149,8 @@ fn import_platform_database_blocking(
     }
     match result {
         Ok(result) => {
-            let import_status = crate::commands::platforms::get_platform_import_status_sync(&platform_id)?;
+            let import_status =
+                crate::commands::platforms::get_platform_import_status_sync(&platform_id)?;
             Ok(PlatformDatabaseImportResult {
                 platform_id,
                 db_path: result.db_path,
@@ -150,7 +161,10 @@ fn import_platform_database_blocking(
         }
         Err(err) => {
             if std::env::var("VIC40_DEBUG_LAUNCH").is_ok() {
-                eprintln!("[DEBUG IMPORT ERROR] Failed to import platform database for {}: {}", request.platform_id, err);
+                eprintln!(
+                    "[DEBUG IMPORT ERROR] Failed to import platform database for {}: {}",
+                    request.platform_id, err
+                );
             }
             Err(err)
         }
@@ -182,7 +196,8 @@ pub(super) fn validate_platform_import_request(
     }
 
     for folder_type in ["games", "music", "photos", "screenshots", "extras"] {
-        let (label, folder_path) = folder_by_type(&request.folder_settings, folder_type, &platform_id);
+        let (label, folder_path) =
+            folder_by_type(&request.folder_settings, folder_type, &platform_id);
         if !folder_path.trim().is_empty() {
             validate_existing_folder(label, folder_path)?;
         }
@@ -199,7 +214,14 @@ fn folder_by_type<'a>(
     match folder_type {
         "games" => ("Games", &settings.games_path),
         "music" => ("Music", &settings.music_path),
-        "photos" => (if platform_id == "zxspectrum" { "Musician Photos" } else { "Photos" }, &settings.photos_path),
+        "photos" => (
+            if platform_id == "zxspectrum" {
+                "Musician Photos"
+            } else {
+                "Photos"
+            },
+            &settings.photos_path,
+        ),
         "screenshots" => ("Screenshots", &settings.screenshots_path),
         "extras" => ("Extras", &settings.extras_path),
         _ => ("Folder", ""),

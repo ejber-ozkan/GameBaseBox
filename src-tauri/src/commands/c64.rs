@@ -342,7 +342,7 @@ fn replace_option(text: &mut String, key: &str, value: &str) {
         .lines()
         .filter(|line| {
             line.split_once('=')
-                .map_or(true, |(name, _)| name.trim() != key)
+                .is_none_or(|(name, _)| name.trim() != key)
         })
         .map(|line| format!("{line}\n"))
         .collect();
@@ -834,6 +834,4 @@ mod tests {
         assert!(args.contains(&"+trapdevice1".to_string()));
         assert!(!args.iter().any(|arg| arg.contains("virtualdev")));
     }
-
-
 }

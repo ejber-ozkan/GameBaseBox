@@ -4,7 +4,10 @@
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-pub(super) fn find_matching_primary_rom(extracted_roms: &[PathBuf], file_to_run: &str) -> Option<PathBuf> {
+pub(super) fn find_matching_primary_rom(
+    extracted_roms: &[PathBuf],
+    file_to_run: &str,
+) -> Option<PathBuf> {
     if file_to_run.is_empty() {
         return None;
     }
@@ -73,7 +76,10 @@ pub(super) fn natural_disk_sort_key(path: &Path) -> (u32, u32, String) {
     (priority, disk_num, name)
 }
 
-pub(super) fn write_vice_fliplist(writer: &mut impl Write, rom_files: &[PathBuf]) -> std::io::Result<()> {
+pub(super) fn write_vice_fliplist(
+    writer: &mut impl Write,
+    rom_files: &[PathBuf],
+) -> std::io::Result<()> {
     writeln!(writer, "# Vice fliplist file")?;
     writeln!(writer, "UNIT 8")?;
     for rom_file in rom_files {

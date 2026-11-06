@@ -124,13 +124,26 @@ pub(super) fn is_atarist_harddisk_name(rom_path: &str) -> bool {
 /// An extracted archive is a hard-disk game when it is named like one, or when it has
 /// no floppy images but has TOS programs or a DESKTOP.INF.
 pub(super) fn is_atarist_harddisk_archive(rom_path: &str, files: &[PathBuf]) -> bool {
-    let extension = |path: &PathBuf| path.extension().unwrap_or_default().to_string_lossy().to_lowercase();
+    let extension = |path: &PathBuf| {
+        path.extension()
+            .unwrap_or_default()
+            .to_string_lossy()
+            .to_lowercase()
+    };
     is_atarist_harddisk_name(rom_path)
-        || (!files.iter().any(|path| matches!(extension(path).as_str(), "st" | "msa" | "stx" | "dim" | "ipf"))
-            && files.iter().any(|path| {
-                matches!(extension(path).as_str(), "tos" | "prg")
-                    || path.file_name().unwrap_or_default().to_string_lossy().eq_ignore_ascii_case("desktop.inf")
-            }))
+        || (!files.iter().any(|path| {
+            matches!(
+                extension(path).as_str(),
+                "st" | "msa" | "stx" | "dim" | "ipf"
+            )
+        }) && files.iter().any(|path| {
+            matches!(extension(path).as_str(), "tos" | "prg")
+                || path
+                    .file_name()
+                    .unwrap_or_default()
+                    .to_string_lossy()
+                    .eq_ignore_ascii_case("desktop.inf")
+        }))
 }
 
 pub(super) fn atarist_boot_disk(request: &LaunchRequest) -> Result<PathBuf, String> {
@@ -169,7 +182,9 @@ pub(super) fn push_atarist_harddisk_args(
     } else if family.retroarch {
         push_retroarch_core(args, request.core_path.as_deref());
         let gem_file = match emulator.parent() {
-            Some(parent) => prepare_retroarch_hatari_harddisk(parent, &disk.retroarch_drive, &disk.boot_disk)?,
+            Some(parent) => {
+                prepare_retroarch_hatari_harddisk(parent, &disk.retroarch_drive, &disk.boot_disk)?
+            }
             None => {
                 let gem_file = disk.retroarch_drive.with_extension("gem");
                 let _ = std::fs::write(&gem_file, b"");

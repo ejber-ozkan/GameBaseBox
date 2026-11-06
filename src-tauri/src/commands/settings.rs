@@ -37,14 +37,20 @@ fn settings_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
         .path()
         .app_config_dir()
         .map_err(|error| format!("Could not resolve the settings directory: {error}"))?;
-    Ok(SETTINGS_PATH.get_or_init(|| dir.join(SETTINGS_FILE_NAME)).clone())
+    Ok(SETTINGS_PATH
+        .get_or_init(|| dir.join(SETTINGS_FILE_NAME))
+        .clone())
 }
 
 /// Lexically normalizes a path for comparison: `/` separators, `.`/`..` resolved, no
 /// trailing separator, and case-folded on Windows and macOS (case-insensitive by
 /// default there). Never touches the file system, so missing paths compare too.
 pub(crate) fn normalize_for_comparison(path: &str) -> String {
-    let unified = path.trim().trim_matches('"').trim_matches('\'').replace('\\', "/");
+    let unified = path
+        .trim()
+        .trim_matches('"')
+        .trim_matches('\'')
+        .replace('\\', "/");
     let mut prefix = String::new();
     let mut parts: Vec<String> = Vec::new();
     for component in Path::new(&unified).components() {
@@ -72,14 +78,19 @@ fn looks_like_absolute_path(value: &str) -> bool {
     let bytes = value.as_bytes();
     value.starts_with('/')
         || value.starts_with("\\\\")
-        || (bytes.len() >= 3 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' && (bytes[2] == b'\\' || bytes[2] == b'/'))
+        || (bytes.len() >= 3
+            && bytes[0].is_ascii_alphabetic()
+            && bytes[1] == b':'
+            && (bytes[2] == b'\\' || bytes[2] == b'/'))
 }
 
 /// Every absolute path string anywhere in the settings JSON.
 pub(crate) fn collect_allowed_paths(settings: &Value) -> Vec<String> {
     fn walk(value: &Value, out: &mut Vec<String>) {
         match value {
-            Value::String(text) if looks_like_absolute_path(text) => out.push(normalize_for_comparison(text)),
+            Value::String(text) if looks_like_absolute_path(text) => {
+                out.push(normalize_for_comparison(text))
+            }
             Value::Array(items) => items.iter().for_each(|item| walk(item, out)),
             Value::Object(map) => map.values().for_each(|item| walk(item, out)),
             _ => {}
@@ -117,7 +128,10 @@ fn current_allowed_paths() -> Option<Vec<String>> {
     }
     #[cfg(not(test))]
     {
-        ALLOWED_PATHS.read().ok().and_then(|allowed| allowed.clone())
+        ALLOWED_PATHS
+            .read()
+            .ok()
+            .and_then(|allowed| allowed.clone())
     }
 }
 
@@ -149,23 +163,32 @@ pub(crate) fn ensure_allowed_path(path: &str, what: &str) -> Result<(), String> 
 
 fn read_settings_file(path: &Path) -> Result<Option<Value>, String> {
     match fs::read_to_string(path) {
-        Ok(text) => serde_json::from_str(&text)
-            .map(Some)
-            .map_err(|error| format!("Settings file is not valid JSON ({}): {error}", path.display())),
+        Ok(text) => serde_json::from_str(&text).map(Some).map_err(|error| {
+            format!(
+                "Settings file is not valid JSON ({}): {error}",
+                path.display()
+            )
+        }),
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
-        Err(error) => Err(format!("Could not read settings ({}): {error}", path.display())),
+        Err(error) => Err(format!(
+            "Could not read settings ({}): {error}",
+            path.display()
+        )),
     }
 }
 
 /// Writes through a temporary file and a rename, so a crash never leaves a truncated file.
 fn write_settings_file(path: &Path, settings: &Value) -> Result<(), String> {
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent).map_err(|error| format!("Could not create {}: {error}", parent.display()))?;
+        fs::create_dir_all(parent)
+            .map_err(|error| format!("Could not create {}: {error}", parent.display()))?;
     }
     let text = serde_json::to_string_pretty(settings).map_err(|error| error.to_string())?;
     let temporary = path.with_extension("json.tmp");
-    fs::write(&temporary, text).map_err(|error| format!("Could not write {}: {error}", temporary.display()))?;
-    fs::rename(&temporary, path).map_err(|error| format!("Could not replace {}: {error}", path.display()))
+    fs::write(&temporary, text)
+        .map_err(|error| format!("Could not write {}: {error}", temporary.display()))?;
+    fs::rename(&temporary, path)
+        .map_err(|error| format!("Could not replace {}: {error}", path.display()))
 }
 
 #[tauri::command]
@@ -188,7 +211,10 @@ pub async fn save_settings(app: tauri::AppHandle, settings: Value) -> Result<(),
     }
     let path = settings_path(&app)?;
     set_allowed_paths(&settings);
-    crate::database::run_blocking("Settings save", move || write_settings_file(&path, &settings)).await
+    crate::database::run_blocking("Settings save", move || {
+        write_settings_file(&path, &settings)
+    })
+    .await
 }
 
 #[cfg(test)]
@@ -198,7 +224,8 @@ pub(crate) struct AllowedPathsGuard(Option<Vec<String>>);
 impl AllowedPathsGuard {
     /// Installs an allow-list for the current test thread.
     pub(crate) fn set(settings: &Value) -> Self {
-        let previous = TEST_ALLOWED_PATHS.with(|cell| cell.replace(Some(collect_allowed_paths(settings))));
+        let previous =
+            TEST_ALLOWED_PATHS.with(|cell| cell.replace(Some(collect_allowed_paths(settings))));
         Self(previous)
     }
 }
@@ -232,7 +259,8 @@ mod tests {
 
     #[test]
     fn bare_roots_are_never_allowed_locations() {
-        let paths = collect_allowed_paths(&json!({ "a": "/", "b": "C:\\", "c": "D:/", "d": "/data" }));
+        let paths =
+            collect_allowed_paths(&json!({ "a": "/", "b": "C:\\", "c": "D:/", "d": "/data" }));
         assert_eq!(paths, vec![normalize_for_comparison("/data")]);
     }
 
@@ -240,7 +268,9 @@ mod tests {
     fn collects_every_absolute_path_and_ignores_other_strings() {
         let paths = collect_allowed_paths(&settings());
         assert_eq!(paths.len(), 3, "{paths:?}");
-        assert!(paths.iter().all(|path| !path.ends_with('/') && !path.contains('\\')));
+        assert!(paths
+            .iter()
+            .all(|path| !path.ends_with('/') && !path.contains('\\')));
     }
 
     #[test]
@@ -248,12 +278,21 @@ mod tests {
         let allowed = collect_allowed_paths(&settings());
         assert!(is_within_allowed("D:/GB64/Games/A/Archon.zip", &allowed));
         assert!(is_within_allowed("D:\\GB64\\Games", &allowed));
-        assert!(is_within_allowed("/Users/me/C64Music/Hubbard/Commando.sid", &allowed));
+        assert!(is_within_allowed(
+            "/Users/me/C64Music/Hubbard/Commando.sid",
+            &allowed
+        ));
         assert!(is_within_allowed("C:\\VICE\\x64sc.exe", &allowed));
 
         assert!(!is_within_allowed("C:/VICE/other.exe", &allowed));
-        assert!(!is_within_allowed("D:/GB64/GamesExtra/evil.zip", &allowed), "prefix must match whole components");
-        assert!(!is_within_allowed("D:/GB64/Games/../../Windows/system32/cmd.exe", &allowed));
+        assert!(
+            !is_within_allowed("D:/GB64/GamesExtra/evil.zip", &allowed),
+            "prefix must match whole components"
+        );
+        assert!(!is_within_allowed(
+            "D:/GB64/Games/../../Windows/system32/cmd.exe",
+            &allowed
+        ));
         assert!(!is_within_allowed("/etc/passwd", &allowed));
     }
 
@@ -270,7 +309,10 @@ mod tests {
         let _guard = AllowedPathsGuard::set(&settings());
         assert!(ensure_allowed_path("D:/GB64/Games/x.d64", "ROM").is_ok());
         let error = ensure_allowed_path("/etc/passwd", "ROM").unwrap_err();
-        assert!(error.contains("outside the folders configured in Settings"), "{error}");
+        assert!(
+            error.contains("outside the folders configured in Settings"),
+            "{error}"
+        );
     }
 
     #[test]
@@ -283,6 +325,8 @@ mod tests {
         assert!(!path.with_extension("json.tmp").exists());
 
         std::fs::write(&path, "{ not json").unwrap();
-        assert!(read_settings_file(&path).unwrap_err().contains("not valid JSON"));
+        assert!(read_settings_file(&path)
+            .unwrap_err()
+            .contains("not valid JSON"));
     }
 }

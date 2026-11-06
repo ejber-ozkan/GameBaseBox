@@ -3,8 +3,8 @@ use rusqlite::{params_from_iter, Connection, OptionalExtension};
 use std::fs;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
-use std::sync::{LazyLock, Mutex, OnceLock};
 use std::process::Command;
+use std::sync::{LazyLock, Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::Manager;
 pub mod connection;
@@ -85,8 +85,8 @@ where
     let test_db_path = TEST_DB_PATH.with(|cell| cell.borrow().clone());
     tauri::async_runtime::spawn_blocking(move || {
         #[cfg(test)]
-        let _db_path = test_db_path
-            .map(|path| crate::test_helpers::DbPathGuard::set(&path.to_string_lossy()));
+        let _db_path =
+            test_db_path.map(|path| crate::test_helpers::DbPathGuard::set(&path.to_string_lossy()));
         task()
     })
     .await
@@ -133,7 +133,11 @@ pub fn get_db_path() -> String {
 
     // Not configured yet (unit tests, or a call before Tauri setup ran).
     explicit_db_override()
-        .or_else(|| std::env::current_dir().ok().and_then(|dir| existing_dev_db(&dir)))
+        .or_else(|| {
+            std::env::current_dir()
+                .ok()
+                .and_then(|dir| existing_dev_db(&dir))
+        })
         .unwrap_or_else(|| PathBuf::from("gb64.sqlite"))
         .to_string_lossy()
         .to_string()
@@ -171,9 +175,11 @@ pub fn configure_runtime_db_path(app: &tauri::AppHandle) -> Result<String, Strin
         return Ok(path.to_string_lossy().to_string());
     }
 
-    let chosen = match explicit_db_override()
-        .or_else(|| std::env::current_dir().ok().and_then(|dir| existing_dev_db(&dir)))
-    {
+    let chosen = match explicit_db_override().or_else(|| {
+        std::env::current_dir()
+            .ok()
+            .and_then(|dir| existing_dev_db(&dir))
+    }) {
         Some(path) => path,
         None => create_runtime_db_path(app)?,
     };
@@ -350,11 +356,16 @@ fn ensure_game_view(conn: &Connection) -> Result<(), String> {
     }
 
     if table_has_columns(conn, "GameView", &["platformId", "sourceGameId"])? {
-        let view_sql: String = conn.query_row(
-            "SELECT sql FROM sqlite_master WHERE type='view' AND name='GameView'", [], |r| r.get(0),
-        ).map_err(|e| e.to_string())?;
+        let view_sql: String = conn
+            .query_row(
+                "SELECT sql FROM sqlite_master WHERE type='view' AND name='GameView'",
+                [],
+                |r| r.get(0),
+            )
+            .map_err(|e| e.to_string())?;
         // Upgrade generated region expressions without replacing unrelated/custom views.
-        if !view_sql.contains("g.V_PalNTSC") || view_sql.contains("UPPER(TRIM(COALESCE(g.V_PalNTSC") {
+        if !view_sql.contains("g.V_PalNTSC") || view_sql.contains("UPPER(TRIM(COALESCE(g.V_PalNTSC")
+        {
             return Ok(());
         }
     }
@@ -537,7 +548,9 @@ fn run_support_migrations(conn: &Connection) -> Result<(), String> {
 /// startups no longer drop and repopulate the cover index. The version is only stamped
 /// once a game library exists, so an empty database is checked again after import.
 pub fn ensure_query_support_objects(conn: &Connection) -> Result<(), String> {
-    let _migration = MIGRATION_LOCK.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+    let _migration = MIGRATION_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
     if schema_version(conn)? >= SCHEMA_VERSION {
         return Ok(());
     }
@@ -545,7 +558,9 @@ pub fn ensure_query_support_objects(conn: &Connection) -> Result<(), String> {
     conn.execute_batch("BEGIN IMMEDIATE")
         .map_err(|error| error.to_string())?;
     let result = run_support_migrations(conn).and_then(|()| {
-        if table_exists(conn, "Games")? && sqlite_object_exists(conn, "GameView", &["view", "table"])? {
+        if table_exists(conn, "Games")?
+            && sqlite_object_exists(conn, "GameView", &["view", "table"])?
+        {
             stamp_schema_version(conn)?;
         }
         Ok(())
@@ -696,11 +711,7 @@ fn import_single_csv_table(conn: &mut Connection, csv_path: &Path) -> Result<boo
         .map_err(|error| error.to_string())?;
     let mut imported_any_rows = false;
 
-    loop {
-        let Some(record) = read_csv_record(&mut reader, csv_path)? else {
-            break;
-        };
-
+    while let Some(record) = read_csv_record(&mut reader, csv_path)? {
         let values = normalize_record_values(parse_csv_line(&record), header_values.len());
         statement
             .execute(params_from_iter(values.iter()))
@@ -1283,7 +1294,10 @@ where
     match (import_result, cleanup_result) {
         (Ok(tables), Ok(())) => Ok(tables),
         (Err(error), Ok(())) | (Ok(_), Err(error)) => Err(error),
-        (Err(error), Err(cleanup)) => Err(format!("{error}; staging cleanup failed at '{}': {cleanup}", temp_db_path.display())),
+        (Err(error), Err(cleanup)) => Err(format!(
+            "{error}; staging cleanup failed at '{}': {cleanup}",
+            temp_db_path.display()
+        )),
     }
 }
 
@@ -1330,8 +1344,12 @@ where
     let export_result = export_mdb_to_csv(&mdb_path, &export_dir, &mut check_cancelled);
     let import_result = export_result.and_then(|exported_tables| {
         check_cancelled()?;
-        import_csv_directory_to_sqlite_with_cancellation(&export_dir, &platform_id, &mut check_cancelled)
-            .map(|imported_tables| (exported_tables, imported_tables))
+        import_csv_directory_to_sqlite_with_cancellation(
+            &export_dir,
+            &platform_id,
+            &mut check_cancelled,
+        )
+        .map(|imported_tables| (exported_tables, imported_tables))
     });
     cleanup_export_directory(&export_dir);
 
@@ -1365,16 +1383,38 @@ mod tests {
                 CASE WHEN g.V_PalNTSC = 'N' THEN 1 ELSE 0 END AS isNtsc FROM Games g;
         ").unwrap();
         for (code, pal, ntsc) in [
-            ("1", 1, 0), ("2", 0, 1), ("3", 1, 1), ("4", 1, 1),
-            ("P", 1, 0), ("N", 0, 1), ("B", 1, 1), ("0", 0, 0), ("", 0, 0), (" p ", 1, 0),
+            ("1", 1, 0),
+            ("2", 0, 1),
+            ("3", 1, 1),
+            ("4", 1, 1),
+            ("P", 1, 0),
+            ("N", 0, 1),
+            ("B", 1, 1),
+            ("0", 0, 0),
+            ("", 0, 0),
+            (" p ", 1, 0),
         ] {
-            conn.execute("INSERT INTO Games (platform_id, GA_Id, V_PalNTSC) VALUES ('c64', ?1, ?1)", [code]).unwrap();
+            conn.execute(
+                "INSERT INTO Games (platform_id, GA_Id, V_PalNTSC) VALUES ('c64', ?1, ?1)",
+                [code],
+            )
+            .unwrap();
             super::ensure_game_view(&conn).unwrap();
-            let flags: (i32, i32) = conn.query_row("SELECT isPal, isNtsc FROM GameView WHERE id=?1", [code], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+            let flags: (i32, i32) = conn
+                .query_row(
+                    "SELECT isPal, isNtsc FROM GameView WHERE id=?1",
+                    [code],
+                    |r| Ok((r.get(0)?, r.get(1)?)),
+                )
+                .unwrap();
             assert_eq!(flags, (pal, ntsc), "region {code:?}");
         }
         super::ensure_game_view(&conn).unwrap();
-        assert_eq!(conn.query_row("SELECT count(*) FROM Games", [], |r| r.get::<_, i32>(0)).unwrap(), 10);
+        assert_eq!(
+            conn.query_row("SELECT count(*) FROM Games", [], |r| r.get::<_, i32>(0))
+                .unwrap(),
+            10
+        );
     }
     use super::*;
     use crate::test_helpers::DbPathGuard;
@@ -1919,7 +1959,9 @@ mod tests {
         assert!(imported);
 
         let row_count: i64 = conn
-            .query_row("SELECT COUNT(*) FROM \"Paste_Errors\"", [], |row| row.get(0))
+            .query_row("SELECT COUNT(*) FROM \"Paste_Errors\"", [], |row| {
+                row.get(0)
+            })
             .unwrap();
         assert_eq!(row_count, 1);
 
@@ -1991,7 +2033,6 @@ mod tests {
         for (filename, contents) in tables {
             fs::write(directory.join(filename), contents).unwrap();
         }
-
     }
 
     #[test]
@@ -2020,9 +2061,16 @@ mod tests {
 
         let conn = Connection::open(&db).unwrap();
         let markers: i64 = conn
-            .query_row("SELECT COUNT(*) FROM GameCoverIndex WHERE GA_Id = 'marker'", [], |row| row.get(0))
+            .query_row(
+                "SELECT COUNT(*) FROM GameCoverIndex WHERE GA_Id = 'marker'",
+                [],
+                |row| row.get(0),
+            )
             .unwrap();
-        assert_eq!(markers, 1, "startup must not rebuild an up-to-date cover index");
+        assert_eq!(
+            markers, 1,
+            "startup must not rebuild an up-to-date cover index"
+        );
     }
 
     #[test]
@@ -2031,7 +2079,11 @@ mod tests {
         for index in QUERY_SUPPORT_INDEXES.iter() {
             assert!(!index.columns.is_empty(), "{} lists its columns", index.sql);
             for column in &index.columns {
-                assert!(index.sql.contains(column.as_str()), "{} uses {column}", index.sql);
+                assert!(
+                    index.sql.contains(column.as_str()),
+                    "{} uses {column}",
+                    index.sql
+                );
             }
         }
     }
@@ -2064,13 +2116,18 @@ mod tests {
                 |row| row.get(0),
             )
             .unwrap();
-        assert_eq!(platform_indexes, 0, "the v2 migration drops the Games platform_id indexes");
+        assert_eq!(
+            platform_indexes, 0,
+            "the v2 migration drops the Games platform_id indexes"
+        );
 
         let (query, params) = crate::commands::db::build_game_query_for_tests("c64", 50, 0);
         let plan: Vec<String> = conn
             .prepare(&format!("EXPLAIN QUERY PLAN {query}"))
             .unwrap()
-            .query_map(rusqlite::params_from_iter(params), |row| row.get::<_, String>(3))
+            .query_map(rusqlite::params_from_iter(params), |row| {
+                row.get::<_, String>(3)
+            })
             .unwrap()
             .collect::<Result<_, _>>()
             .unwrap();
@@ -2090,7 +2147,8 @@ mod tests {
         import_csv_directory_to_sqlite(exports.path(), "c64").unwrap();
 
         let conn = Connection::open(&db).unwrap();
-        conn.execute_batch("PRAGMA user_version = 0; DELETE FROM GameCoverIndex;").unwrap();
+        conn.execute_batch("PRAGMA user_version = 0; DELETE FROM GameCoverIndex;")
+            .unwrap();
         drop(conn);
 
         init_database().unwrap();
@@ -2100,7 +2158,10 @@ mod tests {
         let covers: i64 = conn
             .query_row("SELECT COUNT(*) FROM GameCoverIndex", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(covers, 1, "an outdated database gets its support objects rebuilt");
+        assert_eq!(
+            covers, 1,
+            "an outdated database gets its support objects rebuilt"
+        );
         let journal_mode: String = conn
             .query_row("PRAGMA journal_mode", [], |row| row.get(0))
             .unwrap();
@@ -2119,7 +2180,11 @@ mod tests {
         drop(conn);
         init_database().unwrap();
         let conn = Connection::open(&db).unwrap();
-        assert_eq!(schema_version(&conn).unwrap(), 0, "empty databases are re-checked after import");
+        assert_eq!(
+            schema_version(&conn).unwrap(),
+            0,
+            "empty databases are re-checked after import"
+        );
     }
 
     #[test]
@@ -2132,13 +2197,21 @@ mod tests {
         let exports = tempdir().unwrap();
         write_staged_import_fixture(exports.path());
         let mut checks = 0;
-        let result = import_csv_directory_to_sqlite_with_cancellation(exports.path(), "c64", &mut || {
-            checks += 1;
-            if checks == 12 { Err("cancel at merge boundary".into()) } else { Ok(()) }
-        });
+        let result =
+            import_csv_directory_to_sqlite_with_cancellation(exports.path(), "c64", &mut || {
+                checks += 1;
+                if checks == 12 {
+                    Err("cancel at merge boundary".into())
+                } else {
+                    Ok(())
+                }
+            });
         assert_eq!(result.unwrap_err(), "cancel at merge boundary");
         assert_eq!(fs::read(&db).unwrap(), original);
-        let remaining: Vec<_> = fs::read_dir(directory.path()).unwrap().map(|entry| entry.unwrap().file_name()).collect();
+        let remaining: Vec<_> = fs::read_dir(directory.path())
+            .unwrap()
+            .map(|entry| entry.unwrap().file_name())
+            .collect();
         assert_eq!(remaining, vec![std::ffi::OsString::from("live.sqlite")]);
     }
 
@@ -2153,7 +2226,10 @@ mod tests {
         write_staged_import_fixture(exports.path());
         assert!(import_csv_directory_to_sqlite(exports.path(), "c64").is_err());
         assert_eq!(fs::read(&db).unwrap(), original);
-        let remaining: Vec<_> = fs::read_dir(directory.path()).unwrap().map(|entry| entry.unwrap().file_name()).collect();
+        let remaining: Vec<_> = fs::read_dir(directory.path())
+            .unwrap()
+            .map(|entry| entry.unwrap().file_name())
+            .collect();
         assert_eq!(remaining, vec![std::ffi::OsString::from("live.sqlite")]);
     }
 }

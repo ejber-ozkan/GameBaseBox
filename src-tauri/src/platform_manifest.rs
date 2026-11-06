@@ -57,7 +57,10 @@ fn manifest_ref() -> Option<&'static PlatformManifest> {
 }
 
 fn platform_entry(platform_id: &str) -> Option<&'static ManifestPlatform> {
-    manifest_ref()?.platforms.iter().find(|platform| platform.id == platform_id)
+    manifest_ref()?
+        .platforms
+        .iter()
+        .find(|platform| platform.id == platform_id)
 }
 
 /// Display name from the manifest, e.g. "Commodore Amiga".
@@ -67,8 +70,12 @@ pub fn display_name(platform_id: &str) -> Option<&'static str> {
 
 /// Whether `profile_id` is one of the platform's emulator profiles.
 pub fn supports_emulator_profile(platform_id: &str, profile_id: &str) -> bool {
-    platform_entry(platform_id)
-        .is_some_and(|platform| platform.emulator_profiles.iter().any(|profile| profile.id == profile_id))
+    platform_entry(platform_id).is_some_and(|platform| {
+        platform
+            .emulator_profiles
+            .iter()
+            .any(|profile| profile.id == profile_id)
+    })
 }
 
 /// Short emulator name for messages: "RetroArch" and "VICE" for those families,
@@ -124,51 +131,65 @@ pub fn normalize_platform_id(value: &str) -> Option<String> {
 }
 
 pub fn supported_platforms() -> Result<Vec<PlatformProfile>, String> {
-    manifest()?.platforms.into_iter().map(|platform| {
-        let default_emulator_profile_id = platform
-            .emulator_profiles
-            .iter()
-            .find(|profile| profile.default.unwrap_or(false))
-            .or_else(|| platform.emulator_profiles.first())
-            .ok_or_else(|| format!("{} has no emulator profile", platform.id))?
-            .id
-            .clone();
-
-        Ok(PlatformProfile {
-            id: platform.id,
-            display_name: platform.display_name,
-            status: platform.status,
-            import_status: if platform.default_imported { "imported" } else { "notImported" }.to_string(),
-            default_emulator_profile_id,
-            supported_emulator_profile_ids: platform
+    manifest()?
+        .platforms
+        .into_iter()
+        .map(|platform| {
+            let default_emulator_profile_id = platform
                 .emulator_profiles
-                .into_iter()
-                .map(|profile| profile.id)
-                .collect(),
-            capabilities: PlatformCapabilities {
-                screenshots: platform.media_capabilities.screenshots,
-                photos: platform.media_capabilities.photos,
-                music: platform.media_capabilities.music,
-                extras: platform.media_capabilities.extras,
-                videos: platform.media_capabilities.videos,
-                in_app_emulation: platform.in_app_emulation,
-                launch_extensions: platform.launch_extensions,
-            },
-            folder_types: platform.folder_types,
+                .iter()
+                .find(|profile| profile.default.unwrap_or(false))
+                .or_else(|| platform.emulator_profiles.first())
+                .ok_or_else(|| format!("{} has no emulator profile", platform.id))?
+                .id
+                .clone();
+
+            Ok(PlatformProfile {
+                id: platform.id,
+                display_name: platform.display_name,
+                status: platform.status,
+                import_status: if platform.default_imported {
+                    "imported"
+                } else {
+                    "notImported"
+                }
+                .to_string(),
+                default_emulator_profile_id,
+                supported_emulator_profile_ids: platform
+                    .emulator_profiles
+                    .into_iter()
+                    .map(|profile| profile.id)
+                    .collect(),
+                capabilities: PlatformCapabilities {
+                    screenshots: platform.media_capabilities.screenshots,
+                    photos: platform.media_capabilities.photos,
+                    music: platform.media_capabilities.music,
+                    extras: platform.media_capabilities.extras,
+                    videos: platform.media_capabilities.videos,
+                    in_app_emulation: platform.in_app_emulation,
+                    launch_extensions: platform.launch_extensions,
+                },
+                folder_types: platform.folder_types,
+            })
         })
-    }).collect()
+        .collect()
 }
 
 pub fn required_folder_types(platform_id: &str) -> Result<Vec<String>, String> {
     let canonical_platform_id = normalize_platform_id(platform_id)
         .ok_or_else(|| format!("Unsupported platform: {platform_id}"))?;
-    manifest()?.platforms.into_iter()
+    manifest()?
+        .platforms
+        .into_iter()
         .find(|platform| platform.id == canonical_platform_id)
         .map(|platform| platform.required_folder_types)
         .ok_or_else(|| format!("Unsupported platform: {platform_id}"))
 }
 
 pub fn find_platform(platform_id: &str) -> Result<Option<PlatformProfile>, String> {
-    let canonical_platform_id = normalize_platform_id(platform_id).unwrap_or_else(|| platform_id.to_string());
-    Ok(supported_platforms()?.into_iter().find(|platform| platform.id == canonical_platform_id))
+    let canonical_platform_id =
+        normalize_platform_id(platform_id).unwrap_or_else(|| platform_id.to_string());
+    Ok(supported_platforms()?
+        .into_iter()
+        .find(|platform| platform.id == canonical_platform_id))
 }

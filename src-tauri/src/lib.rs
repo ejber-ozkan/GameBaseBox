@@ -5,36 +5,6 @@ pub mod database;
 pub mod models;
 pub mod platform_manifest;
 
-/// Shared test utilities - only compiled with `cfg(test)`.
-#[cfg(test)]
-pub mod test_helpers {
-    use std::path::PathBuf;
-
-    /// RAII guard that points `database::get_db_path()` at a test database for the
-    /// current thread only, restoring the previous value on drop. Because the path is
-    /// thread-local, tests with their own databases can run in parallel.
-    pub struct DbPathGuard {
-        previous: Option<PathBuf>,
-    }
-
-    impl DbPathGuard {
-        pub fn set(path: &str) -> Self {
-            let previous = crate::database::TEST_DB_PATH
-                .with(|cell| cell.replace(Some(PathBuf::from(path))));
-            DbPathGuard { previous }
-        }
-    }
-
-    impl Drop for DbPathGuard {
-        fn drop(&mut self) {
-            let previous = self.previous.take();
-            crate::database::TEST_DB_PATH.with(|cell| {
-                *cell.borrow_mut() = previous;
-            });
-        }
-    }
-}
-
 use std::sync::OnceLock;
 
 static DEBUG_MODE: OnceLock<bool> = OnceLock::new();
@@ -185,4 +155,34 @@ pub fn run() {
         })
         .run(tauri::generate_context!())
         .expect("error while running GBBox");
+}
+
+/// Shared test utilities - only compiled with `cfg(test)`.
+#[cfg(test)]
+pub mod test_helpers {
+    use std::path::PathBuf;
+
+    /// RAII guard that points `database::get_db_path()` at a test database for the
+    /// current thread only, restoring the previous value on drop. Because the path is
+    /// thread-local, tests with their own databases can run in parallel.
+    pub struct DbPathGuard {
+        previous: Option<PathBuf>,
+    }
+
+    impl DbPathGuard {
+        pub fn set(path: &str) -> Self {
+            let previous =
+                crate::database::TEST_DB_PATH.with(|cell| cell.replace(Some(PathBuf::from(path))));
+            DbPathGuard { previous }
+        }
+    }
+
+    impl Drop for DbPathGuard {
+        fn drop(&mut self) {
+            let previous = self.previous.take();
+            crate::database::TEST_DB_PATH.with(|cell| {
+                *cell.borrow_mut() = previous;
+            });
+        }
+    }
 }

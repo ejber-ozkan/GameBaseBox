@@ -156,9 +156,8 @@ pub async fn set_window_mode(
                 .map(|s| s.to_logical::<f64>(scale_factor))
                 .ok();
 
-            let should_resize = current_logical.map_or(true, |cur| {
-                (cur.width - w).abs() > 2.0 || (cur.height - h).abs() > 2.0
-            });
+            let should_resize = current_logical
+                .is_none_or(|cur| (cur.width - w).abs() > 2.0 || (cur.height - h).abs() > 2.0);
 
             if should_resize {
                 window

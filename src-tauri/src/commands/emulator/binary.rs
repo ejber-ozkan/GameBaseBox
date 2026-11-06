@@ -62,33 +62,62 @@ pub(super) fn profile_candidate_binaries(
 ) -> &'static [&'static str] {
     match emulator_profile_id {
         Some("vice-c64") => &[
-            "x64sc.exe", "x64sc", "x64.exe", "x64", "vice.exe", "vice", "x64dtv.exe", "x64dtv",
+            "x64sc.exe",
+            "x64sc",
+            "x64.exe",
+            "x64",
+            "vice.exe",
+            "vice",
+            "x64dtv.exe",
+            "x64dtv",
         ],
         Some("vice-vic20") => &["xvic.exe", "xvic"],
         Some("vice-c128") => &["x128.exe", "x128"],
         Some("vice-pet") => &["xpet.exe", "xpet"],
-        Some(id) if id.starts_with("retroarch-") => &[
-            "retroarch.exe", "retroarch", "RetroArch",
-        ],
+        Some(id) if id.starts_with("retroarch-") => &["retroarch.exe", "retroarch", "RetroArch"],
         Some("altirra-atari800") | Some("altirra-atari5200") => &[
-            "altirra64.exe", "altirra64", "altirra.exe", "altirra", "Altirra64.exe", "Altirra.exe",
+            "altirra64.exe",
+            "altirra64",
+            "altirra.exe",
+            "altirra",
+            "Altirra64.exe",
+            "Altirra.exe",
         ],
-        Some("spectaculator-zxspectrum") => &[
-            "spectaculator.exe", "spectaculator", "Spectaculator.exe",
-        ],
+        Some("spectaculator-zxspectrum") => {
+            &["spectaculator.exe", "spectaculator", "Spectaculator.exe"]
+        }
         Some("beebem-bbcmicro") => &["beebem.exe", "beebem", "BeeBEm.exe", "BeeBEm"],
         Some("winuae-amiga") => &[
-            "winuae64.exe", "winuae.exe", "winuae", "fs-uae.exe", "fs-uae", "FS-UAE", "amiberry.exe", "amiberry",
+            "winuae64.exe",
+            "winuae.exe",
+            "winuae",
+            "fs-uae.exe",
+            "fs-uae",
+            "FS-UAE",
+            "amiberry.exe",
+            "amiberry",
         ],
         Some("kegs-apple2gs") => &[
-            "kegswin.exe", "kegswin", "kegs.exe", "kegs", "gsplus.exe", "gsplus",
+            "kegswin.exe",
+            "kegswin",
+            "kegs.exe",
+            "kegs",
+            "gsplus.exe",
+            "gsplus",
         ],
         Some("hatari-atarist") => &["hatari.exe", "hatari", "Hatari"],
         Some("steem-atarist") => &["steem.exe", "steem", "Steem.exe"],
         Some("cpce-amstradcpc") => &["cpce.exe", "cpce"],
         _ => match platform_id {
             Some("c64") => &[
-                "x64sc.exe", "x64sc", "x64.exe", "x64", "vice.exe", "vice", "retroarch.exe", "retroarch",
+                "x64sc.exe",
+                "x64sc",
+                "x64.exe",
+                "x64",
+                "vice.exe",
+                "vice",
+                "retroarch.exe",
+                "retroarch",
             ],
             Some("vic20") => &["xvic.exe", "xvic", "retroarch.exe", "retroarch"],
             Some("c128") => &["x128.exe", "x128", "retroarch.exe", "retroarch"],
@@ -154,9 +183,9 @@ pub(super) fn resolve_app_bundle(
             for exe in profile_candidate_binaries(emulator_profile_id, platform_id) {
                 let clean_exe = exe.strip_suffix(".exe").unwrap_or(exe);
                 if let Some(matching) = files.iter().find(|p| {
-                    p.file_name()
-                        .and_then(|s| s.to_str())
-                        .is_some_and(|s| s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe))
+                    p.file_name().and_then(|s| s.to_str()).is_some_and(|s| {
+                        s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe)
+                    })
                 }) {
                     return Some(matching.clone());
                 }
@@ -165,9 +194,9 @@ pub(super) fn resolve_app_bundle(
             for exe in ALL_POSSIBLE_EXES {
                 let clean_exe = exe.strip_suffix(".exe").unwrap_or(exe);
                 if let Some(matching) = files.iter().find(|p| {
-                    p.file_name()
-                        .and_then(|s| s.to_str())
-                        .is_some_and(|s| s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe))
+                    p.file_name().and_then(|s| s.to_str()).is_some_and(|s| {
+                        s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe)
+                    })
                 }) {
                     return Some(matching.clone());
                 }
@@ -193,9 +222,9 @@ pub(super) fn resolve_app_bundle(
             for exe in profile_candidate_binaries(emulator_profile_id, platform_id) {
                 let clean_exe = exe.strip_suffix(".exe").unwrap_or(exe);
                 if let Some(matching) = files.iter().find(|p| {
-                    p.file_name()
-                        .and_then(|s| s.to_str())
-                        .is_some_and(|s| s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe))
+                    p.file_name().and_then(|s| s.to_str()).is_some_and(|s| {
+                        s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe)
+                    })
                 }) {
                     return Some(matching.clone());
                 }
@@ -204,9 +233,9 @@ pub(super) fn resolve_app_bundle(
             for exe in ALL_POSSIBLE_EXES {
                 let clean_exe = exe.strip_suffix(".exe").unwrap_or(exe);
                 if let Some(matching) = files.iter().find(|p| {
-                    p.file_name()
-                        .and_then(|s| s.to_str())
-                        .is_some_and(|s| s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe))
+                    p.file_name().and_then(|s| s.to_str()).is_some_and(|s| {
+                        s.eq_ignore_ascii_case(clean_exe) || s.eq_ignore_ascii_case(exe)
+                    })
                 }) {
                     return Some(matching.clone());
                 }
@@ -269,7 +298,10 @@ pub(super) fn resolve_directory(
         let candidates = profile_candidate_binaries(emulator_profile_id, platform_id);
         for app in &app_bundles {
             let stem = app.file_stem().and_then(|s| s.to_str()).unwrap_or("");
-            if candidates.iter().any(|c| stem.eq_ignore_ascii_case(c.strip_suffix(".exe").unwrap_or(c))) {
+            if candidates
+                .iter()
+                .any(|c| stem.eq_ignore_ascii_case(c.strip_suffix(".exe").unwrap_or(c)))
+            {
                 if let Some(resolved) = resolve_app_bundle(app, emulator_profile_id, platform_id) {
                     return Some(resolved);
                 }
@@ -278,7 +310,10 @@ pub(super) fn resolve_directory(
 
         for app in &app_bundles {
             let stem = app.file_stem().and_then(|s| s.to_str()).unwrap_or("");
-            if ALL_POSSIBLE_EXES.iter().any(|c| stem.eq_ignore_ascii_case(c.strip_suffix(".exe").unwrap_or(c))) {
+            if ALL_POSSIBLE_EXES
+                .iter()
+                .any(|c| stem.eq_ignore_ascii_case(c.strip_suffix(".exe").unwrap_or(c)))
+            {
                 if let Some(resolved) = resolve_app_bundle(app, emulator_profile_id, platform_id) {
                     return Some(resolved);
                 }
@@ -320,10 +355,13 @@ pub(in crate::commands) fn resolve_emulator_binary(
             || raw_path.join("Contents/MacOS").is_dir();
 
         if is_app_bundle {
-            if let Some(resolved) = resolve_app_bundle(&raw_path, emulator_profile_id, platform_id) {
+            if let Some(resolved) = resolve_app_bundle(&raw_path, emulator_profile_id, platform_id)
+            {
                 return Ok(resolved);
             }
-        } else if let Some(resolved) = resolve_directory(&raw_path, emulator_profile_id, platform_id) {
+        } else if let Some(resolved) =
+            resolve_directory(&raw_path, emulator_profile_id, platform_id)
+        {
             return Ok(resolved);
         }
 

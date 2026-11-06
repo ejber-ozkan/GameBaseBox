@@ -112,7 +112,8 @@ impl GameQueryBuilder {
                     self.params.push(pattern.clone());
                 }
                 if is_dbug {
-                    self.params.push(format!("%{}%", lower.replace("dbug", "d-bug")));
+                    self.params
+                        .push(format!("%{}%", lower.replace("dbug", "d-bug")));
                 }
             }
         }
@@ -175,7 +176,13 @@ impl GameQueryBuilder {
         true
     }
 
-    fn finish(mut self, limit: usize, offset: usize, column: GameSortColumn, direction: GameSortDirection) -> (String, Vec<String>) {
+    fn finish(
+        mut self,
+        limit: usize,
+        offset: usize,
+        column: GameSortColumn,
+        direction: GameSortDirection,
+    ) -> (String, Vec<String>) {
         let expression = match column {
             GameSortColumn::Name => "sort_name",
             GameSortColumn::Year => "MIN(CAST(NULLIF(gv.year, '') AS INTEGER))",
@@ -187,10 +194,12 @@ impl GameQueryBuilder {
             GameSortDirection::Desc => "DESC",
         };
         self.filter_query.push_str(FILTERED_IDS_GROUP_BY);
-        self.filter_query.push_str(&format!("
+        self.filter_query.push_str(&format!(
+            "
             ORDER BY {expression} IS NULL ASC, {expression} COLLATE NOCASE {direction},
                      sort_name COLLATE NOCASE ASC, g.platform_id ASC, g.GA_Id ASC
-            LIMIT ? OFFSET ?"));
+            LIMIT ? OFFSET ?"
+        ));
         self.params.push(limit.to_string());
         self.params.push(offset.to_string());
         (self.filter_query, self.params)
@@ -225,8 +234,14 @@ pub(crate) fn build_game_query(
     let mut builder = GameQueryBuilder::new(platform_id, search_mode);
     builder.push_platform_filter();
 
-    let column = filters.as_ref().and_then(|filters| filters.sort_by).unwrap_or_default();
-    let direction = filters.as_ref().and_then(|filters| filters.sort_direction).unwrap_or_default();
+    let column = filters
+        .as_ref()
+        .and_then(|filters| filters.sort_by)
+        .unwrap_or_default();
+    let direction = filters
+        .as_ref()
+        .and_then(|filters| filters.sort_direction)
+        .unwrap_or_default();
 
     if let Some(filters) = filters {
         if !apply_game_filters(&mut builder, filters) {

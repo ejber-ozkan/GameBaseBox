@@ -1,4 +1,6 @@
-use crate::models::{ActivePlatformState, PlatformImportStatus, PlatformProfile, SetActivePlatformResponse};
+use crate::models::{
+    ActivePlatformState, PlatformImportStatus, PlatformProfile, SetActivePlatformResponse,
+};
 use crate::platform_manifest::{find_platform, supported_platforms};
 use rusqlite::OptionalExtension;
 
@@ -35,7 +37,10 @@ pub async fn set_active_platform(platform_id: String) -> Result<SetActivePlatfor
         active_platform_id: platform.id.clone(),
         requires_import,
         message: if requires_import {
-            format!("{} needs to be imported before browsing.", platform.display_name)
+            format!(
+                "{} needs to be imported before browsing.",
+                platform.display_name
+            )
         } else {
             format!("{} is ready.", platform.display_name)
         },
@@ -76,13 +81,15 @@ pub fn get_platform_import_status_sync(platform_id: &str) -> Result<PlatformImpo
 
         match imported {
             Ok(Some(status)) => return Ok(status),
-            Ok(None) if has_platform_libraries => return Ok(PlatformImportStatus {
-                platform_id: platform.id,
-                import_status: "notImported".to_string(),
-                source_mdb_path: None,
-                game_count: 0,
-                last_import_error: None,
-            }),
+            Ok(None) if has_platform_libraries => {
+                return Ok(PlatformImportStatus {
+                    platform_id: platform.id,
+                    import_status: "notImported".to_string(),
+                    source_mdb_path: None,
+                    game_count: 0,
+                    last_import_error: None,
+                })
+            }
             Ok(None) => {}
             Err(error) if error.to_string().contains("no such table") => {}
             Err(error) => return Err(error.to_string()),

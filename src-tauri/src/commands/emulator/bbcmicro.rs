@@ -67,7 +67,9 @@ pub(super) fn find_bbcmicro_companion_disk_archive(rom_path: &Path) -> Option<Pa
     // 2. Cleaned _RUN match in Extras/Disks/<dir_prefix>/<cleaned_stem>.zip
     let cleaned_stem = stem.replace("_RUN_", "_").replace("_RUN", "");
     if let Some((dir_prefix, _)) = rest.rsplit_once('/') {
-        let candidate2 = PathBuf::from(format!("{base}/Extras/Disks/{dir_prefix}/{cleaned_stem}.zip"));
+        let candidate2 = PathBuf::from(format!(
+            "{base}/Extras/Disks/{dir_prefix}/{cleaned_stem}.zip"
+        ));
         if candidate2.exists() {
             return Some(candidate2);
         }
@@ -178,7 +180,7 @@ pub(super) fn write_mame_bbcmicro_cmd(
         }
     };
 
-    let mut cmd_line = format!("{}", machine);
+    let mut cmd_line = machine.to_string();
 
     if let Some(sys) = system_dir {
         let sys_lossy = sys.to_string_lossy().replace('\\', "/");

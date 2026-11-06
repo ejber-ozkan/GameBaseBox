@@ -84,8 +84,13 @@ impl ExtractionSession {
         let mut paths = Vec::new();
         for index in 0..archive.len() {
             let mut member = archive.by_index(index).map_err(|error| error.to_string())?;
-            let path = directory.join(member.mangled_name());
-            if member.name().ends_with('/') {
+            // mangled_name() sanitizes the entry name (no absolute paths or "..").
+            let member_name = member
+                .name()
+                .map_err(|error| error.to_string())?
+                .to_string();
+            let path = directory.join(member.mangled_name().map_err(|error| error.to_string())?);
+            if member_name.ends_with('/') {
                 std::fs::create_dir_all(&path).map_err(|error| error.to_string())?;
             } else {
                 let normalized = path
@@ -98,7 +103,7 @@ impl ExtractionSession {
                     return Err(format!("Duplicate ZIP output path: {}", path.display()));
                 }
                 if member.size() > self.limits.max_file_bytes {
-                    return Err(format!("ZIP file byte limit exceeded: {}", member.name()));
+                    return Err(format!("ZIP file byte limit exceeded: {member_name}"));
                 }
                 if member.size() > self.limits.max_total_bytes.saturating_sub(self.total_bytes) {
                     return Err("ZIP total byte limit exceeded".to_string());
@@ -228,7 +233,7 @@ mod tests {
     use std::io::{Cursor, Write};
     use std::path::{Path, PathBuf};
     use tempfile::tempdir;
-    use zip::write::FileOptions;
+    use zip::write::SimpleFileOptions as FileOptions;
 
     fn write_zip(path: &Path, files: &[(&str, &[u8])]) {
         let mut writer = zip::ZipWriter::new(std::fs::File::create(path).unwrap());
@@ -355,11 +360,9 @@ mod tests {
 
     #[test]
     fn extraction_rejects_duplicate_normalized_file_names() {
-        for (first, second) in [
-            ("disk.d64", "disk.d64"),
-            ("../disk.d64", "disk.d64"),
-            ("Disk.d64", "disk.d64"),
-        ] {
+        // Exact duplicate entry names cannot be written with the zip crate (>= 2), so the
+        // cases below cover names that only collide once normalized.
+        for (first, second) in [("../disk.d64", "disk.d64"), ("Disk.d64", "disk.d64")] {
             let parent = tempdir().unwrap();
             let zip = parent.path().join("duplicate.zip");
             write_zip(&zip, &[(first, b"1"), (second, b"2")]);

@@ -1,11 +1,11 @@
 use crate::models::{ExtraRow, GameFilters, GameRow};
 use rusqlite::{params_from_iter, Row};
 
-use crate::database::get_db_path;
 use super::querying::{
     load_game_count_with_fallback, load_ordered_game_ids_with_fallback, open_db_connection,
     sqlite_table_exists,
 };
+use crate::database::get_db_path;
 
 pub(crate) fn build_game_summary_query(
     platform_id: &str,
@@ -180,7 +180,10 @@ where
 }
 
 pub async fn get_genres(platform_id: Option<String>) -> Result<Vec<String>, String> {
-    run_db_task("Genre query", move |db_path| get_genres_blocking(&db_path, platform_id)).await
+    run_db_task("Genre query", move |db_path| {
+        get_genres_blocking(&db_path, platform_id)
+    })
+    .await
 }
 
 fn get_genres_blocking(db_path: &str, platform_id: Option<String>) -> Result<Vec<String>, String> {
@@ -309,9 +312,12 @@ fn get_game_detail_blocking(
     let include_cover_index = sqlite_table_exists(&conn, "GameCoverIndex")?;
     let (query, params) = build_game_detail_query(&platform_id, &game_id, include_cover_index);
 
-    let mut stmt = conn.prepare_cached(&query).map_err(|e| format!("Prepare error: {e}"))?;
+    let mut stmt = conn
+        .prepare_cached(&query)
+        .map_err(|e| format!("Prepare error: {e}"))?;
 
-    let mut iter = stmt.query_map(params_from_iter(params), map_game_detail_row)
+    let mut iter = stmt
+        .query_map(params_from_iter(params), map_game_detail_row)
         .map_err(|e| e.to_string())?;
 
     if let Some(row) = iter.next() {

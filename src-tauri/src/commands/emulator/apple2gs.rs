@@ -35,7 +35,10 @@ pub(super) fn is_kegs_hard_drive_image(path: &Path) -> bool {
         .unwrap_or(false)
 }
 
-pub(super) fn find_kegs_boot_disk(emulator_dir: &Path, gemus_rom_version: Option<&str>) -> Option<PathBuf> {
+pub(super) fn find_kegs_boot_disk(
+    emulator_dir: &Path,
+    gemus_rom_version: Option<&str>,
+) -> Option<PathBuf> {
     let is_rom1 = gemus_rom_version == Some("1");
     let preferred_names: &[&str] = if is_rom1 {
         &[
@@ -137,7 +140,9 @@ pub(super) fn is_apple_disk_self_bootable(path: &Path) -> bool {
     if data.len() >= root_offset + 1024 {
         let root_dir = &data[root_offset..root_offset + 1024];
         // If "PRODOS" or "SOS" is found in the root directory, it has the system kernel and is bootable
-        return root_dir.windows(6).any(|w| w.eq_ignore_ascii_case(b"PRODOS"))
+        return root_dir
+            .windows(6)
+            .any(|w| w.eq_ignore_ascii_case(b"PRODOS"))
             || root_dir.windows(3).any(|w| w.eq_ignore_ascii_case(b"SOS"));
     }
 
@@ -182,28 +187,59 @@ pub(super) fn prepare_kegs_launch(
         None
     };
 
-    let (s5d1_disk, s5d2_disk, s6d1_disk, s6d2_disk, s7d1_disk) = if let Some(ref boot) = boot_disk {
+    let (s5d1_disk, s5d2_disk, s6d1_disk, s6d2_disk, s7d1_disk) = if let Some(ref boot) = boot_disk
+    {
         if is_kegs_hard_drive_image(boot) {
             // Hard drive boot image: goes into s7d1, game goes into primary floppy slot
-            let s5_1 = if !is_525 { Some(primary_str.clone()) } else { None };
+            let s5_1 = if !is_525 {
+                Some(primary_str.clone())
+            } else {
+                None
+            };
             let s5_2 = if !is_525 { secondary_str.clone() } else { None };
-            let s6_1 = if is_525 { Some(primary_str.clone()) } else { None };
+            let s6_1 = if is_525 {
+                Some(primary_str.clone())
+            } else {
+                None
+            };
             let s6_2 = if is_525 { secondary_str.clone() } else { None };
-            (s5_1, s5_2, s6_1, s6_2, Some(boot.to_string_lossy().to_string()))
+            (
+                s5_1,
+                s5_2,
+                s6_1,
+                s6_2,
+                Some(boot.to_string_lossy().to_string()),
+            )
         } else {
             // Floppy boot disk (e.g. system5.2mg, prod 16v1_6.2mg):
             // Boot floppy goes into s5d1, game disk goes into s5d2 (or s6d1 for 5.25" game)
             let s5_1 = Some(boot.to_string_lossy().to_string());
-            let s5_2 = if !is_525 { Some(primary_str.clone()) } else { None };
-            let s6_1 = if is_525 { Some(primary_str.clone()) } else { None };
+            let s5_2 = if !is_525 {
+                Some(primary_str.clone())
+            } else {
+                None
+            };
+            let s6_1 = if is_525 {
+                Some(primary_str.clone())
+            } else {
+                None
+            };
             let s6_2 = if is_525 { secondary_str.clone() } else { None };
             (s5_1, s5_2, s6_1, s6_2, None)
         }
     } else {
         // Standard game: game goes into s5d1 or s6d1, s7d1 is cleared
-        let s5_1 = if !is_525 { Some(primary_str.clone()) } else { None };
+        let s5_1 = if !is_525 {
+            Some(primary_str.clone())
+        } else {
+            None
+        };
         let s5_2 = if !is_525 { secondary_str.clone() } else { None };
-        let s6_1 = if is_525 { Some(primary_str.clone()) } else { None };
+        let s6_1 = if is_525 {
+            Some(primary_str.clone())
+        } else {
+            None
+        };
         let s6_2 = if is_525 { secondary_str.clone() } else { None };
         (s5_1, s5_2, s6_1, s6_2, None)
     };
@@ -358,19 +394,25 @@ pub(super) fn write_mame_apple2gs_cmd(
             candidate_dirs.push(parent.to_path_buf());
         }
     }
-    for fallback in [Path::new("F:/RETRO/Mac2"), Path::new("C:/RETRO/Mac2"), Path::new("F:/RETRO/kegs")] {
+    for fallback in [
+        Path::new("F:/RETRO/Mac2"),
+        Path::new("C:/RETRO/Mac2"),
+        Path::new("F:/RETRO/kegs"),
+    ] {
         if fallback.exists() {
             candidate_dirs.push(fallback.to_path_buf());
         }
     }
 
     let boot_disk = if needs_boot_disk {
-        candidate_dirs.iter().find_map(|dir| find_kegs_boot_disk(dir, rom_ver))
+        candidate_dirs
+            .iter()
+            .find_map(|dir| find_kegs_boot_disk(dir, rom_ver))
     } else {
         None
     };
 
-    let mut cmd_line = format!("{}", machine);
+    let mut cmd_line = machine.to_string();
 
     if let Some(sys) = system_dir {
         cmd_line.push_str(&format!(" -rompath \"{}\"", sys.to_string_lossy()));

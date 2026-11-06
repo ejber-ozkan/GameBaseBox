@@ -22,19 +22,16 @@ pub(super) fn amiga_disk_sort_key(path: &Path) -> (u32, String) {
         .to_lowercase();
 
     // Prioritize .slave files (priority 0) over floppy disks (priority 1)
-    let priority = if ext == "slave" {
-        0
-    } else {
-        1
-    };
+    let priority = if ext == "slave" { 0 } else { 1 };
 
-    let disk_number = if name.contains("disk1") || name.contains("disk 1") || name.contains("disk_1") {
-        1
-    } else if let Some((_, rest)) = name.rsplit_once("_disk") {
-        rest.parse::<u32>().unwrap_or(999)
-    } else {
-        999
-    };
+    let disk_number =
+        if name.contains("disk1") || name.contains("disk 1") || name.contains("disk_1") {
+            1
+        } else if let Some((_, rest)) = name.rsplit_once("_disk") {
+            rest.parse::<u32>().unwrap_or(999)
+        } else {
+            999
+        };
 
     (priority * 1000 + disk_number, name)
 }
@@ -101,9 +98,15 @@ pub(super) fn push_uae_rom_args(args: &mut Vec<String>, rom_files: &[PathBuf]) {
     if let Some(slave_path) = rom_files.iter().find(|p| is_amiga_slave(p)) {
         if let Some(parent_dir) = slave_path.parent() {
             args.push("-s".to_string());
-            args.push(format!("filesystem2=rw,DH1:DH1:{},0", parent_dir.to_string_lossy()));
+            args.push(format!(
+                "filesystem2=rw,DH1:DH1:{},0",
+                parent_dir.to_string_lossy()
+            ));
             args.push("-s".to_string());
-            args.push(format!("filesystem=rw,DH1:{}", parent_dir.to_string_lossy()));
+            args.push(format!(
+                "filesystem=rw,DH1:{}",
+                parent_dir.to_string_lossy()
+            ));
         }
         return;
     }

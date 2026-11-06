@@ -1,6 +1,5 @@
 //! Per-game launch metadata (FileToRun, GEMUS options) read from the library database.
 
-
 #[derive(Default)]
 pub(super) struct GameLaunchMetadata {
     pub(super) file_to_run: String,
@@ -15,6 +14,9 @@ pub(super) fn games_table_has_column(conn: &rusqlite::Connection, column_name: &
         return false;
     };
 
+    // Bound to a local so the row iterator is dropped before `stmt` (returning the
+    // expression directly does not compile; clippy's let_and_return is a false positive).
+    #[allow(clippy::let_and_return)]
     let has_column = columns
         .filter_map(Result::ok)
         .any(|column| column.eq_ignore_ascii_case(column_name));

@@ -35,13 +35,19 @@ fn clean_unc_prefix(path_str: String) -> String {
     }
 }
 
-
 const MAX_MEDIA_DOWNLOAD_BYTES: u64 = 100 * 1024 * 1024;
 
 fn validate_media_download_url(value: &str) -> Result<reqwest::Url, String> {
     let url = reqwest::Url::parse(value).map_err(|error| format!("Invalid media URL: {error}"))?;
-    if url.scheme() != "https" || url.host_str().is_none() || !url.username().is_empty() || url.password().is_some() {
-        return Err("Media downloads must use an HTTPS URL with a host and no embedded credentials.".to_string());
+    if url.scheme() != "https"
+        || url.host_str().is_none()
+        || !url.username().is_empty()
+        || url.password().is_some()
+    {
+        return Err(
+            "Media downloads must use an HTTPS URL with a host and no embedded credentials."
+                .to_string(),
+        );
     }
     Ok(url)
 }
@@ -71,8 +77,12 @@ fn resolve_media_child_path(base_dir: &Path, relative_path: &str) -> Option<Path
 
 fn split_variant_stem(stem: &str) -> (&str, Option<&str>) {
     if let Some((base, suffix)) = stem.rsplit_once('_') {
-        let is_numeric_variant = !suffix.is_empty() && suffix.chars().all(|character| character.is_ascii_digit());
-        let is_alpha_variant = suffix.len() == 1 && suffix.chars().all(|character| character.is_ascii_lowercase());
+        let is_numeric_variant =
+            !suffix.is_empty() && suffix.chars().all(|character| character.is_ascii_digit());
+        let is_alpha_variant = suffix.len() == 1
+            && suffix
+                .chars()
+                .all(|character| character.is_ascii_lowercase());
         if is_numeric_variant || is_alpha_variant {
             return (base, Some(suffix));
         }
@@ -210,11 +220,15 @@ pub async fn download_media_asset_internal(
         }
     }
 
-    let mut response = response_opt.ok_or_else(|| format!("Download failed with status: {}", last_status))?;
+    let mut response =
+        response_opt.ok_or_else(|| format!("Download failed with status: {}", last_status))?;
 
     let total_bytes = response.content_length();
     if total_bytes.is_some_and(|length| length > MAX_MEDIA_DOWNLOAD_BYTES) {
-        return Err(format!("Media download exceeds the {} MiB limit.", MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024));
+        return Err(format!(
+            "Media download exceeds the {} MiB limit.",
+            MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024
+        ));
     }
 
     let temp_path = full_path.with_extension(format!("tmp-{}", std::process::id()));
@@ -247,7 +261,10 @@ pub async fn download_media_asset_internal(
         if downloaded > MAX_MEDIA_DOWNLOAD_BYTES {
             drop(file);
             let _ = std::fs::remove_file(&temp_path);
-            return Err(format!("Media download exceeds the {} MiB limit.", MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024));
+            return Err(format!(
+                "Media download exceeds the {} MiB limit.",
+                MAX_MEDIA_DOWNLOAD_BYTES / 1024 / 1024
+            ));
         }
 
         file.write_all(&chunk)
@@ -281,7 +298,7 @@ pub async fn download_media_asset_internal(
     }
 
     drop(file);
-    let _ = std::fs::rename(&temp_path, &full_path)
+    std::fs::rename(&temp_path, &full_path)
         .map_err(|e| format!("Failed to finalize downloaded file: {}", e))?;
 
     if let Some(app_handle) = app {
@@ -363,10 +380,9 @@ fn resolve_path_case_insensitive(base: &Path, relative: &Path) -> Option<PathBuf
     let mut current = base.to_path_buf();
     for component in relative.components() {
         let comp_str = component.as_os_str().to_str()?;
-        if let Some(matched) = find_case_insensitive_file(&current, comp_str) {
+        {
+            let matched = find_case_insensitive_file(&current, comp_str)?;
             current = matched;
-        } else {
-            return None;
         }
     }
     Some(current)
@@ -430,7 +446,9 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
     for candidate in &candidates {
         if candidate.exists() {
             // Canonicalize to obtain the actual on-disk path with real casing
-            let resolved = candidate.canonicalize().unwrap_or_else(|_| candidate.clone());
+            let resolved = candidate
+                .canonicalize()
+                .unwrap_or_else(|_| candidate.clone());
             let path_str = clean_unc_prefix(resolved.to_string_lossy().to_string());
             if crate::is_debug_mode() {
                 log::info!(
@@ -490,7 +508,7 @@ pub async fn resolve_media_path(base_dir: String, filename: String) -> ResolvedP
 pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<String> {
     let mut results = Vec::new();
     let base = Path::new(&base_dir);
-    
+
     let normalized_filename = filename.replace('\\', "/");
     let path = Path::new(&normalized_filename);
     let Some(stem) = path.file_stem().and_then(|s| s.to_str()) else {
@@ -510,10 +528,14 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
         // Fast-path: Check if the parent folder exists directly
         let resolved_parent = if parent.is_dir() {
             // Canonicalize to resolve any case differences on case-insensitive filesystems
-            parent.canonicalize().ok().or_else(|| Some(parent.to_path_buf()))
+            parent
+                .canonicalize()
+                .ok()
+                .or_else(|| Some(parent.to_path_buf()))
         } else {
             // Slow-path: Try resolving the parent folder case-insensitively
-            parent.strip_prefix(base)
+            parent
+                .strip_prefix(base)
                 .ok()
                 .and_then(|rel| resolve_path_case_insensitive(base, rel))
                 .and_then(|p| p.canonicalize().ok().or(Some(p)))
@@ -576,7 +598,12 @@ pub async fn find_all_media_variants(base_dir: String, filename: String) -> Vec<
             } else {
                 format!("{}.{}", variant_base, ext_str)
             };
-            let root_path_str = clean_unc_prefix(resolved_parent.join(&root_name).to_string_lossy().to_string());
+            let root_path_str = clean_unc_prefix(
+                resolved_parent
+                    .join(&root_name)
+                    .to_string_lossy()
+                    .to_string(),
+            );
             if !results.contains(&root_path_str) {
                 check_variant(&mut results, &root_name);
             }
@@ -775,7 +802,11 @@ mod tests {
         let res = load_file_bytes("/non/existent/gbbox/rom.d64");
         assert!(res.is_err());
         let msg = res.unwrap_err();
-        assert!(msg.contains("not found") || msg.contains("no such file"), "unexpected error: {}", msg);
+        assert!(
+            msg.contains("not found") || msg.contains("no such file"),
+            "unexpected error: {}",
+            msg
+        );
     }
 
     #[tokio::test]
@@ -786,7 +817,11 @@ mod tests {
         let res = load_file_bytes(&dir.path().to_string_lossy());
         assert!(res.is_err());
         let msg = res.unwrap_err();
-        assert!(msg.contains("not a file"), "expected 'not a file' error, got: {}", msg);
+        assert!(
+            msg.contains("not a file"),
+            "expected 'not a file' error, got: {}",
+            msg
+        );
     }
 
     #[tokio::test]
@@ -872,12 +907,18 @@ mod tests {
         // returns the actual on-disk casing but the path may also have a UNC prefix.
         let res_a = resolve_media_path(base.clone(), "Akualabeth_1.png".to_string()).await;
         assert!(res_a.exists);
-        assert!(res_a.absolute_path.to_lowercase().contains("akualabeth_1.png"));
+        assert!(res_a
+            .absolute_path
+            .to_lowercase()
+            .contains("akualabeth_1.png"));
 
         // Test 2: Resolving a filename starting with a number that exists in '0/' subdirectory
         let res_0 = resolve_media_path(base.clone(), "1942_title.png".to_string()).await;
         assert!(res_0.exists);
-        assert!(res_0.absolute_path.to_lowercase().contains("1942_title.png"));
+        assert!(res_0
+            .absolute_path
+            .to_lowercase()
+            .contains("1942_title.png"));
 
         // Test 3: find_all_media_variants should find them in partitioned directories
         let variants = find_all_media_variants(base.clone(), "Akualabeth_1.png".to_string()).await;
@@ -905,19 +946,43 @@ mod tests {
 
         // 1. resolve_media_path with Windows backslashes
         let res_v1 = resolve_media_path(base.clone(), r"Z\Zaxxon_v1.png".to_string()).await;
-        assert!(res_v1.exists, "Failed to resolve media with Windows backslash");
-        assert!(res_v1.absolute_path.to_lowercase().ends_with("zaxxon_v1.png"));
+        assert!(
+            res_v1.exists,
+            "Failed to resolve media with Windows backslash"
+        );
+        assert!(res_v1
+            .absolute_path
+            .to_lowercase()
+            .ends_with("zaxxon_v1.png"));
 
         // 2. find_all_media_variants with Windows backslashes
-        let variants_v1 = find_all_media_variants(base.clone(), r"Z\Zaxxon_v1.png".to_string()).await;
-        assert_eq!(variants_v1.len(), 2, "Expected base and variant to be found for Zaxxon_v1");
-        assert!(variants_v1.iter().any(|p| p.to_lowercase().ends_with("zaxxon_v1.png")));
-        assert!(variants_v1.iter().any(|p| p.to_lowercase().ends_with("zaxxon_v1_1.png")));
+        let variants_v1 =
+            find_all_media_variants(base.clone(), r"Z\Zaxxon_v1.png".to_string()).await;
+        assert_eq!(
+            variants_v1.len(),
+            2,
+            "Expected base and variant to be found for Zaxxon_v1"
+        );
+        assert!(variants_v1
+            .iter()
+            .any(|p| p.to_lowercase().ends_with("zaxxon_v1.png")));
+        assert!(variants_v1
+            .iter()
+            .any(|p| p.to_lowercase().ends_with("zaxxon_v1_1.png")));
 
-        let variants_v4 = find_all_media_variants(base.clone(), r"Z\Zaxxon_v4.png".to_string()).await;
-        assert_eq!(variants_v4.len(), 2, "Expected base and variant to be found for Zaxxon_v4");
-        assert!(variants_v4.iter().any(|p| p.to_lowercase().ends_with("zaxxon_v4.png")));
-        assert!(variants_v4.iter().any(|p| p.to_lowercase().ends_with("zaxxon_v4_1.png")));
+        let variants_v4 =
+            find_all_media_variants(base.clone(), r"Z\Zaxxon_v4.png".to_string()).await;
+        assert_eq!(
+            variants_v4.len(),
+            2,
+            "Expected base and variant to be found for Zaxxon_v4"
+        );
+        assert!(variants_v4
+            .iter()
+            .any(|p| p.to_lowercase().ends_with("zaxxon_v4.png")));
+        assert!(variants_v4
+            .iter()
+            .any(|p| p.to_lowercase().ends_with("zaxxon_v4_1.png")));
 
         // 3. read_file_bytes with Windows backslashes
         let test_file = dir.path().join("test_rom.bin");

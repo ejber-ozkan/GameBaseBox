@@ -5,7 +5,7 @@ description = "GBBox - GameBase Box"
 authors = ["GBBox Contributors"]
 license = "MIT"
 edition = "2021"
-rust-version = "1.77.2"
+rust-version = "1.88"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -30,7 +30,7 @@ walkdir = "2"
 crc32fast = "1"
 rusqlite = { version = "0.31", features = ["bundled"] }
 reqwest = { version = "0.13.2", features = ["json", "query"] }
-zip = "0.6.6"
+zip = { version = "9.4", default-features = false, features = ["deflate", "deflate64", "bzip2", "lzma", "zstd"] }
 tokio = { version = "1", features = ["time"] }
 
 [dev-dependencies]
