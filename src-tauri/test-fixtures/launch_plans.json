@@ -1,0 +1,298 @@
+{
+  "amiga-retroarch-zip-multi-disk-m3u": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/puae_libretro.so",
+      "<TMP>/Game Disk1.m3u"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {
+      "<TMP>/Game Disk1.m3u": "<TMP>/Game/Game Disk1.adf\n<TMP>/Game/Game Disk2.adf\n"
+    }
+  },
+  "amiga-winuae-whdload": {
+    "args": [
+      "-G",
+      "-s",
+      "filesystem2=rw,DH1:DH1:<TMP>/Game/Game,0",
+      "-s",
+      "filesystem=rw,DH1:<TMP>/Game/Game"
+    ],
+    "emulator": "<ROOT>/emu/winuae.exe",
+    "files": {}
+  },
+  "amiga-winuae-zip-sibling-disks": {
+    "args": [
+      "-G",
+      "-0",
+      "<TMP>/Game_Disk1/Game Disk1.adf",
+      "-1",
+      "<TMP>/Game_Disk2/Game Disk2.adf",
+      "-diskswapper=<TMP>/Game_Disk1/Game Disk1.adf,<TMP>/Game_Disk2/Game Disk2.adf"
+    ],
+    "emulator": "<ROOT>/emu/winuae.exe",
+    "files": {}
+  },
+  "amstradcpc-cpce-direct": {
+    "args": [
+      "-autostart",
+      "<ROOT>/roms/Game.dsk"
+    ],
+    "emulator": "<ROOT>/emu/cap32",
+    "files": {}
+  },
+  "apple2gs-kegs-direct-2mg": {
+    "args": [
+      "-s5d1=<ROOT>/roms/Game.2mg",
+      "-s5d2=",
+      "-s6d1=",
+      "-s6d2=",
+      "-s7d1="
+    ],
+    "emulator": "<ROOT>/emu/kegs",
+    "files": {
+      "<ROOT>/emu/config.kegs": "s5d1 = <ROOT>/roms/Game.2mg\ns5d2 = \ns6d1 = \ns6d2 = \ns7d1 = "
+    }
+  },
+  "apple2gs-kegs-zip-525": {
+    "args": [
+      "-s5d1=",
+      "-s5d2=",
+      "-s6d1=<TMP>/Game/Game Side A.dsk",
+      "-s6d2=<TMP>/Game/Game Side B.dsk",
+      "-s7d1="
+    ],
+    "emulator": "<ROOT>/emu/kegs",
+    "files": {
+      "<ROOT>/emu/config.kegs": "s5d1 = \ns5d2 = \ns6d1 = <TMP>/Game/Game Side A.dsk\ns6d2 = <TMP>/Game/Game Side B.dsk\ns7d1 = "
+    }
+  },
+  "apple2gs-retroarch-mame-direct": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/mame_libretro.so",
+      "<TMP>/Game.cmd"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {
+      "<TMP>/Game.cmd": "apple2gs -rompath \"<ROOT>/emu/system\" -flop3 \"<ROOT>/roms/Game.po\""
+    }
+  },
+  "apple2gs-retroarch-mame-zip": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/mame_libretro.so",
+      "<TMP>/Game Disk 1.cmd"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {
+      "<TMP>/Game Disk 1.cmd": "apple2gs -rompath \"<ROOT>/emu/system\" -flop3 \"<TMP>/Game/Game Disk 1.2mg\" -flop4 \"<TMP>/Game/Game Disk 2.2mg\""
+    }
+  },
+  "atari5200-altirra-zip": {
+    "args": [
+      "/pal",
+      "<TMP>/Game/Game.a52"
+    ],
+    "emulator": "<ROOT>/emu/Altirra64.exe",
+    "files": {}
+  },
+  "atari7800-retroarch-direct": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/prosystem_libretro.so",
+      "<ROOT>/roms/Game.a78"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {}
+  },
+  "atari800-altirra-atr": {
+    "args": [
+      "/pal",
+      "/disk",
+      "<ROOT>/roms/Game.atr"
+    ],
+    "emulator": "<ROOT>/emu/Altirra64.exe",
+    "files": {}
+  },
+  "atari800-altirra-zip-cart-ntsc": {
+    "args": [
+      "/ntsc",
+      "/cart",
+      "<TMP>/Game/Game.car"
+    ],
+    "emulator": "<ROOT>/emu/Altirra64.exe",
+    "files": {}
+  },
+  "atari800-retroarch-zip": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/atari800_libretro.so",
+      "<TMP>/Game/Game.xex"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {}
+  },
+  "atarist-hatari-direct": {
+    "args": [
+      "<ROOT>/roms/Game.st"
+    ],
+    "emulator": "<ROOT>/emu/hatari",
+    "files": {}
+  },
+  "atarist-hatari-harddisk-acsi-image": {
+    "args": [
+      "--acsi",
+      "<ROOT>/roms/HardDisk/Game.hd"
+    ],
+    "emulator": "<ROOT>/emu/hatari",
+    "files": {}
+  },
+  "atarist-hatari-harddisk-directory": {
+    "error": "ROM path is not a file: <ROOT>/roms/HardDisk/Game"
+  },
+  "atarist-hatari-harddisk-zip": {
+    "args": [
+      "--disk-a",
+      "<ROOT>/boot.st",
+      "--harddrive",
+      "<TMP>/Game",
+      "--boot-hd",
+      "yes"
+    ],
+    "emulator": "<ROOT>/emu/hatari",
+    "files": {}
+  },
+  "atarist-hatari-zip-two-disks": {
+    "args": [
+      "--disk-a",
+      "<TMP>/Game/Game Disk 1.st",
+      "--disk-b",
+      "<TMP>/Game/Game Disk 2.st"
+    ],
+    "emulator": "<ROOT>/emu/hatari",
+    "files": {}
+  },
+  "atarist-retroarch-harddisk-directory": {
+    "error": "ROM path is not a file: <ROOT>/roms/HardDisk/Game"
+  },
+  "atarist-retroarch-zip-m3u": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/hatari_libretro.so",
+      "<TMP>/Game Disk 1.m3u"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {
+      "<TMP>/Game Disk 1.m3u": "<TMP>/Game/Game Disk 1.stx\n<TMP>/Game/Game Disk 2.msa\n"
+    }
+  },
+  "atarist-steem-direct": {
+    "args": [
+      "<ROOT>/roms/Game.msa"
+    ],
+    "emulator": "<ROOT>/emu/Steem.exe",
+    "files": {}
+  },
+  "atarist-steem-harddisk-zip": {
+    "args": [
+      "<ROOT>/boot.st"
+    ],
+    "emulator": "<ROOT>/emu/Steem.exe",
+    "files": {}
+  },
+  "bbcmicro-beebem-direct": {
+    "args": [
+      "<ROOT>/roms/Game.ssd"
+    ],
+    "emulator": "<ROOT>/emu/BeebEm.exe",
+    "files": {}
+  },
+  "bbcmicro-retroarch-b2-direct": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/b2_libretro.so",
+      "<ROOT>/roms/Game.ssd"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {}
+  },
+  "bbcmicro-retroarch-mame-direct": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/mame_libretro.so",
+      "<TMP>/Game.cmd"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {
+      "<TMP>/Game.cmd": "bbcb -rompath \"<ROOT>/emu/system\" -autoboot_delay 2 -autoboot_command \"*EXEC !BOOT/n\" -flop1 \"<ROOT>/roms/Game.ssd\""
+    }
+  },
+  "bbcmicro-retroarch-mame-zip": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/mame_libretro.so",
+      "<TMP>/Game.cmd"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {
+      "<TMP>/Game.cmd": "bbcb -rompath \"<ROOT>/emu/system\" -autoboot_delay 2 -autoboot_command \"*EXEC !BOOT/n\" -flop1 \"<TMP>/Game/Game.ssd\" -flop2 \"<TMP>/Game/Game (Side B).ssd\""
+    }
+  },
+  "bbcmicro-retroarch-uef-zip-with-companion-disk": {
+    "args": [
+      "-L",
+      "<ROOT>/cores/mame_libretro.so",
+      "<TMP>/Game.cmd"
+    ],
+    "emulator": "<ROOT>/emu/retroarch",
+    "files": {
+      "<TMP>/Game.cmd": "bbcb -rompath \"<ROOT>/emu/system\" -autoboot_delay 2 -autoboot_command \"*TAPE/nPAGE=&E00/n*RUN/n\" -cass \"<TMP>/Game/Game.uef\""
+    }
+  },
+  "c128-vice-direct": {
+    "args": [
+      "-autostart",
+      "<ROOT>/roms/Game.d71"
+    ],
+    "emulator": "<ROOT>/emu/x128",
+    "files": {}
+  },
+  "pet-vice-direct": {
+    "args": [
+      "-autostart",
+      "<ROOT>/roms/Game.prg"
+    ],
+    "emulator": "<ROOT>/emu/xpet",
+    "files": {}
+  },
+  "vic20-vice-direct-ntsc-truedrive": {
+    "args": [
+      "-truedrive",
+      "-ntsc",
+      "-autostart",
+      "<ROOT>/roms/Game.prg"
+    ],
+    "emulator": "<ROOT>/emu/xvic",
+    "files": {}
+  },
+  "vic20-vice-zip-two-disks-fliplist": {
+    "args": [
+      "-autostart",
+      "<TMP>/Game/Game (Disk 1).d64",
+      "-flipname",
+      "<TMP>/Game (Disk 1).vfl"
+    ],
+    "emulator": "<ROOT>/emu/xvic",
+    "files": {
+      "<TMP>/Game (Disk 1).vfl": "# Vice fliplist file\nUNIT 8\n<TMP>/Game/Game (Disk 1).d64\n<TMP>/Game/Game (Disk 2).d64\n"
+    }
+  },
+  "zxspectrum-spectaculator": {
+    "args": [
+      "<ROOT>/roms/Game.tzx"
+    ],
+    "emulator": "<ROOT>/emu/Spectaculator.exe",
+    "files": {}
+  }
+}

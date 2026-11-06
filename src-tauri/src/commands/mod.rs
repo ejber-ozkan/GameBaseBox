@@ -8,3 +8,6 @@ pub mod setup;
 pub mod system;
 pub mod video;
 pub mod vice_compat;
+
+#[cfg(test)]
+mod launch_plan_tests;

@@ -1701,7 +1701,53 @@ pub async fn launch_emulator(request: LaunchRequest) -> Result<LaunchResult, Str
     crate::database::run_blocking("Emulator launch", move || launch_emulator_blocking(request)).await
 }
 
+/// Everything needed to start an emulator: the resolved binary and its arguments. Built
+/// without spawning anything, so launch argument assembly is testable on its own.
+#[derive(Debug)]
+pub(crate) struct LaunchPlan {
+    pub emulator: PathBuf,
+    pub args: Vec<String>,
+    pub exe_name: String,
+    pub warnings: Vec<String>,
+}
+
 fn launch_emulator_blocking(request: LaunchRequest) -> Result<LaunchResult, String> {
+    let plan = plan_launch(&request)?;
+
+    let is_debug = crate::is_debug_mode() || std::env::var("VIC40_DEBUG_LAUNCH").is_ok();
+    if is_debug {
+        println!("[GameBaseBox Launch] Emulator: {}", plan.emulator.to_string_lossy());
+        println!("[GameBaseBox Launch] Switches: {:?}", plan.args);
+    }
+
+    let mut cmd = Command::new(&plan.emulator);
+
+    if let Some(parent) = plan.emulator.parent() {
+        cmd.current_dir(parent);
+    }
+
+    match cmd
+        .args(&plan.args)
+        .stdin(std::process::Stdio::null())
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .spawn()
+    {
+        Ok(_) => Ok(LaunchResult {
+            success: true,
+            message: {
+                let mut message = format!("Launched {} successfully", plan.exe_name);
+                for warning in &plan.warnings {
+                    message.push_str(&format!("\n{warning}"));
+                }
+                message
+            },
+        }),
+        Err(e) => Err(format!("Failed to launch emulator: {}", e)),
+    }
+}
+
+pub(crate) fn plan_launch(request: &LaunchRequest) -> Result<LaunchPlan, String> {
     let platform_id = request.platform_id.as_deref();
     let emulator = resolve_emulator_binary(
         &request.emulator_path,
@@ -2165,36 +2211,12 @@ fn launch_emulator_blocking(request: LaunchRequest) -> Result<LaunchResult, Stri
         }
     }
 
-    if is_debug {
-        println!("[GameBaseBox Launch] Emulator: {}", emulator.to_string_lossy());
-        println!("[GameBaseBox Launch] Switches: {:?}", args);
-    }
-
-    let mut cmd = Command::new(&emulator);
-
-    if let Some(parent) = emulator.parent() {
-        cmd.current_dir(parent);
-    }
-
-    match cmd
-        .args(&args)
-        .stdin(std::process::Stdio::null())
-        .stdout(std::process::Stdio::null())
-        .stderr(std::process::Stdio::null())
-        .spawn()
-    {
-        Ok(_) => Ok(LaunchResult {
-            success: true,
-            message: {
-                let mut message = format!("Launched {} successfully", exe_name);
-                if let Some(settings) = &c64_settings {
-                    for warning in &settings.warnings { message.push_str(&format!("\n{warning}")); }
-                }
-                message
-            },
-        }),
-        Err(e) => Err(format!("Failed to launch emulator: {}", e)),
-    }
+    Ok(LaunchPlan {
+        emulator,
+        args,
+        exe_name,
+        warnings: c64_settings.map(|settings| settings.warnings).unwrap_or_default(),
+    })
 }
 
 #[cfg(test)]
