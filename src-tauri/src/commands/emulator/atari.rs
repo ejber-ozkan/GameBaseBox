@@ -1,5 +1,8 @@
-//! Atari 8-bit (Altirra arguments) and Atari ST (RetroArch Hatari hard-disk setup).
+//! Atari 8-bit (Altirra arguments) and Atari ST (floppy and hard-disk launches for
+//! Hatari, STeem and the RetroArch Hatari core).
 
+use super::{path_arg, push_retroarch_core, EmulatorFamily};
+use crate::models::LaunchRequest;
 use std::path::{Path, PathBuf};
 
 pub(super) fn push_altirra_rom_args(args: &mut Vec<String>, rom_path: &Path) {
@@ -98,4 +101,86 @@ pub(super) fn prepare_retroarch_hatari_harddisk(
     std::fs::write(&gem_file, b"").map_err(|e| e.to_string())?;
 
     Ok(gem_file)
+}
+
+/// Atari ST hard-disk games boot from a configured boot.st and mount a GEMDOS folder.
+pub(super) struct StHardDisk {
+    pub(super) boot_disk: PathBuf,
+    /// Folder (or image) given to Hatari's --harddrive.
+    pub(super) hatari_drive: PathBuf,
+    /// Folder the RetroArch Hatari core mounts through a generated .gem file.
+    pub(super) retroarch_drive: PathBuf,
+    /// A raw ACSI image (`.hd`) launched with Hatari's --acsi instead.
+    pub(super) acsi_image: Option<PathBuf>,
+    /// What other emulators are given.
+    pub(super) fallback: PathBuf,
+}
+
+pub(super) fn is_atarist_harddisk_name(rom_path: &str) -> bool {
+    let lower = rom_path.to_lowercase();
+    lower.contains("harddisk") || lower.contains("hdold") || lower.ends_with(".hd")
+}
+
+/// An extracted archive is a hard-disk game when it is named like one, or when it has
+/// no floppy images but has TOS programs or a DESKTOP.INF.
+pub(super) fn is_atarist_harddisk_archive(rom_path: &str, files: &[PathBuf]) -> bool {
+    let extension = |path: &PathBuf| path.extension().unwrap_or_default().to_string_lossy().to_lowercase();
+    is_atarist_harddisk_name(rom_path)
+        || (!files.iter().any(|path| matches!(extension(path).as_str(), "st" | "msa" | "stx" | "dim" | "ipf"))
+            && files.iter().any(|path| {
+                matches!(extension(path).as_str(), "tos" | "prg")
+                    || path.file_name().unwrap_or_default().to_string_lossy().eq_ignore_ascii_case("desktop.inf")
+            }))
+}
+
+pub(super) fn atarist_boot_disk(request: &LaunchRequest) -> Result<PathBuf, String> {
+    match &request.boot_disk_path {
+        Some(path) if !path.trim().is_empty() => {
+            let boot_disk = PathBuf::from(path.trim().trim_matches('"').trim_matches('\''));
+            if !boot_disk.exists() {
+                return Err(format!("Atari ST boot disk file not found: {}", path));
+            }
+            Ok(boot_disk)
+        }
+        _ => Err("HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.".to_string()),
+    }
+}
+
+pub(super) fn push_atarist_harddisk_args(
+    args: &mut Vec<String>,
+    family: EmulatorFamily,
+    request: &LaunchRequest,
+    emulator: &Path,
+    disk: &StHardDisk,
+) -> Result<(), String> {
+    // Hatari is checked before RetroArch here, unlike the general dispatch.
+    if family.hatari {
+        if let Some(image) = &disk.acsi_image {
+            args.push("--acsi".to_string());
+            args.push(path_arg(image));
+        } else {
+            args.push("--disk-a".to_string());
+            args.push(path_arg(&disk.boot_disk));
+            args.push("--harddrive".to_string());
+            args.push(path_arg(&disk.hatari_drive));
+            args.push("--boot-hd".to_string());
+            args.push("yes".to_string());
+        }
+    } else if family.retroarch {
+        push_retroarch_core(args, request.core_path.as_deref());
+        let gem_file = match emulator.parent() {
+            Some(parent) => prepare_retroarch_hatari_harddisk(parent, &disk.retroarch_drive, &disk.boot_disk)?,
+            None => {
+                let gem_file = disk.retroarch_drive.with_extension("gem");
+                let _ = std::fs::write(&gem_file, b"");
+                gem_file
+            }
+        };
+        args.push(path_arg(&gem_file));
+    } else if family.steem {
+        args.push(path_arg(&disk.boot_disk));
+    } else {
+        args.push(path_arg(&disk.fallback));
+    }
+    Ok(())
 }

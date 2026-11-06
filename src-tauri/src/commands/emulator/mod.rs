@@ -253,6 +253,190 @@ fn launch_emulator_blocking(request: LaunchRequest) -> Result<LaunchResult, Stri
     }
 }
 
+/// Which emulator family the configured binary/profile is. Detection keeps the
+/// historical rules: RetroArch by executable name only, the others by profile id or
+/// executable name.
+#[derive(Debug, Clone, Copy, Default)]
+struct EmulatorFamily {
+    retroarch: bool,
+    altirra: bool,
+    spectaculator: bool,
+    beebem: bool,
+    uae: bool,
+    kegs: bool,
+    hatari: bool,
+    steem: bool,
+}
+
+impl EmulatorFamily {
+    fn detect(profile_id: Option<&str>, exe_name: &str) -> Self {
+        let profile_is = |id: &str| profile_id == Some(id);
+        Self {
+            retroarch: exe_name.contains("retroarch"),
+            altirra: profile_is("altirra-atari800") || exe_name.contains("altirra"),
+            spectaculator: profile_is("spectaculator-zxspectrum") || exe_name.contains("spectaculator"),
+            beebem: profile_is("beebem-bbcmicro") || exe_name.contains("beebem"),
+            uae: profile_is("winuae-amiga")
+                || exe_name.contains("winuae")
+                || exe_name.contains("fs-uae")
+                || exe_name.contains("amiberry"),
+            kegs: profile_is("kegs-apple2gs") || exe_name.contains("kegs") || exe_name.contains("gsplus"),
+            hatari: profile_is("hatari-atarist") || exe_name.contains("hatari"),
+            steem: profile_is("steem-atarist") || exe_name.contains("steem"),
+        }
+    }
+
+    /// No other family matched: VICE-style command line (-autostart, -ntsc, ...).
+    fn is_vice_like(&self) -> bool {
+        !(self.retroarch
+            || self.altirra
+            || self.spectaculator
+            || self.beebem
+            || self.uae
+            || self.kegs
+            || self.hatari
+            || self.steem)
+    }
+}
+
+/// The files a launch hands to the emulator: the primary file and, for multi-disk
+/// games, every disk in playlist order (Disk 1 / main game first).
+struct LaunchMedia {
+    primary: PathBuf,
+    files: Vec<PathBuf>,
+    /// Session directory of an extracted archive; direct launches create one on demand.
+    session_dir: Option<PathBuf>,
+}
+
+impl LaunchMedia {
+    fn session_dir(&self) -> Result<PathBuf, String> {
+        match &self.session_dir {
+            Some(dir) => Ok(dir.clone()),
+            None => create_launch_temp_dir(),
+        }
+    }
+}
+
+/// Extracts a ZIP launch into a session directory and orders its launch files.
+fn extract_launch_media(rom: &Path, platform_id: Option<&str>, file_to_run: &str) -> Result<LaunchMedia, String> {
+    let (session_dir, mut files) = with_extraction_session(
+        &std::env::temp_dir(), DEFAULT_EXTRACTION_LIMITS, |session| {
+            let mut extracted = Vec::new();
+            let archives = if platform_id == Some("amiga") {
+                collect_amiga_sibling_disk_archives(rom)
+            } else {
+                vec![rom.to_path_buf()]
+            };
+            for archive in archives {
+                extracted.extend(session.extract_archive(&archive, &launch_extensions_for_platform(platform_id))?);
+            }
+            if extracted.is_empty() {
+                return Err(format!(
+                    "No compatible {} launch files found inside the ZIP file.",
+                    platform_display_name(platform_id)
+                ));
+            }
+            if platform_id == Some("bbcmicro") && extracted.iter().all(|path| {
+                let ext = path.extension().and_then(|ext| ext.to_str()).unwrap_or("").to_lowercase();
+                matches!(ext.as_str(), "uef" | "csw" | "wav")
+            }) {
+                if let Some(companion) = find_bbcmicro_companion_disk_archive(rom) {
+                    extracted.extend(session.extract_archive(&companion, &["ssd", "dsd", "adl", "adf"])?);
+                }
+            }
+            Ok(extracted)
+        },
+    )?;
+
+    match platform_id {
+        Some("amiga") => files.sort_by_key(|path| amiga_disk_sort_key(path)),
+        Some("bbcmicro") => files.sort_by_key(|path| bbcmicro_media_sort_key(path)),
+        _ => files.sort_by_key(|path| natural_disk_sort_key(path)),
+    }
+
+    let primary = find_matching_primary_rom(&files, file_to_run).unwrap_or_else(|| files[0].clone());
+    Ok(LaunchMedia { primary, files, session_dir: Some(session_dir) })
+}
+
+fn push_retroarch_core(args: &mut Vec<String>, core_path: Option<&str>) {
+    if let Some(core) = core_path.filter(|core| !core.is_empty()) {
+        args.push("-L".to_string());
+        args.push(core.to_string());
+    }
+}
+
+fn path_arg(path: &Path) -> String {
+    path.to_string_lossy().to_string()
+}
+
+/// Content arguments for every emulator family except the Atari ST hard-disk case.
+fn push_content_args(
+    args: &mut Vec<String>,
+    family: EmulatorFamily,
+    request: &LaunchRequest,
+    emulator: &Path,
+    media: &LaunchMedia,
+    gemus: &str,
+) -> Result<(), String> {
+    let platform_id = request.platform_id.as_deref();
+    let primary = &media.primary;
+
+    if family.retroarch {
+        push_retroarch_core(args, request.core_path.as_deref());
+        let system_dir = emulator.parent().map(|parent| parent.join("system"));
+        let mame_system_dir = system_dir.as_deref().or_else(|| emulator.parent());
+        if platform_id == Some("apple2gs") {
+            let cmd = write_mame_apple2gs_cmd(&media.session_dir()?, primary, &media.files, gemus, mame_system_dir)?;
+            args.push(path_arg(&cmd));
+        } else if platform_id == Some("bbcmicro") {
+            if is_retroarch_mame_core(request.core_path.as_deref()) {
+                let cmd = write_mame_bbcmicro_cmd(&media.session_dir()?, primary, &media.files, gemus, mame_system_dir)?;
+                args.push(path_arg(&cmd));
+            } else {
+                args.push(path_arg(primary));
+            }
+        } else if media.files.len() > 1 && !media.files.iter().any(|path| is_amiga_slave(path)) {
+            let m3u = write_retroarch_m3u(&media.session_dir()?, primary, &media.files)?;
+            args.push(path_arg(&m3u));
+        } else {
+            args.push(path_arg(primary));
+        }
+    } else if family.altirra {
+        push_altirra_rom_args(args, primary);
+    } else if family.uae {
+        push_uae_rom_args(args, &media.files);
+        push_uae_gemus_args(args, gemus);
+    } else if family.kegs {
+        prepare_kegs_launch(emulator.parent(), args, &media.files, primary, gemus);
+    } else if family.hatari && media.files.len() > 1 {
+        args.push("--disk-a".to_string());
+        args.push(path_arg(primary));
+        if let Some(second) = media.files.iter().find(|path| *path != primary) {
+            args.push("--disk-b".to_string());
+            args.push(path_arg(second));
+        }
+    } else if family.spectaculator || family.beebem || family.hatari || family.steem {
+        args.push(path_arg(primary));
+    } else {
+        args.push("-autostart".to_string());
+        args.push(path_arg(primary));
+        if media.files.len() > 1 {
+            let session_dir = media.session_dir()?;
+            let fliplist_path = session_dir.join(format!(
+                "{}.vfl",
+                primary.file_stem().unwrap_or_default().to_string_lossy()
+            ));
+            let mut fliplist = std::fs::File::create(&fliplist_path)
+                .map_err(|error| format!("Failed to create VICE fliplist '{}': {error}", fliplist_path.display()))?;
+            write_vice_fliplist(&mut fliplist, &media.files)
+                .map_err(|error| format!("Failed to write VICE fliplist '{}': {error}", fliplist_path.display()))?;
+            args.push("-flipname".to_string());
+            args.push(path_arg(&fliplist_path));
+        }
+    }
+    Ok(())
+}
+
 pub(crate) fn plan_launch(request: &LaunchRequest) -> Result<LaunchPlan, String> {
     let platform_id = request.platform_id.as_deref();
     let emulator = resolve_emulator_binary(
@@ -281,45 +465,8 @@ pub(crate) fn plan_launch(request: &LaunchRequest) -> Result<LaunchPlan, String>
         .and_then(|n| n.to_str())
         .unwrap_or("")
         .to_lowercase();
-    let is_retroarch = exe_name.contains("retroarch");
-    let is_altirra = request
-        .emulator_profile_id
-        .as_deref()
-        .is_some_and(|profile_id| profile_id == "altirra-atari800")
-        || exe_name.contains("altirra");
-    let is_spectaculator = request
-        .emulator_profile_id
-        .as_deref()
-        .is_some_and(|profile_id| profile_id == "spectaculator-zxspectrum")
-        || exe_name.contains("spectaculator");
-    let is_beebem = request
-        .emulator_profile_id
-        .as_deref()
-        .is_some_and(|profile_id| profile_id == "beebem-bbcmicro")
-        || exe_name.contains("beebem");
-    let is_uae = request
-        .emulator_profile_id
-        .as_deref()
-        .is_some_and(|profile_id| profile_id == "winuae-amiga")
-        || exe_name.contains("winuae")
-        || exe_name.contains("fs-uae")
-        || exe_name.contains("amiberry");
-    let is_kegs = request
-        .emulator_profile_id
-        .as_deref()
-        .is_some_and(|profile_id| profile_id == "kegs-apple2gs")
-        || exe_name.contains("kegs")
-        || exe_name.contains("gsplus");
-    let is_hatari = request
-        .emulator_profile_id
-        .as_deref()
-        .is_some_and(|profile_id| profile_id == "hatari-atarist")
-        || exe_name.contains("hatari");
-    let is_steem = request
-        .emulator_profile_id
-        .as_deref()
-        .is_some_and(|profile_id| profile_id == "steem-atarist")
-        || exe_name.contains("steem");
+    let family = EmulatorFamily::detect(request.emulator_profile_id.as_deref(), &exe_name);
+    let is_retroarch = family.retroarch;
 
     if is_retroarch {
         if let Some(cp) = &request.core_path {
@@ -333,6 +480,7 @@ pub(crate) fn plan_launch(request: &LaunchRequest) -> Result<LaunchPlan, String>
         }
     }
 
+    // Region / drive switches come first on the command line.
     let mut args: Vec<String> = Vec::new();
     let is_c64 = platform_id.unwrap_or("c64") == "c64";
     let c64_layers = request.c64.clone().unwrap_or_default();
@@ -353,13 +501,9 @@ pub(crate) fn plan_launch(request: &LaunchRequest) -> Result<LaunchPlan, String>
         if !is_retroarch {
             args.extend(super::c64::vice_args(settings, &c64_layers)?);
         }
-    } else if is_altirra {
-        if request.is_pal {
-            args.push("/pal".to_string());
-        } else {
-            args.push("/ntsc".to_string());
-        }
-    } else if !is_retroarch && !is_spectaculator && !is_beebem && !is_uae && !is_kegs && !is_hatari && !is_steem {
+    } else if family.altirra {
+        args.push(if request.is_pal { "/pal" } else { "/ntsc" }.to_string());
+    } else if family.is_vice_like() {
         if request.true_drive_emulation {
             args.push("-truedrive".to_string());
         }
@@ -371,318 +515,45 @@ pub(crate) fn plan_launch(request: &LaunchRequest) -> Result<LaunchPlan, String>
     let c64_option_count = args.len();
     let launch_metadata =
         load_game_launch_metadata(request.game_id.as_deref(), request.platform_id.as_deref());
-    let file_to_run = launch_metadata.file_to_run.clone();
 
     let is_zip = rom
         .extension()
         .and_then(|e| e.to_str())
-        .unwrap_or("")
-        .to_lowercase()
-        == "zip";
+        .is_some_and(|extension| extension.eq_ignore_ascii_case("zip"));
 
-    if is_zip {
-        let (temp_dir, mut extracted_roms) = with_extraction_session(
-            &std::env::temp_dir(), DEFAULT_EXTRACTION_LIMITS, |session| {
-                let mut extracted_roms = Vec::new();
-                let zip_archives = if platform_id == Some("amiga") {
-                    collect_amiga_sibling_disk_archives(&rom)
-                } else {
-                    vec![rom.clone()]
-                };
-                for archive_path in zip_archives {
-                    extracted_roms.extend(session.extract_archive(&archive_path, &launch_extensions_for_platform(platform_id))?);
-                }
-                if extracted_roms.is_empty() {
-                    return Err(format!(
-                        "No compatible {} launch files found inside the ZIP file.",
-                        platform_display_name(platform_id)
-                    ));
-                }
-                if platform_id == Some("bbcmicro") && extracted_roms.iter().all(|path| {
-                    let ext = path.extension().and_then(|ext| ext.to_str()).unwrap_or("").to_lowercase();
-                    matches!(ext.as_str(), "uef" | "csw" | "wav")
-                }) {
-                    if let Some(companion) = find_bbcmicro_companion_disk_archive(&rom) {
-                        extracted_roms.extend(session.extract_archive(&companion, &["ssd", "dsd", "adl", "adf"])?);
-                    }
-                }
-                Ok(extracted_roms)
-            },
-        )?;
-
-        if platform_id == Some("amiga") {
-            extracted_roms.sort_by_key(|path| amiga_disk_sort_key(path));
-        } else if platform_id == Some("bbcmicro") {
-            extracted_roms.sort_by_key(|path| bbcmicro_media_sort_key(path));
-        } else {
-            extracted_roms.sort_by_key(|path| natural_disk_sort_key(path));
-        }
-
-        let resolved_primary_rom = find_matching_primary_rom(&extracted_roms, &file_to_run)
-            .unwrap_or_else(|| extracted_roms.first().unwrap().clone());
-
-        let is_harddisk_atarist = platform_id == Some("atarist")
-            && (request.rom_path.to_lowercase().contains("harddisk")
-                || request.rom_path.to_lowercase().contains("hdold")
-                || request.rom_path.to_lowercase().ends_with(".hd")
-                || (!extracted_roms.iter().any(|r| {
-                    let ext = r.extension().unwrap_or_default().to_string_lossy().to_lowercase();
-                    matches!(ext.as_str(), "st" | "msa" | "stx" | "dim" | "ipf")
-                }) && extracted_roms.iter().any(|r| {
-                    let ext = r.extension().unwrap_or_default().to_string_lossy().to_lowercase();
-                    matches!(ext.as_str(), "tos" | "prg")
-                        || r.file_name().unwrap_or_default().to_string_lossy().eq_ignore_ascii_case("desktop.inf")
-                })));
-
-        if is_harddisk_atarist {
-            let boot_disk = match &request.boot_disk_path {
-                Some(path) if !path.trim().is_empty() => {
-                    let p = PathBuf::from(path.trim().trim_matches('"').trim_matches('\''));
-                    if !p.exists() {
-                        return Err(format!("Atari ST boot disk file not found: {}", path));
-                    }
-                    p
-                }
-                _ => {
-                    return Err("HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.".to_string());
-                }
-            };
-
-            let primary_extract_dir = temp_dir.join(
-                rom.file_stem()
-                    .and_then(|s| s.to_str())
-                    .unwrap_or("archive"),
-            );
-            let hd_dir = if primary_extract_dir.exists() {
-                &primary_extract_dir
-            } else {
-                &temp_dir
-            };
-
-            if is_hatari {
-                args.push("--disk-a".to_string());
-                args.push(boot_disk.to_string_lossy().to_string());
-                args.push("--harddrive".to_string());
-                args.push(hd_dir.to_string_lossy().to_string());
-                args.push("--boot-hd".to_string());
-                args.push("yes".to_string());
-            } else if is_retroarch {
-                if let Some(cp) = &request.core_path {
-                    if !cp.is_empty() {
-                        args.push("-L".to_string());
-                        args.push(cp.clone());
-                    }
-                }
-                if let Some(parent) = emulator.parent() {
-                    let gem_file = prepare_retroarch_hatari_harddisk(parent, hd_dir, &boot_disk)?;
-                    args.push(gem_file.to_string_lossy().to_string());
-                } else {
-                    let gem_file = hd_dir.with_extension("gem");
-                    let _ = std::fs::write(&gem_file, b"");
-                    args.push(gem_file.to_string_lossy().to_string());
-                }
-            } else if is_steem {
-                args.push(boot_disk.to_string_lossy().to_string());
-            } else {
-                args.push(resolved_primary_rom.to_string_lossy().to_string());
-            }
-        } else if is_retroarch {
-            if let Some(cp) = &request.core_path {
-                if !cp.is_empty() {
-                    args.push("-L".to_string());
-                    args.push(cp.clone());
-                }
-            }
-            if platform_id == Some("apple2gs") {
-                let system_dir = emulator.parent().map(|p| p.join("system"));
-                let cmd_path = write_mame_apple2gs_cmd(
-                    &temp_dir,
-                    &resolved_primary_rom,
-                    &extracted_roms,
-                    &launch_metadata.gemus,
-                    system_dir.as_deref().or_else(|| emulator.parent()),
-                )?;
-                args.push(cmd_path.to_string_lossy().to_string());
-            } else if platform_id == Some("bbcmicro") {
-                if is_retroarch_mame_core(request.core_path.as_deref()) {
-                    let system_dir = emulator.parent().map(|p| p.join("system"));
-                    let cmd_path = write_mame_bbcmicro_cmd(
-                        &temp_dir,
-                        &resolved_primary_rom,
-                        &extracted_roms,
-                        &launch_metadata.gemus,
-                        system_dir.as_deref().or_else(|| emulator.parent()),
-                    )?;
-                    args.push(cmd_path.to_string_lossy().to_string());
-                } else {
-                    args.push(resolved_primary_rom.to_string_lossy().to_string());
-                }
-            } else if extracted_roms.len() > 1 && !extracted_roms.iter().any(|p| is_amiga_slave(p)) {
-                let m3u_path =
-                    write_retroarch_m3u(&temp_dir, &resolved_primary_rom, &extracted_roms)?;
-                args.push(m3u_path.to_string_lossy().to_string());
-            } else {
-                args.push(resolved_primary_rom.to_string_lossy().to_string());
-            }
-        } else if is_altirra {
-            push_altirra_rom_args(&mut args, &resolved_primary_rom);
-        } else if is_uae {
-            push_uae_rom_args(&mut args, &extracted_roms);
-            push_uae_gemus_args(&mut args, &launch_metadata.gemus);
-        } else if is_kegs {
-            prepare_kegs_launch(
-                emulator.parent(),
-                &mut args,
-                &extracted_roms,
-                &resolved_primary_rom,
-                &launch_metadata.gemus,
-            );
-        } else if is_spectaculator || is_beebem {
-            args.push(resolved_primary_rom.to_string_lossy().to_string());
-        } else if is_hatari {
-            if extracted_roms.len() > 1 {
-                args.push("--disk-a".to_string());
-                args.push(resolved_primary_rom.to_string_lossy().to_string());
-                if let Some(second) = extracted_roms.iter().find(|p| **p != resolved_primary_rom) {
-                    args.push("--disk-b".to_string());
-                    args.push(second.to_string_lossy().to_string());
-                }
-            } else {
-                args.push(resolved_primary_rom.to_string_lossy().to_string());
-            }
-        } else if is_steem {
-            args.push(resolved_primary_rom.to_string_lossy().to_string());
-        } else {
-            args.push("-autostart".to_string());
-            args.push(resolved_primary_rom.to_string_lossy().to_string());
-            if extracted_roms.len() > 1 {
-                let fliplist_path = temp_dir.join(format!(
-                    "{}.vfl",
-                    resolved_primary_rom
-                        .file_stem()
-                        .unwrap_or_default()
-                        .to_string_lossy()
-                ));
-                let mut fliplist =
-                    std::fs::File::create(&fliplist_path).map_err(|error| format!("Failed to create VICE fliplist '{}': {error}", fliplist_path.display()))?;
-                write_vice_fliplist(&mut fliplist, &extracted_roms)
-                    .map_err(|error| format!("Failed to write VICE fliplist '{}': {error}", fliplist_path.display()))?;
-                args.push("-flipname".to_string());
-                args.push(fliplist_path.to_string_lossy().to_string());
-            }
-        }
+    let media = if is_zip {
+        extract_launch_media(&rom, platform_id, &launch_metadata.file_to_run)?
     } else {
-        let is_harddisk_atarist = platform_id == Some("atarist")
-            && (request.rom_path.to_lowercase().contains("harddisk")
-                || request.rom_path.to_lowercase().contains("hdold")
-                || request.rom_path.to_lowercase().ends_with(".hd"));
+        LaunchMedia { primary: rom.clone(), files: vec![rom.clone()], session_dir: None }
+    };
 
-        if is_harddisk_atarist {
-            let boot_disk = match &request.boot_disk_path {
-                Some(path) if !path.trim().is_empty() => {
-                    let p = PathBuf::from(path.trim().trim_matches('"').trim_matches('\''));
-                    if !p.exists() {
-                        return Err(format!("Atari ST boot disk file not found: {}", path));
-                    }
-                    p
-                }
-                _ => {
-                    return Err("HardDisk games require a boot disk (boot.st). Please configure the boot.st path in Atari ST Settings.".to_string());
-                }
-            };
+    let st_hard_disk = if platform_id != Some("atarist") {
+        None
+    } else if let Some(session_dir) = media.session_dir.as_ref().filter(|_| is_atarist_harddisk_archive(&request.rom_path, &media.files)) {
+        let named_dir = session_dir.join(rom.file_stem().and_then(|stem| stem.to_str()).unwrap_or("archive"));
+        let drive = if named_dir.exists() { named_dir } else { session_dir.clone() };
+        Some(StHardDisk {
+            boot_disk: atarist_boot_disk(request)?,
+            hatari_drive: drive.clone(),
+            retroarch_drive: drive,
+            acsi_image: None,
+            fallback: media.primary.clone(),
+        })
+    } else if media.session_dir.is_none() && is_atarist_harddisk_name(&request.rom_path) {
+        Some(StHardDisk {
+            boot_disk: atarist_boot_disk(request)?,
+            hatari_drive: rom.clone(),
+            retroarch_drive: if rom.is_dir() { rom.clone() } else { rom.parent().unwrap_or(&rom).to_path_buf() },
+            acsi_image: rom.extension().is_some_and(|ext| ext.eq_ignore_ascii_case("hd")).then(|| rom.clone()),
+            fallback: rom.clone(),
+        })
+    } else {
+        None
+    };
 
-            if is_hatari {
-                if rom.extension().is_some_and(|e| e.eq_ignore_ascii_case("hd")) {
-                    args.push("--acsi".to_string());
-                    args.push(rom.to_string_lossy().to_string());
-                } else {
-                    args.push("--disk-a".to_string());
-                    args.push(boot_disk.to_string_lossy().to_string());
-                    args.push("--harddrive".to_string());
-                    args.push(rom.to_string_lossy().to_string());
-                    args.push("--boot-hd".to_string());
-                    args.push("yes".to_string());
-                }
-            } else if is_retroarch {
-                if let Some(cp) = &request.core_path {
-                    if !cp.is_empty() {
-                        args.push("-L".to_string());
-                        args.push(cp.clone());
-                    }
-                }
-                let hd_dir = if rom.is_dir() {
-                    &rom
-                } else {
-                    rom.parent().unwrap_or(&rom)
-                };
-                if let Some(parent) = emulator.parent() {
-                    let gem_file = prepare_retroarch_hatari_harddisk(parent, hd_dir, &boot_disk)?;
-                    args.push(gem_file.to_string_lossy().to_string());
-                } else {
-                    let gem_file = hd_dir.with_extension("gem");
-                    let _ = std::fs::write(&gem_file, b"");
-                    args.push(gem_file.to_string_lossy().to_string());
-                }
-            } else if is_steem {
-                args.push(boot_disk.to_string_lossy().to_string());
-            } else {
-                args.push(rom.to_string_lossy().to_string());
-            }
-        } else if is_retroarch {
-            if let Some(cp) = &request.core_path {
-                if !cp.is_empty() {
-                    args.push("-L".to_string());
-                    args.push(cp.clone());
-                }
-            }
-            if platform_id == Some("apple2gs") {
-                let temp_dir = create_launch_temp_dir()?;
-                let system_dir = emulator.parent().map(|p| p.join("system"));
-                let cmd_path = write_mame_apple2gs_cmd(
-                    &temp_dir,
-                    &rom,
-                    &[rom.clone()],
-                    &launch_metadata.gemus,
-                    system_dir.as_deref().or_else(|| emulator.parent()),
-                )?;
-                args.push(cmd_path.to_string_lossy().to_string());
-            } else if platform_id == Some("bbcmicro") {
-                if is_retroarch_mame_core(request.core_path.as_deref()) {
-                    let temp_dir = create_launch_temp_dir()?;
-                    let system_dir = emulator.parent().map(|p| p.join("system"));
-                    let cmd_path = write_mame_bbcmicro_cmd(
-                        &temp_dir,
-                        &rom,
-                        &[rom.clone()],
-                        &launch_metadata.gemus,
-                        system_dir.as_deref().or_else(|| emulator.parent()),
-                    )?;
-                    args.push(cmd_path.to_string_lossy().to_string());
-                } else {
-                    args.push(rom.to_string_lossy().to_string());
-                }
-            } else {
-                args.push(rom.to_string_lossy().to_string());
-            }
-        } else if is_altirra {
-            push_altirra_rom_args(&mut args, &rom);
-        } else if is_uae {
-            push_uae_rom_args(&mut args, &[rom]);
-            push_uae_gemus_args(&mut args, &launch_metadata.gemus);
-        } else if is_kegs {
-            prepare_kegs_launch(
-                emulator.parent(),
-                &mut args,
-                &[rom.clone()],
-                &rom,
-                &launch_metadata.gemus,
-            );
-        } else if is_spectaculator || is_beebem || is_hatari || is_steem {
-            args.push(rom.to_string_lossy().to_string());
-        } else {
-            args.push("-autostart".to_string());
-            args.push(rom.to_string_lossy().to_string());
-        }
+    match &st_hard_disk {
+        Some(disk) => push_atarist_harddisk_args(&mut args, family, request, &emulator, disk)?,
+        None => push_content_args(&mut args, family, request, &emulator, &media, &launch_metadata.gemus)?,
     }
 
     if !is_retroarch && c64_settings.is_some() {
