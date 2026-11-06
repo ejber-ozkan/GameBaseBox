@@ -36,8 +36,8 @@ pub fn init_debug_mode() {
                 use std::os::windows::io::AsRawHandle;
                 if let Ok(file) = OpenOptions::new().write(true).open("CONOUT$") {
                     let handle = file.as_raw_handle();
-                    SetStdHandle(0xffff_fff5, handle as *mut std::ffi::c_void); // STD_OUTPUT_HANDLE
-                    SetStdHandle(0xffff_fff4, handle as *mut std::ffi::c_void); // STD_ERROR_HANDLE
+                    SetStdHandle(0xffff_fff5, handle); // STD_OUTPUT_HANDLE
+                    SetStdHandle(0xffff_fff4, handle); // STD_ERROR_HANDLE
                 }
             }
         }

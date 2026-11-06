@@ -21,10 +21,10 @@ pub struct MediaDownloadProgress {
 fn clean_unc_prefix(path_str: String) -> String {
     #[cfg(windows)]
     {
-        if path_str.starts_with(r"\\?\UNC\") {
-            format!(r"\\{}", &path_str[8..])
-        } else if path_str.starts_with(r"\\?\") {
-            path_str[4..].to_string()
+        if let Some(unc) = path_str.strip_prefix(r"\\?\UNC\") {
+            format!(r"\\{unc}")
+        } else if let Some(local) = path_str.strip_prefix(r"\\?\") {
+            local.to_string()
         } else {
             path_str
         }
