@@ -11,6 +11,7 @@ on:
       - 'scripts/**'
       - 'package.json'
       - 'package-lock.json'
+      - 'platform-manifest.json'
       - '*config*'
       - 'tsconfig.json'
       - '.github/workflows/quality.yml'
@@ -21,24 +22,42 @@ on:
 permissions:
   contents: read
 
+# A newer push to the same branch or PR supersedes the running check.
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  quality:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      rust: ${{ steps.filter.outputs.rust }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            rust:
+              - 'src-tauri/**'
+              - 'scripts/exportMdb.ps1'
+              - 'platform-manifest.json'
+              - '.github/workflows/quality.yml'
+
+  # Lint, types, unit tests, audit, build and browser tests. Needs no GTK/WebKit
+  # system packages, so it never waits on apt.
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libayatana-appindicator3-dev libgtk-3-dev librsvg2-dev libwebkit2gtk-4.1-dev
       - name: Install dependencies
         run: npm ci
       - name: Lint
@@ -47,17 +66,45 @@ jobs:
         run: npm run typecheck
       - name: Frontend tests and coverage ratchet
         run: npm run coverage:frontend
-      - name: Rust formatting
-        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
-      - name: Rust lints
-        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
-      - name: Backend tests
-        run: npm run test:backend
       - name: Dependency audit
         run: npm audit --omit=dev
       - name: Production build smoke test
         run: npm run build
+      # Full browser suite on pull requests, main and manual runs; branch pushes
+      # get the fast checks above. Uses the runner's preinstalled Google Chrome
+      # (channel: 'chrome' on CI in playwright.config.ts), so nothing is downloaded.
       - name: Browser smoke tests
-        run: |
-          npx playwright install --with-deps chromium
-          npm run test:e2e
+        if: github.event_name != 'push' || github.ref == 'refs/heads/main'
+        run: npm run test:e2e
+
+  # Rust formatting, lints and tests. Runs when the backend changed, and always on
+  # pull requests, main and manual runs.
+  rust:
+    name: Rust
+    needs: changes
+    if: needs.changes.outputs.rust == 'true' || github.event_name != 'push' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Rust formatting
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+      # The crate lives in src-tauri/, not the repository root.
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      # GTK/WebKit build dependencies, cached as .deb files after the first run so a
+      # slow Ubuntu mirror cannot stall the job (as it did for 30 minutes before).
+      - name: Install system dependencies (cached)
+        timeout-minutes: 12
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: libayatana-appindicator3-dev libgtk-3-dev librsvg2-dev libwebkit2gtk-4.1-dev
+          version: ubuntu-24.04-tauri-1
+      - name: Rust lints
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+      - name: Backend tests
+        run: cargo test --manifest-path src-tauri/Cargo.toml

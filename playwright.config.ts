@@ -16,7 +16,9 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      // On CI use the Google Chrome preinstalled on GitHub's Ubuntu runners instead
+      // of downloading Playwright's Chromium (and its apt dependencies) every run.
+      use: { ...devices['Desktop Chrome'], ...(process.env.CI ? { channel: 'chrome' } : {}) },
     },
   ],
 
