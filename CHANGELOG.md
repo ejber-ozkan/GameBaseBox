@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.7.3] - Candidate
+
+### Fixed
+- Game details page fits the window in every theme; imports no longer freeze the window and can be cancelled.
+- Random game selection no longer mutates rail state or loads the whole list prefix.
+
+### Changed
+- Database path chosen once at startup; schema versioned with `PRAGMA user_version` so normal starts skip the cover-index rebuild; pooled connections and blocking work off the main thread.
+- Settings saved in backend `settings.json` (localStorage mirror kept); file reads, folder opens and launches restricted to configured paths.
+- Schema SQL shared between the app and `scripts/`; `dbug` search special case replaced by a spelling-variants table; platform display names from the manifest.
+- Emulator launch code split into modules driven by `platform-manifest.json`; UnifiedDetailLayout split into a view model and per-theme layouts.
+- zip 9.4, MSRV 1.88, rustfmt/clippy/coverage gates in CI.
+- Library backgrounds and README demos converted to WebP; machine-specific MDB paths moved to a git-ignored `platform-paths.local.json`.
+See [release notes](RELEASE_NOTES_0.7.3.md).
+
+
 ## [0.7.0] - Candidate
 
 ### Fixed
