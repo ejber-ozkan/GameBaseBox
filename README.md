@@ -34,23 +34,23 @@ Install the latest single executable application release and run it, no need to 
 </table>
 
 ### C64 Library Browsing & Filtering
-![C64 Library Browsing](docs/images/demo-01-c64-library-browsing.gif)
+![C64 Library Browsing](docs/images/demo-01-c64-library-browsing.webp)
 
 ### Game Details & Video Previews
-![Game Details & Video Preview](docs/images/demo-02-game-details-video-preview.gif)
+![Game Details & Video Preview](docs/images/demo-02-game-details-video-preview.webp)
 
 ### Theme Customization & Settings
-![Settings & Themes](docs/images/demo-03-settings-and-themes.gif)
+![Settings & Themes](docs/images/demo-03-settings-and-themes.webp)
 
 ### C64 Edition Theme & In-App SID Player
-![C64 Edition Theme](docs/images/demo-04-c64-theme-extras-sid.gif)
+![C64 Edition Theme](docs/images/demo-04-c64-theme-extras-sid.webp)
 
 ### Multi-Platform Libraries (Atari 800 & Amiga)
-![Atari 800 Alphabetical Jump](docs/images/demo-05-atari800-alphabetical-jump.gif)
-![Amiga Quick Search](docs/images/demo-06-amiga-search-filter.gif)
+![Atari 800 Alphabetical Jump](docs/images/demo-05-atari800-alphabetical-jump.webp)
+![Amiga Quick Search](docs/images/demo-06-amiga-search-filter.webp)
 
 ### Cyberpunk CRT Theme & Navigation
-![Cyberpunk Theme Navigation](docs/images/demo-07-cyberpunk-c64-rails.gif)
+![Cyberpunk Theme Navigation](docs/images/demo-07-cyberpunk-c64-rails.webp)
 
 Grateful to the GameBase64 project and GB64 Team for decades of Commodore 64 preservation. Visit [gb64.com](https://gb64.com/) for the original project.
 
