@@ -24,10 +24,18 @@ describe('release workflow', () => {
     const quality = require('js-yaml').load(readFileSync('.github/workflows/quality.yml', 'utf8'));
     const scripts = JSON.parse(readFileSync('package.json', 'utf8')).scripts;
     expect(scripts.typecheck).toContain('tsc --noEmit');
-    for (const job of [quality.jobs.quality, workflow.jobs.quality]) {
+    for (const job of [quality.jobs.frontend, workflow.jobs.quality]) {
       const commands = job.steps.map((step: { run?: string }) => step.run || '').join('\n');
       expect(commands).toContain('npm run typecheck');
     }
+  });
+
+  it('formats, lints and tests the Rust crate in the quality workflow', () => {
+    const quality = require('js-yaml').load(readFileSync('.github/workflows/quality.yml', 'utf8'));
+    const commands = quality.jobs.rust.steps.map((step: { run?: string }) => step.run || '').join('\n');
+    expect(commands).toContain('cargo fmt --manifest-path src-tauri/Cargo.toml --check');
+    expect(commands).toContain('cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings');
+    expect(commands).toContain('cargo test --manifest-path src-tauri/Cargo.toml');
   });
 
   it('validates versions before quality, draft creation or platform builds', () => {

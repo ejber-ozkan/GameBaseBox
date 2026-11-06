@@ -96,14 +96,33 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri -> target
-      # GTK/WebKit build dependencies, cached as .deb files after the first run so a
-      # slow Ubuntu mirror cannot stall the job (as it did for 30 minutes before).
-      - name: Install system dependencies (cached)
-        timeout-minutes: 12
-        uses: awalsh128/cache-apt-pkgs-action@v1
+      # GTK/WebKit build dependencies. Downloaded .debs are kept in the Actions cache,
+      # so later runs barely touch the Ubuntu mirror (a slow mirror once stalled the job
+      # for 30 minutes). Retries plus one refresh-and-retry cover mirrors serving a
+      # stale index (404s); a failed install still fails the job.
+      - name: Cache apt archives
+        uses: actions/cache@v5
         with:
-          packages: libayatana-appindicator3-dev libgtk-3-dev librsvg2-dev libwebkit2gtk-4.1-dev
-          version: ubuntu-24.04-tauri-1
+          path: ~/apt-archives
+          key: apt-ubuntu-24.04-tauri-v1
+      - name: Install system dependencies
+        timeout-minutes: 12
+        run: |
+          mkdir -p ~/apt-archives/partial
+          apt_get() {
+            sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 \
+              -o Dir::Cache::Archives="$HOME/apt-archives" "$@"
+          }
+          packages="libayatana-appindicator3-dev libgtk-3-dev librsvg2-dev libwebkit2gtk-4.1-dev"
+          apt_get update
+          if ! apt_get install -y --no-install-recommends $packages; then
+            echo "::warning::apt install failed; refreshing package lists and retrying"
+            sleep 15
+            apt_get update
+            apt_get install -y --no-install-recommends --fix-missing $packages
+          fi
+          sudo rm -f ~/apt-archives/lock
+          sudo chown -R "$USER" ~/apt-archives
       - name: Rust lints
         run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
       - name: Backend tests
