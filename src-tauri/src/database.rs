@@ -1121,15 +1121,7 @@ fn merge_imported_table(
 }
 
 fn platform_display_name(platform_id: &str) -> &str {
-    match platform_id {
-        "c64" => "Commodore 64",
-        "atari800" => "Atari 800",
-        "atari2600" => "Atari 2600",
-        "zxspectrum" => "ZX Spectrum",
-        "bbcmicro" => "Acorn BBC Micro",
-        "amiga" => "Commodore Amiga",
-        _ => platform_id,
-    }
+    crate::platform_manifest::display_name(platform_id).unwrap_or(platform_id)
 }
 
 fn refresh_platform_libraries(conn: &Connection) -> Result<(), String> {
@@ -2231,5 +2223,12 @@ mod tests {
             .map(|entry| entry.unwrap().file_name())
             .collect();
         assert_eq!(remaining, vec![std::ffi::OsString::from("live.sqlite")]);
+    }
+
+    #[test]
+    fn platform_display_name_comes_from_the_manifest() {
+        assert_eq!(super::platform_display_name("vic20"), "Commodore VIC-20");
+        assert_eq!(super::platform_display_name("atari7800"), "Atari 7800");
+        assert_eq!(super::platform_display_name("unknown"), "unknown");
     }
 }
