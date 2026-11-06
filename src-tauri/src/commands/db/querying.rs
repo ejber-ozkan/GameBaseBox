@@ -24,19 +24,46 @@ const LEGACY_SEARCH_FILTER_COLUMNS: [&str; 6] = [
     "LOWER(COALESCE(ar.Artist, '')) LIKE ?",
 ];
 
+/// Titles that are commonly searched with a different spelling from the one in the
+/// database (for example "Dbug" for "D-Bug"). Add rows here instead of special-casing
+/// terms in the query builders.
+pub(crate) struct SpellingVariant {
+    /// How users type it: one lowercase word, matched as a term prefix.
+    pub compact: &'static str,
+    /// The tokenised form in the FTS index (punctuation becomes a space).
+    pub fts_phrase: &'static str,
+    /// The literal form for the LIKE fallback.
+    pub like_text: &'static str,
+}
+
+pub(crate) const SPELLING_VARIANTS: &[SpellingVariant] = &[SpellingVariant {
+    compact: "dbug",
+    fts_phrase: "d bug",
+    like_text: "d-bug",
+}];
+
+fn spelling_variant_for(lower_term: &str) -> Option<&'static SpellingVariant> {
+    SPELLING_VARIANTS
+        .iter()
+        .find(|variant| lower_term.starts_with(variant.compact))
+}
+
 pub(crate) fn build_fts_match_query(search_query: &str) -> Option<String> {
     let terms = search_query
         .split(|character: char| !character.is_alphanumeric())
         .filter(|term| !term.is_empty())
         .map(|term| {
             let lower = term.to_lowercase();
-            if lower == "dbug" {
-                "(dbug* OR \"d bug\"*)".to_string()
-            } else if lower.starts_with("dbug") && lower.len() > 4 {
-                let suffix = &lower[4..];
-                format!("(dbug* OR (\"d bug\"* AND {suffix}*))")
+            let Some(variant) = spelling_variant_for(&lower) else {
+                return format!("{term}*");
+            };
+            let compact = variant.compact;
+            let phrase = variant.fts_phrase;
+            if lower.len() == compact.len() {
+                format!("({compact}* OR \"{phrase}\"*)")
             } else {
-                format!("{term}*")
+                let suffix = &lower[compact.len()..];
+                format!("({compact}* OR (\"{phrase}\"* AND {suffix}*))")
             }
         })
         .collect::<Vec<_>>();
@@ -101,8 +128,11 @@ impl GameQueryBuilder {
                 self.filter_query
                     .push_str(&LEGACY_SEARCH_FILTER_COLUMNS.join(" OR "));
                 let lower = search_query.to_lowercase();
-                let is_dbug = lower.contains("dbug");
-                if is_dbug {
+                let variants = SPELLING_VARIANTS
+                    .iter()
+                    .filter(|variant| lower.contains(variant.compact))
+                    .collect::<Vec<_>>();
+                for _ in &variants {
                     self.filter_query.push_str(" OR LOWER(gv.name) LIKE ?");
                 }
                 self.filter_query.push(')');
@@ -111,9 +141,11 @@ impl GameQueryBuilder {
                 for _ in 0..LEGACY_SEARCH_FILTER_COLUMNS.len() {
                     self.params.push(pattern.clone());
                 }
-                if is_dbug {
-                    self.params
-                        .push(format!("%{}%", lower.replace("dbug", "d-bug")));
+                for variant in variants {
+                    self.params.push(format!(
+                        "%{}%",
+                        lower.replace(variant.compact, variant.like_text)
+                    ));
                 }
             }
         }

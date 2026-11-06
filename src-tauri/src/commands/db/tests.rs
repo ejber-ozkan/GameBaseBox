@@ -5,7 +5,7 @@ use tempfile::NamedTempFile;
 use super::games::{build_game_detail_query, build_game_summary_query};
 use super::querying::{
     build_fts_match_query, build_game_query, load_game_count_with_fallback,
-    load_ordered_game_ids_with_fallback, SearchMode,
+    load_ordered_game_ids_with_fallback, SearchMode, SPELLING_VARIANTS,
 };
 use super::{get_db_game_count, get_db_games, get_game_extras, get_genres, get_sub_genres};
 use crate::database::init_database;
@@ -377,6 +377,22 @@ fn test_build_fts_match_query_sanitizes_terms() {
         Some("(dbug* OR (\"d bug\"* AND 001*))".to_string())
     );
     assert_eq!(build_fts_match_query("!!!"), None);
+}
+
+#[test]
+fn test_spelling_variants_are_single_lowercase_terms() {
+    for variant in SPELLING_VARIANTS {
+        assert!(
+            variant
+                .compact
+                .chars()
+                .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit()),
+            "{} must be one lowercase alphanumeric term",
+            variant.compact
+        );
+        assert_eq!(variant.fts_phrase, variant.fts_phrase.to_lowercase());
+        assert_eq!(variant.like_text, variant.like_text.to_lowercase());
+    }
 }
 
 #[test]
