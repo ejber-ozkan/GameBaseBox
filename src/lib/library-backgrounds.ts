@@ -4,7 +4,8 @@ export type LibraryViewMode = 'grid' | 'list';
 
 const BACKGROUND_BASE_PATH = '/docs/images/backgrounds';
 
-export const LIBRARY_BACKGROUND_OPACITY = 0.156;
+// Original layer 0.13, raised 20% and then a further 10% for visibility.
+export const LIBRARY_BACKGROUND_OPACITY = 0.1716;
 
 const PLATFORM_BACKGROUND_POOLS: Partial<Record<PlatformId, readonly string[]>> = {
   c64: [

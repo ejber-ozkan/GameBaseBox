@@ -65,7 +65,7 @@ describe('library-backgrounds', () => {
     expect(resolveLibraryBackground('bbcmicro', 'list', 1)).toBe('/docs/images/backgrounds/Acorn_BBC_Micro_1.webp');
   });
 
-  test('sets the windowed library background visibility about twenty percent higher than the original layer', () => {
-    expect(LIBRARY_BACKGROUND_OPACITY).toBeCloseTo(0.13 * 1.2, 3);
+  test('sets the library background visibility 20% and then another 10% above the original layer', () => {
+    expect(LIBRARY_BACKGROUND_OPACITY).toBeCloseTo(0.13 * 1.2 * 1.1, 4);
   });
 });
