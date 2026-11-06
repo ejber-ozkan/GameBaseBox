@@ -1120,6 +1120,37 @@ fn merge_imported_table(
     Ok(())
 }
 
+/// A reimport replaces the platform's rows table by table. Tables from an earlier import
+/// that the new MDB no longer has would otherwise keep stale rows for the platform, so
+/// clear those too (inside the merge transaction; other platforms are untouched).
+fn remove_platform_rows_missing_from_import(
+    conn: &Connection,
+    imported_tables: &[String],
+    platform_id: &str,
+) -> Result<(), String> {
+    for table_name in importable_table_names(conn, "main")? {
+        if imported_tables
+            .iter()
+            .any(|imported| imported == &table_name)
+        {
+            continue;
+        }
+        let columns = table_columns_in_schema(conn, "main", &table_name)?;
+        if !columns.iter().any(|column| column == "platform_id") {
+            continue;
+        }
+        conn.execute(
+            &format!(
+                "DELETE FROM {} WHERE platform_id = ?1",
+                quote_identifier(&table_name)?
+            ),
+            [platform_id],
+        )
+        .map_err(|error| error.to_string())?;
+    }
+    Ok(())
+}
+
 fn platform_display_name(platform_id: &str) -> &str {
     crate::platform_manifest::display_name(platform_id).unwrap_or(platform_id)
 }
@@ -1208,6 +1239,7 @@ fn merge_imported_database(
             ensure_live_table_matches_import(&conn, table_name, &legacy_platform_id)?;
             merge_imported_table(&conn, table_name, platform_id)?;
         }
+        remove_platform_rows_missing_from_import(&conn, &table_names, platform_id)?;
 
         recreate_game_view(&conn)?;
         ensure_query_indexes(&conn)?;
@@ -1879,6 +1911,100 @@ mod tests {
             .unwrap();
         assert_eq!(c64_search_platform, "c64");
         assert_eq!(atari_search_platform, "atari800");
+    }
+
+    #[test]
+    fn reimport_replaces_only_that_platforms_rows_including_tables_the_new_mdb_lacks() {
+        let temp_db = NamedTempFile::new().unwrap();
+        let db_path = temp_db.path().to_string_lossy().to_string();
+        let _env = DbPathGuard::set(&db_path);
+
+        let write_export = |games: &str, with_extras: bool| {
+            let dir = tempdir().unwrap();
+            let mut tables = vec![
+                ("Games.csv", games.to_string()),
+                ("Years.csv", "YE_Id,Year\n1,1988\n".to_string()),
+                ("Genres.csv", "GE_Id,Genre,PG_Id\n1,Shooter,1\n".to_string()),
+                ("PGenres.csv", "PG_Id,ParentGenre\n1,Arcade\n".to_string()),
+                ("Developers.csv", "DE_Id,Developer\n1,Dev\n".to_string()),
+                ("Publishers.csv", "PU_Id,Publisher\n1,Pub\n".to_string()),
+                (
+                    "Musicians.csv",
+                    "MU_Id,Musician,Photo,Nick,Grp\n1,,,,\n".to_string(),
+                ),
+                ("Languages.csv", "LA_Id,Language\n1,English\n".to_string()),
+                ("Programmers.csv", "PR_Id,Programmer\n1,Coder\n".to_string()),
+                ("Artists.csv", "AR_Id,Artist\n1,Artist\n".to_string()),
+            ];
+            if with_extras {
+                tables.push((
+                    "Extras.csv",
+                    "GA_Id,DisplayOrder,Path\n1,1,Cover/one.png\n".to_string(),
+                ));
+            }
+            for (filename, contents) in tables {
+                fs::write(dir.path().join(filename), contents).unwrap();
+            }
+            dir
+        };
+        let header = "GA_Id,Name,Filename,FileToRun,ScrnshotFilename,SidFilename,CRC,YE_Id,GE_Id,DE_Id,PU_Id,MU_Id,LA_Id,PR_Id,AR_Id,V_PalNTSC,V_TrueDriveEmu,Classic,Adult\n";
+
+        let c64_first = write_export(&format!("{header}1,Old Game,a.zip,,a.png,,a,1,1,1,1,1,1,1,1,P,1,False,False\n2,Gone Game,b.zip,,b.png,,b,1,1,1,1,1,1,1,1,P,1,False,False\n"), true);
+        let atari = write_export(
+            &format!("{header}1,Airstrike,c.xex,,c.png,,c,1,1,1,1,1,1,1,1,N,0,False,False\n"),
+            true,
+        );
+        import_csv_directory_to_sqlite(c64_first.path(), "c64").unwrap();
+        import_csv_directory_to_sqlite(atari.path(), "atari800").unwrap();
+
+        // Reimport C64 from an MDB with different games and no Extras table.
+        let c64_second = write_export(
+            &format!("{header}1,New Game,a.zip,,a.png,,a,1,1,1,1,1,1,1,1,P,1,False,False\n"),
+            false,
+        );
+        import_csv_directory_to_sqlite(c64_second.path(), "c64").unwrap();
+
+        let conn = Connection::open(&db_path).unwrap();
+        let count = |sql: &str, platform: &str| -> i64 {
+            conn.query_row(sql, [platform], |row| row.get(0)).unwrap()
+        };
+        let c64_names: Vec<String> = conn
+            .prepare("SELECT Name FROM Games WHERE platform_id = 'c64' ORDER BY Name")
+            .unwrap()
+            .query_map([], |row| row.get(0))
+            .unwrap()
+            .collect::<Result<_, _>>()
+            .unwrap();
+        assert_eq!(c64_names, vec!["New Game".to_string()]);
+        assert_eq!(
+            count("SELECT COUNT(*) FROM Extras WHERE platform_id = ?1", "c64"),
+            0
+        );
+        assert_eq!(
+            count(
+                "SELECT COUNT(*) FROM Extras WHERE platform_id = ?1",
+                "atari800"
+            ),
+            1
+        );
+        assert_eq!(
+            count(
+                "SELECT COUNT(*) FROM Games WHERE platform_id = ?1",
+                "atari800"
+            ),
+            1
+        );
+        assert_eq!(
+            count(
+                "SELECT game_count FROM PlatformLibraries WHERE platform_id = ?1",
+                "c64"
+            ),
+            1
+        );
+        assert_eq!(
+            count("SELECT COUNT(*) FROM GameSearchIndex WHERE platform_id = ?1 AND GameSearchIndex MATCH 'gone*'", "c64"),
+            0
+        );
     }
 
     #[test]
